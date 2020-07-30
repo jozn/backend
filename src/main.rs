@@ -1,9 +1,145 @@
+#![allow(dead_code)]
+#![allow(unused_imports)]
+#![allow(unused_variables)]
+#![allow(warnings)]
+#![allow(soft_unstable)]
+
 use std::convert::Infallible;
 use std::net::SocketAddr;
 use hyper::{Body, Request, Response, Server};
 use hyper::service::{make_service_fn, service_fn};
 use hyper::body;
 use serde::{Deserialize, Serialize};
+
+fn to_bin(s: String) -> Vec<u8> {
+    s.as_bytes().to_owned()
+}
+async fn server_http(req: Request<Body>) -> Result<Response<Body>, Infallible> {
+    let res= match req.uri().path() {
+        "/echo" => (200, to_bin(echo().await) ),
+        "/repeat" => (200,to_bin(repeat(req.uri()).await) ),
+        "/rpc" => {
+            (200, server_http_rpc(req).await)
+        },
+        _ => (404, to_bin("Not found".to_string()))
+    };
+
+    Ok(Response::builder().status(res.0).body(Body::from(res.1)).unwrap())
+}
+
+async fn echo() -> String {
+    "dfa".to_string()
+}
+async fn repeat(u: &http::Uri) -> String {
+    "dfa".to_string()
+}
+
+#[tokio::main]
+async fn main() {
+    // We'll bind to 127.0.0.1:3000
+    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+
+    // A `Service` is needed for every connection, so this
+    // creates one from our `hello_world` function.
+    let make_svc = make_service_fn(|_conn| async {
+        // service_fn converts our function into a `Service`
+        // println!("server xxxxxxx {:?}", _conn.clone());
+        // Ok::<_, Infallible>(service_fn(hello_world))
+        Ok::<_, Infallible>(service_fn(server_http))
+    });
+
+    let server = Server::bind(&addr).serve(make_svc);
+
+    // Run this server for... forever!
+    if let Err(e) = server.await {
+        eprintln!("server error: {}", e);
+    }
+}
+
+async fn server_http_rpc(req: Request<Body>) -> Vec<u8> {
+    let bo = req.into_body();
+    let bts = body::to_bytes(bo).await.unwrap();
+
+    // let act = serde_json::from_slice::<Act>(&bts);
+    let act = bincode::deserialize::<Act>(&bts);
+
+    if let Ok(act) = act {
+        println!("act {:?}", act);
+        let pb_bts = server_rpc(act).unwrap_or("vec![]".as_bytes().to_owned());
+        return  pb_bts
+        //return bincode::serialize(&pb_bts).unwrap()
+    }
+
+    "error in rpc ".as_bytes().to_owned()
+}
+
+fn server_rpc(act :Act) -> Result<Vec<u8>,GenErr> {
+    let up = UserParam{};
+    match act.method {
+        45 => {
+            let vec = "funk ".as_bytes().to_owned();
+
+            // let req_param_pb = serde_json::from_slice::<CheckUsernameParam>(&act.data);
+            let req_param_pb = bincode::deserialize::<CheckUsernameParam>(&act.data);
+            if let Ok(act) = &req_param_pb {
+                println!("actingggggggggggggg {:?}", act);
+                let result = rpc::check_username(&up,act)?;
+                let bts = bincode::serialize(&result).unwrap();
+                return Ok(bts)
+
+                // Ok(Response::builder().status(404).body(Body::from("RPC Not found.")).unwrap())
+            } else {
+                // Ok(Response::builder().status(404).body(Body::from("RPC Not found.")).unwrap())
+            }
+
+            Ok(vec)
+        },
+        _ => {
+            Err(GenErr{})
+        }
+    }
+}
+
+mod rpc {
+    use super::*;
+    pub fn check_username(user_param: &UserParam, req: &CheckUsernameParam) -> Result<CheckUsernameRespose,GenErr> {
+        Ok(CheckUsernameRespose{
+            yes: "sdfsd".to_string()
+        })
+    }
+}
+
+trait AllRpc: RPC + RPC5 {
+
+}
+
+trait RPC {
+    fn check_username(user_param: &UserParam, req: &CheckUsernameParam) -> Result<CheckUsernameRespose,GenErr>;
+}
+
+trait RPC5 {
+    fn check_username5(user_param: &UserParam, req: &CheckUsernameParam) -> Result<CheckUsernameRespose,GenErr>;
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Act {
+    method: u32,
+    data: Vec<u8>,
+    act_id: u64,
+}
+
+pub struct GenErr {}
+pub struct UserParam {}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CheckUsernameParam {
+    id: u64,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CheckUsernameRespose {
+    yes: String
+}
 
 async fn hello_world(req: Request<Body>) -> Result<Response<Body>, Infallible> {
     let s = format!("{:#?}", req);
@@ -23,42 +159,23 @@ async fn hello_world(req: Request<Body>) -> Result<Response<Body>, Infallible> {
             // let bo = req.body().clone();
             let bo = req.into_body();
             let bts = body::to_bytes(bo).await.unwrap();
-            let res_body = format!("body bytes:: {:#?}", bts);
-            println!("{:?}", bts);
-            Ok(Response::new(Body::from(res_body)))
-            // Ok(Response::builder().status(404).body(Body::from("RPC not found.")).unwrap())
+
+            let act = serde_json::from_slice::<Act>(&bts);
+
+            if let Ok(act) = act {
+                println!("act {:?}", act);
+
+                Ok(Response::new(Body::from(bts)))
+
+            } else {
+                Ok(Response::builder().status(404).body(Body::from("RPC Not found.")).unwrap())
+            }
+
         },
         _ => Ok(Response::builder().status(404).body(Body::from("Not found.")).unwrap())
     }
     // Ok(Response::new(Body::from(s.repeat(100))))
 }
-
-#[tokio::main]
-async fn main() {
-    // We'll bind to 127.0.0.1:3000
-    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
-
-    // A `Service` is needed for every connection, so this
-    // creates one from our `hello_world` function.
-    let make_svc = make_service_fn(|_conn| async {
-        // service_fn converts our function into a `Service`
-        Ok::<_, Infallible>(service_fn(hello_world))
-    });
-
-    let server = Server::bind(&addr).serve(make_svc);
-
-    // Run this server for... forever!
-    if let Err(e) = server.await {
-        eprintln!("server error: {}", e);
-    }
-}
-
-struct Act {
-    method: u32,
-    data: String,
-    act_id: u64,
-}
-
 
 // println!("uri >>> {:#?}", uri.port());
 // println!("uri >>> {:#?}", uri.host());
