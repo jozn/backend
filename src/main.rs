@@ -1,3 +1,4 @@
+
 #![allow(dead_code)]
 #![allow(unused_imports)]
 #![allow(unused_variables)]
@@ -10,6 +11,18 @@ use hyper::{Body, Request, Response, Server};
 use hyper::service::{make_service_fn, service_fn};
 use hyper::body;
 use serde::{Deserialize, Serialize};
+
+mod pb;
+// mod pbs;
+
+fn play(){
+
+    let _m = pb::store::Comment{
+
+    };
+
+}
+
 
 fn to_bin(s: String) -> Vec<u8> {
     s.as_bytes().to_owned()
@@ -28,10 +41,10 @@ async fn server_http(req: Request<Body>) -> Result<Response<Body>, Infallible> {
 }
 
 async fn echo() -> String {
-    "dfa".to_string()
+    "echo me".to_string()
 }
 async fn repeat(u: &http::Uri) -> String {
-    "dfa".to_string()
+    u.query().unwrap_or("[empty]").repeat(10)
 }
 
 #[tokio::main]
@@ -176,6 +189,75 @@ async fn hello_world(req: Request<Body>) -> Result<Response<Body>, Infallible> {
     }
     // Ok(Response::new(Body::from(s.repeat(100))))
 }
+
+/*
+fn play1() {
+    use pb::mod_RoomMessage as mrm;
+    use pb::mod_RoomMessage::mod_Author as mrma;
+
+    std::mem::size_of();
+
+    mrm::ChannelExtra{
+        signature: "".to_string(),
+        views_label: "".to_string(),
+        thumbs_up_label: "".to_string(),
+        thumbs_down_label: "".to_string()
+    };
+
+    let param = pb::RoomMessage{
+        message_id: 0,
+        message_version: 0,
+        status: Default::default(),
+        status_version: 0,
+        message_type: Default::default(),
+        message: "".to_string(),
+        attachment: None,
+        author: None,
+        location: None,
+        log: None,
+        contact: None,
+        wallet: None,
+        edited: false,
+        create_time: 0,
+        update_time: 0,
+        deleted: false,
+        forward_from: None,
+        reply_to: None,
+        previous_message_id: 0,
+        random_id: 0,
+        additional_type: 0,
+        additional_data: "".to_string(),
+        extra_type: Default::default(),
+        channel_extra: None
+    };
+
+    let m  = pbs::mod_GetLikesPage::Param{
+        PostId: 0,
+        Limit: 0,
+        LastId: 0
+    };
+
+    use pbs::mod_PB_RoomsChanges as rc;
+    rc::Chat{
+        ChatId: 0,
+        RoomKey: "".to_string(),
+        RoomType: 0,
+        PeerPush: 0,
+        ReceivedMessages: vec![],
+        SeenMessages: vec![],
+        EditeMessages: vec![],
+        DeleteMessages: vec![],
+        ClearHistroyFromMessageId: 0,
+        DeleteChat: 0,
+        ChatTitle: "".to_string(),
+        Muted: Default::default(),
+        MutedUntil: 0,
+        Pined: Default::default(),
+        PinTime: 0
+    };
+
+}
+*/
 
 // println!("uri >>> {:#?}", uri.port());
 // println!("uri >>> {:#?}", uri.host());

@@ -1,3 +1,6 @@
+fn main() {
+
+}
 fn main2() {
     // prost_build::compile_protos(&["src/items.proto"],
     //                             &["src/"]);
@@ -18,17 +21,19 @@ use pb_rs::types::{Config, FileDescriptor};
 use std::env;
 use std::path::{Path, PathBuf};
 
-fn main() {
+fn main4() {
     let out_dir = env::var("OUT_DIR").unwrap();
-    let out_dir = "src/ps/".to_string();
+    let out_dir = "src/pb/prost/".to_string();
     let out_file = Path::new(&out_dir).join("hello.rs");
 
     let config = Config {
         // in_file: PathBuf::from("protos/Hello.proto"),
-        in_file: PathBuf::from("src/proto/igap.proto"),
+        in_file: PathBuf::from(
+            "src/proto/pb_views.proto",
+        ),
         out_file,
         single_module: false,
-        import_search_path: vec![PathBuf::from("protos")],
+        import_search_path: vec![PathBuf::from("src/proto/")],
         no_output: false,
         error_cycle: false,           // may change a required field to an optional
         headers: false,               // do not generate headers

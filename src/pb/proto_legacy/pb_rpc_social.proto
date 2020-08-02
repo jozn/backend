@@ -1,0 +1,238 @@
+syntax = "proto3";
+
+option java_package = "ir.ms.pb";
+//option java_outer_classname = "PB2";
+option java_multiple_files = true;
+option optimize_for = LITE_RUNTIME; //CODE_SIZE;
+
+option go_package = "x";
+
+import "pb_global.proto";
+import "pb_views.proto";
+
+message RPC_Social_Types {
+    message AddComment {
+        message Param {
+            int64 PostId = 1;
+            string Text = 2;
+            int64 RandHash = 3;
+        }
+
+        message Response {
+            bool Done =1;
+            PB_Error Error = 2;
+            PB_CommentView Comment =3;
+        }
+    }
+
+    message DeleteComment {
+        message Param {
+            int64 PostId = 1;
+            int64 CommentId = 2;
+        }
+
+        message Response {
+            bool Done =1;
+            PB_Error Error = 2;
+        }
+    }
+
+    message EditComment {
+        message Param {
+            int64 PostId = 1;
+            int64 CommentId = 2;
+            string Text = 3;
+            int64 RandHash = 4;
+        }
+
+        message Response {
+            bool Done =1;
+            PB_Error Error = 2;
+            PB_CommentView Comment =3;
+        }
+    }
+
+    message LikeComment {
+        message Param {
+            int64 PostId = 1;
+            int64 CommentId = 2;
+        }
+
+        message Response {
+            bool Done =1;
+            PB_Error Error = 2;
+        }
+    }
+
+
+    //posts
+    message AddPost {
+        message Param {
+            string Text = 1;
+            //todo add pic files
+            bytes ImageBlob = 2;
+        }
+
+        message Response {
+            bool Done = 1;
+            PB_Error Error = 2;
+            PB_PostView PostView = 3;
+        }
+    }
+
+
+    message EditPost {
+        message Param {
+            int64 PostId = 1;
+            string Text = 2;
+        }
+
+        message Response {
+            bool Done = 1;
+            PB_Error Error = 2;
+            PB_PostView PostView = 3;
+        }
+    }
+
+    message DeletePost {
+        message Param {
+            int64 PostId = 1;
+        }
+
+        message Response {
+            bool Done = 1;
+            PB_Error Error = 2;
+        }
+    }
+
+    message ArchivePost {
+        message Param {
+            int64 PostId = 1;
+        }
+
+        message Response {
+            bool Done = 1;
+            PB_Error Error = 2;
+        }
+    }
+
+    message PromotePost {
+        message Param {
+            int64 PostId = 1;
+        }
+
+        message Response {
+            bool Done = 1;
+            PB_Error Error = 2;
+        }
+    }
+
+    //likes
+    message LikePost {
+        message Param {
+            int64 PostId = 1;
+        }
+
+        message Response {
+            bool Done = 1;
+            PB_Error Error = 2;
+        }
+    }
+
+
+    message UnLikePost {
+        message Param {
+            int64 PostId = 1;
+        }
+
+        message Response {
+            bool Done = 1;
+            PB_Error Error = 2;
+        }
+    }
+
+
+    message FollowUser {
+        message Param {
+            int64 UserId = 1;
+        }
+
+        message Response {
+            bool Done = 1;
+            PB_Error Error = 2;
+        }
+    }
+
+    message UnFollowUser {
+        message Param {
+            int64 UserId = 1;
+        }
+
+        message Response {
+            bool Done = 1;
+            PB_Error Error = 2;
+        }
+    }
+
+    message BlockUser {
+        message Param {
+            int64 UserId = 1;
+        }
+
+        message Response {
+            bool Done = 1;
+            PB_Error Error = 2;
+        }
+    }
+
+    message UnBlockUser {
+        message Param {
+            int64 UserId = 1;
+        }
+
+        message Response {
+            bool Done = 1;
+            PB_Error Error = 2;
+        }
+    } 
+
+    message AddSeenPosts {
+        message Param {
+            int64 RandHash = 1;
+            repeated int64 PostIds = 2;
+        }
+
+        message Response {
+            bool Done = 1;
+            PB_Error Error = 2;
+            int64 RandHash = 3;
+        }
+    }
+}
+
+service RPC_Social {
+    //comments
+    rpc AddComment (RPC_Social_Types.AddComment.Param) returns (RPC_Social_Types.AddComment.Response);
+    rpc DeleteComment (RPC_Social_Types.DeleteComment.Param) returns (RPC_Social_Types.DeleteComment.Response);
+    rpc EditComment (RPC_Social_Types.EditComment.Param) returns (RPC_Social_Types.EditComment.Response);
+    rpc LikeComment (RPC_Social_Types.LikeComment.Param) returns (RPC_Social_Types.LikeComment.Response);
+    //posts
+    rpc AddPost (RPC_Social_Types.AddPost.Param) returns (RPC_Social_Types.AddPost.Response);
+    rpc EditPost (RPC_Social_Types.EditPost.Param) returns (RPC_Social_Types.EditPost.Response);
+    rpc DeletePost (RPC_Social_Types.DeletePost.Param) returns (RPC_Social_Types.DeletePost.Response);
+    rpc ArchivePost (RPC_Social_Types.ArchivePost.Param) returns (RPC_Social_Types.ArchivePost.Response);
+    rpc PromotePost (RPC_Social_Types.PromotePost.Param) returns (RPC_Social_Types.PromotePost.Response);
+    //likes
+    rpc LikePost (RPC_Social_Types.LikePost.Param) returns (RPC_Social_Types.LikePost.Response);
+    rpc UnLikePost (RPC_Social_Types.UnLikePost.Param) returns (RPC_Social_Types.UnLikePost.Response);
+    //follow
+    rpc FollowUser (RPC_Social_Types.FollowUser.Param) returns (RPC_Social_Types.FollowUser.Response);
+    rpc UnFollowUser (RPC_Social_Types.UnFollowUser.Param) returns (RPC_Social_Types.UnFollowUser.Response);
+    //profile - user
+    rpc BlockUser (RPC_Social_Types.BlockUser.Param) returns (RPC_Social_Types.BlockUser.Response);
+    rpc UnBlockUser (RPC_Social_Types.UnBlockUser.Param) returns (RPC_Social_Types.UnBlockUser.Response);
+    //activitys
+    //contacts
+
+    rpc AddSeenPosts (RPC_Social_Types.AddSeenPosts.Param) returns (RPC_Social_Types.AddSeenPosts.Response);
+}

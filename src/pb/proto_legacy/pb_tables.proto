@@ -1,0 +1,515 @@
+
+syntax = "proto3";
+option java_package = "ir.ms.pb";
+option java_multiple_files = true;
+option optimize_for = LITE_RUNTIME; //CODE_SIZE;
+
+option go_package = "x";
+
+message PB_Action {
+    int64 ActionId = 1;
+    int32 ActorUserId = 2;
+    int32 ActionType = 3;
+    int32 PeerUserId = 4;
+    int64 PostId = 5;
+    int64 CommentId = 6;
+    int64 Murmur64Hash = 7;
+    int32 CreatedTime = 8;
+}
+message PB_Blocked {
+    int64 Id = 1;
+    int32 UserId = 2;
+    int32 BlockedUserId = 3;
+    int32 CreatedTime = 4;
+}
+message PB_Comment {
+    int64 CommentId = 1;
+    int32 UserId = 2;
+    int64 PostId = 3;
+    string Text = 4;
+    int32 LikesCount = 5;
+    int32 IsEdited = 6;
+    int32 CreatedTime = 7;
+}
+message PB_CommentDeleted {
+    int64 CommentId = 1;
+    int32 UserId = 2;
+}
+message PB_Event {
+    int64 EventId = 1;
+    int32 EventType = 2;
+    int64 ByUserId = 3;
+    int64 PeerUserId = 4;
+    int64 PostId = 5;
+    int64 CommentId = 6;
+    int64 HashTagId = 7;
+    int64 GroupId = 8;
+    int64 ActionId = 9;
+    int64 ChatId = 10;
+    string ChatKey = 11;
+    int64 MessageId = 12;
+    int64 ReSharedId = 13;
+    int64 Murmur64Hash = 14;
+}
+message PB_Followed {
+    int64 Id = 1;
+    int32 UserId = 2;
+    int32 FollowedUserId = 3;
+    int32 CreatedTime = 4;
+}
+message PB_Likes {
+    int64 Id = 1;
+    int64 PostId = 2;
+    int32 UserId = 3;
+    int32 PostType = 4;
+    int32 CreatedTime = 5;
+}
+message PB_Notify {
+    int64 NotifyId = 1;
+    int32 ForUserId = 2;
+    int32 ActorUserId = 3;
+    int32 NotifyType = 4;
+    int64 PostId = 5;
+    int64 CommentId = 6;
+    int32 PeerUserId = 7;
+    int64 Murmur64Hash = 8;
+    int32 SeenStatus = 9;
+    int32 CreatedTime = 10;
+}
+message PB_NotifyRemoved {
+    int64 Murmur64Hash = 1;
+    int32 ForUserId = 2;
+    int64 Id = 3;
+}
+message PB_PhoneContacts {
+    int64 Id = 1;
+    int32 UserId = 2;
+    int64 ClientId = 3;
+    string Phone = 4;
+    string FirstName = 5;
+    string LastName = 6;
+}
+message PB_Post {
+    int64 PostId = 1;
+    int32 UserId = 2;
+    int32 PostType = 3;
+    int64 MediaId = 4;
+    int64 FileRefId = 5;
+    string PostKey = 6;
+    string Text = 7;
+    string RichText = 8;
+    int32 MediaCount = 9;
+    int32 SharedTo = 10;
+    int32 DisableComment = 11;
+    int32 Via = 12;
+    int32 Seq = 13;
+    int32 CommentsCount = 14;
+    int32 LikesCount = 15;
+    int32 ViewsCount = 16;
+    int32 EditedTime = 17;
+    int32 CreatedTime = 18;
+}
+message PB_PostCount {
+    int64 PostId = 1;
+    int32 CommentsCount = 2;
+    int32 LikesCount = 3;
+    int64 ViewsCount = 4;
+    int32 ReSharedCount = 5;
+    int32 ChatSharedCount = 6;
+}
+message PB_PostDeleted {
+    int64 PostId = 1;
+    int32 UserId = 2;
+}
+message PB_PostKeys {
+    int32 Id = 1;
+    string PostKeyStr = 2;
+    int32 Used = 3;
+    int32 RandShard = 4;
+}
+message PB_PostLink {
+    int64 LinkId = 1;
+    string LinkUrl = 2;
+}
+message PB_PostMedia {
+    int64 MediaId = 1;
+    int32 UserId = 2;
+    int64 PostId = 3;
+    int32 AlbumId = 4;
+    int32 MediaTypeEnum = 5;
+    int32 Width = 6;
+    int32 Height = 7;
+    int32 Size = 8;
+    int32 Duration = 9;
+    string Extension = 10;
+    string Md5Hash = 11;
+    string Color = 12;
+    int32 CreatedTime = 13;
+    int32 ViewCount = 14;
+    string Extra = 15;
+}
+message PB_PostPromoted {
+    int32 PromoteId = 1;
+    int64 PostId = 2;
+    int32 ByUserId = 3;
+    int32 PostUserId = 4;
+    string BazzarUuid = 5;
+    string Package = 6;
+    int32 EndTime = 7;
+    int32 CreatedTime = 8;
+}
+message PB_PostReshared {
+    int64 ResharedId = 1;
+    int64 PostId = 2;
+    int32 ByUserId = 3;
+    int32 PostUserId = 4;
+    int32 CreatedTime = 5;
+}
+message PB_ProfileAll {
+    int64 Id = 1;
+    int32 UserId = 2;
+    int64 PostId = 3;
+    int32 IsReShared = 4;
+}
+message PB_ProfileMedia {
+    int64 Id = 1;
+    int32 UserId = 2;
+    int64 PostId = 3;
+    int32 PostType = 4;
+}
+message PB_ProfileMentioned {
+    int64 Id = 1;
+    int32 ForUserId = 2;
+    int64 PostId = 3;
+    int32 PostUserId = 4;
+    int32 PostType = 5;
+    int32 CreatedTime = 6;
+}
+message PB_Session {
+    int64 Id = 1;
+    string SessionUuid = 2;
+    int32 UserId = 3;
+    string LastIpAddress = 4;
+    int32 AppVersion = 5;
+    int32 ActiveTime = 6;
+    int32 CreatedTime = 7;
+}
+message PB_SettingNotifications {
+    int32 UserId = 1;
+    int32 SocialLedOn = 2;
+    string SocialLedColor = 3;
+    int32 ReqestToFollowYou = 4;
+    int32 FollowedYou = 5;
+    int32 AccptedYourFollowRequest = 6;
+    int32 YourPostLiked = 7;
+    int32 YourPostCommented = 8;
+    int32 MenthenedYouInPost = 9;
+    int32 MenthenedYouInComment = 10;
+    int32 YourContactsJoined = 11;
+    int32 DirectMessage = 12;
+    int32 DirectAlert = 13;
+    int32 DirectPerview = 14;
+    int32 DirectLedOn = 15;
+    int32 DirectLedColor = 16;
+    int32 DirectVibrate = 17;
+    int32 DirectPopup = 18;
+    int32 DirectSound = 19;
+    int32 DirectPriority = 20;
+}
+message PB_Sms {
+    int32 Id = 1;
+    string Hash = 2;
+    string AppUuid = 3;
+    string ClientPhone = 4;
+    int32 GenratedCode = 5;
+    string SmsSenderNumber = 6;
+    string SmsSendStatues = 7;
+    string SmsHttpBody = 8;
+    string Err = 9;
+    string Carrier = 10;
+    bytes Country = 11;
+    int32 IsValidPhone = 12;
+    int32 IsConfirmed = 13;
+    int32 IsLogin = 14;
+    int32 IsRegister = 15;
+    int32 RetriedCount = 16;
+    int32 TTL = 17;
+}
+message PB_Tag {
+    int64 TagId = 1;
+    string Name = 2;
+    int32 Count = 3;
+    int32 TagStatusEnum = 4;
+    int32 IsBlocked = 5;
+    int32 GroupId = 6;
+    int32 CreatedTime = 7;
+}
+message PB_TagPost {
+    int64 Id = 1;
+    int32 TagId = 2;
+    int32 PostId = 3;
+    int32 PostType = 4;
+    int32 CreatedTime = 5;
+}
+message PB_TriggerLog {
+    int64 Id = 1;
+    string ModelName = 2;
+    string ChangeType = 3;
+    int64 TargetId = 4;
+    string TargetStr = 5;
+    int32 CreatedSe = 6;
+}
+message PB_User {
+    int32 UserId = 1;
+    string UserName = 2;
+    string UserNameLower = 3;
+    string FirstName = 4;
+    string LastName = 5;
+    int32 IsVerified = 6;
+    int64 AvatarId = 7;
+    int32 AccessHash = 8;
+    int32 ProfilePrivacy = 9;
+    int32 OnlinePrivacy = 10;
+    int32 CallPrivacy = 11;
+    int32 AddToGroupPrivacy = 12;
+    int32 SeenMessagePrivacy = 13;
+    string Phone = 14;
+    string Email = 15;
+    string About = 16;
+    string PasswordHash = 17;
+    string PasswordSalt = 18;
+    int32 PostSeq = 19;
+    int32 FollowersCount = 20;
+    int32 FollowingCount = 21;
+    int32 PostsCount = 22;
+    int32 MediaCount = 23;
+    int32 PhotoCount = 24;
+    int32 VideoCount = 25;
+    int32 GifCount = 26;
+    int32 AudioCount = 27;
+    int32 VoiceCount = 28;
+    int32 FileCount = 29;
+    int32 LinkCount = 30;
+    int32 BoardCount = 31;
+    int32 PinedCount = 32;
+    int32 LikesCount = 33;
+    int32 ResharedCount = 34;
+    int32 LastPostTime = 35;
+    int32 CreatedTime = 36;
+    int32 VersionTime = 37;
+    int32 IsDeleted = 38;
+    int32 IsBanned = 39;
+}
+message PB_UserRelation {
+    int64 RelNanoId = 1;
+    int32 UserId = 2;
+    int32 PeerUserId = 3;
+    int32 Follwing = 4;
+    int32 Followed = 5;
+    int32 InContacts = 6;
+    int32 MutualContact = 7;
+    int32 IsFavorite = 8;
+    int32 Notify = 9;
+}
+message PB_Chat {
+    int64 ChatId = 1;
+    string ChatKey = 2;
+    string RoomKey = 3;
+    int32 RoomType = 4;
+    int32 UserId = 5;
+    int32 PeerUserId = 6;
+    int64 GroupId = 7;
+    int64 HashTagId = 8;
+    string Title = 9;
+    int64 PinTimeMs = 10;
+    int64 FromMsgId = 11;
+    int32 UnseenCount = 12;
+    int32 Seq = 13;
+    int64 LastMsgId = 14;
+    int32 LastMyMsgStatus = 15;
+    int32 MyLastSeenSeq = 16;
+    int64 MyLastSeenMsgId = 17;
+    int64 PeerLastSeenMsgId = 18;
+    int32 MyLastDeliveredSeq = 19;
+    int64 MyLastDeliveredMsgId = 20;
+    int64 PeerLastDeliveredMsgId = 21;
+    int32 IsActive = 22;
+    int32 IsLeft = 23;
+    int32 IsCreator = 24;
+    int32 IsKicked = 25;
+    int32 IsAdmin = 26;
+    int32 IsDeactivated = 27;
+    int32 IsMuted = 28;
+    int32 MuteUntil = 29;
+    int64 VersionTimeMs = 30;
+    int32 VersionSeq = 31;
+    int32 OrderTime = 32;
+    int32 CreatedTime = 33;
+    string DraftText = 34;
+    int64 DratReplyToMsgId = 35;
+}
+message PB_ChatDeleted {
+    int64 ChatId = 1;
+    string RoomKey = 2;
+}
+message PB_ChatLastMessage {
+    string ChatIdGroupId = 1;
+    bytes LastMsgPb = 2;
+}
+message PB_ChatUserVersion {
+    int32 UserId = 1;
+    int64 ChatId = 2;
+    int32 VersionTimeNano = 3;
+}
+message PB_Group {
+    int64 GroupId = 1;
+    string GroupKey = 2;
+    string GroupName = 3;
+    string UserName = 4;
+    int32 IsSuperGroup = 5;
+    int64 HashTagId = 6;
+    int32 CreatorUserId = 7;
+    int32 GroupPrivacy = 8;
+    int32 HistoryViewAble = 9;
+    int64 Seq = 10;
+    int64 LastMsgId = 11;
+    int64 PinedMsgId = 12;
+    int64 AvatarRefId = 13;
+    int32 AvatarCount = 14;
+    string About = 15;
+    string InviteLinkHash = 16;
+    int32 MembersCount = 17;
+    int32 AdminsCount = 18;
+    int32 ModeratorCounts = 19;
+    int32 SortTime = 20;
+    int32 CreatedTime = 21;
+    int32 IsMute = 22;
+    int32 IsDeleted = 23;
+    int32 IsBanned = 24;
+}
+message PB_GroupMember {
+    int64 OrderId = 1;
+    int64 GroupId = 2;
+    int32 UserId = 3;
+    int32 ByUserId = 4;
+    int32 GroupRole = 5;
+    int32 CreatedTime = 6;
+}
+message PB_GroupOrderdUser {
+    int64 OrderId = 1;
+    int64 GroupId = 2;
+    int32 UserId = 3;
+}
+message PB_GroupPinedMsg {
+    int64 MsgId = 1;
+    bytes MsgPb = 2;
+}
+message PB_FileMsg {
+    int64 Id = 1;
+    int32 AccessHash = 2;
+    int32 FileType = 3;
+    int32 Width = 4;
+    int32 Height = 5;
+    string Extension = 6;
+    int32 UserId = 7;
+    bytes DataThumb = 8;
+    bytes Data = 9;
+}
+message PB_FilePost {
+    int64 Id = 1;
+    int32 AccessHash = 2;
+    int32 FileType = 3;
+    int32 Width = 4;
+    int32 Height = 5;
+    string Extension = 6;
+    int32 UserId = 7;
+    bytes DataThumb = 8;
+    bytes Data = 9;
+}
+message PB_ActionFanout {
+    int64 OrderId = 1;
+    int32 ForUserId = 2;
+    int64 ActionId = 3;
+    int32 ActorUserId = 4;
+}
+message PB_HomeFanout {
+    int64 OrderId = 1;
+    int64 ForUserId = 2;
+    int64 PostId = 3;
+    int64 PostUserId = 4;
+    int64 ResharedId = 5;
+}
+message PB_SuggestedTopPosts {
+    int64 Id = 1;
+    int64 PostId = 2;
+}
+message PB_SuggestedUser {
+    int32 Id = 1;
+    int32 UserId = 2;
+    int32 TargetId = 3;
+    float Weight = 4;
+    int32 CreatedTime = 5;
+}
+message PB_PushChat {
+    int64 PushId = 1;
+    int32 ToUserId = 2;
+    int32 PushTypeId = 3;
+    string RoomKey = 4;
+    string ChatKey = 5;
+    int32 Seq = 6;
+    int32 UnseenCount = 7;
+    int64 FromHighMessageId = 8;
+    int64 ToLowMessageId = 9;
+    int64 MessageId = 10;
+    int64 MessageFileId = 11;
+    bytes MessagePb = 12;
+    string MessageJson = 13;
+    int32 CreatedTime = 14;
+}
+message PB_HTTPRPCLog {
+    int32 Id = 1;
+    string Time = 2;
+    string MethodFull = 3;
+    string MethodParent = 4;
+    int32 UserId = 5;
+    string SessionId = 6;
+    int32 StatusCode = 7;
+    int32 InputSize = 8;
+    int32 OutputSize = 9;
+    string ReqestJson = 10;
+    string ResponseJson = 11;
+    string ReqestParamJson = 12;
+    string ResponseMsgJson = 13;
+}
+message PB_MetricLog {
+    int32 Id = 1;
+    int32 InstanceId = 2;
+    string StartFrom = 3;
+    string EndTo = 4;
+    int32 StartTime = 5;
+    string Duration = 6;
+    string MetericsJson = 7;
+}
+message PB_XfileServiceInfoLog {
+    int64 Id = 1;
+    int32 InstanceId = 2;
+    string Url = 3;
+    string CreatedTime = 4;
+}
+message PB_XfileServiceMetricLog {
+    int64 Id = 1;
+    int32 InstanceId = 2;
+    string MetricJson = 3;
+}
+message PB_XfileServiceRequestLog {
+    int64 Id = 1;
+    int32 LocalSeq = 2;
+    int32 InstanceId = 3;
+    string Url = 4;
+    int32 HttpCode = 5;
+    string CreatedTime = 6;
+}
+message PB_InvalidateCache {
+    int64 OrderId = 1;
+    string CacheKey = 2;
+}
