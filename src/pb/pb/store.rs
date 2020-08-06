@@ -1,4 +1,4 @@
-// Automatically generated rust module for 'store.proto' file
+// Automatically generated rust module for 'store_v0.proto' file
 
 #![allow(non_snake_case)]
 #![allow(non_upper_case_globals)]
