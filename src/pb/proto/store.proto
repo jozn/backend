@@ -9,52 +9,54 @@ option go_package = "x";
 // cid = common id - seqentaily increase id for user, channels, groups, shops,..
 
 message Message {
+  fixed64 gid = 1;
+  uint32 by_user_cid = 2;
+  uint32 by_channel_cid = 100;
+  uint32 post_type = 3;
+  int64 media_id = 4;
+  int64 file_ref_id = 5;
+  string post_key = 6;
+  string text = 7;
+  string rich_text = 8;
+//  uint32 media_count = 9;
+  uint32 shared_to = 10;
+  uint32 via = 12;
+  uint32 seq = 13;
+  uint32 edited_time = 17;
+  uint32 created_time = 18;
+
+  MessageDeliveryStatues delivery_status = 105;
+  uint32 delivery_time = 106;
+
+  MessageCount counts = 101;
+  MessageSetting setting = 102;
+  repeated FileMsg files = 103;
+
+  // add location, log, payment, proudcut, forward,
+  // reply, pre msg, rich media
+}
+
+message MessageCount {
+  fixed64 post_gid = 1;
+  uint32 comments_count = 2;
+  uint32 likes_count = 3;
+  int64 views_count = 4;
+  uint32 re_shared_count = 5;
+  uint32 chat_shared_count = 6;
+}
+
+message MessageSetting {
+  uint32 disable_comment = 11;
 
 }
 
-enum ChannelType {
-  CHANNEL_UNKNOWN = 0;
-  CHANNEL_PRIMARY = 1;
-  CHANNEL_NORMAL = 2;
-  CHANNEL_SAVES = 3;
-  CHANNEL_STORE = 4;
-}
-
-enum ChannelAccessibility {
-  CHANNEL_UNKNOWN_AB = 0;
-  CHANNEL_OPEN = 1;
-  CHANNEL_PRIVATE_LINK = 2;
-  CHANNEL_CREATOR = 3;
-}
-
-message ChannelPrivacySetting {
-  uint32 online_privacy = 10;
-  uint32 call_privacy = 11;
-  uint32 add_to_group_privacy = 12;
-  uint32 seen_message_privacy = 13;
-}
-
-message ChannelNotificationSetting {
-  uint32 user_cid = 1;
-  bool social_led_on = 2;
-  string social_led_color = 3;
-  bool request_to_follow_you = 4;
-  bool followed_channel = 5;
-  bool accepted_channel_follow_request = 6;
-  bool channel_message_liked = 7;
-  bool channel_message_commented = 8;
-  bool mentioned_channel_in_message = 9;
-  bool mentioned_channel_in_comment = 10;
-  bool contacts_joined = 11;
-  bool direct_message = 12;
-  bool direct_alert = 13;
-  bool direct_preview = 14;
-  bool direct_led_on = 15;
-  bool direct_led_color = 16;
-  bool direct_vibrate = 17;
-  bool direct_popup = 18;
-  bool direct_sound = 19;
-  bool direct_priority = 20;
+enum MessageDeliveryStatues {
+  FAILED = 0;
+  SENDING = 1;
+  SENT = 2;
+  DELIVERED = 3;
+  SEEN = 4;
+  LISTENED = 5;
 }
 
 message Channel {
@@ -77,12 +79,60 @@ message Channel {
   uint32 is_deleted = 38;
   uint32 is_banned = 39;
 
-  ChannelAccessibility accessibility = 9;
+  ChannelNotificationSetting notification_setting = 90;
+  ChannelPrivacy privacy = 9;
   ChannelType channel_type = 42;
   ChannelCounts counts = 41;
   Message last_message = 25;
   Message pinned_message = 26;
   Message avatar = 100;
+
+  //  repeated Chat chats = 103;
+  //  repeated Contact contacts= 103;
+}
+
+enum ChannelType {
+  CHANNEL_UNKNOWN = 0;
+  CHANNEL_PRIMARY = 1;
+  CHANNEL_NORMAL = 2;
+  CHANNEL_SAVES = 3;
+  CHANNEL_STORE = 4;
+}
+
+enum ChannelPrivacy {
+  CHANNEL_UNKNOWN_AB = 0;
+  CHANNEL_OPEN = 1;
+  CHANNEL_PRIVATE_LINK = 2;
+  CHANNEL_CREATOR = 3; // For save
+}
+
+message ChannelPrivacySetting {
+  uint32 online_privacy = 10;
+  uint32 call_privacy = 11;
+  uint32 add_to_group_privacy = 12;
+  uint32 seen_message_privacy = 13;
+}
+
+message ChannelNotificationSetting {
+  bool social_led_on = 2;
+  string social_led_color = 3;
+  bool request_to_follow_you = 4;
+  bool followed_channel = 5;
+  bool accepted_channel_follow_request = 6;
+  bool channel_message_liked = 7;
+  bool channel_message_commented = 8;
+  bool mentioned_channel_in_message = 9;
+  bool mentioned_channel_in_comment = 10;
+  bool contacts_joined = 11;
+  bool direct_message = 12;
+  bool direct_alert = 13;
+  bool direct_preview = 14;
+  bool direct_led_on = 15;
+  bool direct_led_color = 16;
+  bool direct_vibrate = 17;
+  bool direct_popup = 18;
+  bool direct_sound = 19;
+  bool direct_priority = 20;
 }
 
 message ChannelCounts {
@@ -115,7 +165,6 @@ enum Cast {
   TAG = 7;
 }
 
-//
 message Action {
   fixed64 gid = 1;
   uint32 actor_user_cid = 2;
@@ -179,36 +228,6 @@ message Contact {
   string last_name = 6;
 }
 
-message Post {
-  fixed64 gid = 1;
-  uint32 user_cid = 2;
-  uint32 post_type = 3;
-  int64 media_id = 4;
-  int64 file_ref_id = 5;
-  string post_key = 6;
-  string text = 7;
-  string rich_text = 8;
-  uint32 media_count = 9;
-  uint32 shared_to = 10;
-  uint32 disable_comment = 11;
-  uint32 via = 12;
-  uint32 seq = 13;
-  uint32 comments_count = 14;
-  uint32 likes_count = 15;
-  uint32 views_count = 16;
-  uint32 edited_time = 17;
-  uint32 created_time = 18;
-}
-
-message PostCount {
-  fixed64 post_gid = 1;
-  uint32 comments_count = 2;
-  uint32 likes_count = 3;
-  int64 views_count = 4;
-  uint32 re_shared_count = 5;
-  uint32 chat_shared_count = 6;
-}
-
 enum SessionPlatform {
   UNKNOWN_PLATFORM = 0;
   ANDROID = 1;
@@ -231,7 +250,6 @@ message Session {
   uint32 active_time = 6;
   uint32 created_time = 7;
 }
-
 
 message Sms {
   fixed64 gid = 1;
@@ -265,29 +283,18 @@ message Tag {
 
 message User {
   uint32 cid = 1;
-//  string user_name = 2;
-//  string user_name_lower = 3;
-//  string first_name = 4;
-//  string last_name = 5;
-//  uint32 is_verified = 6;
-//  int64 avatar_id = 7;
-//  uint32 access_hash = 8;
-//  uint32 profile_privacy = 9;
-//  uint32 online_privacy = 10;
-//  uint32 call_privacy = 11;
-//  uint32 add_to_group_privacy = 12;
-//  uint32 seen_message_privacy = 13;
   string phone = 14;
   string email = 15;
-//  string about = 16;
   string password_hash = 17;
   string password_salt = 18;
-//  uint32 post_seq = 19;
-//  uint32 last_post_time = 35;
   uint32 created_time = 36;
   uint32 version_time = 37;
   uint32 is_deleted = 38;
   uint32 is_banned = 39;
+
+  uint32 primary_channel_changed_time = 50;
+
+  Channel UserCounts = 80;
 
   Channel primary_channel = 100;
   repeated Channel channels = 101;
@@ -299,7 +306,6 @@ message User {
 
 message UserCounts {
   uint32 created_channels = 1;
-
 }
 
 message UserRelation {
@@ -332,22 +338,16 @@ message ChatCustomNotification {
 
 message Chat {
   fixed64 gid = 1;
-//  string chat_key = 2;
-//  string room_key = 3;
-//  uint32 room_type = 4;
   uint32 user_cid = 5;
   uint32 channel_cid = 40;
   uint32 peer_user_cid = 6;
   uint32 peer_channel_cid = 41;
   uint32 group_cid = 7;
-//  int64 hash_tag_id = 8;
   string custom_title = 9;
   fixed64 pin_time_ms = 10;
   int64 from_msg_gid = 11;
   uint32 unseen_count = 12;
   uint32 seq = 13;
-//  int64 last_msg_id = 14;
-//  uint32 last_my_msg_status = 15;
   uint32 my_last_seen_seq = 16;
   int64 my_last_seen_msg_id = 17;
   int64 peer_last_seen_msg_id = 18;
@@ -355,16 +355,8 @@ message Chat {
   int64 my_last_delivered_msg_id = 20;
   int64 peer_last_delivered_msg_id = 21;
   bool is_active = 22;
-//  bool is_left = 23;
-//  bool is_creator = 24;
-//  bool is_kicked = 25;
-//  bool is_admin = 26;
-//  bool is_deactivated = 27;
-//  bool is_muted = 28;
   uint32 mute_until = 29;
   int64 sort_time_ms = 30;
-//  uint32 version_seq = 31;
-//  uint32 order_time = 32;
   uint32 created_time = 33;
 
   fixed64 sort_time = 45;
@@ -381,9 +373,9 @@ message Chat {
 }
 
 enum GroupPrivacy {
-  UNKNOWN_GP = 0;
-  OPEN = 1; // via username
-  PRIVATE_LINK = 2;
+  GROUP_UNKNOWN_GP = 0;
+  GROUP_OPEN = 1; // via username
+  GROUP_PRIVATE_LINK = 2;
 }
 
 message Group {
@@ -412,10 +404,10 @@ message Group {
 }
 
 enum GroupMemberRole {
-  Unknown = 0;
-  CREATOR = 1;
-  NORMAL_USER = 2;
-  MODERATOR = 3;
+  MEMBER_Unknown = 0;
+  MEMBER_CREATOR = 1;
+  MEMBER_MODERATOR = 3;
+  MEMBER_NORMAL_USER = 2;
 }
 
 message GroupMember {
@@ -439,4 +431,42 @@ message FileMsg {
   uint32 user_cid = 7;
   bytes data_thumb = 8;
   bytes data = 9;
+}
+
+
+//// archives
+
+message Post {
+  fixed64 gid = 1;
+  uint32 user_cid = 2;
+  uint32 post_type = 3;
+  int64 media_id = 4;
+  int64 file_ref_id = 5;
+  string post_key = 6;
+  string text = 7;
+  string rich_text = 8;
+  uint32 media_count = 9;
+  uint32 shared_to = 10;
+  uint32 disable_comment = 11;
+  uint32 via = 12;
+  uint32 seq = 13;
+  uint32 comments_count = 14;
+  uint32 likes_count = 15;
+  uint32 views_count = 16;
+  uint32 edited_time = 17;
+  uint32 created_time = 18;
+}
+
+message PostCount {
+  fixed64 post_gid = 1;
+  uint32 comments_count = 2;
+  uint32 likes_count = 3;
+  int64 views_count = 4;
+  uint32 re_shared_count = 5;
+  uint32 chat_shared_count = 6;
+}
+
+message MessageDelivery {
+  MessageDeliveryStatues statues = 11;
+  uint32 seen_time = 2;
 }
