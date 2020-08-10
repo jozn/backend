@@ -16,17 +16,28 @@ mod pb;
 // mod pbs;
 
 fn play(){
-
-    let _m = pb::store::Comment{
-
+    let _m = pb::store::User{
+        cid: 0,
+        phone: Default::default(),
+        email: Default::default(),
+        password_hash: Default::default(),
+        password_salt: Default::default(),
+        created_time: 0,
+        version_time: 0,
+        is_deleted: 0,
+        is_banned: 0,
+        primary_channel_changed_time: 0,
+        UserCounts: None,
+        primary_channel: None,
+        channels: vec![],
+        sessions: vec![]
     };
-
 }
-
 
 fn to_bin(s: String) -> Vec<u8> {
     s.as_bytes().to_owned()
 }
+
 async fn server_http(req: Request<Body>) -> Result<Response<Body>, Infallible> {
     let res= match req.uri().path() {
         "/echo" => (200, to_bin(echo().await) ),
@@ -78,7 +89,7 @@ async fn server_http_rpc(req: Request<Body>) -> Vec<u8> {
 
     if let Ok(act) = act {
         println!("act {:?}", act);
-        let pb_bts = server_rpc(act).unwrap_or("vec![]".as_bytes().to_owned());
+        let pb_bts = server_rpc_old(act).unwrap_or("vec![]".as_bytes().to_owned());
         return  pb_bts
         //return bincode::serialize(&pb_bts).unwrap()
     }
@@ -86,7 +97,7 @@ async fn server_http_rpc(req: Request<Body>) -> Vec<u8> {
     "error in rpc ".as_bytes().to_owned()
 }
 
-fn server_rpc(act :Act) -> Result<Vec<u8>,GenErr> {
+fn server_rpc_old(act :Act) -> Result<Vec<u8>,GenErr> {
     let up = UserParam{};
     match act.method {
         45 => {
