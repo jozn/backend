@@ -1,14 +1,15 @@
-pub mod pb;
+pub mod ps;
 
 /// This module is a convienet mod for exporting all protos in one place; so they can be more easily
 /// accessible while still respecting diffrent proto files and sub-modules.
 
 /// gen in ./proto dir: pb-rs --dont_use_cow --custom_struct_derive "Serialize, Deserialize" -d ../pb *.proto
 
-pub use pb::*;
+pub use ps::*;
+// pub use pb::*;
 
-pub use pb::global::*;
-pub use pb::rpc_general::*;
+// pub use pb::global::*;
+// pub use pb::rpc_general::*;
 
 // legacy ones
 /*pub use pb::pb_changes::*;

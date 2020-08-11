@@ -1,4 +1,6 @@
 syntax = "proto3";
+
+package pbs;
 option java_package = "ir.ms.pb";
 option java_multiple_files = true;
 option optimize_for = LITE_RUNTIME; //CODE_SIZE;
@@ -32,4 +34,11 @@ message PB_Notify {
   int64 murmur64_hash = 8;
   int32 seen_status = 9;
   int32 created_time = 10;
+}
+
+message Invoke {
+  uint32 method = 1;
+  uint64 action_id = 2;
+  bool is_response = 3;
+  bytes rpc_data = 4;
 }

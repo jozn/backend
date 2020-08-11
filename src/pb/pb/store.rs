@@ -9,7 +9,6 @@
 #![cfg_attr(rustfmt, rustfmt_skip)]
 
 
-use std::borrow::Cow;
 use quick_protobuf::{MessageRead, MessageWrite, BytesReader, Writer, WriterBackend, Result};
 use quick_protobuf::sizeofs::*;
 use super::*;
@@ -473,16 +472,16 @@ impl<'a> From<&'a str> for GroupMemberRole {
 }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct Message<'a> {
+pub struct Message {
     pub gid: u64,
     pub by_user_cid: u32,
     pub by_channel_cid: u32,
     pub post_type: u32,
     pub media_id: i64,
     pub file_ref_id: i64,
-    pub post_key: Cow<'a, str>,
-    pub text: Cow<'a, str>,
-    pub rich_text: Cow<'a, str>,
+    pub post_key: String,
+    pub text: String,
+    pub rich_text: String,
     pub shared_to: u32,
     pub via: u32,
     pub seq: u32,
@@ -492,14 +491,14 @@ pub struct Message<'a> {
     pub delivery_time: u32,
     pub previous_message_id: u64,
     pub deleted: bool,
-    pub forward_from: Option<Box<Message<'a>>>,
-    pub reply_to: Option<Box<Message<'a>>>,
+    pub forward_from: Option<Box<Message>>,
+    pub reply_to: Option<Box<Message>>,
     pub counts: Option<MessageCount>,
     pub setting: Option<MessageSetting>,
-    pub files: Vec<FileMsg<'a>>,
+    pub files: Vec<FileMsg>,
 }
 
-impl<'a> MessageRead<'a> for Message<'a> {
+impl<'a> MessageRead<'a> for Message {
     fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
         let mut msg = Self::default();
         while !r.is_eof() {
@@ -510,9 +509,9 @@ impl<'a> MessageRead<'a> for Message<'a> {
                 Ok(24) => msg.post_type = r.read_uint32(bytes)?,
                 Ok(32) => msg.media_id = r.read_int64(bytes)?,
                 Ok(40) => msg.file_ref_id = r.read_int64(bytes)?,
-                Ok(50) => msg.post_key = r.read_string(bytes).map(Cow::Borrowed)?,
-                Ok(58) => msg.text = r.read_string(bytes).map(Cow::Borrowed)?,
-                Ok(66) => msg.rich_text = r.read_string(bytes).map(Cow::Borrowed)?,
+                Ok(50) => msg.post_key = r.read_string(bytes)?.to_owned(),
+                Ok(58) => msg.text = r.read_string(bytes)?.to_owned(),
+                Ok(66) => msg.rich_text = r.read_string(bytes)?.to_owned(),
                 Ok(80) => msg.shared_to = r.read_uint32(bytes)?,
                 Ok(96) => msg.via = r.read_uint32(bytes)?,
                 Ok(104) => msg.seq = r.read_uint32(bytes)?,
@@ -535,7 +534,7 @@ impl<'a> MessageRead<'a> for Message<'a> {
     }
 }
 
-impl<'a> MessageWrite for Message<'a> {
+impl MessageWrite for Message {
     fn get_size(&self) -> usize {
         0
         + if self.gid == 0u64 { 0 } else { 1 + 8 }
@@ -544,9 +543,9 @@ impl<'a> MessageWrite for Message<'a> {
         + if self.post_type == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.post_type) as u64) }
         + if self.media_id == 0i64 { 0 } else { 1 + sizeof_varint(*(&self.media_id) as u64) }
         + if self.file_ref_id == 0i64 { 0 } else { 1 + sizeof_varint(*(&self.file_ref_id) as u64) }
-        + if self.post_key == "" { 0 } else { 1 + sizeof_len((&self.post_key).len()) }
-        + if self.text == "" { 0 } else { 1 + sizeof_len((&self.text).len()) }
-        + if self.rich_text == "" { 0 } else { 1 + sizeof_len((&self.rich_text).len()) }
+        + if self.post_key == String::default() { 0 } else { 1 + sizeof_len((&self.post_key).len()) }
+        + if self.text == String::default() { 0 } else { 1 + sizeof_len((&self.text).len()) }
+        + if self.rich_text == String::default() { 0 } else { 1 + sizeof_len((&self.rich_text).len()) }
         + if self.shared_to == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.shared_to) as u64) }
         + if self.via == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.via) as u64) }
         + if self.seq == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.seq) as u64) }
@@ -570,9 +569,9 @@ impl<'a> MessageWrite for Message<'a> {
         if self.post_type != 0u32 { w.write_with_tag(24, |w| w.write_uint32(*&self.post_type))?; }
         if self.media_id != 0i64 { w.write_with_tag(32, |w| w.write_int64(*&self.media_id))?; }
         if self.file_ref_id != 0i64 { w.write_with_tag(40, |w| w.write_int64(*&self.file_ref_id))?; }
-        if self.post_key != "" { w.write_with_tag(50, |w| w.write_string(&**&self.post_key))?; }
-        if self.text != "" { w.write_with_tag(58, |w| w.write_string(&**&self.text))?; }
-        if self.rich_text != "" { w.write_with_tag(66, |w| w.write_string(&**&self.rich_text))?; }
+        if self.post_key != String::default() { w.write_with_tag(50, |w| w.write_string(&**&self.post_key))?; }
+        if self.text != String::default() { w.write_with_tag(58, |w| w.write_string(&**&self.text))?; }
+        if self.rich_text != String::default() { w.write_with_tag(66, |w| w.write_string(&**&self.rich_text))?; }
         if self.shared_to != 0u32 { w.write_with_tag(80, |w| w.write_uint32(*&self.shared_to))?; }
         if self.via != 0u32 { w.write_with_tag(96, |w| w.write_uint32(*&self.via))?; }
         if self.seq != 0u32 { w.write_with_tag(104, |w| w.write_uint32(*&self.seq))?; }
@@ -674,16 +673,16 @@ impl MessageWrite for MessageSetting {
 }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct MessageLog<'a> {
+pub struct MessageLog {
     pub log_type: MessageLogType,
     pub by_user_cid: u32,
     pub by_channel_cid: u32,
     pub target_user_cid: u32,
     pub target_channel_cid: u32,
-    pub target_channel_view: Option<Channel<'a>>,
+    pub target_channel_view: Option<Channel>,
 }
 
-impl<'a> MessageRead<'a> for MessageLog<'a> {
+impl<'a> MessageRead<'a> for MessageLog {
     fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
         let mut msg = Self::default();
         while !r.is_eof() {
@@ -702,7 +701,7 @@ impl<'a> MessageRead<'a> for MessageLog<'a> {
     }
 }
 
-impl<'a> MessageWrite for MessageLog<'a> {
+impl MessageWrite for MessageLog {
     fn get_size(&self) -> usize {
         0
         + if self.log_type == store::MessageLogType::USER_JOINED { 0 } else { 1 + sizeof_varint(*(&self.log_type) as u64) }
@@ -725,45 +724,45 @@ impl<'a> MessageWrite for MessageLog<'a> {
 }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct Channel<'a> {
+pub struct Channel {
     pub cid: u32,
-    pub user_name: Cow<'a, str>,
-    pub first_name: Cow<'a, str>,
-    pub last_name: Cow<'a, str>,
+    pub user_name: String,
+    pub first_name: String,
+    pub last_name: String,
     pub creator_user_cid: u32,
     pub is_verified: u32,
     pub avatar_count: i64,
-    pub about: Cow<'a, str>,
-    pub invite_link_hash: Cow<'a, str>,
+    pub about: String,
+    pub invite_link_hash: String,
     pub post_seq: u32,
     pub sort_time: u64,
     pub sync_time: u64,
     pub created_time: u32,
     pub is_deleted: u32,
     pub is_banned: u32,
-    pub notification_setting: Option<ChannelNotificationSetting<'a>>,
+    pub notification_setting: Option<ChannelNotificationSetting>,
     pub privacy: ChannelPrivacy,
     pub channel_type: ChannelType,
     pub counts: Option<ChannelCounts>,
-    pub last_message: Option<Message<'a>>,
-    pub pinned_message: Option<Message<'a>>,
-    pub avatar: Option<Message<'a>>,
+    pub last_message: Option<Message>,
+    pub pinned_message: Option<Message>,
+    pub avatar: Option<Message>,
 }
 
-impl<'a> MessageRead<'a> for Channel<'a> {
+impl<'a> MessageRead<'a> for Channel {
     fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
         let mut msg = Self::default();
         while !r.is_eof() {
             match r.next_tag(bytes) {
                 Ok(8) => msg.cid = r.read_uint32(bytes)?,
-                Ok(18) => msg.user_name = r.read_string(bytes).map(Cow::Borrowed)?,
-                Ok(34) => msg.first_name = r.read_string(bytes).map(Cow::Borrowed)?,
-                Ok(42) => msg.last_name = r.read_string(bytes).map(Cow::Borrowed)?,
+                Ok(18) => msg.user_name = r.read_string(bytes)?.to_owned(),
+                Ok(34) => msg.first_name = r.read_string(bytes)?.to_owned(),
+                Ok(42) => msg.last_name = r.read_string(bytes)?.to_owned(),
                 Ok(56) => msg.creator_user_cid = r.read_uint32(bytes)?,
                 Ok(48) => msg.is_verified = r.read_uint32(bytes)?,
                 Ok(320) => msg.avatar_count = r.read_int64(bytes)?,
-                Ok(130) => msg.about = r.read_string(bytes).map(Cow::Borrowed)?,
-                Ok(138) => msg.invite_link_hash = r.read_string(bytes).map(Cow::Borrowed)?,
+                Ok(130) => msg.about = r.read_string(bytes)?.to_owned(),
+                Ok(138) => msg.invite_link_hash = r.read_string(bytes)?.to_owned(),
                 Ok(152) => msg.post_seq = r.read_uint32(bytes)?,
                 Ok(161) => msg.sort_time = r.read_fixed64(bytes)?,
                 Ok(169) => msg.sync_time = r.read_fixed64(bytes)?,
@@ -785,18 +784,18 @@ impl<'a> MessageRead<'a> for Channel<'a> {
     }
 }
 
-impl<'a> MessageWrite for Channel<'a> {
+impl MessageWrite for Channel {
     fn get_size(&self) -> usize {
         0
         + if self.cid == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.cid) as u64) }
-        + if self.user_name == "" { 0 } else { 1 + sizeof_len((&self.user_name).len()) }
-        + if self.first_name == "" { 0 } else { 1 + sizeof_len((&self.first_name).len()) }
-        + if self.last_name == "" { 0 } else { 1 + sizeof_len((&self.last_name).len()) }
+        + if self.user_name == String::default() { 0 } else { 1 + sizeof_len((&self.user_name).len()) }
+        + if self.first_name == String::default() { 0 } else { 1 + sizeof_len((&self.first_name).len()) }
+        + if self.last_name == String::default() { 0 } else { 1 + sizeof_len((&self.last_name).len()) }
         + if self.creator_user_cid == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.creator_user_cid) as u64) }
         + if self.is_verified == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.is_verified) as u64) }
         + if self.avatar_count == 0i64 { 0 } else { 2 + sizeof_varint(*(&self.avatar_count) as u64) }
-        + if self.about == "" { 0 } else { 2 + sizeof_len((&self.about).len()) }
-        + if self.invite_link_hash == "" { 0 } else { 2 + sizeof_len((&self.invite_link_hash).len()) }
+        + if self.about == String::default() { 0 } else { 2 + sizeof_len((&self.about).len()) }
+        + if self.invite_link_hash == String::default() { 0 } else { 2 + sizeof_len((&self.invite_link_hash).len()) }
         + if self.post_seq == 0u32 { 0 } else { 2 + sizeof_varint(*(&self.post_seq) as u64) }
         + if self.sort_time == 0u64 { 0 } else { 2 + 8 }
         + if self.sync_time == 0u64 { 0 } else { 2 + 8 }
@@ -814,14 +813,14 @@ impl<'a> MessageWrite for Channel<'a> {
 
     fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
         if self.cid != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.cid))?; }
-        if self.user_name != "" { w.write_with_tag(18, |w| w.write_string(&**&self.user_name))?; }
-        if self.first_name != "" { w.write_with_tag(34, |w| w.write_string(&**&self.first_name))?; }
-        if self.last_name != "" { w.write_with_tag(42, |w| w.write_string(&**&self.last_name))?; }
+        if self.user_name != String::default() { w.write_with_tag(18, |w| w.write_string(&**&self.user_name))?; }
+        if self.first_name != String::default() { w.write_with_tag(34, |w| w.write_string(&**&self.first_name))?; }
+        if self.last_name != String::default() { w.write_with_tag(42, |w| w.write_string(&**&self.last_name))?; }
         if self.creator_user_cid != 0u32 { w.write_with_tag(56, |w| w.write_uint32(*&self.creator_user_cid))?; }
         if self.is_verified != 0u32 { w.write_with_tag(48, |w| w.write_uint32(*&self.is_verified))?; }
         if self.avatar_count != 0i64 { w.write_with_tag(320, |w| w.write_int64(*&self.avatar_count))?; }
-        if self.about != "" { w.write_with_tag(130, |w| w.write_string(&**&self.about))?; }
-        if self.invite_link_hash != "" { w.write_with_tag(138, |w| w.write_string(&**&self.invite_link_hash))?; }
+        if self.about != String::default() { w.write_with_tag(130, |w| w.write_string(&**&self.about))?; }
+        if self.invite_link_hash != String::default() { w.write_with_tag(138, |w| w.write_string(&**&self.invite_link_hash))?; }
         if self.post_seq != 0u32 { w.write_with_tag(152, |w| w.write_uint32(*&self.post_seq))?; }
         if self.sort_time != 0u64 { w.write_with_tag(161, |w| w.write_fixed64(*&self.sort_time))?; }
         if self.sync_time != 0u64 { w.write_with_tag(169, |w| w.write_fixed64(*&self.sync_time))?; }
@@ -883,9 +882,9 @@ impl MessageWrite for ChannelPrivacySetting {
 }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelNotificationSetting<'a> {
+pub struct ChannelNotificationSetting {
     pub social_led_on: bool,
-    pub social_led_color: Cow<'a, str>,
+    pub social_led_color: String,
     pub request_to_follow_you: bool,
     pub followed_channel: bool,
     pub accepted_channel_follow_request: bool,
@@ -905,13 +904,13 @@ pub struct ChannelNotificationSetting<'a> {
     pub direct_priority: bool,
 }
 
-impl<'a> MessageRead<'a> for ChannelNotificationSetting<'a> {
+impl<'a> MessageRead<'a> for ChannelNotificationSetting {
     fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
         let mut msg = Self::default();
         while !r.is_eof() {
             match r.next_tag(bytes) {
                 Ok(16) => msg.social_led_on = r.read_bool(bytes)?,
-                Ok(26) => msg.social_led_color = r.read_string(bytes).map(Cow::Borrowed)?,
+                Ok(26) => msg.social_led_color = r.read_string(bytes)?.to_owned(),
                 Ok(32) => msg.request_to_follow_you = r.read_bool(bytes)?,
                 Ok(40) => msg.followed_channel = r.read_bool(bytes)?,
                 Ok(48) => msg.accepted_channel_follow_request = r.read_bool(bytes)?,
@@ -937,11 +936,11 @@ impl<'a> MessageRead<'a> for ChannelNotificationSetting<'a> {
     }
 }
 
-impl<'a> MessageWrite for ChannelNotificationSetting<'a> {
+impl MessageWrite for ChannelNotificationSetting {
     fn get_size(&self) -> usize {
         0
         + if self.social_led_on == false { 0 } else { 1 + sizeof_varint(*(&self.social_led_on) as u64) }
-        + if self.social_led_color == "" { 0 } else { 1 + sizeof_len((&self.social_led_color).len()) }
+        + if self.social_led_color == String::default() { 0 } else { 1 + sizeof_len((&self.social_led_color).len()) }
         + if self.request_to_follow_you == false { 0 } else { 1 + sizeof_varint(*(&self.request_to_follow_you) as u64) }
         + if self.followed_channel == false { 0 } else { 1 + sizeof_varint(*(&self.followed_channel) as u64) }
         + if self.accepted_channel_follow_request == false { 0 } else { 1 + sizeof_varint(*(&self.accepted_channel_follow_request) as u64) }
@@ -963,7 +962,7 @@ impl<'a> MessageWrite for ChannelNotificationSetting<'a> {
 
     fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
         if self.social_led_on != false { w.write_with_tag(16, |w| w.write_bool(*&self.social_led_on))?; }
-        if self.social_led_color != "" { w.write_with_tag(26, |w| w.write_string(&**&self.social_led_color))?; }
+        if self.social_led_color != String::default() { w.write_with_tag(26, |w| w.write_string(&**&self.social_led_color))?; }
         if self.request_to_follow_you != false { w.write_with_tag(32, |w| w.write_bool(*&self.request_to_follow_you))?; }
         if self.followed_channel != false { w.write_with_tag(40, |w| w.write_bool(*&self.followed_channel))?; }
         if self.accepted_channel_follow_request != false { w.write_with_tag(48, |w| w.write_bool(*&self.accepted_channel_follow_request))?; }
@@ -1227,18 +1226,18 @@ impl MessageWrite for Blocked {
 }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct Comment<'a> {
+pub struct Comment {
     pub gid: u64,
     pub channel_cid: u32,
     pub by_cast_cid: u32,
     pub message_gid: u64,
-    pub text: Cow<'a, str>,
+    pub text: String,
     pub likes_count: u32,
     pub edit_time: u32,
     pub created_time: u32,
 }
 
-impl<'a> MessageRead<'a> for Comment<'a> {
+impl<'a> MessageRead<'a> for Comment {
     fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
         let mut msg = Self::default();
         while !r.is_eof() {
@@ -1247,7 +1246,7 @@ impl<'a> MessageRead<'a> for Comment<'a> {
                 Ok(72) => msg.channel_cid = r.read_uint32(bytes)?,
                 Ok(16) => msg.by_cast_cid = r.read_uint32(bytes)?,
                 Ok(25) => msg.message_gid = r.read_fixed64(bytes)?,
-                Ok(34) => msg.text = r.read_string(bytes).map(Cow::Borrowed)?,
+                Ok(34) => msg.text = r.read_string(bytes)?.to_owned(),
                 Ok(40) => msg.likes_count = r.read_uint32(bytes)?,
                 Ok(48) => msg.edit_time = r.read_uint32(bytes)?,
                 Ok(56) => msg.created_time = r.read_uint32(bytes)?,
@@ -1259,14 +1258,14 @@ impl<'a> MessageRead<'a> for Comment<'a> {
     }
 }
 
-impl<'a> MessageWrite for Comment<'a> {
+impl MessageWrite for Comment {
     fn get_size(&self) -> usize {
         0
         + if self.gid == 0u64 { 0 } else { 1 + 8 }
         + if self.channel_cid == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.channel_cid) as u64) }
         + if self.by_cast_cid == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.by_cast_cid) as u64) }
         + if self.message_gid == 0u64 { 0 } else { 1 + 8 }
-        + if self.text == "" { 0 } else { 1 + sizeof_len((&self.text).len()) }
+        + if self.text == String::default() { 0 } else { 1 + sizeof_len((&self.text).len()) }
         + if self.likes_count == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.likes_count) as u64) }
         + if self.edit_time == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.edit_time) as u64) }
         + if self.created_time == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.created_time) as u64) }
@@ -1277,7 +1276,7 @@ impl<'a> MessageWrite for Comment<'a> {
         if self.channel_cid != 0u32 { w.write_with_tag(72, |w| w.write_uint32(*&self.channel_cid))?; }
         if self.by_cast_cid != 0u32 { w.write_with_tag(16, |w| w.write_uint32(*&self.by_cast_cid))?; }
         if self.message_gid != 0u64 { w.write_with_tag(25, |w| w.write_fixed64(*&self.message_gid))?; }
-        if self.text != "" { w.write_with_tag(34, |w| w.write_string(&**&self.text))?; }
+        if self.text != String::default() { w.write_with_tag(34, |w| w.write_string(&**&self.text))?; }
         if self.likes_count != 0u32 { w.write_with_tag(40, |w| w.write_uint32(*&self.likes_count))?; }
         if self.edit_time != 0u32 { w.write_with_tag(48, |w| w.write_uint32(*&self.edit_time))?; }
         if self.created_time != 0u32 { w.write_with_tag(56, |w| w.write_uint32(*&self.created_time))?; }
@@ -1388,19 +1387,19 @@ impl MessageWrite for Reaction {
 }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct Contact<'a> {
+pub struct Contact {
     pub gid: u64,
     pub user_cid: u32,
     pub channel_cid: u32,
     pub client_id: i64,
-    pub phone: Cow<'a, str>,
-    pub first_name: Cow<'a, str>,
-    pub last_name: Cow<'a, str>,
+    pub phone: String,
+    pub first_name: String,
+    pub last_name: String,
     pub target_user_cid: u32,
     pub target_channel_cid: u32,
 }
 
-impl<'a> MessageRead<'a> for Contact<'a> {
+impl<'a> MessageRead<'a> for Contact {
     fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
         let mut msg = Self::default();
         while !r.is_eof() {
@@ -1409,9 +1408,9 @@ impl<'a> MessageRead<'a> for Contact<'a> {
                 Ok(16) => msg.user_cid = r.read_uint32(bytes)?,
                 Ok(80) => msg.channel_cid = r.read_uint32(bytes)?,
                 Ok(24) => msg.client_id = r.read_int64(bytes)?,
-                Ok(34) => msg.phone = r.read_string(bytes).map(Cow::Borrowed)?,
-                Ok(42) => msg.first_name = r.read_string(bytes).map(Cow::Borrowed)?,
-                Ok(50) => msg.last_name = r.read_string(bytes).map(Cow::Borrowed)?,
+                Ok(34) => msg.phone = r.read_string(bytes)?.to_owned(),
+                Ok(42) => msg.first_name = r.read_string(bytes)?.to_owned(),
+                Ok(50) => msg.last_name = r.read_string(bytes)?.to_owned(),
                 Ok(96) => msg.target_user_cid = r.read_uint32(bytes)?,
                 Ok(120) => msg.target_channel_cid = r.read_uint32(bytes)?,
                 Ok(t) => { r.read_unknown(bytes, t)?; }
@@ -1422,16 +1421,16 @@ impl<'a> MessageRead<'a> for Contact<'a> {
     }
 }
 
-impl<'a> MessageWrite for Contact<'a> {
+impl MessageWrite for Contact {
     fn get_size(&self) -> usize {
         0
         + if self.gid == 0u64 { 0 } else { 1 + 8 }
         + if self.user_cid == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.user_cid) as u64) }
         + if self.channel_cid == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.channel_cid) as u64) }
         + if self.client_id == 0i64 { 0 } else { 1 + sizeof_varint(*(&self.client_id) as u64) }
-        + if self.phone == "" { 0 } else { 1 + sizeof_len((&self.phone).len()) }
-        + if self.first_name == "" { 0 } else { 1 + sizeof_len((&self.first_name).len()) }
-        + if self.last_name == "" { 0 } else { 1 + sizeof_len((&self.last_name).len()) }
+        + if self.phone == String::default() { 0 } else { 1 + sizeof_len((&self.phone).len()) }
+        + if self.first_name == String::default() { 0 } else { 1 + sizeof_len((&self.first_name).len()) }
+        + if self.last_name == String::default() { 0 } else { 1 + sizeof_len((&self.last_name).len()) }
         + if self.target_user_cid == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.target_user_cid) as u64) }
         + if self.target_channel_cid == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.target_channel_cid) as u64) }
     }
@@ -1441,9 +1440,9 @@ impl<'a> MessageWrite for Contact<'a> {
         if self.user_cid != 0u32 { w.write_with_tag(16, |w| w.write_uint32(*&self.user_cid))?; }
         if self.channel_cid != 0u32 { w.write_with_tag(80, |w| w.write_uint32(*&self.channel_cid))?; }
         if self.client_id != 0i64 { w.write_with_tag(24, |w| w.write_int64(*&self.client_id))?; }
-        if self.phone != "" { w.write_with_tag(34, |w| w.write_string(&**&self.phone))?; }
-        if self.first_name != "" { w.write_with_tag(42, |w| w.write_string(&**&self.first_name))?; }
-        if self.last_name != "" { w.write_with_tag(50, |w| w.write_string(&**&self.last_name))?; }
+        if self.phone != String::default() { w.write_with_tag(34, |w| w.write_string(&**&self.phone))?; }
+        if self.first_name != String::default() { w.write_with_tag(42, |w| w.write_string(&**&self.first_name))?; }
+        if self.last_name != String::default() { w.write_with_tag(50, |w| w.write_string(&**&self.last_name))?; }
         if self.target_user_cid != 0u32 { w.write_with_tag(96, |w| w.write_uint32(*&self.target_user_cid))?; }
         if self.target_channel_cid != 0u32 { w.write_with_tag(120, |w| w.write_uint32(*&self.target_channel_cid))?; }
         Ok(())
@@ -1451,28 +1450,28 @@ impl<'a> MessageWrite for Contact<'a> {
 }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct Session<'a> {
+pub struct Session {
     pub gid: u64,
-    pub session_uuid: Cow<'a, str>,
+    pub session_uuid: String,
     pub user_cid: u32,
-    pub last_ip_address: Cow<'a, str>,
-    pub user_agent: Cow<'a, str>,
+    pub last_ip_address: String,
+    pub user_agent: String,
     pub platform: SessionPlatform,
     pub app_version: u32,
     pub active_time: u32,
     pub created_time: u32,
 }
 
-impl<'a> MessageRead<'a> for Session<'a> {
+impl<'a> MessageRead<'a> for Session {
     fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
         let mut msg = Self::default();
         while !r.is_eof() {
             match r.next_tag(bytes) {
                 Ok(9) => msg.gid = r.read_fixed64(bytes)?,
-                Ok(18) => msg.session_uuid = r.read_string(bytes).map(Cow::Borrowed)?,
+                Ok(18) => msg.session_uuid = r.read_string(bytes)?.to_owned(),
                 Ok(24) => msg.user_cid = r.read_uint32(bytes)?,
-                Ok(34) => msg.last_ip_address = r.read_string(bytes).map(Cow::Borrowed)?,
-                Ok(66) => msg.user_agent = r.read_string(bytes).map(Cow::Borrowed)?,
+                Ok(34) => msg.last_ip_address = r.read_string(bytes)?.to_owned(),
+                Ok(66) => msg.user_agent = r.read_string(bytes)?.to_owned(),
                 Ok(72) => msg.platform = r.read_enum(bytes)?,
                 Ok(40) => msg.app_version = r.read_uint32(bytes)?,
                 Ok(48) => msg.active_time = r.read_uint32(bytes)?,
@@ -1485,14 +1484,14 @@ impl<'a> MessageRead<'a> for Session<'a> {
     }
 }
 
-impl<'a> MessageWrite for Session<'a> {
+impl MessageWrite for Session {
     fn get_size(&self) -> usize {
         0
         + if self.gid == 0u64 { 0 } else { 1 + 8 }
-        + if self.session_uuid == "" { 0 } else { 1 + sizeof_len((&self.session_uuid).len()) }
+        + if self.session_uuid == String::default() { 0 } else { 1 + sizeof_len((&self.session_uuid).len()) }
         + if self.user_cid == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.user_cid) as u64) }
-        + if self.last_ip_address == "" { 0 } else { 1 + sizeof_len((&self.last_ip_address).len()) }
-        + if self.user_agent == "" { 0 } else { 1 + sizeof_len((&self.user_agent).len()) }
+        + if self.last_ip_address == String::default() { 0 } else { 1 + sizeof_len((&self.last_ip_address).len()) }
+        + if self.user_agent == String::default() { 0 } else { 1 + sizeof_len((&self.user_agent).len()) }
         + if self.platform == store::SessionPlatform::UNKNOWN_PLATFORM { 0 } else { 1 + sizeof_varint(*(&self.platform) as u64) }
         + if self.app_version == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.app_version) as u64) }
         + if self.active_time == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.active_time) as u64) }
@@ -1501,10 +1500,10 @@ impl<'a> MessageWrite for Session<'a> {
 
     fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
         if self.gid != 0u64 { w.write_with_tag(9, |w| w.write_fixed64(*&self.gid))?; }
-        if self.session_uuid != "" { w.write_with_tag(18, |w| w.write_string(&**&self.session_uuid))?; }
+        if self.session_uuid != String::default() { w.write_with_tag(18, |w| w.write_string(&**&self.session_uuid))?; }
         if self.user_cid != 0u32 { w.write_with_tag(24, |w| w.write_uint32(*&self.user_cid))?; }
-        if self.last_ip_address != "" { w.write_with_tag(34, |w| w.write_string(&**&self.last_ip_address))?; }
-        if self.user_agent != "" { w.write_with_tag(66, |w| w.write_string(&**&self.user_agent))?; }
+        if self.last_ip_address != String::default() { w.write_with_tag(34, |w| w.write_string(&**&self.last_ip_address))?; }
+        if self.user_agent != String::default() { w.write_with_tag(66, |w| w.write_string(&**&self.user_agent))?; }
         if self.platform != store::SessionPlatform::UNKNOWN_PLATFORM { w.write_with_tag(72, |w| w.write_enum(*&self.platform as i32))?; }
         if self.app_version != 0u32 { w.write_with_tag(40, |w| w.write_uint32(*&self.app_version))?; }
         if self.active_time != 0u32 { w.write_with_tag(48, |w| w.write_uint32(*&self.active_time))?; }
@@ -1514,18 +1513,18 @@ impl<'a> MessageWrite for Session<'a> {
 }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct Sms<'a> {
+pub struct Sms {
     pub gid: u64,
-    pub hash: Cow<'a, str>,
-    pub app_uuid: Cow<'a, str>,
-    pub client_phone: Cow<'a, str>,
+    pub hash: String,
+    pub app_uuid: String,
+    pub client_phone: String,
     pub genrated_code: u32,
-    pub sms_sender_number: Cow<'a, str>,
-    pub sms_send_statues: Cow<'a, str>,
-    pub sms_http_body: Cow<'a, str>,
-    pub err: Cow<'a, str>,
-    pub carrier: Cow<'a, str>,
-    pub country: Cow<'a, [u8]>,
+    pub sms_sender_number: String,
+    pub sms_send_statues: String,
+    pub sms_http_body: String,
+    pub err: String,
+    pub carrier: String,
+    pub country: Vec<u8>,
     pub is_valid_phone: u32,
     pub is_confirmed: u32,
     pub is_login: u32,
@@ -1534,22 +1533,22 @@ pub struct Sms<'a> {
     pub ttl: u32,
 }
 
-impl<'a> MessageRead<'a> for Sms<'a> {
+impl<'a> MessageRead<'a> for Sms {
     fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
         let mut msg = Self::default();
         while !r.is_eof() {
             match r.next_tag(bytes) {
                 Ok(9) => msg.gid = r.read_fixed64(bytes)?,
-                Ok(18) => msg.hash = r.read_string(bytes).map(Cow::Borrowed)?,
-                Ok(26) => msg.app_uuid = r.read_string(bytes).map(Cow::Borrowed)?,
-                Ok(34) => msg.client_phone = r.read_string(bytes).map(Cow::Borrowed)?,
+                Ok(18) => msg.hash = r.read_string(bytes)?.to_owned(),
+                Ok(26) => msg.app_uuid = r.read_string(bytes)?.to_owned(),
+                Ok(34) => msg.client_phone = r.read_string(bytes)?.to_owned(),
                 Ok(40) => msg.genrated_code = r.read_uint32(bytes)?,
-                Ok(50) => msg.sms_sender_number = r.read_string(bytes).map(Cow::Borrowed)?,
-                Ok(58) => msg.sms_send_statues = r.read_string(bytes).map(Cow::Borrowed)?,
-                Ok(66) => msg.sms_http_body = r.read_string(bytes).map(Cow::Borrowed)?,
-                Ok(74) => msg.err = r.read_string(bytes).map(Cow::Borrowed)?,
-                Ok(82) => msg.carrier = r.read_string(bytes).map(Cow::Borrowed)?,
-                Ok(90) => msg.country = r.read_bytes(bytes).map(Cow::Borrowed)?,
+                Ok(50) => msg.sms_sender_number = r.read_string(bytes)?.to_owned(),
+                Ok(58) => msg.sms_send_statues = r.read_string(bytes)?.to_owned(),
+                Ok(66) => msg.sms_http_body = r.read_string(bytes)?.to_owned(),
+                Ok(74) => msg.err = r.read_string(bytes)?.to_owned(),
+                Ok(82) => msg.carrier = r.read_string(bytes)?.to_owned(),
+                Ok(90) => msg.country = r.read_bytes(bytes)?.to_owned(),
                 Ok(96) => msg.is_valid_phone = r.read_uint32(bytes)?,
                 Ok(104) => msg.is_confirmed = r.read_uint32(bytes)?,
                 Ok(112) => msg.is_login = r.read_uint32(bytes)?,
@@ -1564,20 +1563,20 @@ impl<'a> MessageRead<'a> for Sms<'a> {
     }
 }
 
-impl<'a> MessageWrite for Sms<'a> {
+impl MessageWrite for Sms {
     fn get_size(&self) -> usize {
         0
         + if self.gid == 0u64 { 0 } else { 1 + 8 }
-        + if self.hash == "" { 0 } else { 1 + sizeof_len((&self.hash).len()) }
-        + if self.app_uuid == "" { 0 } else { 1 + sizeof_len((&self.app_uuid).len()) }
-        + if self.client_phone == "" { 0 } else { 1 + sizeof_len((&self.client_phone).len()) }
+        + if self.hash == String::default() { 0 } else { 1 + sizeof_len((&self.hash).len()) }
+        + if self.app_uuid == String::default() { 0 } else { 1 + sizeof_len((&self.app_uuid).len()) }
+        + if self.client_phone == String::default() { 0 } else { 1 + sizeof_len((&self.client_phone).len()) }
         + if self.genrated_code == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.genrated_code) as u64) }
-        + if self.sms_sender_number == "" { 0 } else { 1 + sizeof_len((&self.sms_sender_number).len()) }
-        + if self.sms_send_statues == "" { 0 } else { 1 + sizeof_len((&self.sms_send_statues).len()) }
-        + if self.sms_http_body == "" { 0 } else { 1 + sizeof_len((&self.sms_http_body).len()) }
-        + if self.err == "" { 0 } else { 1 + sizeof_len((&self.err).len()) }
-        + if self.carrier == "" { 0 } else { 1 + sizeof_len((&self.carrier).len()) }
-        + if self.country == Cow::Borrowed(b"") { 0 } else { 1 + sizeof_len((&self.country).len()) }
+        + if self.sms_sender_number == String::default() { 0 } else { 1 + sizeof_len((&self.sms_sender_number).len()) }
+        + if self.sms_send_statues == String::default() { 0 } else { 1 + sizeof_len((&self.sms_send_statues).len()) }
+        + if self.sms_http_body == String::default() { 0 } else { 1 + sizeof_len((&self.sms_http_body).len()) }
+        + if self.err == String::default() { 0 } else { 1 + sizeof_len((&self.err).len()) }
+        + if self.carrier == String::default() { 0 } else { 1 + sizeof_len((&self.carrier).len()) }
+        + if self.country == vec![] { 0 } else { 1 + sizeof_len((&self.country).len()) }
         + if self.is_valid_phone == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.is_valid_phone) as u64) }
         + if self.is_confirmed == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.is_confirmed) as u64) }
         + if self.is_login == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.is_login) as u64) }
@@ -1588,16 +1587,16 @@ impl<'a> MessageWrite for Sms<'a> {
 
     fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
         if self.gid != 0u64 { w.write_with_tag(9, |w| w.write_fixed64(*&self.gid))?; }
-        if self.hash != "" { w.write_with_tag(18, |w| w.write_string(&**&self.hash))?; }
-        if self.app_uuid != "" { w.write_with_tag(26, |w| w.write_string(&**&self.app_uuid))?; }
-        if self.client_phone != "" { w.write_with_tag(34, |w| w.write_string(&**&self.client_phone))?; }
+        if self.hash != String::default() { w.write_with_tag(18, |w| w.write_string(&**&self.hash))?; }
+        if self.app_uuid != String::default() { w.write_with_tag(26, |w| w.write_string(&**&self.app_uuid))?; }
+        if self.client_phone != String::default() { w.write_with_tag(34, |w| w.write_string(&**&self.client_phone))?; }
         if self.genrated_code != 0u32 { w.write_with_tag(40, |w| w.write_uint32(*&self.genrated_code))?; }
-        if self.sms_sender_number != "" { w.write_with_tag(50, |w| w.write_string(&**&self.sms_sender_number))?; }
-        if self.sms_send_statues != "" { w.write_with_tag(58, |w| w.write_string(&**&self.sms_send_statues))?; }
-        if self.sms_http_body != "" { w.write_with_tag(66, |w| w.write_string(&**&self.sms_http_body))?; }
-        if self.err != "" { w.write_with_tag(74, |w| w.write_string(&**&self.err))?; }
-        if self.carrier != "" { w.write_with_tag(82, |w| w.write_string(&**&self.carrier))?; }
-        if self.country != Cow::Borrowed(b"") { w.write_with_tag(90, |w| w.write_bytes(&**&self.country))?; }
+        if self.sms_sender_number != String::default() { w.write_with_tag(50, |w| w.write_string(&**&self.sms_sender_number))?; }
+        if self.sms_send_statues != String::default() { w.write_with_tag(58, |w| w.write_string(&**&self.sms_send_statues))?; }
+        if self.sms_http_body != String::default() { w.write_with_tag(66, |w| w.write_string(&**&self.sms_http_body))?; }
+        if self.err != String::default() { w.write_with_tag(74, |w| w.write_string(&**&self.err))?; }
+        if self.carrier != String::default() { w.write_with_tag(82, |w| w.write_string(&**&self.carrier))?; }
+        if self.country != vec![] { w.write_with_tag(90, |w| w.write_bytes(&**&self.country))?; }
         if self.is_valid_phone != 0u32 { w.write_with_tag(96, |w| w.write_uint32(*&self.is_valid_phone))?; }
         if self.is_confirmed != 0u32 { w.write_with_tag(104, |w| w.write_uint32(*&self.is_confirmed))?; }
         if self.is_login != 0u32 { w.write_with_tag(112, |w| w.write_uint32(*&self.is_login))?; }
@@ -1609,22 +1608,22 @@ impl<'a> MessageWrite for Sms<'a> {
 }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct Tag<'a> {
+pub struct Tag {
     pub gid: u64,
-    pub name: Cow<'a, str>,
+    pub name: String,
     pub count: u32,
     pub is_blocked: bool,
     pub group_cid: u32,
     pub created_time: u32,
 }
 
-impl<'a> MessageRead<'a> for Tag<'a> {
+impl<'a> MessageRead<'a> for Tag {
     fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
         let mut msg = Self::default();
         while !r.is_eof() {
             match r.next_tag(bytes) {
                 Ok(9) => msg.gid = r.read_fixed64(bytes)?,
-                Ok(18) => msg.name = r.read_string(bytes).map(Cow::Borrowed)?,
+                Ok(18) => msg.name = r.read_string(bytes)?.to_owned(),
                 Ok(24) => msg.count = r.read_uint32(bytes)?,
                 Ok(40) => msg.is_blocked = r.read_bool(bytes)?,
                 Ok(48) => msg.group_cid = r.read_uint32(bytes)?,
@@ -1637,11 +1636,11 @@ impl<'a> MessageRead<'a> for Tag<'a> {
     }
 }
 
-impl<'a> MessageWrite for Tag<'a> {
+impl MessageWrite for Tag {
     fn get_size(&self) -> usize {
         0
         + if self.gid == 0u64 { 0 } else { 1 + 8 }
-        + if self.name == "" { 0 } else { 1 + sizeof_len((&self.name).len()) }
+        + if self.name == String::default() { 0 } else { 1 + sizeof_len((&self.name).len()) }
         + if self.count == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.count) as u64) }
         + if self.is_blocked == false { 0 } else { 1 + sizeof_varint(*(&self.is_blocked) as u64) }
         + if self.group_cid == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.group_cid) as u64) }
@@ -1650,7 +1649,7 @@ impl<'a> MessageWrite for Tag<'a> {
 
     fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
         if self.gid != 0u64 { w.write_with_tag(9, |w| w.write_fixed64(*&self.gid))?; }
-        if self.name != "" { w.write_with_tag(18, |w| w.write_string(&**&self.name))?; }
+        if self.name != String::default() { w.write_with_tag(18, |w| w.write_string(&**&self.name))?; }
         if self.count != 0u32 { w.write_with_tag(24, |w| w.write_uint32(*&self.count))?; }
         if self.is_blocked != false { w.write_with_tag(40, |w| w.write_bool(*&self.is_blocked))?; }
         if self.group_cid != 0u32 { w.write_with_tag(48, |w| w.write_uint32(*&self.group_cid))?; }
@@ -1660,33 +1659,33 @@ impl<'a> MessageWrite for Tag<'a> {
 }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct User<'a> {
+pub struct User {
     pub cid: u32,
-    pub phone: Cow<'a, str>,
-    pub email: Cow<'a, str>,
-    pub password_hash: Cow<'a, str>,
-    pub password_salt: Cow<'a, str>,
+    pub phone: String,
+    pub email: String,
+    pub password_hash: String,
+    pub password_salt: String,
     pub created_time: u32,
     pub version_time: u32,
     pub is_deleted: u32,
     pub is_banned: u32,
     pub primary_channel_changed_time: u32,
-    pub UserCounts: Option<Channel<'a>>,
-    pub primary_channel: Option<Channel<'a>>,
-    pub channels: Vec<Channel<'a>>,
-    pub sessions: Vec<Session<'a>>,
+    pub UserCounts: Option<Channel>,
+    pub primary_channel: Option<Channel>,
+    pub channels: Vec<Channel>,
+    pub sessions: Vec<Session>,
 }
 
-impl<'a> MessageRead<'a> for User<'a> {
+impl<'a> MessageRead<'a> for User {
     fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
         let mut msg = Self::default();
         while !r.is_eof() {
             match r.next_tag(bytes) {
                 Ok(8) => msg.cid = r.read_uint32(bytes)?,
-                Ok(114) => msg.phone = r.read_string(bytes).map(Cow::Borrowed)?,
-                Ok(122) => msg.email = r.read_string(bytes).map(Cow::Borrowed)?,
-                Ok(138) => msg.password_hash = r.read_string(bytes).map(Cow::Borrowed)?,
-                Ok(146) => msg.password_salt = r.read_string(bytes).map(Cow::Borrowed)?,
+                Ok(114) => msg.phone = r.read_string(bytes)?.to_owned(),
+                Ok(122) => msg.email = r.read_string(bytes)?.to_owned(),
+                Ok(138) => msg.password_hash = r.read_string(bytes)?.to_owned(),
+                Ok(146) => msg.password_salt = r.read_string(bytes)?.to_owned(),
                 Ok(288) => msg.created_time = r.read_uint32(bytes)?,
                 Ok(296) => msg.version_time = r.read_uint32(bytes)?,
                 Ok(304) => msg.is_deleted = r.read_uint32(bytes)?,
@@ -1704,14 +1703,14 @@ impl<'a> MessageRead<'a> for User<'a> {
     }
 }
 
-impl<'a> MessageWrite for User<'a> {
+impl MessageWrite for User {
     fn get_size(&self) -> usize {
         0
         + if self.cid == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.cid) as u64) }
-        + if self.phone == "" { 0 } else { 1 + sizeof_len((&self.phone).len()) }
-        + if self.email == "" { 0 } else { 1 + sizeof_len((&self.email).len()) }
-        + if self.password_hash == "" { 0 } else { 2 + sizeof_len((&self.password_hash).len()) }
-        + if self.password_salt == "" { 0 } else { 2 + sizeof_len((&self.password_salt).len()) }
+        + if self.phone == String::default() { 0 } else { 1 + sizeof_len((&self.phone).len()) }
+        + if self.email == String::default() { 0 } else { 1 + sizeof_len((&self.email).len()) }
+        + if self.password_hash == String::default() { 0 } else { 2 + sizeof_len((&self.password_hash).len()) }
+        + if self.password_salt == String::default() { 0 } else { 2 + sizeof_len((&self.password_salt).len()) }
         + if self.created_time == 0u32 { 0 } else { 2 + sizeof_varint(*(&self.created_time) as u64) }
         + if self.version_time == 0u32 { 0 } else { 2 + sizeof_varint(*(&self.version_time) as u64) }
         + if self.is_deleted == 0u32 { 0 } else { 2 + sizeof_varint(*(&self.is_deleted) as u64) }
@@ -1725,10 +1724,10 @@ impl<'a> MessageWrite for User<'a> {
 
     fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
         if self.cid != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.cid))?; }
-        if self.phone != "" { w.write_with_tag(114, |w| w.write_string(&**&self.phone))?; }
-        if self.email != "" { w.write_with_tag(122, |w| w.write_string(&**&self.email))?; }
-        if self.password_hash != "" { w.write_with_tag(138, |w| w.write_string(&**&self.password_hash))?; }
-        if self.password_salt != "" { w.write_with_tag(146, |w| w.write_string(&**&self.password_salt))?; }
+        if self.phone != String::default() { w.write_with_tag(114, |w| w.write_string(&**&self.phone))?; }
+        if self.email != String::default() { w.write_with_tag(122, |w| w.write_string(&**&self.email))?; }
+        if self.password_hash != String::default() { w.write_with_tag(138, |w| w.write_string(&**&self.password_hash))?; }
+        if self.password_salt != String::default() { w.write_with_tag(146, |w| w.write_string(&**&self.password_salt))?; }
         if self.created_time != 0u32 { w.write_with_tag(288, |w| w.write_uint32(*&self.created_time))?; }
         if self.version_time != 0u32 { w.write_with_tag(296, |w| w.write_uint32(*&self.version_time))?; }
         if self.is_deleted != 0u32 { w.write_with_tag(304, |w| w.write_uint32(*&self.is_deleted))?; }
@@ -1837,14 +1836,14 @@ impl MessageWrite for UserRelation {
 }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct Chat<'a> {
+pub struct Chat {
     pub gid: u64,
     pub user_cid: u32,
     pub channel_cid: u32,
     pub peer_user_cid: u32,
     pub peer_channel_cid: u32,
     pub group_cid: u32,
-    pub custom_title: Cow<'a, str>,
+    pub custom_title: String,
     pub pin_time_ms: u64,
     pub from_msg_gid: i64,
     pub unseen_count: u32,
@@ -1860,18 +1859,18 @@ pub struct Chat<'a> {
     pub sort_time_ms: i64,
     pub created_time: u32,
     pub sort_time: u64,
-    pub channel: Option<Channel<'a>>,
-    pub contact: Option<Contact<'a>>,
-    pub group: Option<Group<'a>>,
-    pub last_message: Option<Message<'a>>,
-    pub pinned_message: Option<Message<'a>>,
-    pub avatar: Option<FileMsg<'a>>,
+    pub channel: Option<Channel>,
+    pub contact: Option<Contact>,
+    pub group: Option<Group>,
+    pub last_message: Option<Message>,
+    pub pinned_message: Option<Message>,
+    pub avatar: Option<FileMsg>,
     pub group_member: Option<GroupMember>,
-    pub draft: Option<MessageDraft<'a>>,
+    pub draft: Option<MessageDraft>,
     pub custom_notification: Option<ChatCustomNotification>,
 }
 
-impl<'a> MessageRead<'a> for Chat<'a> {
+impl<'a> MessageRead<'a> for Chat {
     fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
         let mut msg = Self::default();
         while !r.is_eof() {
@@ -1882,7 +1881,7 @@ impl<'a> MessageRead<'a> for Chat<'a> {
                 Ok(48) => msg.peer_user_cid = r.read_uint32(bytes)?,
                 Ok(328) => msg.peer_channel_cid = r.read_uint32(bytes)?,
                 Ok(56) => msg.group_cid = r.read_uint32(bytes)?,
-                Ok(74) => msg.custom_title = r.read_string(bytes).map(Cow::Borrowed)?,
+                Ok(74) => msg.custom_title = r.read_string(bytes)?.to_owned(),
                 Ok(81) => msg.pin_time_ms = r.read_fixed64(bytes)?,
                 Ok(88) => msg.from_msg_gid = r.read_int64(bytes)?,
                 Ok(96) => msg.unseen_count = r.read_uint32(bytes)?,
@@ -1915,7 +1914,7 @@ impl<'a> MessageRead<'a> for Chat<'a> {
     }
 }
 
-impl<'a> MessageWrite for Chat<'a> {
+impl MessageWrite for Chat {
     fn get_size(&self) -> usize {
         0
         + if self.gid == 0u64 { 0 } else { 1 + 8 }
@@ -1924,7 +1923,7 @@ impl<'a> MessageWrite for Chat<'a> {
         + if self.peer_user_cid == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.peer_user_cid) as u64) }
         + if self.peer_channel_cid == 0u32 { 0 } else { 2 + sizeof_varint(*(&self.peer_channel_cid) as u64) }
         + if self.group_cid == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.group_cid) as u64) }
-        + if self.custom_title == "" { 0 } else { 1 + sizeof_len((&self.custom_title).len()) }
+        + if self.custom_title == String::default() { 0 } else { 1 + sizeof_len((&self.custom_title).len()) }
         + if self.pin_time_ms == 0u64 { 0 } else { 1 + 8 }
         + if self.from_msg_gid == 0i64 { 0 } else { 1 + sizeof_varint(*(&self.from_msg_gid) as u64) }
         + if self.unseen_count == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.unseen_count) as u64) }
@@ -1958,7 +1957,7 @@ impl<'a> MessageWrite for Chat<'a> {
         if self.peer_user_cid != 0u32 { w.write_with_tag(48, |w| w.write_uint32(*&self.peer_user_cid))?; }
         if self.peer_channel_cid != 0u32 { w.write_with_tag(328, |w| w.write_uint32(*&self.peer_channel_cid))?; }
         if self.group_cid != 0u32 { w.write_with_tag(56, |w| w.write_uint32(*&self.group_cid))?; }
-        if self.custom_title != "" { w.write_with_tag(74, |w| w.write_string(&**&self.custom_title))?; }
+        if self.custom_title != String::default() { w.write_with_tag(74, |w| w.write_string(&**&self.custom_title))?; }
         if self.pin_time_ms != 0u64 { w.write_with_tag(81, |w| w.write_fixed64(*&self.pin_time_ms))?; }
         if self.from_msg_gid != 0i64 { w.write_with_tag(88, |w| w.write_int64(*&self.from_msg_gid))?; }
         if self.unseen_count != 0u32 { w.write_with_tag(96, |w| w.write_uint32(*&self.unseen_count))?; }
@@ -1988,17 +1987,17 @@ impl<'a> MessageWrite for Chat<'a> {
 }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct MessageDraft<'a> {
-    pub draft_text: Cow<'a, str>,
+pub struct MessageDraft {
+    pub draft_text: String,
     pub drat_reply_to_msg_id: i64,
 }
 
-impl<'a> MessageRead<'a> for MessageDraft<'a> {
+impl<'a> MessageRead<'a> for MessageDraft {
     fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
         let mut msg = Self::default();
         while !r.is_eof() {
             match r.next_tag(bytes) {
-                Ok(274) => msg.draft_text = r.read_string(bytes).map(Cow::Borrowed)?,
+                Ok(274) => msg.draft_text = r.read_string(bytes)?.to_owned(),
                 Ok(280) => msg.drat_reply_to_msg_id = r.read_int64(bytes)?,
                 Ok(t) => { r.read_unknown(bytes, t)?; }
                 Err(e) => return Err(e),
@@ -2008,15 +2007,15 @@ impl<'a> MessageRead<'a> for MessageDraft<'a> {
     }
 }
 
-impl<'a> MessageWrite for MessageDraft<'a> {
+impl MessageWrite for MessageDraft {
     fn get_size(&self) -> usize {
         0
-        + if self.draft_text == "" { 0 } else { 2 + sizeof_len((&self.draft_text).len()) }
+        + if self.draft_text == String::default() { 0 } else { 2 + sizeof_len((&self.draft_text).len()) }
         + if self.drat_reply_to_msg_id == 0i64 { 0 } else { 2 + sizeof_varint(*(&self.drat_reply_to_msg_id) as u64) }
     }
 
     fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
-        if self.draft_text != "" { w.write_with_tag(274, |w| w.write_string(&**&self.draft_text))?; }
+        if self.draft_text != String::default() { w.write_with_tag(274, |w| w.write_string(&**&self.draft_text))?; }
         if self.drat_reply_to_msg_id != 0i64 { w.write_with_tag(280, |w| w.write_int64(*&self.drat_reply_to_msg_id))?; }
         Ok(())
     }
@@ -2082,18 +2081,18 @@ impl MessageWrite for ChatCustomNotification {
 }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct Group<'a> {
+pub struct Group {
     pub cid: u32,
-    pub group_title: Cow<'a, str>,
-    pub user_name: Cow<'a, str>,
+    pub group_title: String,
+    pub user_name: String,
     pub creator_user_cid: u32,
     pub creator_channel_cid: u32,
     pub group_privacy: GroupPrivacy,
     pub history_viewable: bool,
     pub seq: u32,
     pub avatar_count: u32,
-    pub about: Cow<'a, str>,
-    pub invite_link_hash: Cow<'a, str>,
+    pub about: String,
+    pub invite_link_hash: String,
     pub members_count: u32,
     pub admins_count: u32,
     pub moderator_counts: u32,
@@ -2102,27 +2101,27 @@ pub struct Group<'a> {
     pub created_time: u32,
     pub is_deleted: bool,
     pub is_banned: bool,
-    pub last_message: Option<Message<'a>>,
-    pub pinned_message: Option<Message<'a>>,
-    pub avatar: Option<FileMsg<'a>>,
+    pub last_message: Option<Message>,
+    pub pinned_message: Option<Message>,
+    pub avatar: Option<FileMsg>,
 }
 
-impl<'a> MessageRead<'a> for Group<'a> {
+impl<'a> MessageRead<'a> for Group {
     fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
         let mut msg = Self::default();
         while !r.is_eof() {
             match r.next_tag(bytes) {
                 Ok(8) => msg.cid = r.read_uint32(bytes)?,
-                Ok(26) => msg.group_title = r.read_string(bytes).map(Cow::Borrowed)?,
-                Ok(34) => msg.user_name = r.read_string(bytes).map(Cow::Borrowed)?,
+                Ok(26) => msg.group_title = r.read_string(bytes)?.to_owned(),
+                Ok(34) => msg.user_name = r.read_string(bytes)?.to_owned(),
                 Ok(56) => msg.creator_user_cid = r.read_uint32(bytes)?,
                 Ok(248) => msg.creator_channel_cid = r.read_uint32(bytes)?,
                 Ok(64) => msg.group_privacy = r.read_enum(bytes)?,
                 Ok(72) => msg.history_viewable = r.read_bool(bytes)?,
                 Ok(80) => msg.seq = r.read_uint32(bytes)?,
                 Ok(112) => msg.avatar_count = r.read_uint32(bytes)?,
-                Ok(122) => msg.about = r.read_string(bytes).map(Cow::Borrowed)?,
-                Ok(130) => msg.invite_link_hash = r.read_string(bytes).map(Cow::Borrowed)?,
+                Ok(122) => msg.about = r.read_string(bytes)?.to_owned(),
+                Ok(130) => msg.invite_link_hash = r.read_string(bytes)?.to_owned(),
                 Ok(136) => msg.members_count = r.read_uint32(bytes)?,
                 Ok(144) => msg.admins_count = r.read_uint32(bytes)?,
                 Ok(152) => msg.moderator_counts = r.read_uint32(bytes)?,
@@ -2142,20 +2141,20 @@ impl<'a> MessageRead<'a> for Group<'a> {
     }
 }
 
-impl<'a> MessageWrite for Group<'a> {
+impl MessageWrite for Group {
     fn get_size(&self) -> usize {
         0
         + if self.cid == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.cid) as u64) }
-        + if self.group_title == "" { 0 } else { 1 + sizeof_len((&self.group_title).len()) }
-        + if self.user_name == "" { 0 } else { 1 + sizeof_len((&self.user_name).len()) }
+        + if self.group_title == String::default() { 0 } else { 1 + sizeof_len((&self.group_title).len()) }
+        + if self.user_name == String::default() { 0 } else { 1 + sizeof_len((&self.user_name).len()) }
         + if self.creator_user_cid == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.creator_user_cid) as u64) }
         + if self.creator_channel_cid == 0u32 { 0 } else { 2 + sizeof_varint(*(&self.creator_channel_cid) as u64) }
         + if self.group_privacy == store::GroupPrivacy::GROUP_UNKNOWN_GP { 0 } else { 1 + sizeof_varint(*(&self.group_privacy) as u64) }
         + if self.history_viewable == false { 0 } else { 1 + sizeof_varint(*(&self.history_viewable) as u64) }
         + if self.seq == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.seq) as u64) }
         + if self.avatar_count == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.avatar_count) as u64) }
-        + if self.about == "" { 0 } else { 1 + sizeof_len((&self.about).len()) }
-        + if self.invite_link_hash == "" { 0 } else { 2 + sizeof_len((&self.invite_link_hash).len()) }
+        + if self.about == String::default() { 0 } else { 1 + sizeof_len((&self.about).len()) }
+        + if self.invite_link_hash == String::default() { 0 } else { 2 + sizeof_len((&self.invite_link_hash).len()) }
         + if self.members_count == 0u32 { 0 } else { 2 + sizeof_varint(*(&self.members_count) as u64) }
         + if self.admins_count == 0u32 { 0 } else { 2 + sizeof_varint(*(&self.admins_count) as u64) }
         + if self.moderator_counts == 0u32 { 0 } else { 2 + sizeof_varint(*(&self.moderator_counts) as u64) }
@@ -2171,16 +2170,16 @@ impl<'a> MessageWrite for Group<'a> {
 
     fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
         if self.cid != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.cid))?; }
-        if self.group_title != "" { w.write_with_tag(26, |w| w.write_string(&**&self.group_title))?; }
-        if self.user_name != "" { w.write_with_tag(34, |w| w.write_string(&**&self.user_name))?; }
+        if self.group_title != String::default() { w.write_with_tag(26, |w| w.write_string(&**&self.group_title))?; }
+        if self.user_name != String::default() { w.write_with_tag(34, |w| w.write_string(&**&self.user_name))?; }
         if self.creator_user_cid != 0u32 { w.write_with_tag(56, |w| w.write_uint32(*&self.creator_user_cid))?; }
         if self.creator_channel_cid != 0u32 { w.write_with_tag(248, |w| w.write_uint32(*&self.creator_channel_cid))?; }
         if self.group_privacy != store::GroupPrivacy::GROUP_UNKNOWN_GP { w.write_with_tag(64, |w| w.write_enum(*&self.group_privacy as i32))?; }
         if self.history_viewable != false { w.write_with_tag(72, |w| w.write_bool(*&self.history_viewable))?; }
         if self.seq != 0u32 { w.write_with_tag(80, |w| w.write_uint32(*&self.seq))?; }
         if self.avatar_count != 0u32 { w.write_with_tag(112, |w| w.write_uint32(*&self.avatar_count))?; }
-        if self.about != "" { w.write_with_tag(122, |w| w.write_string(&**&self.about))?; }
-        if self.invite_link_hash != "" { w.write_with_tag(130, |w| w.write_string(&**&self.invite_link_hash))?; }
+        if self.about != String::default() { w.write_with_tag(122, |w| w.write_string(&**&self.about))?; }
+        if self.invite_link_hash != String::default() { w.write_with_tag(130, |w| w.write_string(&**&self.invite_link_hash))?; }
         if self.members_count != 0u32 { w.write_with_tag(136, |w| w.write_uint32(*&self.members_count))?; }
         if self.admins_count != 0u32 { w.write_with_tag(144, |w| w.write_uint32(*&self.admins_count))?; }
         if self.moderator_counts != 0u32 { w.write_with_tag(152, |w| w.write_uint32(*&self.moderator_counts))?; }
@@ -2256,19 +2255,19 @@ impl MessageWrite for GroupMember {
 }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct FileMsg<'a> {
+pub struct FileMsg {
     pub gid: u64,
     pub access_hash: u32,
     pub file_type: u32,
     pub width: u32,
     pub height: u32,
-    pub extension: Cow<'a, str>,
+    pub extension: String,
     pub user_cid: u32,
-    pub data_thumb: Cow<'a, [u8]>,
-    pub data: Cow<'a, [u8]>,
+    pub data_thumb: Vec<u8>,
+    pub data: Vec<u8>,
 }
 
-impl<'a> MessageRead<'a> for FileMsg<'a> {
+impl<'a> MessageRead<'a> for FileMsg {
     fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
         let mut msg = Self::default();
         while !r.is_eof() {
@@ -2278,10 +2277,10 @@ impl<'a> MessageRead<'a> for FileMsg<'a> {
                 Ok(24) => msg.file_type = r.read_uint32(bytes)?,
                 Ok(32) => msg.width = r.read_uint32(bytes)?,
                 Ok(40) => msg.height = r.read_uint32(bytes)?,
-                Ok(50) => msg.extension = r.read_string(bytes).map(Cow::Borrowed)?,
+                Ok(50) => msg.extension = r.read_string(bytes)?.to_owned(),
                 Ok(56) => msg.user_cid = r.read_uint32(bytes)?,
-                Ok(66) => msg.data_thumb = r.read_bytes(bytes).map(Cow::Borrowed)?,
-                Ok(74) => msg.data = r.read_bytes(bytes).map(Cow::Borrowed)?,
+                Ok(66) => msg.data_thumb = r.read_bytes(bytes)?.to_owned(),
+                Ok(74) => msg.data = r.read_bytes(bytes)?.to_owned(),
                 Ok(t) => { r.read_unknown(bytes, t)?; }
                 Err(e) => return Err(e),
             }
@@ -2290,7 +2289,7 @@ impl<'a> MessageRead<'a> for FileMsg<'a> {
     }
 }
 
-impl<'a> MessageWrite for FileMsg<'a> {
+impl MessageWrite for FileMsg {
     fn get_size(&self) -> usize {
         0
         + if self.gid == 0u64 { 0 } else { 1 + 8 }
@@ -2298,10 +2297,10 @@ impl<'a> MessageWrite for FileMsg<'a> {
         + if self.file_type == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.file_type) as u64) }
         + if self.width == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.width) as u64) }
         + if self.height == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.height) as u64) }
-        + if self.extension == "" { 0 } else { 1 + sizeof_len((&self.extension).len()) }
+        + if self.extension == String::default() { 0 } else { 1 + sizeof_len((&self.extension).len()) }
         + if self.user_cid == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.user_cid) as u64) }
-        + if self.data_thumb == Cow::Borrowed(b"") { 0 } else { 1 + sizeof_len((&self.data_thumb).len()) }
-        + if self.data == Cow::Borrowed(b"") { 0 } else { 1 + sizeof_len((&self.data).len()) }
+        + if self.data_thumb == vec![] { 0 } else { 1 + sizeof_len((&self.data_thumb).len()) }
+        + if self.data == vec![] { 0 } else { 1 + sizeof_len((&self.data).len()) }
     }
 
     fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
@@ -2310,24 +2309,24 @@ impl<'a> MessageWrite for FileMsg<'a> {
         if self.file_type != 0u32 { w.write_with_tag(24, |w| w.write_uint32(*&self.file_type))?; }
         if self.width != 0u32 { w.write_with_tag(32, |w| w.write_uint32(*&self.width))?; }
         if self.height != 0u32 { w.write_with_tag(40, |w| w.write_uint32(*&self.height))?; }
-        if self.extension != "" { w.write_with_tag(50, |w| w.write_string(&**&self.extension))?; }
+        if self.extension != String::default() { w.write_with_tag(50, |w| w.write_string(&**&self.extension))?; }
         if self.user_cid != 0u32 { w.write_with_tag(56, |w| w.write_uint32(*&self.user_cid))?; }
-        if self.data_thumb != Cow::Borrowed(b"") { w.write_with_tag(66, |w| w.write_bytes(&**&self.data_thumb))?; }
-        if self.data != Cow::Borrowed(b"") { w.write_with_tag(74, |w| w.write_bytes(&**&self.data))?; }
+        if self.data_thumb != vec![] { w.write_with_tag(66, |w| w.write_bytes(&**&self.data_thumb))?; }
+        if self.data != vec![] { w.write_with_tag(74, |w| w.write_bytes(&**&self.data))?; }
         Ok(())
     }
 }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct Post<'a> {
+pub struct Post {
     pub gid: u64,
     pub user_cid: u32,
     pub post_type: u32,
     pub media_id: i64,
     pub file_ref_id: i64,
-    pub post_key: Cow<'a, str>,
-    pub text: Cow<'a, str>,
-    pub rich_text: Cow<'a, str>,
+    pub post_key: String,
+    pub text: String,
+    pub rich_text: String,
     pub media_count: u32,
     pub shared_to: u32,
     pub disable_comment: u32,
@@ -2340,7 +2339,7 @@ pub struct Post<'a> {
     pub created_time: u32,
 }
 
-impl<'a> MessageRead<'a> for Post<'a> {
+impl<'a> MessageRead<'a> for Post {
     fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
         let mut msg = Self::default();
         while !r.is_eof() {
@@ -2350,9 +2349,9 @@ impl<'a> MessageRead<'a> for Post<'a> {
                 Ok(24) => msg.post_type = r.read_uint32(bytes)?,
                 Ok(32) => msg.media_id = r.read_int64(bytes)?,
                 Ok(40) => msg.file_ref_id = r.read_int64(bytes)?,
-                Ok(50) => msg.post_key = r.read_string(bytes).map(Cow::Borrowed)?,
-                Ok(58) => msg.text = r.read_string(bytes).map(Cow::Borrowed)?,
-                Ok(66) => msg.rich_text = r.read_string(bytes).map(Cow::Borrowed)?,
+                Ok(50) => msg.post_key = r.read_string(bytes)?.to_owned(),
+                Ok(58) => msg.text = r.read_string(bytes)?.to_owned(),
+                Ok(66) => msg.rich_text = r.read_string(bytes)?.to_owned(),
                 Ok(72) => msg.media_count = r.read_uint32(bytes)?,
                 Ok(80) => msg.shared_to = r.read_uint32(bytes)?,
                 Ok(88) => msg.disable_comment = r.read_uint32(bytes)?,
@@ -2371,7 +2370,7 @@ impl<'a> MessageRead<'a> for Post<'a> {
     }
 }
 
-impl<'a> MessageWrite for Post<'a> {
+impl MessageWrite for Post {
     fn get_size(&self) -> usize {
         0
         + if self.gid == 0u64 { 0 } else { 1 + 8 }
@@ -2379,9 +2378,9 @@ impl<'a> MessageWrite for Post<'a> {
         + if self.post_type == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.post_type) as u64) }
         + if self.media_id == 0i64 { 0 } else { 1 + sizeof_varint(*(&self.media_id) as u64) }
         + if self.file_ref_id == 0i64 { 0 } else { 1 + sizeof_varint(*(&self.file_ref_id) as u64) }
-        + if self.post_key == "" { 0 } else { 1 + sizeof_len((&self.post_key).len()) }
-        + if self.text == "" { 0 } else { 1 + sizeof_len((&self.text).len()) }
-        + if self.rich_text == "" { 0 } else { 1 + sizeof_len((&self.rich_text).len()) }
+        + if self.post_key == String::default() { 0 } else { 1 + sizeof_len((&self.post_key).len()) }
+        + if self.text == String::default() { 0 } else { 1 + sizeof_len((&self.text).len()) }
+        + if self.rich_text == String::default() { 0 } else { 1 + sizeof_len((&self.rich_text).len()) }
         + if self.media_count == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.media_count) as u64) }
         + if self.shared_to == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.shared_to) as u64) }
         + if self.disable_comment == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.disable_comment) as u64) }
@@ -2400,9 +2399,9 @@ impl<'a> MessageWrite for Post<'a> {
         if self.post_type != 0u32 { w.write_with_tag(24, |w| w.write_uint32(*&self.post_type))?; }
         if self.media_id != 0i64 { w.write_with_tag(32, |w| w.write_int64(*&self.media_id))?; }
         if self.file_ref_id != 0i64 { w.write_with_tag(40, |w| w.write_int64(*&self.file_ref_id))?; }
-        if self.post_key != "" { w.write_with_tag(50, |w| w.write_string(&**&self.post_key))?; }
-        if self.text != "" { w.write_with_tag(58, |w| w.write_string(&**&self.text))?; }
-        if self.rich_text != "" { w.write_with_tag(66, |w| w.write_string(&**&self.rich_text))?; }
+        if self.post_key != String::default() { w.write_with_tag(50, |w| w.write_string(&**&self.post_key))?; }
+        if self.text != String::default() { w.write_with_tag(58, |w| w.write_string(&**&self.text))?; }
+        if self.rich_text != String::default() { w.write_with_tag(66, |w| w.write_string(&**&self.rich_text))?; }
         if self.media_count != 0u32 { w.write_with_tag(72, |w| w.write_uint32(*&self.media_count))?; }
         if self.shared_to != 0u32 { w.write_with_tag(80, |w| w.write_uint32(*&self.shared_to))?; }
         if self.disable_comment != 0u32 { w.write_with_tag(88, |w| w.write_uint32(*&self.disable_comment))?; }

@@ -1,18 +1,27 @@
-fn main() {
+fn main7() {
 
 }
-fn main2() {
+fn main() {
     // prost_build::compile_protos(&["src/items.proto"],
     //                             &["src/"]);
 
-    prost_build::compile_protos(&["src/proto/igap.proto"], &["src/proto/"]).unwrap();
+    let arr = &[
+        "src/pb/proto/enums.proto",
+        "src/pb/proto/global.proto",
+        "src/pb/proto/rpc_auth.proto",
+        "src/pb/proto/rpc_general.proto",
+        "src/pb/proto/store.proto",
+        "src/pb/proto/sys.proto",
+        "src/pb/proto/views.proto",
+    ];
+    // prost_build::compile_protos(arr, &["src/pb/proto/"]).unwrap();
 
     let mut config = prost_build::Config::default();
-    config.out_dir("src/ps/");
+    config.out_dir("src/pb/ps/");
     config.compile_well_known_types();
-
+    config.retain_enum_prefix();
     config
-        .compile_protos(&["src/proto/igap.proto"], &["src/proto/"])
+        .compile_protos(arr, &["src/pb/proto/"])
         .unwrap();
 }
 extern crate pb_rs;

@@ -9,13 +9,12 @@
 #![cfg_attr(rustfmt, rustfmt_skip)]
 
 
-use std::borrow::Cow;
 use quick_protobuf::{MessageRead, MessageWrite, BytesReader, Writer, WriterBackend, Result};
 use quick_protobuf::sizeofs::*;
 use super::*;
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct Event<'a> {
+pub struct Event {
     pub event_id: i64,
     pub event_type: i32,
     pub by_user_id: i64,
@@ -26,13 +25,13 @@ pub struct Event<'a> {
     pub group_id: i64,
     pub action_id: i64,
     pub chat_id: i64,
-    pub chat_key: Cow<'a, str>,
+    pub chat_key: String,
     pub message_id: i64,
     pub re_shared_id: i64,
     pub murmur64_hash: i64,
 }
 
-impl<'a> MessageRead<'a> for Event<'a> {
+impl<'a> MessageRead<'a> for Event {
     fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
         let mut msg = Self::default();
         while !r.is_eof() {
@@ -47,7 +46,7 @@ impl<'a> MessageRead<'a> for Event<'a> {
                 Ok(64) => msg.group_id = r.read_int64(bytes)?,
                 Ok(72) => msg.action_id = r.read_int64(bytes)?,
                 Ok(80) => msg.chat_id = r.read_int64(bytes)?,
-                Ok(90) => msg.chat_key = r.read_string(bytes).map(Cow::Borrowed)?,
+                Ok(90) => msg.chat_key = r.read_string(bytes)?.to_owned(),
                 Ok(96) => msg.message_id = r.read_int64(bytes)?,
                 Ok(104) => msg.re_shared_id = r.read_int64(bytes)?,
                 Ok(112) => msg.murmur64_hash = r.read_int64(bytes)?,
@@ -59,7 +58,7 @@ impl<'a> MessageRead<'a> for Event<'a> {
     }
 }
 
-impl<'a> MessageWrite for Event<'a> {
+impl MessageWrite for Event {
     fn get_size(&self) -> usize {
         0
         + if self.event_id == 0i64 { 0 } else { 1 + sizeof_varint(*(&self.event_id) as u64) }
@@ -72,7 +71,7 @@ impl<'a> MessageWrite for Event<'a> {
         + if self.group_id == 0i64 { 0 } else { 1 + sizeof_varint(*(&self.group_id) as u64) }
         + if self.action_id == 0i64 { 0 } else { 1 + sizeof_varint(*(&self.action_id) as u64) }
         + if self.chat_id == 0i64 { 0 } else { 1 + sizeof_varint(*(&self.chat_id) as u64) }
-        + if self.chat_key == "" { 0 } else { 1 + sizeof_len((&self.chat_key).len()) }
+        + if self.chat_key == String::default() { 0 } else { 1 + sizeof_len((&self.chat_key).len()) }
         + if self.message_id == 0i64 { 0 } else { 1 + sizeof_varint(*(&self.message_id) as u64) }
         + if self.re_shared_id == 0i64 { 0 } else { 1 + sizeof_varint(*(&self.re_shared_id) as u64) }
         + if self.murmur64_hash == 0i64 { 0 } else { 1 + sizeof_varint(*(&self.murmur64_hash) as u64) }
@@ -89,7 +88,7 @@ impl<'a> MessageWrite for Event<'a> {
         if self.group_id != 0i64 { w.write_with_tag(64, |w| w.write_int64(*&self.group_id))?; }
         if self.action_id != 0i64 { w.write_with_tag(72, |w| w.write_int64(*&self.action_id))?; }
         if self.chat_id != 0i64 { w.write_with_tag(80, |w| w.write_int64(*&self.chat_id))?; }
-        if self.chat_key != "" { w.write_with_tag(90, |w| w.write_string(&**&self.chat_key))?; }
+        if self.chat_key != String::default() { w.write_with_tag(90, |w| w.write_string(&**&self.chat_key))?; }
         if self.message_id != 0i64 { w.write_with_tag(96, |w| w.write_int64(*&self.message_id))?; }
         if self.re_shared_id != 0i64 { w.write_with_tag(104, |w| w.write_int64(*&self.re_shared_id))?; }
         if self.murmur64_hash != 0i64 { w.write_with_tag(112, |w| w.write_int64(*&self.murmur64_hash))?; }
@@ -160,6 +159,49 @@ impl MessageWrite for PB_Notify {
         if self.murmur64_hash != 0i64 { w.write_with_tag(64, |w| w.write_int64(*&self.murmur64_hash))?; }
         if self.seen_status != 0i32 { w.write_with_tag(72, |w| w.write_int32(*&self.seen_status))?; }
         if self.created_time != 0i32 { w.write_with_tag(80, |w| w.write_int32(*&self.created_time))?; }
+        Ok(())
+    }
+}
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct Invoke {
+    pub method: u32,
+    pub action_id: u64,
+    pub is_response: bool,
+    pub rpc_data: Vec<u8>,
+}
+
+impl<'a> MessageRead<'a> for Invoke {
+    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
+        let mut msg = Self::default();
+        while !r.is_eof() {
+            match r.next_tag(bytes) {
+                Ok(8) => msg.method = r.read_uint32(bytes)?,
+                Ok(16) => msg.action_id = r.read_uint64(bytes)?,
+                Ok(24) => msg.is_response = r.read_bool(bytes)?,
+                Ok(34) => msg.rpc_data = r.read_bytes(bytes)?.to_owned(),
+                Ok(t) => { r.read_unknown(bytes, t)?; }
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(msg)
+    }
+}
+
+impl MessageWrite for Invoke {
+    fn get_size(&self) -> usize {
+        0
+        + if self.method == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.method) as u64) }
+        + if self.action_id == 0u64 { 0 } else { 1 + sizeof_varint(*(&self.action_id) as u64) }
+        + if self.is_response == false { 0 } else { 1 + sizeof_varint(*(&self.is_response) as u64) }
+        + if self.rpc_data == vec![] { 0 } else { 1 + sizeof_len((&self.rpc_data).len()) }
+    }
+
+    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
+        if self.method != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.method))?; }
+        if self.action_id != 0u64 { w.write_with_tag(16, |w| w.write_uint64(*&self.action_id))?; }
+        if self.is_response != false { w.write_with_tag(24, |w| w.write_bool(*&self.is_response))?; }
+        if self.rpc_data != vec![] { w.write_with_tag(34, |w| w.write_bytes(&**&self.rpc_data))?; }
         Ok(())
     }
 }

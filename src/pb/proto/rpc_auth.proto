@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+package pbs;
 option java_package = "ir.ms.pb";
 //option java_outer_classname = "PB2";
 option java_multiple_files = true;
@@ -7,7 +8,7 @@ option optimize_for = LITE_RUNTIME; //CODE_SIZE;
 
 option go_package = "x";
 
-import "enum.proto";
+import "enums.proto";
 import "views.proto";
 
 message SendConfirmCodeParam {
@@ -65,7 +66,7 @@ message SingInParam {
 message SingInResponse {
    bool Done =1;
    string ErrorMessage = 2;
-   SelfUserView SelfUserView = 3;
+    SelfUserView SelfUserView = 3;
 }
 
 message LogOutParam {
