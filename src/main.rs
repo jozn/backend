@@ -15,11 +15,8 @@ use quick_protobuf::{BytesReader, BytesWriter};
 use quick_protobuf::{MessageRead,MessageWrite,Writer};
 
 mod pb;
-// use pb::sys::Invoke;
-// mod pb;
-// mod ps;
-// use pb::store::*;
-// mod pbs;
+
+use pb::pb::sys::*;
 use prost::Message;
 #[derive(Debug, Default, PartialEq, Clone)]
 pub struct Inv {
@@ -30,55 +27,7 @@ pub struct Inv {
 }
 
 fn play(){
-    let i = Inv{
-        method: 0,
-        action_id: 0,
-        is_response: false,
-        rpc_data: vec![]
-    };
 
-    let b= Inv{
-        method: 0,
-        action_id: 0,
-        is_response: false,
-        rpc_data: vec![1]
-    };
-
-    let r = pb::Message{
-        gid: 0,
-        by_user_cid: 0,
-        by_channel_cid: 0,
-        post_type: 0,
-        media_id: 0,
-        file_ref_id: 0,
-        post_key: "".to_string(),
-        text: "".to_string(),
-        rich_text: "".to_string(),
-        shared_to: 0,
-        via: 0,
-        seq: 0,
-        edited_time: 0,
-        created_time: 0,
-        delivery_status: 0,
-        delivery_time: 0,
-        previous_message_id: 0,
-        deleted: false,
-        forward_from: None,
-        reply_to: None,
-        counts: None,
-        setting: None,
-        files: vec![]
-    };
-
-    let mut bts = vec![];
-    let m = r.encode(&mut bts );
-
-    // if b.rpc_data == Vec::new() {
-    //     println!("sdfsd")
-    // }
-    // let _m = pb::sys::Invoke{
-    //
-    // };
 }
 
 fn to_bin(s: String) -> Vec<u8> {
@@ -99,11 +48,6 @@ async fn server_http(req: Request<Body>) -> Result<Response<Body>, Infallible> {
 }
 
 async fn server_http_rpc(req: Request<Body>) -> Vec<u8> {
-    // let bo = req.into_body();
-    // let y = bo.poll_data().await.unwrap();
-    // let bts = body::to_bytes(bo).await.unwrap();
-    // let b = bts.as_bytes();
-    // req.st
 
     let bo = req.into_body();
     let bts = body::to_bytes(bo).await.unwrap();
@@ -115,14 +59,14 @@ async fn server_http_rpc(req: Request<Body>) -> Vec<u8> {
 
     if let Ok(act) = invoke {
         println!("act {:?}", act);
-        let pb_bts = server_rpc_old(act).unwrap_or("vec![]".as_bytes().to_owned());
+        let pb_bts = server_rpc(act).unwrap_or("vec![]".as_bytes().to_owned());
         return  pb_bts
-    }
+    };
 
     "error in rpc ".as_bytes().to_owned()
 }
 
-fn server_rpc_old(act : Invoke) -> Result<Vec<u8>,GenErr> {
+fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
     let up = UserParam{};
     match act.method {
         45 => {
@@ -188,129 +132,4 @@ async fn main() {
     if let Err(e) = server.await {
         eprintln!("server error: {}", e);
     }
-}
-
-mod archive {
-use super::*;
-    async fn server_http_rpc(req: Request<Body>) -> Vec<u8> {
-        let bo = req.into_body();
-        let bts = body::to_bytes(bo).await.unwrap();
-
-        // let act = serde_json::from_slice::<Act>(&bts);
-        let act = bincode::deserialize::<Act>(&bts);
-
-        if let Ok(act) = act {
-            println!("act {:?}", act);
-            let pb_bts = server_rpc_old(act).unwrap_or("vec![]".as_bytes().to_owned());
-            return  pb_bts
-            //return bincode::serialize(&pb_bts).unwrap()
-        }
-
-        "error in rpc ".as_bytes().to_owned()
-    }
-
-    fn server_rpc_old(act :Act) -> Result<Vec<u8>,GenErr> {
-        let up = UserParam{};
-        match act.method {
-            45 => {
-                let vec = "funk ".as_bytes().to_owned();
-
-                // let req_param_pb = serde_json::from_slice::<CheckUsernameParam>(&act.data);
-                let req_param_pb = bincode::deserialize::<CheckUsernameParam>(&act.data);
-                if let Ok(act) = &req_param_pb {
-                    println!("actingggggggggggggg {:?}", act);
-                    let result = rpc::check_username(&up,act)?;
-                    let bts = bincode::serialize(&result).unwrap();
-                    return Ok(bts)
-
-                    // Ok(Response::builder().status(404).body(Body::from("RPC Not found.")).unwrap())
-                } else {
-                    // Ok(Response::builder().status(404).body(Body::from("RPC Not found.")).unwrap())
-                }
-
-                Ok(vec)
-            },
-            _ => {
-                Err(GenErr{})
-            }
-        }
-    }
-
-    mod rpc {
-        use super::*;
-        pub fn check_username(user_param: &UserParam, req: &CheckUsernameParam) -> Result<CheckUsernameRespose,GenErr> {
-            Ok(CheckUsernameRespose{
-                yes: "sdfsd".to_string()
-            })
-        }
-    }
-
-    trait AllRpc: RPC + RPC5 {
-
-    }
-
-    trait RPC {
-        fn check_username(user_param: &UserParam, req: &CheckUsernameParam) -> Result<CheckUsernameRespose,GenErr>;
-    }
-
-    trait RPC5 {
-        fn check_username5(user_param: &UserParam, req: &CheckUsernameParam) -> Result<CheckUsernameRespose,GenErr>;
-    }
-
-    #[derive(Debug, Serialize, Deserialize)]
-    pub struct Act {
-        method: u32,
-        data: Vec<u8>,
-        act_id: u64,
-    }
-
-    pub struct GenErr {}
-    pub struct UserParam {}
-
-    #[derive(Debug, Serialize, Deserialize)]
-    pub struct CheckUsernameParam {
-        id: u64,
-    }
-
-    #[derive(Debug, Serialize, Deserialize)]
-    pub struct CheckUsernameRespose {
-        yes: String
-    }
-
-    async fn hello_world(req: Request<Body>) -> Result<Response<Body>, Infallible> {
-        let s = format!("{:#?}", req);
-        let h =  req.headers();
-        let host = h.get(http::header::HOST);
-        // let host = h.get(http::header::HOST);
-        let uri = req.uri();
-        // println!("uri >>> {:#?}", uri);
-        println!("uri >>> {:#?}", uri.path());
-        println!("uri >>> {:#?}", uri.query());
-        println!("method >>> {:#?}", req.method());
-        let p = uri.path();
-        match p {
-            "/echo" => Ok(Response::new(Body::from(uri.query().unwrap_or("[none]").to_string().clone()))),
-            "/repeat" => Ok(Response::new(Body::from(s.repeat(100)))),
-            "/rpc" => {
-                // let bo = req.body().clone();
-                let bo = req.into_body();
-                let bts = body::to_bytes(bo).await.unwrap();
-
-                let act = serde_json::from_slice::<Act>(&bts);
-
-                if let Ok(act) = act {
-                    println!("act {:?}", act);
-
-                    Ok(Response::new(Body::from(bts)))
-
-                } else {
-                    Ok(Response::builder().status(404).body(Body::from("RPC Not found.")).unwrap())
-                }
-
-            },
-            _ => Ok(Response::builder().status(404).body(Body::from("Not found.")).unwrap())
-        }
-        // Ok(Response::new(Body::from(s.repeat(100))))
-    }
-
 }

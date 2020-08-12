@@ -1576,7 +1576,7 @@ impl MessageWrite for Sms {
         + if self.sms_http_body == String::default() { 0 } else { 1 + sizeof_len((&self.sms_http_body).len()) }
         + if self.err == String::default() { 0 } else { 1 + sizeof_len((&self.err).len()) }
         + if self.carrier == String::default() { 0 } else { 1 + sizeof_len((&self.carrier).len()) }
-        + if self.country == vec![] { 0 } else { 1 + sizeof_len((&self.country).len()) }
+        + if self.country.is_empty() { 0 } else { 1 + sizeof_len((&self.country).len()) }
         + if self.is_valid_phone == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.is_valid_phone) as u64) }
         + if self.is_confirmed == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.is_confirmed) as u64) }
         + if self.is_login == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.is_login) as u64) }
@@ -1596,7 +1596,7 @@ impl MessageWrite for Sms {
         if self.sms_http_body != String::default() { w.write_with_tag(66, |w| w.write_string(&**&self.sms_http_body))?; }
         if self.err != String::default() { w.write_with_tag(74, |w| w.write_string(&**&self.err))?; }
         if self.carrier != String::default() { w.write_with_tag(82, |w| w.write_string(&**&self.carrier))?; }
-        if self.country != vec![] { w.write_with_tag(90, |w| w.write_bytes(&**&self.country))?; }
+        if !self.country.is_empty() { w.write_with_tag(90, |w| w.write_bytes(&**&self.country))?; }
         if self.is_valid_phone != 0u32 { w.write_with_tag(96, |w| w.write_uint32(*&self.is_valid_phone))?; }
         if self.is_confirmed != 0u32 { w.write_with_tag(104, |w| w.write_uint32(*&self.is_confirmed))?; }
         if self.is_login != 0u32 { w.write_with_tag(112, |w| w.write_uint32(*&self.is_login))?; }
@@ -2299,8 +2299,8 @@ impl MessageWrite for FileMsg {
         + if self.height == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.height) as u64) }
         + if self.extension == String::default() { 0 } else { 1 + sizeof_len((&self.extension).len()) }
         + if self.user_cid == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.user_cid) as u64) }
-        + if self.data_thumb == vec![] { 0 } else { 1 + sizeof_len((&self.data_thumb).len()) }
-        + if self.data == vec![] { 0 } else { 1 + sizeof_len((&self.data).len()) }
+        + if self.data_thumb.is_empty() { 0 } else { 1 + sizeof_len((&self.data_thumb).len()) }
+        + if self.data.is_empty() { 0 } else { 1 + sizeof_len((&self.data).len()) }
     }
 
     fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
@@ -2311,8 +2311,8 @@ impl MessageWrite for FileMsg {
         if self.height != 0u32 { w.write_with_tag(40, |w| w.write_uint32(*&self.height))?; }
         if self.extension != String::default() { w.write_with_tag(50, |w| w.write_string(&**&self.extension))?; }
         if self.user_cid != 0u32 { w.write_with_tag(56, |w| w.write_uint32(*&self.user_cid))?; }
-        if self.data_thumb != vec![] { w.write_with_tag(66, |w| w.write_bytes(&**&self.data_thumb))?; }
-        if self.data != vec![] { w.write_with_tag(74, |w| w.write_bytes(&**&self.data))?; }
+        if !self.data_thumb.is_empty() { w.write_with_tag(66, |w| w.write_bytes(&**&self.data_thumb))?; }
+        if !self.data.is_empty() { w.write_with_tag(74, |w| w.write_bytes(&**&self.data))?; }
         Ok(())
     }
 }

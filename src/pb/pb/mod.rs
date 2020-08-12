@@ -1,5 +1,5 @@
 // Automatically generated mod.rs
-pub mod enum_pb;
+pub mod enums;
 pub mod global;
 pub mod rpc_auth;
 pub mod rpc_general;

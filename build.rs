@@ -1,7 +1,7 @@
-fn main7() {
+fn main() {
 
 }
-fn main() {
+fn main_bk() {
     // prost_build::compile_protos(&["src/items.proto"],
     //                             &["src/"]);
 

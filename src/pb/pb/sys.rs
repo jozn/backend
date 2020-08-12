@@ -194,14 +194,14 @@ impl MessageWrite for Invoke {
         + if self.method == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.method) as u64) }
         + if self.action_id == 0u64 { 0 } else { 1 + sizeof_varint(*(&self.action_id) as u64) }
         + if self.is_response == false { 0 } else { 1 + sizeof_varint(*(&self.is_response) as u64) }
-        + if self.rpc_data == vec![] { 0 } else { 1 + sizeof_len((&self.rpc_data).len()) }
+        + if self.rpc_data.is_empty() { 0 } else { 1 + sizeof_len((&self.rpc_data).len()) }
     }
 
     fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
         if self.method != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.method))?; }
         if self.action_id != 0u64 { w.write_with_tag(16, |w| w.write_uint64(*&self.action_id))?; }
         if self.is_response != false { w.write_with_tag(24, |w| w.write_bool(*&self.is_response))?; }
-        if self.rpc_data != vec![] { w.write_with_tag(34, |w| w.write_bytes(&**&self.rpc_data))?; }
+        if !self.rpc_data.is_empty() { w.write_with_tag(34, |w| w.write_bytes(&**&self.rpc_data))?; }
         Ok(())
     }
 }

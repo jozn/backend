@@ -277,7 +277,7 @@ impl MessageWrite for CommentView {
 pub struct PostView {
     pub PostId: i64,
     pub UserId: i32,
-    pub PostTypeEnum: enum_pb::PostTypeEnum,
+    pub PostTypeEnum: enums::PostTypeEnum,
     pub Text: String,
     pub RichText: String,
     pub MediaCount: i32,
@@ -337,7 +337,7 @@ impl MessageWrite for PostView {
         0
         + if self.PostId == 0i64 { 0 } else { 1 + sizeof_varint(*(&self.PostId) as u64) }
         + if self.UserId == 0i32 { 0 } else { 1 + sizeof_varint(*(&self.UserId) as u64) }
-        + if self.PostTypeEnum == enum_pb::PostTypeEnum::POST_Type_Unknown { 0 } else { 1 + sizeof_varint(*(&self.PostTypeEnum) as u64) }
+        + if self.PostTypeEnum == enums::PostTypeEnum::POST_Type_Unknown { 0 } else { 1 + sizeof_varint(*(&self.PostTypeEnum) as u64) }
         + if self.Text == String::default() { 0 } else { 1 + sizeof_len((&self.Text).len()) }
         + if self.RichText == String::default() { 0 } else { 1 + sizeof_len((&self.RichText).len()) }
         + if self.MediaCount == 0i32 { 0 } else { 1 + sizeof_varint(*(&self.MediaCount) as u64) }
@@ -361,7 +361,7 @@ impl MessageWrite for PostView {
     fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
         if self.PostId != 0i64 { w.write_with_tag(8, |w| w.write_int64(*&self.PostId))?; }
         if self.UserId != 0i32 { w.write_with_tag(16, |w| w.write_int32(*&self.UserId))?; }
-        if self.PostTypeEnum != enum_pb::PostTypeEnum::POST_Type_Unknown { w.write_with_tag(24, |w| w.write_enum(*&self.PostTypeEnum as i32))?; }
+        if self.PostTypeEnum != enums::PostTypeEnum::POST_Type_Unknown { w.write_with_tag(24, |w| w.write_enum(*&self.PostTypeEnum as i32))?; }
         if self.Text != String::default() { w.write_with_tag(34, |w| w.write_string(&**&self.Text))?; }
         if self.RichText != String::default() { w.write_with_tag(42, |w| w.write_string(&**&self.RichText))?; }
         if self.MediaCount != 0i32 { w.write_with_tag(48, |w| w.write_int32(*&self.MediaCount))?; }
@@ -873,10 +873,10 @@ pub struct UserView {
     pub FollowingCount: i32,
     pub PostsCount: i32,
     pub MediaCount: i32,
-    pub UserOnlineStatusEnum: enum_pb::UserOnlineStatusEnum,
+    pub UserOnlineStatusEnum: enums::UserOnlineStatusEnum,
     pub LastActiveTime: i32,
     pub LastActiveTimeShow: String,
-    pub MyFollwing: enum_pb::FollowingEnum,
+    pub MyFollwing: enums::FollowingEnum,
 }
 
 impl<'a> MessageRead<'a> for UserView {
@@ -923,10 +923,10 @@ impl MessageWrite for UserView {
         + if self.FollowingCount == 0i32 { 0 } else { 2 + sizeof_varint(*(&self.FollowingCount) as u64) }
         + if self.PostsCount == 0i32 { 0 } else { 2 + sizeof_varint(*(&self.PostsCount) as u64) }
         + if self.MediaCount == 0i32 { 0 } else { 2 + sizeof_varint(*(&self.MediaCount) as u64) }
-        + if self.UserOnlineStatusEnum == enum_pb::UserOnlineStatusEnum::EXACTLY { 0 } else { 2 + sizeof_varint(*(&self.UserOnlineStatusEnum) as u64) }
+        + if self.UserOnlineStatusEnum == enums::UserOnlineStatusEnum::EXACTLY { 0 } else { 2 + sizeof_varint(*(&self.UserOnlineStatusEnum) as u64) }
         + if self.LastActiveTime == 0i32 { 0 } else { 2 + sizeof_varint(*(&self.LastActiveTime) as u64) }
         + if self.LastActiveTimeShow == String::default() { 0 } else { 2 + sizeof_len((&self.LastActiveTimeShow).len()) }
-        + if self.MyFollwing == enum_pb::FollowingEnum::FOLLOWING_NONE { 0 } else { 2 + sizeof_varint(*(&self.MyFollwing) as u64) }
+        + if self.MyFollwing == enums::FollowingEnum::FOLLOWING_NONE { 0 } else { 2 + sizeof_varint(*(&self.MyFollwing) as u64) }
     }
 
     fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
@@ -942,10 +942,10 @@ impl MessageWrite for UserView {
         if self.FollowingCount != 0i32 { w.write_with_tag(808, |w| w.write_int32(*&self.FollowingCount))?; }
         if self.PostsCount != 0i32 { w.write_with_tag(816, |w| w.write_int32(*&self.PostsCount))?; }
         if self.MediaCount != 0i32 { w.write_with_tag(824, |w| w.write_int32(*&self.MediaCount))?; }
-        if self.UserOnlineStatusEnum != enum_pb::UserOnlineStatusEnum::EXACTLY { w.write_with_tag(1600, |w| w.write_enum(*&self.UserOnlineStatusEnum as i32))?; }
+        if self.UserOnlineStatusEnum != enums::UserOnlineStatusEnum::EXACTLY { w.write_with_tag(1600, |w| w.write_enum(*&self.UserOnlineStatusEnum as i32))?; }
         if self.LastActiveTime != 0i32 { w.write_with_tag(1608, |w| w.write_int32(*&self.LastActiveTime))?; }
         if self.LastActiveTimeShow != String::default() { w.write_with_tag(1618, |w| w.write_string(&**&self.LastActiveTimeShow))?; }
-        if self.MyFollwing != enum_pb::FollowingEnum::FOLLOWING_NONE { w.write_with_tag(2400, |w| w.write_enum(*&self.MyFollwing as i32))?; }
+        if self.MyFollwing != enums::FollowingEnum::FOLLOWING_NONE { w.write_with_tag(2400, |w| w.write_enum(*&self.MyFollwing as i32))?; }
         Ok(())
     }
 }
