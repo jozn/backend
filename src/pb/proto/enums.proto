@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+//package pbs;
 option java_package = "ir.ms.pb";
 //option java_outer_classname = "PB2";
 option java_multiple_files = true;
@@ -20,10 +21,10 @@ enum FollowingEnum {
     BLOCKED = 3;
 }
 
-enum UserTypeEnum {
-    USER = 0;
-    CHANNEL = 1;
-}
+//enum UserTypeEnum {
+//    USER = 0;
+//    CHANNEL = 1;
+//}
 
 enum UserLevelEnum{
     LEVEL_NORMAL = 0;
@@ -102,21 +103,21 @@ enum ActionEnum{
     ACTION_POST_COMMENTED = 1;
     ACTION_FOLLOWED_USER = 2;
 }
-
-enum ProfilePrivacyLevelEnum {
-    NONE = 0;
-}
+//
+//enum ProfilePrivacyLevelEnum {
+//    NONE = 0;
+//}
 
 // chat
 
-enum RoomTypeEnum {
-    UNKNOWN_ROOM_TYPE = 0;
-    DIRECT = 1;
-    GROUP = 2;
-    //    CHANNEL = 3;
-    BROADCAST = 3;
-    //    BULK = 3;
-}
+//enum RoomTypeEnum {
+//    UNKNOWN_ROOM_TYPE = 0;
+//    DIRECT = 1;
+//    GROUP = 2;
+//    //    CHANNEL = 3;
+//    BROADCAST = 3;
+//    //    BULK = 3;
+//}
 
 enum RoomActionDoingEnum {
     UNKNOWN_ROOM_ACTION_DOING = 0;
@@ -137,12 +138,12 @@ enum RoomActionDoingEnum {
     PAINTING = 16;
 }
 
-enum RoomMessageDeliviryStatusEnum {
-    UNKNOWN_MESSAGE_DELIVIRY = 0;
-    NEED_TO_SINK = 1;
-    FAILED = 2;
-    SENDING = 3;
-    SENT = 4;
-    DELIVERED = 5;
-    SEEN = 6;
-}
+//enum RoomMessageDeliviryStatusEnum {
+//    UNKNOWN_MESSAGE_DELIVIRY = 0;
+//    NEED_TO_SINK = 1;
+//    FAILED = 2;
+//    SENDING = 3;
+//    SENT = 4;
+//    DELIVERED = 5;
+//    SEEN = 6;
+//}
