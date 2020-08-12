@@ -1,0 +1,2 @@
+pb-rs --dont_use_cow proto/* -d pb
+
