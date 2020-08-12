@@ -13,38 +13,6 @@ use quick_protobuf::{BytesReader, Result, MessageRead, MessageWrite};
 use super::*;
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
-pub enum MediaTypeEnum {
-    MEDIA_IMAGE = 0,
-    MEDIA_VIDEO = 1,
-}
-
-impl Default for MediaTypeEnum {
-    fn default() -> Self {
-        MediaTypeEnum::MEDIA_IMAGE
-    }
-}
-
-impl From<i32> for MediaTypeEnum {
-    fn from(i: i32) -> Self {
-        match i {
-            0 => MediaTypeEnum::MEDIA_IMAGE,
-            1 => MediaTypeEnum::MEDIA_VIDEO,
-            _ => Self::default(),
-        }
-    }
-}
-
-impl<'a> From<&'a str> for MediaTypeEnum {
-    fn from(s: &'a str) -> Self {
-        match s {
-            "MEDIA_IMAGE" => MediaTypeEnum::MEDIA_IMAGE,
-            "MEDIA_VIDEO" => MediaTypeEnum::MEDIA_VIDEO,
-            _ => Self::default(),
-        }
-    }
-}
-
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum FollowingEnum {
     FOLLOWING_NONE = 0,
     FOLLOWING = 1,
@@ -171,35 +139,6 @@ impl<'a> From<&'a str> for GeneralPrivacyEnum {
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
-pub enum UserOnlinePrivacyEnum {
-    E4 = 0,
-}
-
-impl Default for UserOnlinePrivacyEnum {
-    fn default() -> Self {
-        UserOnlinePrivacyEnum::E4
-    }
-}
-
-impl From<i32> for UserOnlinePrivacyEnum {
-    fn from(i: i32) -> Self {
-        match i {
-            0 => UserOnlinePrivacyEnum::E4,
-            _ => Self::default(),
-        }
-    }
-}
-
-impl<'a> From<&'a str> for UserOnlinePrivacyEnum {
-    fn from(s: &'a str) -> Self {
-        match s {
-            "E4" => UserOnlinePrivacyEnum::E4,
-            _ => Self::default(),
-        }
-    }
-}
-
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum UserOnlineStatusEnum {
     EXACTLY = 0,
     ONLINE = 1,
@@ -247,88 +186,6 @@ impl<'a> From<&'a str> for UserOnlineStatusEnum {
             "LAST_MONTH" => UserOnlineStatusEnum::LAST_MONTH,
             "LONG_TIME_AGO" => UserOnlineStatusEnum::LONG_TIME_AGO,
             "HIDE" => UserOnlineStatusEnum::HIDE,
-            _ => Self::default(),
-        }
-    }
-}
-
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
-pub enum PostTypeEnum {
-    POST_Type_Unknown = 0,
-    POST_TEXT = 1,
-    POST_PHOTO = 2,
-    POST_VIDEO = 3,
-    POST_GIF = 4,
-    POST_AUDIO = 5,
-    POST_FILE = 7,
-    POST_POLL = 8,
-    POST_MEDIA = 100,
-}
-
-impl Default for PostTypeEnum {
-    fn default() -> Self {
-        PostTypeEnum::POST_Type_Unknown
-    }
-}
-
-impl From<i32> for PostTypeEnum {
-    fn from(i: i32) -> Self {
-        match i {
-            0 => PostTypeEnum::POST_Type_Unknown,
-            1 => PostTypeEnum::POST_TEXT,
-            2 => PostTypeEnum::POST_PHOTO,
-            3 => PostTypeEnum::POST_VIDEO,
-            4 => PostTypeEnum::POST_GIF,
-            5 => PostTypeEnum::POST_AUDIO,
-            7 => PostTypeEnum::POST_FILE,
-            8 => PostTypeEnum::POST_POLL,
-            100 => PostTypeEnum::POST_MEDIA,
-            _ => Self::default(),
-        }
-    }
-}
-
-impl<'a> From<&'a str> for PostTypeEnum {
-    fn from(s: &'a str) -> Self {
-        match s {
-            "POST_Type_Unknown" => PostTypeEnum::POST_Type_Unknown,
-            "POST_TEXT" => PostTypeEnum::POST_TEXT,
-            "POST_PHOTO" => PostTypeEnum::POST_PHOTO,
-            "POST_VIDEO" => PostTypeEnum::POST_VIDEO,
-            "POST_GIF" => PostTypeEnum::POST_GIF,
-            "POST_AUDIO" => PostTypeEnum::POST_AUDIO,
-            "POST_FILE" => PostTypeEnum::POST_FILE,
-            "POST_POLL" => PostTypeEnum::POST_POLL,
-            "POST_MEDIA" => PostTypeEnum::POST_MEDIA,
-            _ => Self::default(),
-        }
-    }
-}
-
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
-pub enum CategoryEnum {
-    Category_RESHARED = 0,
-}
-
-impl Default for CategoryEnum {
-    fn default() -> Self {
-        CategoryEnum::Category_RESHARED
-    }
-}
-
-impl From<i32> for CategoryEnum {
-    fn from(i: i32) -> Self {
-        match i {
-            0 => CategoryEnum::Category_RESHARED,
-            _ => Self::default(),
-        }
-    }
-}
-
-impl<'a> From<&'a str> for CategoryEnum {
-    fn from(s: &'a str) -> Self {
-        match s {
-            "Category_RESHARED" => CategoryEnum::Category_RESHARED,
             _ => Self::default(),
         }
     }

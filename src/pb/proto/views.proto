@@ -63,7 +63,7 @@ message CommentView {
 message PostView {
     int64 PostId = 1;
     int32 UserId = 2;
-    PostTypeEnum PostTypeEnum = 3;
+//    PostTypeEnum PostTypeEnum = 3;
     string Text = 4;
     string RichText = 5;
     int32 MediaCount = 6;

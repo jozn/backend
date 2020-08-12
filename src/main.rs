@@ -15,9 +15,14 @@ use quick_protobuf::{BytesReader, BytesWriter};
 use quick_protobuf::{MessageRead,MessageWrite,Writer};
 
 mod pb;
+mod rpc;
+mod com;
+
 
 use pb::pb::sys::*;
 use prost::Message;
+
+
 #[derive(Debug, Default, PartialEq, Clone)]
 pub struct Inv {
     pub method: u32,
@@ -27,6 +32,15 @@ pub struct Inv {
 }
 
 fn play(){
+
+    let s = std::mem::size_of::<pb::store::Message>();
+    println!("size: {}", s );
+
+    let s = std::mem::size_of::<pb::store::MessageCount>();
+    println!("size msg count: {}", s );
+
+    let s = std::mem::size_of::<pb::store::MessageCompact>();
+    println!("size compact: {}", s );
 
 }
 
@@ -59,7 +73,8 @@ async fn server_http_rpc(req: Request<Body>) -> Vec<u8> {
 
     if let Ok(act) = invoke {
         println!("act {:?}", act);
-        let pb_bts = server_rpc(act).unwrap_or("vec![]".as_bytes().to_owned());
+        // let pb_bts = server_rpc(act).unwrap_or("vec![]".as_bytes().to_owned());
+        let pb_bts = rpc::server_rpc(act).unwrap_or("vec![]".as_bytes().to_owned());
         return  pb_bts
     };
 
@@ -77,7 +92,7 @@ fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let result = rpc::check_username(&up,param)?;
+                let result = rpc_old::check_username(&up,param)?;
 
                 let mut out_bytes = Vec::new();
                 let mut writer = Writer::new(&mut out_bytes);
@@ -93,13 +108,10 @@ fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
     }
 }
 
-mod rpc {
+mod rpc_old {
     use super::*;
     pub fn check_username(up: &UserParam, param: pb::EchoParam) -> Result<pb::EchoResponse, GenErr> {
-        Ok(pb::EchoResponse{
-            // text: param.text.clone(),
-            // done: true,
-        })
+        Ok(pb::EchoResponse::default())
     }
 }
 
@@ -116,6 +128,8 @@ async fn repeat(u: &http::Uri) -> String {
 #[tokio::main]
 async fn main() {
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+
+    play();
 
     // A `Service` is needed for every connection, so this
     // creates one from our `hello_world` function.

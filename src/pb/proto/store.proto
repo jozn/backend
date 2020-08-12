@@ -7,7 +7,7 @@ option optimize_for = LITE_RUNTIME; //CODE_SIZE;
 option go_package = "x";
 
 // next: user relations, shop, product, message log, store, file
-//
+// next2: message integrations: product, payment, contacts,...
 // gid = unique nano second time;
 // sid = scoped id; for future - bot platforms
 // cid = common id - seqentaily increase id for user, channels, groups, shops,..
@@ -22,12 +22,15 @@ message Message {
   string post_key = 6;
   string text = 7;
   string rich_text = 8;
+  string title = 109;
 //  uint32 media_count = 9;
   uint32 shared_to = 10;
   uint32 via = 12;
   uint32 seq = 13;
+  uint64 version_time = 108;
   uint32 edited_time = 17;
   uint32 created_time = 18;
+  bool verified = 111;
 
   MessageDeliveryStatues delivery_status = 105;
   uint32 delivery_time = 106;
@@ -35,11 +38,12 @@ message Message {
   uint64 previous_message_id = 180;
   bool deleted = 15; //??
 
-  Message forward_from = 16;
+  Message forward_from = 16; // forward is always live object
   Message reply_to = 50;
 
   MessageCount counts = 101;
   MessageSetting setting = 102;
+  Product Product = 110;
   repeated FileMsg files = 103;
 
   // add location, log, payment, proudcut, forward,
@@ -54,12 +58,17 @@ enum MessageType {
   VOICE = 7;
   GIF = 8;
   FILE = 9;
+  POLL = 10;
   LOCATION = 11;
   LOG = 12;
   CONTACT = 13;
   WALLET = 15;
+  // ??
   PRODUCT = 16;
+  FORWARD = 17;
 
+  //??
+  POST_MEDIA = 100; // photo, video, gif
 }
 
 message MessageCount {
@@ -77,7 +86,9 @@ message MessageSetting {
 }
 
 enum MessageDeliveryStatues {
-  FAILED = 0;
+  UNKNOWN_MD = 0; // blocked
+  NOT_ABLE = 6; // blocked
+  FAILED = 7;
   SENDING = 1;
   SENT = 2;
   DELIVERED = 3;
@@ -204,6 +215,36 @@ message ChannelCounts {
   uint32 pined_count = 32;
   uint32 likes_count = 33;
   uint32 reshared_count = 34;
+}
+
+message Store {
+  string address = 1;
+  string phone = 2;
+
+}
+
+message Product {
+  uint32 product_id = 1; // seq
+  uint32 category_id = 53;
+  string category = 50;
+  string brand = 51;
+  uint32 fee_rate = 3; //from 10_000 - 5% > 500
+  uint32 sales_count = 5;
+  uint32 price = 6;
+
+  /*fixed64 gid = 1; // same as message.gid
+  fixed64 product_id = 101; // seq
+  uint32 by_user_cid = 2;
+  uint32 by_channel_cid = 100;
+  string rich_text = 8;
+  uint32 seq = 13;
+  uint32 created_time = 18;*/
+}
+
+message ProductPriceInfo {
+  uint32 price = 1;
+  uint32 discount_price = 6;
+  uint32 rate = 3; // from 1000
 }
 
 // Shared common cid

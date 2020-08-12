@@ -277,7 +277,6 @@ impl MessageWrite for CommentView {
 pub struct PostView {
     pub PostId: i64,
     pub UserId: i32,
-    pub PostTypeEnum: enums::PostTypeEnum,
     pub Text: String,
     pub RichText: String,
     pub MediaCount: i32,
@@ -305,7 +304,6 @@ impl<'a> MessageRead<'a> for PostView {
             match r.next_tag(bytes) {
                 Ok(8) => msg.PostId = r.read_int64(bytes)?,
                 Ok(16) => msg.UserId = r.read_int32(bytes)?,
-                Ok(24) => msg.PostTypeEnum = r.read_enum(bytes)?,
                 Ok(34) => msg.Text = r.read_string(bytes)?.to_owned(),
                 Ok(42) => msg.RichText = r.read_string(bytes)?.to_owned(),
                 Ok(48) => msg.MediaCount = r.read_int32(bytes)?,
@@ -337,7 +335,6 @@ impl MessageWrite for PostView {
         0
         + if self.PostId == 0i64 { 0 } else { 1 + sizeof_varint(*(&self.PostId) as u64) }
         + if self.UserId == 0i32 { 0 } else { 1 + sizeof_varint(*(&self.UserId) as u64) }
-        + if self.PostTypeEnum == enums::PostTypeEnum::POST_Type_Unknown { 0 } else { 1 + sizeof_varint(*(&self.PostTypeEnum) as u64) }
         + if self.Text == String::default() { 0 } else { 1 + sizeof_len((&self.Text).len()) }
         + if self.RichText == String::default() { 0 } else { 1 + sizeof_len((&self.RichText).len()) }
         + if self.MediaCount == 0i32 { 0 } else { 1 + sizeof_varint(*(&self.MediaCount) as u64) }
@@ -361,7 +358,6 @@ impl MessageWrite for PostView {
     fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
         if self.PostId != 0i64 { w.write_with_tag(8, |w| w.write_int64(*&self.PostId))?; }
         if self.UserId != 0i32 { w.write_with_tag(16, |w| w.write_int32(*&self.UserId))?; }
-        if self.PostTypeEnum != enums::PostTypeEnum::POST_Type_Unknown { w.write_with_tag(24, |w| w.write_enum(*&self.PostTypeEnum as i32))?; }
         if self.Text != String::default() { w.write_with_tag(34, |w| w.write_string(&**&self.Text))?; }
         if self.RichText != String::default() { w.write_with_tag(42, |w| w.write_string(&**&self.RichText))?; }
         if self.MediaCount != 0i32 { w.write_with_tag(48, |w| w.write_int32(*&self.MediaCount))?; }

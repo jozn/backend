@@ -8,12 +8,6 @@ option optimize_for = LITE_RUNTIME; //CODE_SIZE;
 
 option go_package = "x";
 
-//dep
-enum MediaTypeEnum {
-    MEDIA_IMAGE = 0;
-    MEDIA_VIDEO = 1;
-}
-
 enum FollowingEnum {
     FOLLOWING_NONE = 0;
     FOLLOWING = 1;
@@ -44,11 +38,6 @@ enum GeneralPrivacyEnum{
     CONTACTS_AND_FOLLOWD_PRIVACY = 5;
 }
 
-//DEP
-enum UserOnlinePrivacyEnum{
-    E4 = 0;
-}
-
 enum UserOnlineStatusEnum{
     EXACTLY = 0;
     ONLINE = 1;
@@ -61,7 +50,7 @@ enum UserOnlineStatusEnum{
     HIDE = 8;
 }
 
-enum PostTypeEnum{
+/*enum PostTypeEnum{
     POST_Type_Unknown = 0;
     POST_TEXT = 1;
     POST_PHOTO = 2;
@@ -72,19 +61,7 @@ enum PostTypeEnum{
     POST_POLL = 8;
 
     POST_MEDIA = 100; // photo, video, gif
-}
-
-enum CategoryEnum{
-    Category_RESHARED = 0;
-    /*POST_TEXT = 1;
-    POST_PHOTO = 2;
-    POST_VIDEO = 3;
-    POST_GIFS = 4;
-    POST_AUDIO = 5;
-    POST_GIF = 6;
-    POST_FILE = 7;
-    POST_POLL = 8;*/
-}
+}*/
 
 enum PostCategoryEnum{
     PostCat_Text = 0;
@@ -103,10 +80,6 @@ enum ActionEnum{
     ACTION_POST_COMMENTED = 1;
     ACTION_FOLLOWED_USER = 2;
 }
-//
-//enum ProfilePrivacyLevelEnum {
-//    NONE = 0;
-//}
 
 // chat
 
