@@ -504,14 +504,17 @@ pub struct Message {
     pub version_time: u64,
     pub edited_time: u32,
     pub created_time: u32,
+    pub verified: bool,
     pub delivery_status: MessageDeliveryStatues,
     pub delivery_time: u32,
     pub previous_message_id: u64,
     pub deleted: bool,
-    pub forward_from: Option<Box<Message>>,
+    pub flags: u32,
+    pub forward: Option<Box<Message>>,
     pub reply_to: Option<Box<Message>>,
     pub counts: Option<MessageCount>,
     pub setting: Option<MessageSetting>,
+    pub Product: Option<Product>,
     pub files: Vec<FileMsg>,
 }
 
@@ -536,14 +539,17 @@ impl<'a> MessageRead<'a> for Message {
                 Ok(864) => msg.version_time = r.read_uint64(bytes)?,
                 Ok(136) => msg.edited_time = r.read_uint32(bytes)?,
                 Ok(144) => msg.created_time = r.read_uint32(bytes)?,
+                Ok(888) => msg.verified = r.read_bool(bytes)?,
                 Ok(840) => msg.delivery_status = r.read_enum(bytes)?,
                 Ok(848) => msg.delivery_time = r.read_uint32(bytes)?,
                 Ok(1440) => msg.previous_message_id = r.read_uint64(bytes)?,
                 Ok(120) => msg.deleted = r.read_bool(bytes)?,
-                Ok(130) => msg.forward_from = Some(Box::new(r.read_message::<Message>(bytes)?)),
+                Ok(896) => msg.flags = r.read_uint32(bytes)?,
+                Ok(130) => msg.forward = Some(Box::new(r.read_message::<Message>(bytes)?)),
                 Ok(402) => msg.reply_to = Some(Box::new(r.read_message::<Message>(bytes)?)),
                 Ok(810) => msg.counts = Some(r.read_message::<MessageCount>(bytes)?),
                 Ok(818) => msg.setting = Some(r.read_message::<MessageSetting>(bytes)?),
+                Ok(882) => msg.Product = Some(r.read_message::<Product>(bytes)?),
                 Ok(826) => msg.files.push(r.read_message::<FileMsg>(bytes)?),
                 Ok(t) => { r.read_unknown(bytes, t)?; }
                 Err(e) => return Err(e),
@@ -572,14 +578,17 @@ impl MessageWrite for Message {
         + if self.version_time == 0u64 { 0 } else { 2 + sizeof_varint(*(&self.version_time) as u64) }
         + if self.edited_time == 0u32 { 0 } else { 2 + sizeof_varint(*(&self.edited_time) as u64) }
         + if self.created_time == 0u32 { 0 } else { 2 + sizeof_varint(*(&self.created_time) as u64) }
+        + if self.verified == false { 0 } else { 2 + sizeof_varint(*(&self.verified) as u64) }
         + if self.delivery_status == store::MessageDeliveryStatues::UNKNOWN_MD { 0 } else { 2 + sizeof_varint(*(&self.delivery_status) as u64) }
         + if self.delivery_time == 0u32 { 0 } else { 2 + sizeof_varint(*(&self.delivery_time) as u64) }
         + if self.previous_message_id == 0u64 { 0 } else { 2 + sizeof_varint(*(&self.previous_message_id) as u64) }
         + if self.deleted == false { 0 } else { 1 + sizeof_varint(*(&self.deleted) as u64) }
-        + self.forward_from.as_ref().map_or(0, |m| 2 + sizeof_len((m).get_size()))
+        + if self.flags == 0u32 { 0 } else { 2 + sizeof_varint(*(&self.flags) as u64) }
+        + self.forward.as_ref().map_or(0, |m| 2 + sizeof_len((m).get_size()))
         + self.reply_to.as_ref().map_or(0, |m| 2 + sizeof_len((m).get_size()))
         + self.counts.as_ref().map_or(0, |m| 2 + sizeof_len((m).get_size()))
         + self.setting.as_ref().map_or(0, |m| 2 + sizeof_len((m).get_size()))
+        + self.Product.as_ref().map_or(0, |m| 2 + sizeof_len((m).get_size()))
         + self.files.iter().map(|s| 2 + sizeof_len((s).get_size())).sum::<usize>()
     }
 
@@ -600,58 +609,18 @@ impl MessageWrite for Message {
         if self.version_time != 0u64 { w.write_with_tag(864, |w| w.write_uint64(*&self.version_time))?; }
         if self.edited_time != 0u32 { w.write_with_tag(136, |w| w.write_uint32(*&self.edited_time))?; }
         if self.created_time != 0u32 { w.write_with_tag(144, |w| w.write_uint32(*&self.created_time))?; }
+        if self.verified != false { w.write_with_tag(888, |w| w.write_bool(*&self.verified))?; }
         if self.delivery_status != store::MessageDeliveryStatues::UNKNOWN_MD { w.write_with_tag(840, |w| w.write_enum(*&self.delivery_status as i32))?; }
         if self.delivery_time != 0u32 { w.write_with_tag(848, |w| w.write_uint32(*&self.delivery_time))?; }
         if self.previous_message_id != 0u64 { w.write_with_tag(1440, |w| w.write_uint64(*&self.previous_message_id))?; }
         if self.deleted != false { w.write_with_tag(120, |w| w.write_bool(*&self.deleted))?; }
-        if let Some(ref s) = self.forward_from { w.write_with_tag(130, |w| w.write_message(&**s))?; }
+        if self.flags != 0u32 { w.write_with_tag(896, |w| w.write_uint32(*&self.flags))?; }
+        if let Some(ref s) = self.forward { w.write_with_tag(130, |w| w.write_message(&**s))?; }
         if let Some(ref s) = self.reply_to { w.write_with_tag(402, |w| w.write_message(&**s))?; }
         if let Some(ref s) = self.counts { w.write_with_tag(810, |w| w.write_message(s))?; }
         if let Some(ref s) = self.setting { w.write_with_tag(818, |w| w.write_message(s))?; }
+        if let Some(ref s) = self.Product { w.write_with_tag(882, |w| w.write_message(s))?; }
         for s in &self.files { w.write_with_tag(826, |w| w.write_message(s))?; }
-        Ok(())
-    }
-}
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct MessageCompact {
-    pub text: String,
-    pub title: String,
-    pub seq: u32,
-    pub created_time: u32,
-}
-
-impl<'a> MessageRead<'a> for MessageCompact {
-    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
-        let mut msg = Self::default();
-        while !r.is_eof() {
-            match r.next_tag(bytes) {
-                Ok(58) => msg.text = r.read_string(bytes)?.to_owned(),
-                Ok(874) => msg.title = r.read_string(bytes)?.to_owned(),
-                Ok(104) => msg.seq = r.read_uint32(bytes)?,
-                Ok(144) => msg.created_time = r.read_uint32(bytes)?,
-                Ok(t) => { r.read_unknown(bytes, t)?; }
-                Err(e) => return Err(e),
-            }
-        }
-        Ok(msg)
-    }
-}
-
-impl MessageWrite for MessageCompact {
-    fn get_size(&self) -> usize {
-        0
-        + if self.text == String::default() { 0 } else { 1 + sizeof_len((&self.text).len()) }
-        + if self.title == String::default() { 0 } else { 2 + sizeof_len((&self.title).len()) }
-        + if self.seq == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.seq) as u64) }
-        + if self.created_time == 0u32 { 0 } else { 2 + sizeof_varint(*(&self.created_time) as u64) }
-    }
-
-    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
-        if self.text != String::default() { w.write_with_tag(58, |w| w.write_string(&**&self.text))?; }
-        if self.title != String::default() { w.write_with_tag(874, |w| w.write_string(&**&self.title))?; }
-        if self.seq != 0u32 { w.write_with_tag(104, |w| w.write_uint32(*&self.seq))?; }
-        if self.created_time != 0u32 { w.write_with_tag(144, |w| w.write_uint32(*&self.created_time))?; }
         Ok(())
     }
 }
@@ -1138,23 +1107,49 @@ impl MessageWrite for ChannelCounts {
 }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct Store { }
+pub struct Store {
+    pub address: String,
+    pub phone: String,
+}
 
 impl<'a> MessageRead<'a> for Store {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
+    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
+        let mut msg = Self::default();
+        while !r.is_eof() {
+            match r.next_tag(bytes) {
+                Ok(10) => msg.address = r.read_string(bytes)?.to_owned(),
+                Ok(18) => msg.phone = r.read_string(bytes)?.to_owned(),
+                Ok(t) => { r.read_unknown(bytes, t)?; }
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(msg)
     }
 }
 
-impl MessageWrite for Store { }
+impl MessageWrite for Store {
+    fn get_size(&self) -> usize {
+        0
+        + if self.address == String::default() { 0 } else { 1 + sizeof_len((&self.address).len()) }
+        + if self.phone == String::default() { 0 } else { 1 + sizeof_len((&self.phone).len()) }
+    }
+
+    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
+        if self.address != String::default() { w.write_with_tag(10, |w| w.write_string(&**&self.address))?; }
+        if self.phone != String::default() { w.write_with_tag(18, |w| w.write_string(&**&self.phone))?; }
+        Ok(())
+    }
+}
 
 #[derive(Debug, Default, PartialEq, Clone)]
 pub struct Product {
     pub product_id: u32,
+    pub category_id: u32,
     pub category: String,
     pub brand: String,
-    pub fee: u32,
+    pub fee_rate: u32,
+    pub sales_count: u32,
+    pub price: u32,
 }
 
 impl<'a> MessageRead<'a> for Product {
@@ -1163,9 +1158,12 @@ impl<'a> MessageRead<'a> for Product {
         while !r.is_eof() {
             match r.next_tag(bytes) {
                 Ok(8) => msg.product_id = r.read_uint32(bytes)?,
+                Ok(424) => msg.category_id = r.read_uint32(bytes)?,
                 Ok(402) => msg.category = r.read_string(bytes)?.to_owned(),
                 Ok(410) => msg.brand = r.read_string(bytes)?.to_owned(),
-                Ok(24) => msg.fee = r.read_uint32(bytes)?,
+                Ok(24) => msg.fee_rate = r.read_uint32(bytes)?,
+                Ok(40) => msg.sales_count = r.read_uint32(bytes)?,
+                Ok(48) => msg.price = r.read_uint32(bytes)?,
                 Ok(t) => { r.read_unknown(bytes, t)?; }
                 Err(e) => return Err(e),
             }
@@ -1178,16 +1176,61 @@ impl MessageWrite for Product {
     fn get_size(&self) -> usize {
         0
         + if self.product_id == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.product_id) as u64) }
+        + if self.category_id == 0u32 { 0 } else { 2 + sizeof_varint(*(&self.category_id) as u64) }
         + if self.category == String::default() { 0 } else { 2 + sizeof_len((&self.category).len()) }
         + if self.brand == String::default() { 0 } else { 2 + sizeof_len((&self.brand).len()) }
-        + if self.fee == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.fee) as u64) }
+        + if self.fee_rate == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.fee_rate) as u64) }
+        + if self.sales_count == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.sales_count) as u64) }
+        + if self.price == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.price) as u64) }
     }
 
     fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
         if self.product_id != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.product_id))?; }
+        if self.category_id != 0u32 { w.write_with_tag(424, |w| w.write_uint32(*&self.category_id))?; }
         if self.category != String::default() { w.write_with_tag(402, |w| w.write_string(&**&self.category))?; }
         if self.brand != String::default() { w.write_with_tag(410, |w| w.write_string(&**&self.brand))?; }
-        if self.fee != 0u32 { w.write_with_tag(24, |w| w.write_uint32(*&self.fee))?; }
+        if self.fee_rate != 0u32 { w.write_with_tag(24, |w| w.write_uint32(*&self.fee_rate))?; }
+        if self.sales_count != 0u32 { w.write_with_tag(40, |w| w.write_uint32(*&self.sales_count))?; }
+        if self.price != 0u32 { w.write_with_tag(48, |w| w.write_uint32(*&self.price))?; }
+        Ok(())
+    }
+}
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct ProductPriceInfo {
+    pub price: u32,
+    pub discount_price: u32,
+    pub rate: u32,
+}
+
+impl<'a> MessageRead<'a> for ProductPriceInfo {
+    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
+        let mut msg = Self::default();
+        while !r.is_eof() {
+            match r.next_tag(bytes) {
+                Ok(8) => msg.price = r.read_uint32(bytes)?,
+                Ok(48) => msg.discount_price = r.read_uint32(bytes)?,
+                Ok(24) => msg.rate = r.read_uint32(bytes)?,
+                Ok(t) => { r.read_unknown(bytes, t)?; }
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(msg)
+    }
+}
+
+impl MessageWrite for ProductPriceInfo {
+    fn get_size(&self) -> usize {
+        0
+        + if self.price == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.price) as u64) }
+        + if self.discount_price == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.discount_price) as u64) }
+        + if self.rate == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.rate) as u64) }
+    }
+
+    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
+        if self.price != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.price))?; }
+        if self.discount_price != 0u32 { w.write_with_tag(48, |w| w.write_uint32(*&self.discount_price))?; }
+        if self.rate != 0u32 { w.write_with_tag(24, |w| w.write_uint32(*&self.rate))?; }
         Ok(())
     }
 }
@@ -2434,191 +2477,6 @@ impl MessageWrite for FileMsg {
         if self.user_cid != 0u32 { w.write_with_tag(56, |w| w.write_uint32(*&self.user_cid))?; }
         if !self.data_thumb.is_empty() { w.write_with_tag(66, |w| w.write_bytes(&**&self.data_thumb))?; }
         if !self.data.is_empty() { w.write_with_tag(74, |w| w.write_bytes(&**&self.data))?; }
-        Ok(())
-    }
-}
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct Post {
-    pub gid: u64,
-    pub user_cid: u32,
-    pub post_type: u32,
-    pub media_id: i64,
-    pub file_ref_id: i64,
-    pub post_key: String,
-    pub text: String,
-    pub rich_text: String,
-    pub media_count: u32,
-    pub shared_to: u32,
-    pub disable_comment: u32,
-    pub via: u32,
-    pub seq: u32,
-    pub comments_count: u32,
-    pub likes_count: u32,
-    pub views_count: u32,
-    pub edited_time: u32,
-    pub created_time: u32,
-}
-
-impl<'a> MessageRead<'a> for Post {
-    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
-        let mut msg = Self::default();
-        while !r.is_eof() {
-            match r.next_tag(bytes) {
-                Ok(9) => msg.gid = r.read_fixed64(bytes)?,
-                Ok(16) => msg.user_cid = r.read_uint32(bytes)?,
-                Ok(24) => msg.post_type = r.read_uint32(bytes)?,
-                Ok(32) => msg.media_id = r.read_int64(bytes)?,
-                Ok(40) => msg.file_ref_id = r.read_int64(bytes)?,
-                Ok(50) => msg.post_key = r.read_string(bytes)?.to_owned(),
-                Ok(58) => msg.text = r.read_string(bytes)?.to_owned(),
-                Ok(66) => msg.rich_text = r.read_string(bytes)?.to_owned(),
-                Ok(72) => msg.media_count = r.read_uint32(bytes)?,
-                Ok(80) => msg.shared_to = r.read_uint32(bytes)?,
-                Ok(88) => msg.disable_comment = r.read_uint32(bytes)?,
-                Ok(96) => msg.via = r.read_uint32(bytes)?,
-                Ok(104) => msg.seq = r.read_uint32(bytes)?,
-                Ok(112) => msg.comments_count = r.read_uint32(bytes)?,
-                Ok(120) => msg.likes_count = r.read_uint32(bytes)?,
-                Ok(128) => msg.views_count = r.read_uint32(bytes)?,
-                Ok(136) => msg.edited_time = r.read_uint32(bytes)?,
-                Ok(144) => msg.created_time = r.read_uint32(bytes)?,
-                Ok(t) => { r.read_unknown(bytes, t)?; }
-                Err(e) => return Err(e),
-            }
-        }
-        Ok(msg)
-    }
-}
-
-impl MessageWrite for Post {
-    fn get_size(&self) -> usize {
-        0
-        + if self.gid == 0u64 { 0 } else { 1 + 8 }
-        + if self.user_cid == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.user_cid) as u64) }
-        + if self.post_type == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.post_type) as u64) }
-        + if self.media_id == 0i64 { 0 } else { 1 + sizeof_varint(*(&self.media_id) as u64) }
-        + if self.file_ref_id == 0i64 { 0 } else { 1 + sizeof_varint(*(&self.file_ref_id) as u64) }
-        + if self.post_key == String::default() { 0 } else { 1 + sizeof_len((&self.post_key).len()) }
-        + if self.text == String::default() { 0 } else { 1 + sizeof_len((&self.text).len()) }
-        + if self.rich_text == String::default() { 0 } else { 1 + sizeof_len((&self.rich_text).len()) }
-        + if self.media_count == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.media_count) as u64) }
-        + if self.shared_to == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.shared_to) as u64) }
-        + if self.disable_comment == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.disable_comment) as u64) }
-        + if self.via == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.via) as u64) }
-        + if self.seq == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.seq) as u64) }
-        + if self.comments_count == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.comments_count) as u64) }
-        + if self.likes_count == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.likes_count) as u64) }
-        + if self.views_count == 0u32 { 0 } else { 2 + sizeof_varint(*(&self.views_count) as u64) }
-        + if self.edited_time == 0u32 { 0 } else { 2 + sizeof_varint(*(&self.edited_time) as u64) }
-        + if self.created_time == 0u32 { 0 } else { 2 + sizeof_varint(*(&self.created_time) as u64) }
-    }
-
-    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
-        if self.gid != 0u64 { w.write_with_tag(9, |w| w.write_fixed64(*&self.gid))?; }
-        if self.user_cid != 0u32 { w.write_with_tag(16, |w| w.write_uint32(*&self.user_cid))?; }
-        if self.post_type != 0u32 { w.write_with_tag(24, |w| w.write_uint32(*&self.post_type))?; }
-        if self.media_id != 0i64 { w.write_with_tag(32, |w| w.write_int64(*&self.media_id))?; }
-        if self.file_ref_id != 0i64 { w.write_with_tag(40, |w| w.write_int64(*&self.file_ref_id))?; }
-        if self.post_key != String::default() { w.write_with_tag(50, |w| w.write_string(&**&self.post_key))?; }
-        if self.text != String::default() { w.write_with_tag(58, |w| w.write_string(&**&self.text))?; }
-        if self.rich_text != String::default() { w.write_with_tag(66, |w| w.write_string(&**&self.rich_text))?; }
-        if self.media_count != 0u32 { w.write_with_tag(72, |w| w.write_uint32(*&self.media_count))?; }
-        if self.shared_to != 0u32 { w.write_with_tag(80, |w| w.write_uint32(*&self.shared_to))?; }
-        if self.disable_comment != 0u32 { w.write_with_tag(88, |w| w.write_uint32(*&self.disable_comment))?; }
-        if self.via != 0u32 { w.write_with_tag(96, |w| w.write_uint32(*&self.via))?; }
-        if self.seq != 0u32 { w.write_with_tag(104, |w| w.write_uint32(*&self.seq))?; }
-        if self.comments_count != 0u32 { w.write_with_tag(112, |w| w.write_uint32(*&self.comments_count))?; }
-        if self.likes_count != 0u32 { w.write_with_tag(120, |w| w.write_uint32(*&self.likes_count))?; }
-        if self.views_count != 0u32 { w.write_with_tag(128, |w| w.write_uint32(*&self.views_count))?; }
-        if self.edited_time != 0u32 { w.write_with_tag(136, |w| w.write_uint32(*&self.edited_time))?; }
-        if self.created_time != 0u32 { w.write_with_tag(144, |w| w.write_uint32(*&self.created_time))?; }
-        Ok(())
-    }
-}
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct PostCount {
-    pub post_gid: u64,
-    pub comments_count: u32,
-    pub likes_count: u32,
-    pub views_count: i64,
-    pub re_shared_count: u32,
-    pub chat_shared_count: u32,
-}
-
-impl<'a> MessageRead<'a> for PostCount {
-    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
-        let mut msg = Self::default();
-        while !r.is_eof() {
-            match r.next_tag(bytes) {
-                Ok(9) => msg.post_gid = r.read_fixed64(bytes)?,
-                Ok(16) => msg.comments_count = r.read_uint32(bytes)?,
-                Ok(24) => msg.likes_count = r.read_uint32(bytes)?,
-                Ok(32) => msg.views_count = r.read_int64(bytes)?,
-                Ok(40) => msg.re_shared_count = r.read_uint32(bytes)?,
-                Ok(48) => msg.chat_shared_count = r.read_uint32(bytes)?,
-                Ok(t) => { r.read_unknown(bytes, t)?; }
-                Err(e) => return Err(e),
-            }
-        }
-        Ok(msg)
-    }
-}
-
-impl MessageWrite for PostCount {
-    fn get_size(&self) -> usize {
-        0
-        + if self.post_gid == 0u64 { 0 } else { 1 + 8 }
-        + if self.comments_count == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.comments_count) as u64) }
-        + if self.likes_count == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.likes_count) as u64) }
-        + if self.views_count == 0i64 { 0 } else { 1 + sizeof_varint(*(&self.views_count) as u64) }
-        + if self.re_shared_count == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.re_shared_count) as u64) }
-        + if self.chat_shared_count == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.chat_shared_count) as u64) }
-    }
-
-    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
-        if self.post_gid != 0u64 { w.write_with_tag(9, |w| w.write_fixed64(*&self.post_gid))?; }
-        if self.comments_count != 0u32 { w.write_with_tag(16, |w| w.write_uint32(*&self.comments_count))?; }
-        if self.likes_count != 0u32 { w.write_with_tag(24, |w| w.write_uint32(*&self.likes_count))?; }
-        if self.views_count != 0i64 { w.write_with_tag(32, |w| w.write_int64(*&self.views_count))?; }
-        if self.re_shared_count != 0u32 { w.write_with_tag(40, |w| w.write_uint32(*&self.re_shared_count))?; }
-        if self.chat_shared_count != 0u32 { w.write_with_tag(48, |w| w.write_uint32(*&self.chat_shared_count))?; }
-        Ok(())
-    }
-}
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct MessageDelivery {
-    pub statues: MessageDeliveryStatues,
-    pub seen_time: u32,
-}
-
-impl<'a> MessageRead<'a> for MessageDelivery {
-    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
-        let mut msg = Self::default();
-        while !r.is_eof() {
-            match r.next_tag(bytes) {
-                Ok(88) => msg.statues = r.read_enum(bytes)?,
-                Ok(16) => msg.seen_time = r.read_uint32(bytes)?,
-                Ok(t) => { r.read_unknown(bytes, t)?; }
-                Err(e) => return Err(e),
-            }
-        }
-        Ok(msg)
-    }
-}
-
-impl MessageWrite for MessageDelivery {
-    fn get_size(&self) -> usize {
-        0
-        + if self.statues == store::MessageDeliveryStatues::UNKNOWN_MD { 0 } else { 1 + sizeof_varint(*(&self.statues) as u64) }
-        + if self.seen_time == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.seen_time) as u64) }
-    }
-
-    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
-        if self.statues != store::MessageDeliveryStatues::UNKNOWN_MD { w.write_with_tag(88, |w| w.write_enum(*&self.statues as i32))?; }
-        if self.seen_time != 0u32 { w.write_with_tag(16, |w| w.write_uint32(*&self.seen_time))?; }
         Ok(())
     }
 }

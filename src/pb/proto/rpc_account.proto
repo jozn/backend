@@ -18,7 +18,7 @@ message ChangePhoneNumberResponse {
     string text = 2;
 }
 
-service RPC_General {
+service RPC_Account {
     rpc ChangePhoneNumber (ChangePhoneNumberParam) returns (ChangePhoneNumberResponse);
     
 }

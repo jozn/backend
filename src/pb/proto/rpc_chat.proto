@@ -10,16 +10,16 @@ option go_package = "x";
 
 //import "pb_enum.proto";
 
-message ChangePhoneNumberParam {
+message DeleteChatParam {
 }
 
-message ChangePhoneNumberResponse {
+message DeleteChatResponse {
     bool done =1;
     string text = 2;
 }
 
-service RPC_General {
-    rpc ChangePhoneNumber (ChangePhoneNumberParam) returns (ChangePhoneNumberResponse);
+service RPC_Chat {
+    rpc DeleteChat (DeleteChatParam) returns (DeleteChatResponse);
     
 }
 

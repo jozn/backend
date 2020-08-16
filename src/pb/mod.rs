@@ -11,27 +11,19 @@
 pub mod pb;
 pub use pb::*;
 
-// pub use pb::global::*;
-// pub use pb::rpc_general::*;
-
-// legacy ones
-// /*pub use pb::pb_changes::*;
-pub use pb::enums::*;
-pub use pb::global::*;
+pub use pb::rpc_account::*;
 pub use pb::rpc_auth::*;
-// pub use pb::pb_rpc_chat::*;
+pub use pb::rpc_channel::*;
+pub use pb::rpc_chat::*;
+pub use pb::rpc_direct::*;
 pub use pb::rpc_general::*;
-// pub use pb::pb_rpc_page::*;
-// pub use pb::pb_rpc_social::*;
-// pub use pb::pb_rpc_user::*;
-// pub use pb::pb_tables::*;
+pub use pb::rpc_social::*;
+pub use pb::rpc_upload::*;
+
+pub use pb::global::*;
+pub use pb::store::*;
+pub use pb::sys::*;
 pub use pb::views::*;
-// pub use pb::proto::*;
+pub use pb::enums::*;
 
 
-/*pub use mod_RPC_Page_Types::*;
-pub use mod_RPC_Auth_Types::*;
-pub use mod_RPC_General_Types::*;
-pub use mod_RPC_Social_Types::*;
-pub use mod_RPC_User_Types::*;
-pub use mod_PB_RPC_Chat_Types::*;*/

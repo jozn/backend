@@ -39,7 +39,7 @@ fn play(){
     let s = std::mem::size_of::<pb::store::MessageCount>();
     println!("size msg count: {}", s );
 
-    let s = std::mem::size_of::<pb::store::MessageCompact>();
+    let s = std::mem::size_of::<pb::MediaView>();
     println!("size compact: {}", s );
 
 }
