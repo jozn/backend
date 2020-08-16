@@ -1,0 +1,141 @@
+syntax = "proto3";
+
+//package pbs;
+option java_package = "ir.ms.pb";
+//option java_outer_classname = "PB2";
+option java_multiple_files = true;
+option optimize_for = LITE_RUNTIME; //CODE_SIZE;
+
+option go_package = "x";
+
+//import "pb_enum.proto";
+
+message AddCommentParam {
+    string text = 1;
+}
+
+message AddCommentResponse {
+    bool done =1;
+    string text = 2;
+}
+
+message DeleteCommentParam {
+
+}
+
+message DeleteCommentResponse {
+
+}
+
+message EditCommentParam {
+
+}
+
+message EditCommentResponse {
+
+}
+
+message LikeCommentParam {
+
+}
+
+message LikeCommentResponse {
+
+}
+
+message AddSeenPostsParam {
+
+}
+
+message AddSeenPostsResponse {
+
+}
+
+message LikePostParam {
+
+}
+
+message LikePostResponse {
+
+}
+ 
+message UnLikePostParam {
+
+}
+
+message UnLikePostResponse {
+
+}
+
+message FollowChannelParam {
+
+}
+
+message FollowChannelResponse {
+
+}
+
+message UnFollowChannelParam {
+
+}
+
+message UnFollowChannelResponse {
+
+}
+
+message PinChannelParam {
+
+}
+
+message PinChannelResponse {
+
+}
+
+message UnPinChannelParam {
+
+}
+
+message UnPinChannelResponse {
+
+}
+
+message BlockChannelParam {
+
+}
+
+message BlockChannelResponse {
+
+}
+
+message UnBlockChannelParam {
+
+}
+
+message UnBlockChannelResponse {
+
+}
+
+// post = synom for channel messages in social context
+service RPC_Social {
+    rpc AddComment (AddCommentParam) returns (AddCommentResponse);
+    rpc DeleteComment (DeleteCommentParam) returns (DeleteCommentResponse);
+    rpc EditComment (EditCommentParam) returns (EditCommentResponse);
+    rpc LikeComment (LikeCommentParam) returns (LikeCommentResponse);
+    rpc AddSeenPosts (AddSeenPostsParam) returns (AddSeenPostsResponse);
+
+    rpc LikePost (LikePostParam) returns (LikePostResponse);
+    rpc UnLikePost (UnLikePostParam) returns (UnLikePostResponse);
+
+    rpc FollowChannel (FollowChannelParam) returns (FollowChannelResponse);
+    rpc UnFollowChannel (UnFollowChannelParam) returns (UnFollowChannelResponse);
+
+    // todo pin or subscribe
+    rpc PinChannel (PinChannelParam) returns (PinChannelResponse);
+    rpc UnPinChannel (UnPinChannelParam) returns (UnPinChannelResponse);
+
+    rpc BlockChannel (BlockChannelParam) returns (BlockChannelResponse);
+    rpc UnBlockChannel (UnBlockChannelParam) returns (UnBlockChannelResponse);
+
+
+}
+

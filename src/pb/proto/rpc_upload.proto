@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+//package pbs;
+option java_package = "ir.ms.pb";
+//option java_outer_classname = "PB2";
+option java_multiple_files = true;
+option optimize_for = LITE_RUNTIME; //CODE_SIZE;
+
+option go_package = "x";
+
+//import "pb_enum.proto";
+
+message UploadFileParam {
+}
+
+message UploadFileResponse {
+    bool done =1;
+    string text = 2;
+}
+
+service RPC_General {
+    rpc UploadFile (UploadFileParam) returns (UploadFileResponse);
+    
+}
+

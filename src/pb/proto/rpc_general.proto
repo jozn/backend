@@ -15,8 +15,8 @@ message EchoParam {
 }
 
 message EchoResponse {
-//    bool done =1;
-//    string text = 2;
+    bool done =1;
+    string text = 2;
 }
 
 message CheckUserNameParam {

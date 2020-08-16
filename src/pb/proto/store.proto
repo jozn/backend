@@ -38,7 +38,8 @@ message Message {
   uint64 previous_message_id = 180;
   bool deleted = 15; //??
 
-  Message forward_from = 16; // forward is always live object
+  uint32 flags = 112;
+  Message forward = 16; // forward is always live object from other channels, but not from other chats, groups
   Message reply_to = 50;
 
   MessageCount counts = 101;
