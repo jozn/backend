@@ -143,7 +143,7 @@ service RPC_Group {
 
 }
 
-// CRDU
+// CrDU
 message GroupCreateGroupParam {
     uint32 group_id = 1;
 }
@@ -318,18 +318,3 @@ message Response {
 }
 
 */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

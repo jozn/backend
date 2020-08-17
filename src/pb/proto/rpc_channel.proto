@@ -29,30 +29,6 @@ message ChannelAvatarGetListParam {
 
 message ChannelAvatarGetListResponse {}
 
-message ChannelCreateParam {
-    uint32 channel_id = 1;
-}
-
-message ChannelCreateResponse {
-
-}
-
-message ChannelEditParam {
-    uint32 channel_id = 1;
-}
-
-message ChannelEditResponse {
-
-}
-
-message ChannelDeleteParam {
-    uint32 channel_id = 1;
-}
-
-message ChannelDeleteResponse {
-
-}
-
 message ChannelSendMessageParam {
     uint32 channel_id = 1;
 }
@@ -101,44 +77,247 @@ message ChannelSetDraftResponse {
 
 }
 
+service RPC_Channel {
+    //rpc Channel (Param) returns (Response);
+
+    // CrDU
+    rpc ChannelCreateChannel (ChannelCreateChannelParam) returns (ChannelCreateChannelResponse);
+    rpc ChannelEditChannel (ChannelEditChannelParam) returns (ChannelEditChannelResponse);
+    rpc ChannelDeleteChannel (ChannelDeleteChannelParam) returns (ChannelDeleteChannelResponse);
+
+    // Members
+    rpc ChannelAddAdmin (ChannelAddAdminParam) returns (ChannelAddAdminResponse); // ??
+    rpc ChannelAddMember (ChannelAddMemberParam) returns (ChannelAddMemberResponse);
+    rpc ChannelRemoveMember (ChannelRemoveMemberParam) returns (ChannelRemoveMemberResponse);
+    rpc ChannelChangeMemberLevel (ChannelChangeMemberLevelParam) returns (ChannelChangeMemberLevelResponse);
+    rpc ChannelChangeMemberRights (ChannelChangeMemberRightsParam) returns (ChannelChangeMemberRightsResponse);
+    rpc ChannelJoinChannel (JoinChannelParam) returns (JoinChannelResponse);
+    rpc ChannelLeaveChannel (ChannelLeaveChannelParam) returns (ChannelLeaveChannelResponse);
+    rpc ChannelBanMember (ChannelBanMemberParam) returns (ChannelBanMemberResponse);
+
+    // Privacy
+    rpc ChannelChangePrivacy (ChannelChangePrivacyParam) returns (ChannelChangePrivacyResponse);
+    rpc ChannelChangeDefaultRights (ChannelChangeDefaultRightsParam) returns (ChannelChangeDefaultRightsResponse);
+    rpc ChannelRevokeLink (ChannelRevokeLinkParam) returns (ChannelRevokeLinkResponse);
+    rpc ChannelChangeUsername (ChannelChangeUsernameParam) returns (ChannelChangeUsernameResponse);
+
+    // Messages
+    rpc ChannelSendMessage (ChannelSendMessageParam) returns (ChannelSendMessageResponse);
+    rpc ChannelEditMessage (ChannelEditMessageParam) returns (ChannelEditMessageResponse);
+    rpc ChannelPinMessage (ChannelPinMessageParam) returns (ChannelPinMessageResponse);
+    rpc ChannelUnPinMessage (ChannelUnPinMessageParam) returns (ChannelUnPinMessageResponse);
+    rpc ChannelDeleteMessage (ChannelDeleteMessageParam) returns (ChannelDeleteMessageResponse); // remove?
+    rpc ChannelDeleteMessages (ChannelDeleteMessagesParam) returns (ChannelDeleteMessagesResponse);
+    rpc ChannelClearHistory (ChannelClearHistoryParam) returns (ChannelClearHistoryResponse);
+
+    // Others
+    rpc ChannelAvatarAdd (ChannelAvatarAddParam) returns (ChannelAvatarAddResponse);
+    rpc ChannelAvatarChange (ChannelAvatarChangeParam) returns (ChannelAvatarChangeResponse); // remove?
+    rpc ChannelAvatarDelete (ChannelAvatarDeleteParam) returns (ChannelAvatarDeleteResponse);
+    rpc ChannelAvatarGetList (ChannelAvatarGetListParam) returns (ChannelAvatarGetListResponse); // view?
+    rpc ChannelSendDoingAction (ChannelSendDoingActionParam) returns (ChannelSendDoingActionResponse);
+    rpc ChannelReportChannel (ChannelReportChannelParam) returns (ChannelReportChannelResponse);
+    rpc ChannelReportMessage (ChannelReportMessageParam) returns (ChannelReportMessageResponse);
+
+    // Views
+    rpc ChannelGetFull (ChannelGetFullParam) returns (ChannelGetFullResponse);
+    rpc ChannelGetMessagesList (ChannelGetMessagesListParam) returns (ChannelGetMessagesListResponse); // posts?
+    rpc ChannelGetMediaList (ChannelGetMediaListParam) returns (ChannelGetMediaListResponse);
+    rpc ChannelGetMembersList (ChannelGetMembersListParam) returns (ChannelGetMembersListResponse);
+    rpc ChannelGetAdminsList (ChannelGetMembersListParam) returns (ChannelGetMembersListResponse);
+
+    // Deprecated
+    rpc ChannelSetDraft (ChannelSetDraftParam) returns (ChannelSetDraftResponse); // draft via direct
+
+}
+
+// CrDU
+message ChannelCreateChannelParam {
+    uint32 group_id = 1;
+}
+
+message ChannelCreateChannelResponse {
+
+}
+
+message ChannelEditChannelParam {
+    uint32 group_id = 1;
+}
+
+message ChannelEditChannelResponse {
+
+}
+
+message ChannelDeleteChannelParam {
+    uint32 group_id = 1;
+}
+
+message ChannelDeleteChannelResponse {
+
+}
+
+// Members
+message Param {
+}
+
+message Response {
+}
+
+message ChannelAddAdminParam {
+}
+
+message ChannelAddAdminResponse {
+}
+
+message ChannelAddMemberParam {
+}
+
+message ChannelAddMemberResponse {
+}
+
+message ChannelRemoveMemberParam {
+}
+
+message ChannelRemoveMemberResponse {
+}
+
+message ChannelChangeMemberLevelParam {
+}
+
+message ChannelChangeMemberLevelResponse {
+}
+
+message ChannelChangeMemberRightsParam {
+}
+
+message ChannelChangeMemberRightsResponse {
+}
+
+message JoinChannelParam {
+}
+
+message JoinChannelResponse {
+}
+
+message ChannelLeaveChannelParam {
+}
+
+message ChannelLeaveChannelResponse {
+}
+
+message ChannelBanMemberParam {
+}
+
+message ChannelBanMemberResponse {
+}
+
+// Privacy
+
 message ChannelChangePrivacyParam {
-    uint32 channel_id = 1;
+    uint32 group_id = 1;
 }
 
 message ChannelChangePrivacyResponse {
 
 }
-message ChannelGetFullMessageParam {
-    uint32 channel_id = 1;
+
+message ChannelChangeDefaultRightsParam {
 }
 
-message ChannelGetFullMessageResponse {
+message ChannelChangeDefaultRightsResponse {
+}
+
+message ChannelRevokeLinkParam {
+}
+
+message ChannelRevokeLinkResponse {
+}
+
+message ChannelChangeUsernameParam {
+}
+
+message ChannelChangeUsernameResponse {
+}
+
+// Messages
+
+message ChannelDeleteMessagesParam {
+    uint32 group_id = 1;
+}
+
+message ChannelDeleteMessagesResponse {
 
 }
 
-service RPC_Channel {
-    rpc ChannelAvatarAdd (ChannelAvatarAddParam) returns (ChannelAvatarAddResponse);// todo Add or Change
-    rpc ChannelAvatarDelete (ChannelAvatarDeleteParam) returns (ChannelAvatarDeleteResponse);
-    rpc ChannelAvatarGetList (ChannelAvatarGetListParam) returns (ChannelAvatarGetListResponse);
-    rpc ChannelCreate (ChannelCreateParam) returns (ChannelCreateResponse);
-    rpc ChannelEdit (ChannelEditParam) returns (ChannelEditResponse);
-    rpc ChannelDelete (ChannelDeleteParam) returns (ChannelDeleteResponse);
-    rpc ChannelSendMessage (ChannelSendMessageParam) returns (ChannelSendMessageResponse);
-    rpc ChannelEditMessage (ChannelEditMessageParam) returns (ChannelEditMessageResponse);
-    rpc ChannelPinMessage (ChannelPinMessageParam) returns (ChannelPinMessageResponse);
-    rpc ChannelUnPinMessage (ChannelUnPinMessageParam) returns (ChannelUnPinMessageResponse);
-    rpc ChannelDeleteMessage (ChannelDeleteMessageParam) returns (ChannelDeleteMessageResponse);
-    rpc ChannelSetDraft (ChannelSetDraftParam) returns (ChannelSetDraftResponse);
-
-    rpc ChannelChangePrivacyDraft (ChannelChangePrivacyParam) returns (ChannelChangePrivacyResponse);
-
-    rpc ChannelGetFull (ChannelGetFullMessageParam) returns (ChannelGetFullMessageResponse);
-
-
+message ChannelClearHistoryParam {
 }
 
+message ChannelClearHistoryResponse {
+}
 
+// Others
 
+message ChannelAvatarChangeParam {
+}
+
+message ChannelAvatarChangeResponse {
+}
+
+message ChannelSendDoingActionParam {
+}
+
+message ChannelSendDoingActionResponse {
+}
+
+message ChannelReportChannelParam {
+}
+
+message ChannelReportChannelResponse {
+}
+
+message ChannelReportMessageParam {
+}
+
+message ChannelReportMessageResponse {
+}
+
+// Views
+
+message ChannelGetFullParam {
+}
+
+message ChannelGetFullResponse {
+}
+
+message ChannelGetMessagesListParam {
+}
+
+message ChannelGetMessagesListResponse {
+}
+
+message ChannelGetMembersListParam {
+}
+
+message ChannelGetMembersListResponse {
+}
+
+message ChannelGetMediaListParam {
+}
+
+message ChannelGetMediaListResponse {
+}
+
+// Dep
+
+/*
+
+message Param {
+}
+
+message Response {
+}
+
+*/
 
 
 
