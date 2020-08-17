@@ -85,21 +85,27 @@ service RPC_Channel {
     rpc ChannelEditChannel (ChannelEditChannelParam) returns (ChannelEditChannelResponse);
     rpc ChannelDeleteChannel (ChannelDeleteChannelParam) returns (ChannelDeleteChannelResponse);
 
-    // Members
-    rpc ChannelAddAdmin (ChannelAddAdminParam) returns (ChannelAddAdminResponse); // ??
-    rpc ChannelAddMember (ChannelAddMemberParam) returns (ChannelAddMemberResponse);
-    rpc ChannelRemoveMember (ChannelRemoveMemberParam) returns (ChannelRemoveMemberResponse);
-    rpc ChannelChangeMemberLevel (ChannelChangeMemberLevelParam) returns (ChannelChangeMemberLevelResponse);
-    rpc ChannelChangeMemberRights (ChannelChangeMemberRightsParam) returns (ChannelChangeMemberRightsResponse);
-    rpc ChannelJoinChannel (JoinChannelParam) returns (JoinChannelResponse);
-    rpc ChannelLeaveChannel (ChannelLeaveChannelParam) returns (ChannelLeaveChannelResponse);
-    rpc ChannelBanMember (ChannelBanMemberParam) returns (ChannelBanMemberResponse);
+    // Author
+    rpc ChannelAddAuthor (ChannelAddAuthorParam) returns (ChannelAddAuthorResponse);
+    rpc ChannelChangeAuthorPermission (ChannelChangeAuthorPermissionParam) returns (ChannelChangeAuthorPermissionResponse);
+    rpc ChannelRemoveAuthor (ChannelRemoveAuthorParam) returns (ChannelRemoveAuthorResponse);
+
+    // Follow
+    rpc ChannelFollowChannel (ChannelFollowChannelParam) returns (ChannelFollowChannelResponse);
+    rpc ChannelUnFollowChannel (ChannelUnFollowChannelParam) returns (ChannelUnFollowChannelResponse);
+    rpc ChannelRemoveFollowers (ChannelRemoveFollowersParam) returns (ChannelRemoveFollowersResponse);
+
+    // Subscribe
+    rpc ChannelSubscribe (ChannelSubscribeParam) returns (ChannelSubscribeResponse);
+    rpc ChannelUnSubscribe (ChannelUnSubscribeParam) returns (ChannelUnSubscribeResponse);
+    rpc ChannelRemoveSubscribers (ChannelRemoveSubscribersParam) returns (ChannelRemoveSubscribersResponse);
 
     // Privacy
     rpc ChannelChangePrivacy (ChannelChangePrivacyParam) returns (ChannelChangePrivacyResponse);
-    rpc ChannelChangeDefaultRights (ChannelChangeDefaultRightsParam) returns (ChannelChangeDefaultRightsResponse);
+    rpc ChannelChangeDefaultPermission (ChannelChangeDefaultPermissionParam) returns (ChannelChangeDefaultPermissionResponse);
     rpc ChannelRevokeLink (ChannelRevokeLinkParam) returns (ChannelRevokeLinkResponse);
     rpc ChannelChangeUsername (ChannelChangeUsernameParam) returns (ChannelChangeUsernameResponse);
+    rpc ChannelBlockChannel (ChannelBlockChannelParam) returns (ChannelBlockChannelResponse);
 
     // Messages
     rpc ChannelSendMessage (ChannelSendMessageParam) returns (ChannelSendMessageResponse);
@@ -123,8 +129,11 @@ service RPC_Channel {
     rpc ChannelGetFull (ChannelGetFullParam) returns (ChannelGetFullResponse);
     rpc ChannelGetMessagesList (ChannelGetMessagesListParam) returns (ChannelGetMessagesListResponse); // posts?
     rpc ChannelGetMediaList (ChannelGetMediaListParam) returns (ChannelGetMediaListResponse);
-    rpc ChannelGetMembersList (ChannelGetMembersListParam) returns (ChannelGetMembersListResponse);
-    rpc ChannelGetAdminsList (ChannelGetMembersListParam) returns (ChannelGetMembersListResponse);
+    rpc ChannelGetAuthors (ChannelGetAuthorsParam) returns (ChannelGetAuthorsResponse);
+    rpc ChannelGetFollowers (ChannelGetFollowersParam) returns (ChannelGetFollowersResponse);
+    rpc ChannelGetFollowings (ChannelGetFollowingsParam) returns (ChannelGetFollowingsResponse);
+    rpc ChannelGetSubscribers (ChannelGetSubscribersParam) returns (ChannelGetSubscribersResponse);
+    rpc ChannelBlocked (ChannelBlockedParam) returns (ChannelBlockedResponse);
 
     // Deprecated
     rpc ChannelSetDraft (ChannelSetDraftParam) returns (ChannelSetDraftResponse); // draft via direct
@@ -156,59 +165,62 @@ message ChannelDeleteChannelResponse {
 
 }
 
-// Members
-message Param {
+// Author
+message ChannelAddAuthorParam {
 }
 
-message Response {
+message ChannelAddAuthorResponse {
 }
 
-message ChannelAddAdminParam {
+message ChannelChangeAuthorPermissionParam {
 }
 
-message ChannelAddAdminResponse {
+message ChannelChangeAuthorPermissionResponse {
 }
 
-message ChannelAddMemberParam {
+message ChannelRemoveAuthorParam {
 }
 
-message ChannelAddMemberResponse {
+message ChannelRemoveAuthorResponse {
 }
 
-message ChannelRemoveMemberParam {
+// Follow
+message ChannelFollowChannelParam {
 }
 
-message ChannelRemoveMemberResponse {
+message ChannelFollowChannelResponse {
 }
 
-message ChannelChangeMemberLevelParam {
+message ChannelUnFollowChannelParam {
 }
 
-message ChannelChangeMemberLevelResponse {
+message ChannelUnFollowChannelResponse {
 }
 
-message ChannelChangeMemberRightsParam {
+message ChannelRemoveFollowersParam {
 }
 
-message ChannelChangeMemberRightsResponse {
+message ChannelRemoveFollowersResponse {
 }
 
-message JoinChannelParam {
+// Subscribe
+
+message ChannelSubscribeParam {
 }
 
-message JoinChannelResponse {
+message ChannelSubscribeResponse {
 }
 
-message ChannelLeaveChannelParam {
+message ChannelUnSubscribeParam {
 }
 
-message ChannelLeaveChannelResponse {
+message ChannelUnSubscribeResponse {
 }
 
-message ChannelBanMemberParam {
+message ChannelRemoveSubscribersParam {
 }
 
-message ChannelBanMemberResponse {
+message ChannelRemoveSubscribersResponse {
 }
 
 // Privacy
@@ -221,10 +233,10 @@ message ChannelChangePrivacyResponse {
 
 }
 
-message ChannelChangeDefaultRightsParam {
+message ChannelChangeDefaultPermissionParam {
 }
 
-message ChannelChangeDefaultRightsResponse {
+message ChannelChangeDefaultPermissionResponse {
 }
 
 message ChannelRevokeLinkParam {
@@ -237,6 +249,12 @@ message ChannelChangeUsernameParam {
 }
 
 message ChannelChangeUsernameResponse {
+}
+
+message ChannelBlockChannelParam {
+}
+
+message ChannelBlockChannelResponse {
 }
 
 // Messages
@@ -295,17 +313,44 @@ message ChannelGetMessagesListParam {
 message ChannelGetMessagesListResponse {
 }
 
-message ChannelGetMembersListParam {
-}
-
-message ChannelGetMembersListResponse {
-}
-
 message ChannelGetMediaListParam {
 }
 
 message ChannelGetMediaListResponse {
 }
+
+message ChannelGetAuthorsParam {
+}
+
+message ChannelGetAuthorsResponse {
+}
+
+message ChannelGetFollowersParam {
+}
+
+message ChannelGetFollowersResponse {
+}
+
+message ChannelGetFollowingsParam {
+}
+
+message ChannelGetFollowingsResponse {
+}
+
+
+message ChannelGetSubscribersParam {
+}
+
+message ChannelGetSubscribersResponse {
+}
+
+
+message ChannelBlockedParam {
+}
+
+message ChannelBlockedResponse {
+}
+
 
 // Dep
 

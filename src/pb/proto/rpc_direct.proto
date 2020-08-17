@@ -17,7 +17,6 @@ message DirectAddMessageResponse {
 }
 
 //// ch
-
 message DirectCreateParam {
 
 }

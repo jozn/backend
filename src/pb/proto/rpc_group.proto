@@ -103,14 +103,14 @@ service RPC_Group {
     rpc GroupAddMember (GroupAddMemberParam) returns (GroupAddMemberResponse);
     rpc GroupRemoveMember (GroupRemoveMemberParam) returns (GroupRemoveMemberResponse);
     rpc GroupChangeMemberLevel (GroupChangeMemberLevelParam) returns (GroupChangeMemberLevelResponse);
-    rpc GroupChangeMemberRights (GroupChangeMemberRightsParam) returns (GroupChangeMemberRightsResponse);
+    rpc GroupChangeMemberPermission (GroupChangeMemberPermissionParam) returns (GroupChangeMemberPermissionResponse);
     rpc GroupJoinGroup (JoinGroupParam) returns (JoinGroupResponse);
     rpc GroupLeaveGroup (GroupLeaveGroupParam) returns (GroupLeaveGroupResponse);
-    rpc GroupBanMember (GroupBanMemberParam) returns (GroupBanMemberResponse);
+    rpc GroupBanMember (GroupBanMemberParam) returns (GroupBanMemberResponse); // ban or block?
 
     // Privacy
     rpc GroupChangePrivacy (GroupChangePrivacyParam) returns (GroupChangePrivacyResponse);
-    rpc GroupChangeDefaultRights (GroupChangeDefaultRightsParam) returns (GroupChangeDefaultRightsResponse);
+    rpc GroupChangeDefaultPermission (GroupChangeDefaultPermissionParam) returns (GroupChangeDefaultPermissionResponse);
     rpc GroupRevokeLink (GroupRevokeLinkParam) returns (GroupRevokeLinkResponse);
     rpc GroupChangeUsername (GroupChangeUsernameParam) returns (GroupChangeUsernameResponse);
 
@@ -199,10 +199,10 @@ message GroupChangeMemberLevelParam {
 message GroupChangeMemberLevelResponse {
 }
 
-message GroupChangeMemberRightsParam {
+message GroupChangeMemberPermissionParam {
 }
 
-message GroupChangeMemberRightsResponse {
+message GroupChangeMemberPermissionResponse {
 }
 
 message JoinGroupParam {
@@ -233,10 +233,10 @@ message GroupChangePrivacyResponse {
 
 }
 
-message GroupChangeDefaultRightsParam {
+message GroupChangeDefaultPermissionParam {
 }
 
-message GroupChangeDefaultRightsResponse {
+message GroupChangeDefaultPermissionResponse {
 }
 
 message GroupRevokeLinkParam {
