@@ -14,12 +14,82 @@ message DirectAddMessageParam {
 }
 
 message DirectAddMessageResponse {
-    bool done =1;
-    string text = 2;
 }
 
+//// ch
+
+message DirectCreateParam {
+
+}
+
+message DirectCreateResponse {
+
+}
+
+message DirectEditParam {
+    uint32 Direct_id = 1;
+}
+
+message DirectEditResponse {
+
+}
+
+message DirectDeleteParam {
+    uint32 Direct_id = 1;
+}
+
+message DirectDeleteResponse {
+
+}
+
+message DirectSendMessageParam {
+    uint32 Direct_id = 1;
+}
+
+message DirectSendMessageResponse {
+
+}
+
+message DirectEditMessageParam {
+    uint32 Direct_id = 1;
+}
+
+message DirectEditMessageResponse {
+
+}
+
+message DirectDeleteMessageParam {
+    uint32 Direct_id = 1;
+}
+
+message DirectDeleteMessageResponse {
+
+}
+
+message DirectSetDraftParam {
+    uint32 Direct_id = 1;
+}
+
+message DirectSetDraftResponse {
+
+}
+
+message DirectChangePrivacyResponse {
+
+}
+
+// direct: holder of chat, groups, subscribed channels - holder of state of users and underlying object: unseen count, last seen, ...
+// it will be a list in the ui of mobiles like whatsapp or telegram
 service RPC_Direct {
     rpc DirectAddMessage (DirectAddMessageParam) returns (DirectAddMessageResponse);
-    
+    //
+    rpc DirectCreate (DirectCreateParam) returns (DirectCreateResponse);
+    rpc DirectEdit (DirectEditParam) returns (DirectEditResponse);
+    rpc DirectDelete (DirectDeleteParam) returns (DirectDeleteResponse);
+    rpc DirectSendMessage (DirectSendMessageParam) returns (DirectSendMessageResponse);
+    rpc DirectEditMessage (DirectEditMessageParam) returns (DirectEditMessageResponse);
+    rpc DirectDeleteMessage (DirectDeleteMessageParam) returns (DirectDeleteMessageResponse);
+    rpc DirectSetDraft (DirectSetDraftParam) returns (DirectSetDraftResponse);
+
 }
 

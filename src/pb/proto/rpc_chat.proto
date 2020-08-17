@@ -14,10 +14,9 @@ message DeleteChatParam {
 }
 
 message DeleteChatResponse {
-    bool done =1;
-    string text = 2;
 }
 
+// chat: converatins between two users(primary channels)
 service RPC_Chat {
     rpc DeleteChat (DeleteChatParam) returns (DeleteChatResponse);
     
