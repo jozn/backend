@@ -10,15 +10,120 @@ option go_package = "x";
 
 //import "pb_enum.proto";
 
-message DeleteChatParam {
-}
-
-message DeleteChatResponse {
-}
-
-// chat: converatins between two users(primary channels)
 service RPC_Chat {
-    rpc DeleteChat (DeleteChatParam) returns (DeleteChatResponse);
-    
+    //rpc Chat (Param) returns (Response);
+
+    // CrDU
+
+    // Members
+
+    // Privacy
+
+    // Messages
+    rpc ChatSendMessage (ChatSendMessageParam) returns (ChatSendMessageResponse);
+    rpc ChatEditMessage (ChatEditMessageParam) returns (ChatEditMessageResponse);
+    rpc ChatDeleteMessages (ChatDeleteMessagesParam) returns (ChatDeleteMessagesResponse);
+    rpc ChatDeleteHistory (ChatDeleteHistoryParam) returns (ChatDeleteHistoryResponse);
+
+    // Others
+    rpc ChatSendDoingAction (ChatSendDoingActionParam) returns (ChatSendDoingActionResponse);
+    rpc ChatReportChat (ChatReportChatParam) returns (ChatReportChatResponse);
+
+    // Views
+    rpc ChatGetFull (ChatGetFullMessageParam) returns (ChatGetFullMessageResponse);
+    rpc ChatGetMessagesList (ChatGetMessagesListParam) returns (ChatGetMessagesListResponse);
+    rpc ChatGetMediaList (ChatGetMediaListParam) returns (ChatGetMediaListResponse);
 }
 
+// CrDU
+
+// Members
+
+
+// Privacy
+
+// Messages
+
+message ChatSendMessageParam {
+    uint32 group_id = 1;
+}
+
+message ChatSendMessageResponse {
+
+}
+
+message ChatEditMessageParam {
+    uint32 group_id = 1;
+}
+
+message ChatEditMessageResponse {
+
+}
+
+message ChatDeleteMessagesParam {
+    uint32 group_id = 1;
+}
+
+message ChatDeleteMessagesResponse {
+
+}
+
+message ChatDeleteHistoryParam {
+}
+
+message ChatDeleteHistoryResponse {
+}
+
+// Others
+
+message ChatAvatarChangeParam {
+}
+
+message ChatAvatarChangeResponse {
+}
+
+message ChatSendDoingActionParam {
+}
+
+message ChatSendDoingActionResponse {
+}
+
+message ChatReportChatParam {
+}
+
+message ChatReportChatResponse {
+}
+
+// Views
+
+message ChatGetFullMessageParam {
+    uint32 group_id = 1;
+}
+
+message ChatGetFullMessageResponse {
+
+}
+
+message ChatGetMessagesListParam {
+}
+
+message ChatGetMessagesListResponse {
+}
+
+message ChatGetMediaListParam {
+}
+
+message ChatGetMediaListResponse {
+}
+
+// Dep
+
+/*
+
+message Param {
+}
+
+message Response {
+}
+
+*/

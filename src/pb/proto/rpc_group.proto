@@ -121,6 +121,7 @@ service RPC_Group {
     rpc GroupUnPinMessage (GroupUnPinMessageParam) returns (GroupUnPinMessageResponse);
     rpc GroupDeleteMessage (GroupDeleteMessageParam) returns (GroupDeleteMessageResponse); // remove?
     rpc GroupDeleteMessages (GroupDeleteMessagesParam) returns (GroupDeleteMessagesResponse);
+    rpc GroupDeleteHistory (GroupDeleteHistoryParam) returns (GroupDeleteHistoryResponse);
     rpc GroupClearHistory (GroupClearHistoryParam) returns (GroupClearHistoryResponse);
 
     // Others
@@ -136,7 +137,7 @@ service RPC_Group {
     rpc GroupGetMessagesList (GroupGetMessagesListParam) returns (GroupGetMessagesListResponse);
     rpc GroupGetMediaList (GroupGetMediaListParam) returns (GroupGetMediaListResponse);
     rpc GroupGetMembersList (GroupGetMembersListParam) returns (GroupGetMembersListResponse);
-    rpc GroupGetAdminsList (GroupGetMembersListParam) returns (GroupGetMembersListResponse);
+    rpc GroupGetAdminsList (GroupGetAdminsListParam) returns (GroupGetAdminsListResponse);
 
     // Deprecated
     rpc GroupSetDraft (GroupSetDraftParam) returns (GroupSetDraftResponse); // draft via direct
@@ -261,6 +262,12 @@ message GroupDeleteMessagesResponse {
 
 }
 
+message GroupDeleteHistoryParam {
+}
+
+message GroupDeleteHistoryResponse {
+}
+
 message GroupClearHistoryParam {
 }
 
@@ -295,16 +302,22 @@ message GroupGetMessagesListParam {
 message GroupGetMessagesListResponse {
 }
 
+message GroupGetMediaListParam {
+}
+
+message GroupGetMediaListResponse {
+}
+
 message GroupGetMembersListParam {
 }
 
 message GroupGetMembersListResponse {
 }
 
-message GroupGetMediaListParam {
+message GroupGetAdminsListParam {
 }
 
-message GroupGetMediaListResponse {
+message GroupGetAdminsListResponse {
 }
 
 // Dep
