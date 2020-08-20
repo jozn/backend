@@ -13,11 +13,9 @@ option go_package = "x";
 service RPC_Chat {
     //rpc Chat (Param) returns (Response);
 
-    // CrDU
+    // crud: c: with sending msg, u: none, d: with direct
 
-    // Members
-
-    // Privacy
+    // Privacy: none in here, with settings in channels privacy
 
     // Messages
     rpc ChatSendMessage (ChatSendMessageParam) returns (ChatSendMessageResponse);
@@ -35,7 +33,7 @@ service RPC_Chat {
     rpc ChatGetMediaList (ChatGetMediaListParam) returns (ChatGetMediaListResponse);
 }
 
-// CrDU
+// crud
 
 // Members
 
