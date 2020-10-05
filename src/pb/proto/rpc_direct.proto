@@ -30,7 +30,6 @@ service RPC_Direct {
     rpc DirectSetDraft (DirectSetDraftParam) returns (DirectSetDraftResponse);
     //========= One End =========
 
-    
     //========= Many =========
     // CRUD
     rpc DirectDeleteDirects (DirectDeleteDirectsParam) returns (DirectDeleteDirectsResponse);

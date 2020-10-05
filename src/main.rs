@@ -5,145 +5,430 @@
 #![allow(warnings)]
 #![allow(soft_unstable)]
 
-use std::convert::Infallible;
-use std::net::SocketAddr;
-use hyper::{Body, Request, Response, Server};
-use hyper::service::{make_service_fn, service_fn};
-use hyper::body;
-use serde::{Deserialize, Serialize};
-use quick_protobuf::{BytesReader, BytesWriter};
-use quick_protobuf::{MessageRead,MessageWrite,Writer};
+#[macro_use]
+extern crate cdrs;
+#[macro_use]
+extern crate cdrs_helpers_derive;
+#[macro_use]
+extern crate maplit;
 
+use std::collections::HashMap;
+
+use cdrs::authenticators::StaticPasswordAuthenticator;
+use cdrs::cluster::session::{new as new_session, Session};
+use cdrs::cluster::{ClusterTcpConfig, NodeTcpConfigBuilder, TcpConnectionPool};
+use cdrs::load_balancing::RoundRobin;
+use cdrs::query::*;
+
+use cdrs::frame::IntoBytes;
+use cdrs::types::from_cdrs::FromCDRSByName;
+use cdrs::types::prelude::*;
+
+pub type CurrentSession = Session<RoundRobin<TcpConnectionPool<StaticPasswordAuthenticator>>>;
+
+mod xc;
 mod pb;
-mod rpc;
-mod com;
 
 
-use pb::pb::sys::*;
-use prost::Message;
+fn main() {
+    let user = "user";
+    let password = "password";
+    let auth = StaticPasswordAuthenticator::new(&user, &password);
+    let node = NodeTcpConfigBuilder::new("localhost:9042", auth).build();
+    let cluster_config = ClusterTcpConfig(vec![node]);
+    let no_compression: CurrentSession =
+        new_session(&cluster_config, RoundRobin::new()).expect("session should be created");
+
+    //delete_struct(&no_compression);
+
+    let mut d = xc::Tweet_Deleter::new();
+    d.user_id_eq(25).and_tweet_id_eq("asdfghjklqwert");;
+    d.delete(&no_compression);
+
+    let mut d = xc::Tweet_Deleter::new();
+    d.delete_body().delete_create_time().user_id_eq(25).and_tweet_id_in(vec!["aaa","bbb","ccc"]).delete(&no_compression);
 
 
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct Inv {
-    pub method: u32,
-    pub action_id: u64,
-    pub is_response: bool,
-    pub rpc_data: Vec<u8>,
+    let mut d = xc::Tweet_Selector::new();
+    let res =d.user_id_eq(2).limit(1).get_row(&no_compression);
+
+    println!("{:?}", res);
+
+    for i in 1..50 {
+        let mut m = xc::Tweet::default();
+        m.tweet_id = format!("id_{}",i);
+        m.user_id = i;
+        m.body = format!("My sample tweet {}",i);
+
+        let res = m.save(&no_compression);
+        println!("{:?}", res);
+    }
+
+    for i in 10..50 {
+        let mut m = xc::Tweet::default();
+        m.tweet_id = format!("id_{}",i);
+        m.user_id = i;
+        m.body = format!("My sample tweet {}",i);
+
+        let res = m.delete(&no_compression);
+        println!("{:?}", res);
+    }
+
 }
 
-fn play(){
+#[derive(Clone, Debug, IntoCDRSValue, TryFromRow, PartialEq)]
+struct Tweet {
+    pub tweet_id: String,   // tweet_id    clustering  0
+    pub user_id: i64,   // user_id    partition_key  0
+    pub body: String,   // body    regular  -1
+    pub create_time: i32,   // create_time    regular  -1
 
-    let s = std::mem::size_of::<pb::store::Message>();
-    println!("size: {}", s );
+    _exists: bool,
+    _deleted: bool,
+}
 
-    let s = std::mem::size_of::<pb::store::MessageCount>();
-    println!("size msg count: {}", s );
+impl Tweet {
+    pub fn deleted(&self) -> bool {
+        self._deleted
+    }
 
-    let s = std::mem::size_of::<pb::MediaView>();
-    println!("size compact: {}", s );
+    pub fn exists(&self) -> bool {
+        self._exists
+    }
+}
+
+
+#[derive(Default, Debug)]
+pub struct Tweet_Selector {
+    wheres: Vec<WhereClause>,
+    select_cols: Vec<&'static str>,
+    order_by: Vec<&'static str>,
+    limit: u32,
+    allow_filter: bool,
+}
+
+impl Tweet_Selector {
+    pub fn new() -> Self {
+        Tweet_Selector::default()
+    }
+
+    pub fn limit(&mut self, size: u32) -> &Self {
+        self.limit = size;
+        self
+    }
+
+    pub fn allow_filtering(&mut self, allow: bool) -> &Self {
+        self.allow_filter = allow;
+        self
+    }
+
+    // each col
+    pub fn select_body(&mut self, allow: bool) -> &Self {
+        self.select_cols.push("body");
+        self
+    }
+
+    //each column orders //just ints
+    pub fn orderby_tweet_id_desc(&mut self, allow: bool) -> &Self {
+        self.order_by.push(" tweet_id desc");
+        self
+    }
+
+    pub fn orderby_tweet_id_asc(&mut self, allow: bool) -> &Self {
+        self.order_by.push(" tweet_id asc");
+        self
+    }
+
+    pub fn select(&mut self, allow: bool) {
+
+    }
 
 }
 
-fn to_bin(s: String) -> Vec<u8> {
-    s.as_bytes().to_owned()
+#[derive(Debug)]
+struct WhereClause {
+    condition: &'static str,
+    args: Value,
 }
 
-async fn server_http(req: Request<Body>) -> Result<Response<Body>, Infallible> {
-    let res= match req.uri().path() {
-        "/echo" => (200, to_bin(echo().await) ),
-        "/repeat" => (200,to_bin(repeat(req.uri()).await) ),
-        "/rpc" => {
-            (200, server_http_rpc(req).await)
+#[derive(Default, Debug)]
+pub struct Tweet_Deleter {
+    wheres: Vec<WhereClause>,
+    delete_cols: Vec<&'static str>,
+}
+
+impl Tweet_Deleter {
+    pub fn new() -> Self {
+        Tweet_Deleter::default()
+    }
+
+    // each col
+    pub fn delete_body(&mut self, allow: bool) -> &Self {
+        self.delete_cols.push("body");
+        self
+    }
+
+    pub fn tweet_id_eq(&mut self, val: &str) ->&Self {
+        let w = WhereClause{
+            condition: "tweet_id =?",
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_tweet_id_eq(&mut self, val: &str) ->&Self {
+        let w = WhereClause{
+            condition: "AND tweet_id =?",
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_tweet_id_eq(&mut self, val: &str) ->&Self {
+        let w = WhereClause{
+            condition: "OR tweet_id =?",
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_tweet_id_ge(&mut self, val: &str) ->&Self {
+        let w = WhereClause{
+            condition: "OR tweet_id >= ?",
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+}
+
+#[derive(Default, Debug)]
+struct TweetSelection {
+
+}
+
+fn insert_struct2(session: &CurrentSession) {
+    let insert_struct_cql = "INSERT INTO test_ks.my_test_table \
+                             (?, ?, ?, ?) VALUES (?, ?, ?, ?)";
+
+    let v :Vec<u8> = Vec::new();
+    use cdrs::types::value::Value;
+    use cdrs::query::QueryValues;
+    let mut values: Vec<Value> = Vec::new();
+    values.push(5.into());
+    values.push("sdf".into());
+    values.push(v.into());
+
+    let query_values = QueryValues::SimpleValues(values);
+
+    session.query_with_values(insert_struct_cql, query_values );
+}
+
+
+/*pub fn delete(&mut self, session: &CurrentSession) {
+
+    let del_col = self.delete_cols.join(", ");
+
+    let  mut where_str = vec![];
+    let mut where_arr = vec![];
+
+    for i in self.wheres {
+        where_str.push(i.condition);
+        where_arr.push(i.args)
+    }
+
+    let where_str = where_str.join("");
+
+    let cql_query = "DELETE " + del_col + " FROM {{.TableSchemeOut}} WHERE " + where_str ;
+
+    let query_values = QueryValues::SimpleValues(where_arr);
+
+    session.query_with_values(cql_query, query_values);
+
+}*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////// Archives /////////////////////////
+fn main_old() {
+    let user = "user";
+    let password = "password";
+    let auth = StaticPasswordAuthenticator::new(&user, &password);
+    let node = NodeTcpConfigBuilder::new("localhost:9042", auth).build();
+    let cluster_config = ClusterTcpConfig(vec![node]);
+    let no_compression: CurrentSession =
+        new_session(&cluster_config, RoundRobin::new()).expect("session should be created");
+
+    create_keyspace(&no_compression);
+    create_udt(&no_compression);
+    create_table(&no_compression);
+    insert_struct(&no_compression);
+    select_struct(&no_compression);
+    update_struct(&no_compression);
+    //delete_struct(&no_compression);
+}
+
+#[derive(Clone, Debug, IntoCDRSValue, TryFromRow, PartialEq)]
+struct RowStruct {
+    key: i32,
+    user: User,
+    map: HashMap<String, User>,
+    list: Vec<User>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+struct Row {
+    key: i32,
+    vec: Vec<u8>,
+    // time: bool,
+}
+
+fn p1() {
+    let r = Row {
+        key: 0,
+        vec: vec![],
+        // time: "".to_string(),
+    };
+}
+
+
+/*
+:= &xc.Tweet {
+	tweet_id: "".to_string(),
+	user_id: 0i62,
+	body: "".to_string(),
+	create_time: 0i32,
+*/
+#[derive(Clone, Debug, IntoCDRSValue, TryFromRow, PartialEq)]
+struct User2 {
+    pub user_id: i32,   // user_id    partition_key  0
+    pub created_time: i64,   // created_time    regular  -1
+    pub full_name: String,   // full_name    regular  -1
+    pub user_name: String,   // user_name    regular  -1
+
+    _exists: bool,
+    _deleted: bool,
+}
+
+impl RowStruct {
+    fn into_query_values(self) -> QueryValues {
+        query_values!("key" => self.key, "user" => self.user, "map" => self.map, "list" => self.list)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, IntoCDRSValue, TryFromUDT)]
+struct User {
+    username: String,
+}
+
+fn create_keyspace(session: &CurrentSession) {
+    let create_ks: &'static str = "CREATE KEYSPACE IF NOT EXISTS test_ks WITH REPLICATION = { \
+                                   'class' : 'SimpleStrategy', 'replication_factor' : 1 };";
+    session.query(create_ks).expect("Keyspace creation error");
+}
+
+fn create_udt(session: &CurrentSession) {
+    let create_type_cql = "CREATE TYPE IF NOT EXISTS test_ks.user (username text)";
+    session
+        .query(create_type_cql)
+        .expect("Keyspace creation error");
+}
+
+fn create_table(session: &CurrentSession) {
+    let create_table_cql =
+        "CREATE TABLE IF NOT EXISTS test_ks.my_test_table (key int PRIMARY KEY, \
+     user frozen<test_ks.user>, map map<text, frozen<test_ks.user>>, list list<frozen<test_ks.user>>);";
+    session
+        .query(create_table_cql)
+        .expect("Table creation error");
+}
+
+fn insert_struct(session: &CurrentSession) {
+    let row = RowStruct {
+        key: 3i32,
+        user: User {
+            username: "John".to_string(),
         },
-        _ => (404, to_bin("Not found".to_string()))
+        map: hashmap! { "John".to_string() => User { username: "John".to_string() } },
+        list: vec![User {
+            username: "John".to_string(),
+        }],
     };
 
-    Ok(Response::builder().status(res.0).body(Body::from(res.1)).unwrap())
+    let insert_struct_cql = "INSERT INTO test_ks.my_test_table \
+                             (key, user, map, list) VALUES (?, ?, ?, ?)";
+    session
+        .query_with_values(insert_struct_cql, row.into_query_values())
+        .expect("insert");
 }
 
-async fn server_http_rpc(req: Request<Body>) -> Vec<u8> {
+fn select_struct(session: &CurrentSession) {
+    let select_struct_cql = "SELECT * FROM test_ks.my_test_table";
+    let rows = session
+        .query(select_struct_cql)
+        .expect("query")
+        .get_body()
+        .expect("get body")
+        .into_rows()
+        .expect("into rows");
 
-    let bo = req.into_body();
-    let bts = body::to_bytes(bo).await.unwrap();
-    let b = &bts;
+    for row in rows {
+        // let my_row: RowStruct = RowStruct::try_from_row(row);//.expect("into RowStruct");
+        let my_row = RowStruct::try_from_row(row); //.expect("into RowStruct");
+        println!("struct got: {:?}", my_row);
+    }
+}
 
-    let mut bytes: Vec<u8>;
-    let mut reader = BytesReader::from_bytes(b);
-    let invoke = pb::sys::Invoke::from_reader(&mut reader, b);
-
-    if let Ok(act) = invoke {
-        println!("act {:?}", act);
-        // let pb_bts = server_rpc(act).unwrap_or("vec![]".as_bytes().to_owned());
-        let pb_bts = rpc::server_rpc(act).unwrap_or("vec![]".as_bytes().to_owned());
-        return  pb_bts
+fn update_struct(session: &CurrentSession) {
+    let update_struct_cql = "UPDATE test_ks.my_test_table SET user = ? WHERE key = ?";
+    let upd_user = User {
+        username: "Marry".to_string(),
     };
-
-    "error in rpc ".as_bytes().to_owned()
+    let user_key = 1i32;
+    session
+        .query_with_values(update_struct_cql, query_values!(upd_user, user_key))
+        .expect("update");
 }
 
-fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
-    let up = UserParam{};
-    match act.method {
-        45 => {
-            let vec = "funk ".as_bytes().to_owned();
-
-            let mut reader = BytesReader::from_bytes(&act.rpc_data);
-            let rpc_param= pb::rpc_general::EchoParam::from_reader(&mut reader, &act.rpc_data);
-
-            if let Ok(param) = rpc_param {
-                println!("param {:?}", param);
-                let result = rpc_old::check_username(&up,param)?;
-
-                let mut out_bytes = Vec::new();
-                let mut writer = Writer::new(&mut out_bytes);
-                let out = writer.write_message(&result);
-                return Ok(out_bytes)
-            } else {
-            }
-            Ok(vec)
-        },
-        _ => {
-            Err(GenErr{})
-        }
-    }
-}
-
-mod rpc_old {
-    use super::*;
-    pub fn check_username(up: &UserParam, param: pb::EchoParam) -> Result<pb::EchoResponse, GenErr> {
-        Ok(pb::EchoResponse::default())
-    }
-}
-
-pub struct GenErr {}
-pub struct UserParam {}
-
-async fn echo() -> String {
-    "echo me".to_string()
-}
-async fn repeat(u: &http::Uri) -> String {
-    u.query().unwrap_or("[empty]").repeat(10)
-}
-
-#[tokio::main]
-async fn main() {
-    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
-
-    play();
-
-    // A `Service` is needed for every connection, so this
-    // creates one from our `hello_world` function.
-    let make_svc = make_service_fn(|_conn| async {
-        // service_fn converts our function into a `Service`
-        // println!("server xxxxxxx {:?}", _conn.clone());
-        // Ok::<_, Infallible>(service_fn(hello_world))
-        Ok::<_, Infallible>(service_fn(server_http))
-    });
-
-    let server = Server::bind(&addr).serve(make_svc);
-
-    // Run this server for... forever!
-    if let Err(e) = server.await {
-        eprintln!("server error: {}", e);
-    }
+fn delete_struct(session: &CurrentSession) {
+    let delete_struct_cql = "DELETE FROM test_ks.my_test_table WHERE key = ?";
+    let user_key = 1i32;
+    session
+        .query_with_values(delete_struct_cql, query_values!(user_key))
+        .expect("delete");
 }

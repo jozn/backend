@@ -37,6 +37,7 @@ message PB_Notify {
 }
 
 message Invoke {
+  uint32 namespace = 6;
   uint32 method = 1;
   uint64 action_id = 2;
   bool is_response = 3;

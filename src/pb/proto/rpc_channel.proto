@@ -116,6 +116,10 @@ service RPC_Channel {
     rpc ChannelDeleteMessages (ChannelDeleteMessagesParam) returns (ChannelDeleteMessagesResponse);
     rpc ChannelClearHistory (ChannelClearHistoryParam) returns (ChannelClearHistoryResponse);
 
+    // Settings
+    //rpc Channel (Param) returns (Response);
+
+
     // Others
     rpc ChannelAvatarAdd (ChannelAvatarAddParam) returns (ChannelAvatarAddResponse);
     rpc ChannelAvatarChange (ChannelAvatarChangeParam) returns (ChannelAvatarChangeResponse); // remove?

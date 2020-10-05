@@ -1,6 +1,4 @@
-fn main() {
-
-}
+fn main() {}
 fn main_bk() {
     // prost_build::compile_protos(&["src/items.proto"],
     //                             &["src/"]);
@@ -20,9 +18,7 @@ fn main_bk() {
     config.out_dir("src/pb/ps/");
     config.compile_well_known_types();
     config.retain_enum_prefix();
-    config
-        .compile_protos(arr, &["src/pb/proto/"])
-        .unwrap();
+    config.compile_protos(arr, &["src/pb/proto/"]).unwrap();
 }
 extern crate pb_rs;
 
@@ -37,9 +33,7 @@ fn main4() {
 
     let config = Config {
         // in_file: PathBuf::from("protos/Hello.proto"),
-        in_file: PathBuf::from(
-            "src/proto/pb_views.proto",
-        ),
+        in_file: PathBuf::from("src/proto/pb_views.proto"),
         out_file,
         single_module: false,
         import_search_path: vec![PathBuf::from("src/proto/")],

@@ -116,6 +116,7 @@ message UnBlockChannelResponse {
 }
 
 // post = synom for channel messages in social context
+// todo remove social? use channels
 service RPC_Social {
     rpc AddComment (AddCommentParam) returns (AddCommentResponse);
     rpc DeleteComment (DeleteCommentParam) returns (DeleteCommentResponse);

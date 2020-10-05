@@ -19,7 +19,19 @@ message ChangePhoneNumberResponse {
 }
 
 service RPC_Account {
+    //rpc Account (Param) returns (Response);
+
+    // Phone, Email
     rpc ChangePhoneNumber (ChangePhoneNumberParam) returns (ChangePhoneNumberResponse);
-    
+
+    // Session
+    rpc AccountRemoveSession (Param) returns (Response);
+    rpc AccountRemoveOtherSessions (Param) returns (Response);
+    rpc AccountGetActiveSessions (Param) returns (Response); // View
+
+    // Settings
+
+    //
+
 }
 

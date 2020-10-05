@@ -8,7 +8,7 @@ build = "build.rs"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-async-std = { version = "1.5" }
+async-std = { version = "1.4" }
 
 mysql = "18.2.0"
 threadpool = "1.8.1"
@@ -18,7 +18,8 @@ tokio = { version = "0.2.21", features = ["full"] }
 rand = "0.7.3"
 log = "0.4"
 once_cell = "1.4.0"
-cdrs = { version = "2" }
+#cdrs = "3.0.0-beta.2"
+cdrs = "2"
 #sqlite = "0.*"
 #diesel = { version = "1.4.5", features =["sqlite"] }
 
@@ -42,6 +43,13 @@ bytes = "0.5.6"
 
 #serde = "1.0.111"
 #serde_json = "1.0.57"
+
+cdrs-async = "0.1.0-alpha.0"
+async-trait = "0.1.21"
+
+cdrs_helpers_derive = "0.3.3"
+maplit = "1.0.2"
+
 
 [build-dependencies]
 prost-build = { version ="0.6" }
