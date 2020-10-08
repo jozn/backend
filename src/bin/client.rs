@@ -20,8 +20,8 @@ async fn me1() -> Result<(), reqwest::Error> {
     let act = Act {
         method: 45,
         // data: "{som:'sdf'}".as_bytes().to_owned(),
-        data: bincode::serialize(&CheckUsernameParam{id:1894}).unwrap(),
-        act_id: 15
+        data: bincode::serialize(&CheckUsernameParam { id: 1894 }).unwrap(),
+        act_id: 15,
     };
     let bts = bincode::serialize(&act).unwrap();
 

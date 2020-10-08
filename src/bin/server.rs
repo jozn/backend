@@ -9,9 +9,9 @@ extern crate backbone;
 use std::convert::Infallible;
 use std::net::SocketAddr;
 
-use hyper::{Body, Request, Response, Server};
 use hyper::body;
 use hyper::service::{make_service_fn, service_fn};
+use hyper::{Body, Request, Response, Server};
 use quick_protobuf::{BytesReader, BytesWriter};
 use quick_protobuf::{MessageRead, MessageWrite, Writer};
 
@@ -23,20 +23,20 @@ fn to_bin(s: String) -> Vec<u8> {
 }
 
 async fn server_http(req: Request<Body>) -> Result<Response<Body>, Infallible> {
-    let res= match req.uri().path() {
-        "/echo" => (200, to_bin(echo().await) ),
-        "/repeat" => (200,to_bin(repeat(req.uri()).await) ),
-        "/rpc" => {
-            (200, server_http_rpc(req).await)
-        },
-        _ => (404, to_bin("Not found.".to_string()))
+    let res = match req.uri().path() {
+        "/echo" => (200, to_bin(echo().await)),
+        "/repeat" => (200, to_bin(repeat(req.uri()).await)),
+        "/rpc" => (200, server_http_rpc(req).await),
+        _ => (404, to_bin("Not found.".to_string())),
     };
 
-    Ok(Response::builder().status(res.0).body(Body::from(res.1)).unwrap())
+    Ok(Response::builder()
+        .status(res.0)
+        .body(Body::from(res.1))
+        .unwrap())
 }
 
 async fn server_http_rpc(req: Request<Body>) -> Vec<u8> {
-
     let bo = req.into_body();
     let bts = body::to_bytes(bo).await.unwrap();
     let b = &bts;
@@ -49,7 +49,7 @@ async fn server_http_rpc(req: Request<Body>) -> Vec<u8> {
         println!("act {:?}", act);
         // let pb_bts = server_rpc(act).unwrap_or("vec![]".as_bytes().to_owned());
         let pb_bts = rpc::server_rpc(act).unwrap_or("vec![]".as_bytes().to_owned());
-        return  pb_bts
+        return pb_bts;
     };
 
     "error in rpc ".as_bytes().to_owned()
@@ -85,4 +85,3 @@ async fn main() {
         eprintln!("server error: {}", e);
     }
 }
-
