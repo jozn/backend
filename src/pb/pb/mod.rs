@@ -12,3 +12,4 @@ pub mod rpc_upload;
 pub mod store;
 pub mod sys;
 pub mod views;
+pub mod rpc_group;

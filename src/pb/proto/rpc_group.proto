@@ -170,11 +170,11 @@ message GroupDeleteGroupResponse {
 }
 
 // Members
-message Param {
+/*message Param {
 }
 
 message Response {
-}
+}*/
 
 message GroupAddAdminParam {
 }

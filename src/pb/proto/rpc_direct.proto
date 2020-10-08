@@ -189,11 +189,13 @@ message DirectChangeFolderParam {
 message DirectChangeFolderResponse {
 }
 
+/*
 message Param {
 }
 
 message Response {
 }
+*/
 
 message DirectRemoveFromFolderParam {
 }

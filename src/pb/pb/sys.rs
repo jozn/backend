@@ -165,6 +165,7 @@ impl MessageWrite for PB_Notify {
 
 #[derive(Debug, Default, PartialEq, Clone)]
 pub struct Invoke {
+    pub namespace: u32,
     pub method: u32,
     pub action_id: u64,
     pub is_response: bool,
@@ -176,6 +177,7 @@ impl<'a> MessageRead<'a> for Invoke {
         let mut msg = Self::default();
         while !r.is_eof() {
             match r.next_tag(bytes) {
+                Ok(48) => msg.namespace = r.read_uint32(bytes)?,
                 Ok(8) => msg.method = r.read_uint32(bytes)?,
                 Ok(16) => msg.action_id = r.read_uint64(bytes)?,
                 Ok(24) => msg.is_response = r.read_bool(bytes)?,
@@ -191,6 +193,7 @@ impl<'a> MessageRead<'a> for Invoke {
 impl MessageWrite for Invoke {
     fn get_size(&self) -> usize {
         0
+        + if self.namespace == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.namespace) as u64) }
         + if self.method == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.method) as u64) }
         + if self.action_id == 0u64 { 0 } else { 1 + sizeof_varint(*(&self.action_id) as u64) }
         + if self.is_response == false { 0 } else { 1 + sizeof_varint(*(&self.is_response) as u64) }
@@ -198,6 +201,7 @@ impl MessageWrite for Invoke {
     }
 
     fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
+        if self.namespace != 0u32 { w.write_with_tag(48, |w| w.write_uint32(*&self.namespace))?; }
         if self.method != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.method))?; }
         if self.action_id != 0u64 { w.write_with_tag(16, |w| w.write_uint64(*&self.action_id))?; }
         if self.is_response != false { w.write_with_tag(24, |w| w.write_bool(*&self.is_response))?; }

@@ -25,9 +25,10 @@ service RPC_Account {
     rpc ChangePhoneNumber (ChangePhoneNumberParam) returns (ChangePhoneNumberResponse);
 
     // Session
-    rpc AccountRemoveSession (Param) returns (Response);
-    rpc AccountRemoveOtherSessions (Param) returns (Response);
-    rpc AccountGetActiveSessions (Param) returns (Response); // View
+    //todo add Param and Response
+//    rpc AccountRemoveSession (Param) returns (Response);
+//    rpc AccountRemoveOtherSessions (Param) returns (Response);
+//    rpc AccountGetActiveSessions (Param) returns (Response); // View
 
     // Settings
 

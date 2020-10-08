@@ -1,4 +1,4 @@
-// Automatically generated rust module for 'rpc_channel.proto' file
+// Automatically generated rust module for 'rpc_group.proto' file
 
 #![allow(non_snake_case)]
 #![allow(non_upper_case_globals)]
@@ -14,398 +14,11 @@ use quick_protobuf::sizeofs::*;
 use super::*;
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelAvatarAddParam {
-    pub channel_id: u32,
-}
-
-impl<'a> MessageRead<'a> for ChannelAvatarAddParam {
-    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
-        let mut msg = Self::default();
-        while !r.is_eof() {
-            match r.next_tag(bytes) {
-                Ok(8) => msg.channel_id = r.read_uint32(bytes)?,
-                Ok(t) => { r.read_unknown(bytes, t)?; }
-                Err(e) => return Err(e),
-            }
-        }
-        Ok(msg)
-    }
-}
-
-impl MessageWrite for ChannelAvatarAddParam {
-    fn get_size(&self) -> usize {
-        0
-        + if self.channel_id == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.channel_id) as u64) }
-    }
-
-    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
-        if self.channel_id != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.channel_id))?; }
-        Ok(())
-    }
-}
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelAvatarAddResponse { }
-
-impl<'a> MessageRead<'a> for ChannelAvatarAddResponse {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelAvatarAddResponse { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelAvatarDeleteParam {
-    pub channel_id: u32,
-}
-
-impl<'a> MessageRead<'a> for ChannelAvatarDeleteParam {
-    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
-        let mut msg = Self::default();
-        while !r.is_eof() {
-            match r.next_tag(bytes) {
-                Ok(8) => msg.channel_id = r.read_uint32(bytes)?,
-                Ok(t) => { r.read_unknown(bytes, t)?; }
-                Err(e) => return Err(e),
-            }
-        }
-        Ok(msg)
-    }
-}
-
-impl MessageWrite for ChannelAvatarDeleteParam {
-    fn get_size(&self) -> usize {
-        0
-        + if self.channel_id == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.channel_id) as u64) }
-    }
-
-    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
-        if self.channel_id != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.channel_id))?; }
-        Ok(())
-    }
-}
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelAvatarDeleteResponse { }
-
-impl<'a> MessageRead<'a> for ChannelAvatarDeleteResponse {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelAvatarDeleteResponse { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelAvatarGetListParam {
-    pub channel_id: u32,
-}
-
-impl<'a> MessageRead<'a> for ChannelAvatarGetListParam {
-    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
-        let mut msg = Self::default();
-        while !r.is_eof() {
-            match r.next_tag(bytes) {
-                Ok(8) => msg.channel_id = r.read_uint32(bytes)?,
-                Ok(t) => { r.read_unknown(bytes, t)?; }
-                Err(e) => return Err(e),
-            }
-        }
-        Ok(msg)
-    }
-}
-
-impl MessageWrite for ChannelAvatarGetListParam {
-    fn get_size(&self) -> usize {
-        0
-        + if self.channel_id == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.channel_id) as u64) }
-    }
-
-    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
-        if self.channel_id != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.channel_id))?; }
-        Ok(())
-    }
-}
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelAvatarGetListResponse { }
-
-impl<'a> MessageRead<'a> for ChannelAvatarGetListResponse {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelAvatarGetListResponse { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelSendMessageParam {
-    pub channel_id: u32,
-}
-
-impl<'a> MessageRead<'a> for ChannelSendMessageParam {
-    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
-        let mut msg = Self::default();
-        while !r.is_eof() {
-            match r.next_tag(bytes) {
-                Ok(8) => msg.channel_id = r.read_uint32(bytes)?,
-                Ok(t) => { r.read_unknown(bytes, t)?; }
-                Err(e) => return Err(e),
-            }
-        }
-        Ok(msg)
-    }
-}
-
-impl MessageWrite for ChannelSendMessageParam {
-    fn get_size(&self) -> usize {
-        0
-        + if self.channel_id == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.channel_id) as u64) }
-    }
-
-    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
-        if self.channel_id != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.channel_id))?; }
-        Ok(())
-    }
-}
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelSendMessageResponse { }
-
-impl<'a> MessageRead<'a> for ChannelSendMessageResponse {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelSendMessageResponse { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelEditMessageParam {
-    pub channel_id: u32,
-}
-
-impl<'a> MessageRead<'a> for ChannelEditMessageParam {
-    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
-        let mut msg = Self::default();
-        while !r.is_eof() {
-            match r.next_tag(bytes) {
-                Ok(8) => msg.channel_id = r.read_uint32(bytes)?,
-                Ok(t) => { r.read_unknown(bytes, t)?; }
-                Err(e) => return Err(e),
-            }
-        }
-        Ok(msg)
-    }
-}
-
-impl MessageWrite for ChannelEditMessageParam {
-    fn get_size(&self) -> usize {
-        0
-        + if self.channel_id == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.channel_id) as u64) }
-    }
-
-    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
-        if self.channel_id != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.channel_id))?; }
-        Ok(())
-    }
-}
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelEditMessageResponse { }
-
-impl<'a> MessageRead<'a> for ChannelEditMessageResponse {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelEditMessageResponse { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelPinMessageParam {
-    pub channel_id: u32,
-}
-
-impl<'a> MessageRead<'a> for ChannelPinMessageParam {
-    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
-        let mut msg = Self::default();
-        while !r.is_eof() {
-            match r.next_tag(bytes) {
-                Ok(8) => msg.channel_id = r.read_uint32(bytes)?,
-                Ok(t) => { r.read_unknown(bytes, t)?; }
-                Err(e) => return Err(e),
-            }
-        }
-        Ok(msg)
-    }
-}
-
-impl MessageWrite for ChannelPinMessageParam {
-    fn get_size(&self) -> usize {
-        0
-        + if self.channel_id == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.channel_id) as u64) }
-    }
-
-    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
-        if self.channel_id != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.channel_id))?; }
-        Ok(())
-    }
-}
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelPinMessageResponse { }
-
-impl<'a> MessageRead<'a> for ChannelPinMessageResponse {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelPinMessageResponse { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelUnPinMessageParam {
-    pub channel_id: u32,
-}
-
-impl<'a> MessageRead<'a> for ChannelUnPinMessageParam {
-    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
-        let mut msg = Self::default();
-        while !r.is_eof() {
-            match r.next_tag(bytes) {
-                Ok(8) => msg.channel_id = r.read_uint32(bytes)?,
-                Ok(t) => { r.read_unknown(bytes, t)?; }
-                Err(e) => return Err(e),
-            }
-        }
-        Ok(msg)
-    }
-}
-
-impl MessageWrite for ChannelUnPinMessageParam {
-    fn get_size(&self) -> usize {
-        0
-        + if self.channel_id == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.channel_id) as u64) }
-    }
-
-    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
-        if self.channel_id != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.channel_id))?; }
-        Ok(())
-    }
-}
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelUnPinMessageResponse { }
-
-impl<'a> MessageRead<'a> for ChannelUnPinMessageResponse {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelUnPinMessageResponse { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelDeleteMessageParam {
-    pub channel_id: u32,
-}
-
-impl<'a> MessageRead<'a> for ChannelDeleteMessageParam {
-    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
-        let mut msg = Self::default();
-        while !r.is_eof() {
-            match r.next_tag(bytes) {
-                Ok(8) => msg.channel_id = r.read_uint32(bytes)?,
-                Ok(t) => { r.read_unknown(bytes, t)?; }
-                Err(e) => return Err(e),
-            }
-        }
-        Ok(msg)
-    }
-}
-
-impl MessageWrite for ChannelDeleteMessageParam {
-    fn get_size(&self) -> usize {
-        0
-        + if self.channel_id == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.channel_id) as u64) }
-    }
-
-    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
-        if self.channel_id != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.channel_id))?; }
-        Ok(())
-    }
-}
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelDeleteMessageResponse { }
-
-impl<'a> MessageRead<'a> for ChannelDeleteMessageResponse {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelDeleteMessageResponse { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelSetDraftParam {
-    pub channel_id: u32,
-}
-
-impl<'a> MessageRead<'a> for ChannelSetDraftParam {
-    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
-        let mut msg = Self::default();
-        while !r.is_eof() {
-            match r.next_tag(bytes) {
-                Ok(8) => msg.channel_id = r.read_uint32(bytes)?,
-                Ok(t) => { r.read_unknown(bytes, t)?; }
-                Err(e) => return Err(e),
-            }
-        }
-        Ok(msg)
-    }
-}
-
-impl MessageWrite for ChannelSetDraftParam {
-    fn get_size(&self) -> usize {
-        0
-        + if self.channel_id == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.channel_id) as u64) }
-    }
-
-    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
-        if self.channel_id != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.channel_id))?; }
-        Ok(())
-    }
-}
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelSetDraftResponse { }
-
-impl<'a> MessageRead<'a> for ChannelSetDraftResponse {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelSetDraftResponse { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelCreateChannelParam {
+pub struct GroupAvatarAddParam {
     pub group_id: u32,
 }
 
-impl<'a> MessageRead<'a> for ChannelCreateChannelParam {
+impl<'a> MessageRead<'a> for GroupAvatarAddParam {
     fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
         let mut msg = Self::default();
         while !r.is_eof() {
@@ -419,7 +32,7 @@ impl<'a> MessageRead<'a> for ChannelCreateChannelParam {
     }
 }
 
-impl MessageWrite for ChannelCreateChannelParam {
+impl MessageWrite for GroupAvatarAddParam {
     fn get_size(&self) -> usize {
         0
         + if self.group_id == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.group_id) as u64) }
@@ -432,23 +45,23 @@ impl MessageWrite for ChannelCreateChannelParam {
 }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelCreateChannelResponse { }
+pub struct GroupAvatarAddResponse { }
 
-impl<'a> MessageRead<'a> for ChannelCreateChannelResponse {
+impl<'a> MessageRead<'a> for GroupAvatarAddResponse {
     fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
         r.read_to_end();
         Ok(Self::default())
     }
 }
 
-impl MessageWrite for ChannelCreateChannelResponse { }
+impl MessageWrite for GroupAvatarAddResponse { }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelEditChannelParam {
+pub struct GroupAvatarDeleteParam {
     pub group_id: u32,
 }
 
-impl<'a> MessageRead<'a> for ChannelEditChannelParam {
+impl<'a> MessageRead<'a> for GroupAvatarDeleteParam {
     fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
         let mut msg = Self::default();
         while !r.is_eof() {
@@ -462,7 +75,7 @@ impl<'a> MessageRead<'a> for ChannelEditChannelParam {
     }
 }
 
-impl MessageWrite for ChannelEditChannelParam {
+impl MessageWrite for GroupAvatarDeleteParam {
     fn get_size(&self) -> usize {
         0
         + if self.group_id == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.group_id) as u64) }
@@ -475,23 +88,23 @@ impl MessageWrite for ChannelEditChannelParam {
 }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelEditChannelResponse { }
+pub struct GroupAvatarDeleteResponse { }
 
-impl<'a> MessageRead<'a> for ChannelEditChannelResponse {
+impl<'a> MessageRead<'a> for GroupAvatarDeleteResponse {
     fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
         r.read_to_end();
         Ok(Self::default())
     }
 }
 
-impl MessageWrite for ChannelEditChannelResponse { }
+impl MessageWrite for GroupAvatarDeleteResponse { }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelDeleteChannelParam {
+pub struct GroupAvatarGetListParam {
     pub group_id: u32,
 }
 
-impl<'a> MessageRead<'a> for ChannelDeleteChannelParam {
+impl<'a> MessageRead<'a> for GroupAvatarGetListParam {
     fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
         let mut msg = Self::default();
         while !r.is_eof() {
@@ -505,7 +118,7 @@ impl<'a> MessageRead<'a> for ChannelDeleteChannelParam {
     }
 }
 
-impl MessageWrite for ChannelDeleteChannelParam {
+impl MessageWrite for GroupAvatarGetListParam {
     fn get_size(&self) -> usize {
         0
         + if self.group_id == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.group_id) as u64) }
@@ -518,239 +131,23 @@ impl MessageWrite for ChannelDeleteChannelParam {
 }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelDeleteChannelResponse { }
+pub struct GroupAvatarGetListResponse { }
 
-impl<'a> MessageRead<'a> for ChannelDeleteChannelResponse {
+impl<'a> MessageRead<'a> for GroupAvatarGetListResponse {
     fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
         r.read_to_end();
         Ok(Self::default())
     }
 }
 
-impl MessageWrite for ChannelDeleteChannelResponse { }
+impl MessageWrite for GroupAvatarGetListResponse { }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelAddAuthorParam { }
-
-impl<'a> MessageRead<'a> for ChannelAddAuthorParam {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelAddAuthorParam { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelAddAuthorResponse { }
-
-impl<'a> MessageRead<'a> for ChannelAddAuthorResponse {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelAddAuthorResponse { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelChangeAuthorPermissionParam { }
-
-impl<'a> MessageRead<'a> for ChannelChangeAuthorPermissionParam {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelChangeAuthorPermissionParam { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelChangeAuthorPermissionResponse { }
-
-impl<'a> MessageRead<'a> for ChannelChangeAuthorPermissionResponse {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelChangeAuthorPermissionResponse { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelRemoveAuthorParam { }
-
-impl<'a> MessageRead<'a> for ChannelRemoveAuthorParam {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelRemoveAuthorParam { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelRemoveAuthorResponse { }
-
-impl<'a> MessageRead<'a> for ChannelRemoveAuthorResponse {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelRemoveAuthorResponse { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelFollowChannelParam { }
-
-impl<'a> MessageRead<'a> for ChannelFollowChannelParam {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelFollowChannelParam { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelFollowChannelResponse { }
-
-impl<'a> MessageRead<'a> for ChannelFollowChannelResponse {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelFollowChannelResponse { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelUnFollowChannelParam { }
-
-impl<'a> MessageRead<'a> for ChannelUnFollowChannelParam {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelUnFollowChannelParam { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelUnFollowChannelResponse { }
-
-impl<'a> MessageRead<'a> for ChannelUnFollowChannelResponse {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelUnFollowChannelResponse { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelRemoveFollowersParam { }
-
-impl<'a> MessageRead<'a> for ChannelRemoveFollowersParam {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelRemoveFollowersParam { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelRemoveFollowersResponse { }
-
-impl<'a> MessageRead<'a> for ChannelRemoveFollowersResponse {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelRemoveFollowersResponse { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelSubscribeParam { }
-
-impl<'a> MessageRead<'a> for ChannelSubscribeParam {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelSubscribeParam { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelSubscribeResponse { }
-
-impl<'a> MessageRead<'a> for ChannelSubscribeResponse {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelSubscribeResponse { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelUnSubscribeParam { }
-
-impl<'a> MessageRead<'a> for ChannelUnSubscribeParam {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelUnSubscribeParam { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelUnSubscribeResponse { }
-
-impl<'a> MessageRead<'a> for ChannelUnSubscribeResponse {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelUnSubscribeResponse { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelRemoveSubscribersParam { }
-
-impl<'a> MessageRead<'a> for ChannelRemoveSubscribersParam {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelRemoveSubscribersParam { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelRemoveSubscribersResponse { }
-
-impl<'a> MessageRead<'a> for ChannelRemoveSubscribersResponse {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelRemoveSubscribersResponse { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelChangePrivacyParam {
+pub struct GroupSendMessageParam {
     pub group_id: u32,
 }
 
-impl<'a> MessageRead<'a> for ChannelChangePrivacyParam {
+impl<'a> MessageRead<'a> for GroupSendMessageParam {
     fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
         let mut msg = Self::default();
         while !r.is_eof() {
@@ -764,7 +161,7 @@ impl<'a> MessageRead<'a> for ChannelChangePrivacyParam {
     }
 }
 
-impl MessageWrite for ChannelChangePrivacyParam {
+impl MessageWrite for GroupSendMessageParam {
     fn get_size(&self) -> usize {
         0
         + if self.group_id == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.group_id) as u64) }
@@ -777,119 +174,23 @@ impl MessageWrite for ChannelChangePrivacyParam {
 }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelChangePrivacyResponse { }
+pub struct GroupSendMessageResponse { }
 
-impl<'a> MessageRead<'a> for ChannelChangePrivacyResponse {
+impl<'a> MessageRead<'a> for GroupSendMessageResponse {
     fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
         r.read_to_end();
         Ok(Self::default())
     }
 }
 
-impl MessageWrite for ChannelChangePrivacyResponse { }
+impl MessageWrite for GroupSendMessageResponse { }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelChangeDefaultPermissionParam { }
-
-impl<'a> MessageRead<'a> for ChannelChangeDefaultPermissionParam {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelChangeDefaultPermissionParam { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelChangeDefaultPermissionResponse { }
-
-impl<'a> MessageRead<'a> for ChannelChangeDefaultPermissionResponse {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelChangeDefaultPermissionResponse { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelRevokeLinkParam { }
-
-impl<'a> MessageRead<'a> for ChannelRevokeLinkParam {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelRevokeLinkParam { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelRevokeLinkResponse { }
-
-impl<'a> MessageRead<'a> for ChannelRevokeLinkResponse {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelRevokeLinkResponse { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelChangeUsernameParam { }
-
-impl<'a> MessageRead<'a> for ChannelChangeUsernameParam {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelChangeUsernameParam { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelChangeUsernameResponse { }
-
-impl<'a> MessageRead<'a> for ChannelChangeUsernameResponse {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelChangeUsernameResponse { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelBlockChannelParam { }
-
-impl<'a> MessageRead<'a> for ChannelBlockChannelParam {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelBlockChannelParam { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelBlockChannelResponse { }
-
-impl<'a> MessageRead<'a> for ChannelBlockChannelResponse {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
-    }
-}
-
-impl MessageWrite for ChannelBlockChannelResponse { }
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelDeleteMessagesParam {
+pub struct GroupEditMessageParam {
     pub group_id: u32,
 }
 
-impl<'a> MessageRead<'a> for ChannelDeleteMessagesParam {
+impl<'a> MessageRead<'a> for GroupEditMessageParam {
     fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
         let mut msg = Self::default();
         while !r.is_eof() {
@@ -903,7 +204,7 @@ impl<'a> MessageRead<'a> for ChannelDeleteMessagesParam {
     }
 }
 
-impl MessageWrite for ChannelDeleteMessagesParam {
+impl MessageWrite for GroupEditMessageParam {
     fn get_size(&self) -> usize {
         0
         + if self.group_id == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.group_id) as u64) }
@@ -916,327 +217,925 @@ impl MessageWrite for ChannelDeleteMessagesParam {
 }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelDeleteMessagesResponse { }
+pub struct GroupEditMessageResponse { }
 
-impl<'a> MessageRead<'a> for ChannelDeleteMessagesResponse {
+impl<'a> MessageRead<'a> for GroupEditMessageResponse {
     fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
         r.read_to_end();
         Ok(Self::default())
     }
 }
 
-impl MessageWrite for ChannelDeleteMessagesResponse { }
+impl MessageWrite for GroupEditMessageResponse { }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelClearHistoryParam { }
+pub struct GroupPinMessageParam {
+    pub group_id: u32,
+}
 
-impl<'a> MessageRead<'a> for ChannelClearHistoryParam {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
+impl<'a> MessageRead<'a> for GroupPinMessageParam {
+    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
+        let mut msg = Self::default();
+        while !r.is_eof() {
+            match r.next_tag(bytes) {
+                Ok(8) => msg.group_id = r.read_uint32(bytes)?,
+                Ok(t) => { r.read_unknown(bytes, t)?; }
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(msg)
     }
 }
 
-impl MessageWrite for ChannelClearHistoryParam { }
+impl MessageWrite for GroupPinMessageParam {
+    fn get_size(&self) -> usize {
+        0
+        + if self.group_id == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.group_id) as u64) }
+    }
+
+    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
+        if self.group_id != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.group_id))?; }
+        Ok(())
+    }
+}
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelClearHistoryResponse { }
+pub struct GroupPinMessageResponse { }
 
-impl<'a> MessageRead<'a> for ChannelClearHistoryResponse {
+impl<'a> MessageRead<'a> for GroupPinMessageResponse {
     fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
         r.read_to_end();
         Ok(Self::default())
     }
 }
 
-impl MessageWrite for ChannelClearHistoryResponse { }
+impl MessageWrite for GroupPinMessageResponse { }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelAvatarChangeParam { }
+pub struct GroupUnPinMessageParam {
+    pub group_id: u32,
+}
 
-impl<'a> MessageRead<'a> for ChannelAvatarChangeParam {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
+impl<'a> MessageRead<'a> for GroupUnPinMessageParam {
+    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
+        let mut msg = Self::default();
+        while !r.is_eof() {
+            match r.next_tag(bytes) {
+                Ok(8) => msg.group_id = r.read_uint32(bytes)?,
+                Ok(t) => { r.read_unknown(bytes, t)?; }
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(msg)
     }
 }
 
-impl MessageWrite for ChannelAvatarChangeParam { }
+impl MessageWrite for GroupUnPinMessageParam {
+    fn get_size(&self) -> usize {
+        0
+        + if self.group_id == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.group_id) as u64) }
+    }
+
+    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
+        if self.group_id != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.group_id))?; }
+        Ok(())
+    }
+}
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelAvatarChangeResponse { }
+pub struct GroupUnPinMessageResponse { }
 
-impl<'a> MessageRead<'a> for ChannelAvatarChangeResponse {
+impl<'a> MessageRead<'a> for GroupUnPinMessageResponse {
     fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
         r.read_to_end();
         Ok(Self::default())
     }
 }
 
-impl MessageWrite for ChannelAvatarChangeResponse { }
+impl MessageWrite for GroupUnPinMessageResponse { }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelSendDoingActionParam { }
+pub struct GroupDeleteMessageParam {
+    pub group_id: u32,
+}
 
-impl<'a> MessageRead<'a> for ChannelSendDoingActionParam {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
+impl<'a> MessageRead<'a> for GroupDeleteMessageParam {
+    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
+        let mut msg = Self::default();
+        while !r.is_eof() {
+            match r.next_tag(bytes) {
+                Ok(8) => msg.group_id = r.read_uint32(bytes)?,
+                Ok(t) => { r.read_unknown(bytes, t)?; }
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(msg)
     }
 }
 
-impl MessageWrite for ChannelSendDoingActionParam { }
+impl MessageWrite for GroupDeleteMessageParam {
+    fn get_size(&self) -> usize {
+        0
+        + if self.group_id == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.group_id) as u64) }
+    }
+
+    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
+        if self.group_id != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.group_id))?; }
+        Ok(())
+    }
+}
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelSendDoingActionResponse { }
+pub struct GroupDeleteMessageResponse { }
 
-impl<'a> MessageRead<'a> for ChannelSendDoingActionResponse {
+impl<'a> MessageRead<'a> for GroupDeleteMessageResponse {
     fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
         r.read_to_end();
         Ok(Self::default())
     }
 }
 
-impl MessageWrite for ChannelSendDoingActionResponse { }
+impl MessageWrite for GroupDeleteMessageResponse { }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelReportChannelParam { }
+pub struct GroupSetDraftParam {
+    pub group_id: u32,
+}
 
-impl<'a> MessageRead<'a> for ChannelReportChannelParam {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
+impl<'a> MessageRead<'a> for GroupSetDraftParam {
+    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
+        let mut msg = Self::default();
+        while !r.is_eof() {
+            match r.next_tag(bytes) {
+                Ok(8) => msg.group_id = r.read_uint32(bytes)?,
+                Ok(t) => { r.read_unknown(bytes, t)?; }
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(msg)
     }
 }
 
-impl MessageWrite for ChannelReportChannelParam { }
+impl MessageWrite for GroupSetDraftParam {
+    fn get_size(&self) -> usize {
+        0
+        + if self.group_id == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.group_id) as u64) }
+    }
+
+    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
+        if self.group_id != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.group_id))?; }
+        Ok(())
+    }
+}
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelReportChannelResponse { }
+pub struct GroupSetDraftResponse { }
 
-impl<'a> MessageRead<'a> for ChannelReportChannelResponse {
+impl<'a> MessageRead<'a> for GroupSetDraftResponse {
     fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
         r.read_to_end();
         Ok(Self::default())
     }
 }
 
-impl MessageWrite for ChannelReportChannelResponse { }
+impl MessageWrite for GroupSetDraftResponse { }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelReportMessageParam { }
+pub struct GroupGetFullMessageParam {
+    pub group_id: u32,
+}
 
-impl<'a> MessageRead<'a> for ChannelReportMessageParam {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
+impl<'a> MessageRead<'a> for GroupGetFullMessageParam {
+    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
+        let mut msg = Self::default();
+        while !r.is_eof() {
+            match r.next_tag(bytes) {
+                Ok(8) => msg.group_id = r.read_uint32(bytes)?,
+                Ok(t) => { r.read_unknown(bytes, t)?; }
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(msg)
     }
 }
 
-impl MessageWrite for ChannelReportMessageParam { }
+impl MessageWrite for GroupGetFullMessageParam {
+    fn get_size(&self) -> usize {
+        0
+        + if self.group_id == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.group_id) as u64) }
+    }
+
+    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
+        if self.group_id != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.group_id))?; }
+        Ok(())
+    }
+}
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelReportMessageResponse { }
+pub struct GroupGetFullMessageResponse { }
 
-impl<'a> MessageRead<'a> for ChannelReportMessageResponse {
+impl<'a> MessageRead<'a> for GroupGetFullMessageResponse {
     fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
         r.read_to_end();
         Ok(Self::default())
     }
 }
 
-impl MessageWrite for ChannelReportMessageResponse { }
+impl MessageWrite for GroupGetFullMessageResponse { }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelGetFullParam { }
+pub struct GroupCreateGroupParam {
+    pub group_id: u32,
+}
 
-impl<'a> MessageRead<'a> for ChannelGetFullParam {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
+impl<'a> MessageRead<'a> for GroupCreateGroupParam {
+    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
+        let mut msg = Self::default();
+        while !r.is_eof() {
+            match r.next_tag(bytes) {
+                Ok(8) => msg.group_id = r.read_uint32(bytes)?,
+                Ok(t) => { r.read_unknown(bytes, t)?; }
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(msg)
     }
 }
 
-impl MessageWrite for ChannelGetFullParam { }
+impl MessageWrite for GroupCreateGroupParam {
+    fn get_size(&self) -> usize {
+        0
+        + if self.group_id == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.group_id) as u64) }
+    }
+
+    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
+        if self.group_id != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.group_id))?; }
+        Ok(())
+    }
+}
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelGetFullResponse { }
+pub struct GroupCreateGroupResponse { }
 
-impl<'a> MessageRead<'a> for ChannelGetFullResponse {
+impl<'a> MessageRead<'a> for GroupCreateGroupResponse {
     fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
         r.read_to_end();
         Ok(Self::default())
     }
 }
 
-impl MessageWrite for ChannelGetFullResponse { }
+impl MessageWrite for GroupCreateGroupResponse { }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelGetMessagesListParam { }
+pub struct GroupEditGroupParam {
+    pub group_id: u32,
+}
 
-impl<'a> MessageRead<'a> for ChannelGetMessagesListParam {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
+impl<'a> MessageRead<'a> for GroupEditGroupParam {
+    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
+        let mut msg = Self::default();
+        while !r.is_eof() {
+            match r.next_tag(bytes) {
+                Ok(8) => msg.group_id = r.read_uint32(bytes)?,
+                Ok(t) => { r.read_unknown(bytes, t)?; }
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(msg)
     }
 }
 
-impl MessageWrite for ChannelGetMessagesListParam { }
+impl MessageWrite for GroupEditGroupParam {
+    fn get_size(&self) -> usize {
+        0
+        + if self.group_id == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.group_id) as u64) }
+    }
+
+    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
+        if self.group_id != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.group_id))?; }
+        Ok(())
+    }
+}
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelGetMessagesListResponse { }
+pub struct GroupEditGroupResponse { }
 
-impl<'a> MessageRead<'a> for ChannelGetMessagesListResponse {
+impl<'a> MessageRead<'a> for GroupEditGroupResponse {
     fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
         r.read_to_end();
         Ok(Self::default())
     }
 }
 
-impl MessageWrite for ChannelGetMessagesListResponse { }
+impl MessageWrite for GroupEditGroupResponse { }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelGetMediaListParam { }
+pub struct GroupDeleteGroupParam {
+    pub group_id: u32,
+}
 
-impl<'a> MessageRead<'a> for ChannelGetMediaListParam {
-    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
-        r.read_to_end();
-        Ok(Self::default())
+impl<'a> MessageRead<'a> for GroupDeleteGroupParam {
+    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
+        let mut msg = Self::default();
+        while !r.is_eof() {
+            match r.next_tag(bytes) {
+                Ok(8) => msg.group_id = r.read_uint32(bytes)?,
+                Ok(t) => { r.read_unknown(bytes, t)?; }
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(msg)
     }
 }
 
-impl MessageWrite for ChannelGetMediaListParam { }
+impl MessageWrite for GroupDeleteGroupParam {
+    fn get_size(&self) -> usize {
+        0
+        + if self.group_id == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.group_id) as u64) }
+    }
+
+    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
+        if self.group_id != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.group_id))?; }
+        Ok(())
+    }
+}
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelGetMediaListResponse { }
+pub struct GroupDeleteGroupResponse { }
 
-impl<'a> MessageRead<'a> for ChannelGetMediaListResponse {
+impl<'a> MessageRead<'a> for GroupDeleteGroupResponse {
     fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
         r.read_to_end();
         Ok(Self::default())
     }
 }
 
-impl MessageWrite for ChannelGetMediaListResponse { }
+impl MessageWrite for GroupDeleteGroupResponse { }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelGetAuthorsParam { }
+pub struct GroupAddAdminParam { }
 
-impl<'a> MessageRead<'a> for ChannelGetAuthorsParam {
+impl<'a> MessageRead<'a> for GroupAddAdminParam {
     fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
         r.read_to_end();
         Ok(Self::default())
     }
 }
 
-impl MessageWrite for ChannelGetAuthorsParam { }
+impl MessageWrite for GroupAddAdminParam { }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelGetAuthorsResponse { }
+pub struct GroupAddAdminResponse { }
 
-impl<'a> MessageRead<'a> for ChannelGetAuthorsResponse {
+impl<'a> MessageRead<'a> for GroupAddAdminResponse {
     fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
         r.read_to_end();
         Ok(Self::default())
     }
 }
 
-impl MessageWrite for ChannelGetAuthorsResponse { }
+impl MessageWrite for GroupAddAdminResponse { }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelGetFollowersParam { }
+pub struct GroupAddMemberParam { }
 
-impl<'a> MessageRead<'a> for ChannelGetFollowersParam {
+impl<'a> MessageRead<'a> for GroupAddMemberParam {
     fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
         r.read_to_end();
         Ok(Self::default())
     }
 }
 
-impl MessageWrite for ChannelGetFollowersParam { }
+impl MessageWrite for GroupAddMemberParam { }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelGetFollowersResponse { }
+pub struct GroupAddMemberResponse { }
 
-impl<'a> MessageRead<'a> for ChannelGetFollowersResponse {
+impl<'a> MessageRead<'a> for GroupAddMemberResponse {
     fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
         r.read_to_end();
         Ok(Self::default())
     }
 }
 
-impl MessageWrite for ChannelGetFollowersResponse { }
+impl MessageWrite for GroupAddMemberResponse { }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelGetFollowingsParam { }
+pub struct GroupRemoveMemberParam { }
 
-impl<'a> MessageRead<'a> for ChannelGetFollowingsParam {
+impl<'a> MessageRead<'a> for GroupRemoveMemberParam {
     fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
         r.read_to_end();
         Ok(Self::default())
     }
 }
 
-impl MessageWrite for ChannelGetFollowingsParam { }
+impl MessageWrite for GroupRemoveMemberParam { }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelGetFollowingsResponse { }
+pub struct GroupRemoveMemberResponse { }
 
-impl<'a> MessageRead<'a> for ChannelGetFollowingsResponse {
+impl<'a> MessageRead<'a> for GroupRemoveMemberResponse {
     fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
         r.read_to_end();
         Ok(Self::default())
     }
 }
 
-impl MessageWrite for ChannelGetFollowingsResponse { }
+impl MessageWrite for GroupRemoveMemberResponse { }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelGetSubscribersParam { }
+pub struct GroupChangeMemberLevelParam { }
 
-impl<'a> MessageRead<'a> for ChannelGetSubscribersParam {
+impl<'a> MessageRead<'a> for GroupChangeMemberLevelParam {
     fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
         r.read_to_end();
         Ok(Self::default())
     }
 }
 
-impl MessageWrite for ChannelGetSubscribersParam { }
+impl MessageWrite for GroupChangeMemberLevelParam { }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelGetSubscribersResponse { }
+pub struct GroupChangeMemberLevelResponse { }
 
-impl<'a> MessageRead<'a> for ChannelGetSubscribersResponse {
+impl<'a> MessageRead<'a> for GroupChangeMemberLevelResponse {
     fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
         r.read_to_end();
         Ok(Self::default())
     }
 }
 
-impl MessageWrite for ChannelGetSubscribersResponse { }
+impl MessageWrite for GroupChangeMemberLevelResponse { }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelBlockedParam { }
+pub struct GroupChangeMemberPermissionParam { }
 
-impl<'a> MessageRead<'a> for ChannelBlockedParam {
+impl<'a> MessageRead<'a> for GroupChangeMemberPermissionParam {
     fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
         r.read_to_end();
         Ok(Self::default())
     }
 }
 
-impl MessageWrite for ChannelBlockedParam { }
+impl MessageWrite for GroupChangeMemberPermissionParam { }
 
 #[derive(Debug, Default, PartialEq, Clone)]
-pub struct ChannelBlockedResponse { }
+pub struct GroupChangeMemberPermissionResponse { }
 
-impl<'a> MessageRead<'a> for ChannelBlockedResponse {
+impl<'a> MessageRead<'a> for GroupChangeMemberPermissionResponse {
     fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
         r.read_to_end();
         Ok(Self::default())
     }
 }
 
-impl MessageWrite for ChannelBlockedResponse { }
+impl MessageWrite for GroupChangeMemberPermissionResponse { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct JoinGroupParam { }
+
+impl<'a> MessageRead<'a> for JoinGroupParam {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for JoinGroupParam { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct JoinGroupResponse { }
+
+impl<'a> MessageRead<'a> for JoinGroupResponse {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for JoinGroupResponse { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupLeaveGroupParam { }
+
+impl<'a> MessageRead<'a> for GroupLeaveGroupParam {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupLeaveGroupParam { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupLeaveGroupResponse { }
+
+impl<'a> MessageRead<'a> for GroupLeaveGroupResponse {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupLeaveGroupResponse { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupBanMemberParam { }
+
+impl<'a> MessageRead<'a> for GroupBanMemberParam {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupBanMemberParam { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupBanMemberResponse { }
+
+impl<'a> MessageRead<'a> for GroupBanMemberResponse {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupBanMemberResponse { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupChangePrivacyParam {
+    pub group_id: u32,
+}
+
+impl<'a> MessageRead<'a> for GroupChangePrivacyParam {
+    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
+        let mut msg = Self::default();
+        while !r.is_eof() {
+            match r.next_tag(bytes) {
+                Ok(8) => msg.group_id = r.read_uint32(bytes)?,
+                Ok(t) => { r.read_unknown(bytes, t)?; }
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(msg)
+    }
+}
+
+impl MessageWrite for GroupChangePrivacyParam {
+    fn get_size(&self) -> usize {
+        0
+        + if self.group_id == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.group_id) as u64) }
+    }
+
+    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
+        if self.group_id != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.group_id))?; }
+        Ok(())
+    }
+}
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupChangePrivacyResponse { }
+
+impl<'a> MessageRead<'a> for GroupChangePrivacyResponse {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupChangePrivacyResponse { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupChangeDefaultPermissionParam { }
+
+impl<'a> MessageRead<'a> for GroupChangeDefaultPermissionParam {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupChangeDefaultPermissionParam { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupChangeDefaultPermissionResponse { }
+
+impl<'a> MessageRead<'a> for GroupChangeDefaultPermissionResponse {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupChangeDefaultPermissionResponse { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupRevokeLinkParam { }
+
+impl<'a> MessageRead<'a> for GroupRevokeLinkParam {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupRevokeLinkParam { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupRevokeLinkResponse { }
+
+impl<'a> MessageRead<'a> for GroupRevokeLinkResponse {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupRevokeLinkResponse { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupChangeUsernameParam { }
+
+impl<'a> MessageRead<'a> for GroupChangeUsernameParam {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupChangeUsernameParam { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupChangeUsernameResponse { }
+
+impl<'a> MessageRead<'a> for GroupChangeUsernameResponse {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupChangeUsernameResponse { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupDeleteMessagesParam {
+    pub group_id: u32,
+}
+
+impl<'a> MessageRead<'a> for GroupDeleteMessagesParam {
+    fn from_reader(r: &mut BytesReader, bytes: &'a [u8]) -> Result<Self> {
+        let mut msg = Self::default();
+        while !r.is_eof() {
+            match r.next_tag(bytes) {
+                Ok(8) => msg.group_id = r.read_uint32(bytes)?,
+                Ok(t) => { r.read_unknown(bytes, t)?; }
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(msg)
+    }
+}
+
+impl MessageWrite for GroupDeleteMessagesParam {
+    fn get_size(&self) -> usize {
+        0
+        + if self.group_id == 0u32 { 0 } else { 1 + sizeof_varint(*(&self.group_id) as u64) }
+    }
+
+    fn write_message<W: WriterBackend>(&self, w: &mut Writer<W>) -> Result<()> {
+        if self.group_id != 0u32 { w.write_with_tag(8, |w| w.write_uint32(*&self.group_id))?; }
+        Ok(())
+    }
+}
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupDeleteMessagesResponse { }
+
+impl<'a> MessageRead<'a> for GroupDeleteMessagesResponse {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupDeleteMessagesResponse { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupDeleteHistoryParam { }
+
+impl<'a> MessageRead<'a> for GroupDeleteHistoryParam {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupDeleteHistoryParam { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupDeleteHistoryResponse { }
+
+impl<'a> MessageRead<'a> for GroupDeleteHistoryResponse {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupDeleteHistoryResponse { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupClearHistoryParam { }
+
+impl<'a> MessageRead<'a> for GroupClearHistoryParam {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupClearHistoryParam { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupClearHistoryResponse { }
+
+impl<'a> MessageRead<'a> for GroupClearHistoryResponse {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupClearHistoryResponse { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupAvatarChangeParam { }
+
+impl<'a> MessageRead<'a> for GroupAvatarChangeParam {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupAvatarChangeParam { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupAvatarChangeResponse { }
+
+impl<'a> MessageRead<'a> for GroupAvatarChangeResponse {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupAvatarChangeResponse { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupSendDoingActionParam { }
+
+impl<'a> MessageRead<'a> for GroupSendDoingActionParam {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupSendDoingActionParam { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupSendDoingActionResponse { }
+
+impl<'a> MessageRead<'a> for GroupSendDoingActionResponse {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupSendDoingActionResponse { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupReportGroupParam { }
+
+impl<'a> MessageRead<'a> for GroupReportGroupParam {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupReportGroupParam { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupReportGroupResponse { }
+
+impl<'a> MessageRead<'a> for GroupReportGroupResponse {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupReportGroupResponse { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupGetMessagesListParam { }
+
+impl<'a> MessageRead<'a> for GroupGetMessagesListParam {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupGetMessagesListParam { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupGetMessagesListResponse { }
+
+impl<'a> MessageRead<'a> for GroupGetMessagesListResponse {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupGetMessagesListResponse { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupGetMediaListParam { }
+
+impl<'a> MessageRead<'a> for GroupGetMediaListParam {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupGetMediaListParam { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupGetMediaListResponse { }
+
+impl<'a> MessageRead<'a> for GroupGetMediaListResponse {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupGetMediaListResponse { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupGetMembersListParam { }
+
+impl<'a> MessageRead<'a> for GroupGetMembersListParam {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupGetMembersListParam { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupGetMembersListResponse { }
+
+impl<'a> MessageRead<'a> for GroupGetMembersListResponse {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupGetMembersListResponse { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupGetAdminsListParam { }
+
+impl<'a> MessageRead<'a> for GroupGetAdminsListParam {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupGetAdminsListParam { }
+
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct GroupGetAdminsListResponse { }
+
+impl<'a> MessageRead<'a> for GroupGetAdminsListResponse {
+    fn from_reader(r: &mut BytesReader, _: &[u8]) -> Result<Self> {
+        r.read_to_end();
+        Ok(Self::default())
+    }
+}
+
+impl MessageWrite for GroupGetAdminsListResponse { }
 
 

@@ -22,9 +22,7 @@ async fn main() -> Result<(), reqwest::Error> {
     pb_test_compact();
 }*/
 async fn me1() -> Result<(), reqwest::Error> {
-    let data =  pb::ChangePhoneNumberResponse{
-        done: true,
-        text: "a".to_string()
+    let data =  pb::ChangePhoneNumberParam{
     };
 
     let mut out_bytes = Vec::new();
@@ -36,7 +34,8 @@ async fn me1() -> Result<(), reqwest::Error> {
     println!("$$$$ method to send: {:?} {:}", out_bytes , out_bytes.len());
 
     let act = pb::Invoke{
-        method: 1,
+        namespace: 0,
+        method: 706069694,
         action_id: 2,
         is_response: true,
         rpc_data: out_bytes,
@@ -58,15 +57,23 @@ async fn me1() -> Result<(), reqwest::Error> {
         .await?;
 
     println!("{:#?}", new_post);
-    println!("body {:#?}", new_post.bytes().await);
+    let vs = new_post.bytes().await?;
+    let vv = vs.to_vec();
+    println!("body {:#?}", vs);
+    println!("body bytes {:?}", vv);
+
+    let res = deserialize_from_slice::<pb::ChangePhoneNumberResponse>(&vv);
+    println!("response {:?}", res);
+
     Ok(())
 }
 
 
-fn pb_test()  {
-    let data =  pb::ChangePhoneNumberResponse{
-        done: true,
-        text: "a".to_string()
+
+
+/*/////////// Archives -- delete ///////////////////
+fn pb_test()  /**/{
+    let data =  pb::ChangePhoneNumberParam{
     };
 
     let mut out_bytes = Vec::new();
@@ -78,8 +85,8 @@ fn pb_test()  {
     println!("$$$$ method to send: {:?} {:}", out_bytes , out_bytes.len());
 
     let act = pb::Invoke{
-        method: 58,
-        action_id: 0,
+        method: 706069694,
+        action_id: 2,
         is_response: false,
         rpc_data: out_bytes,
         // rpc_data: vec![],
@@ -160,4 +167,4 @@ fn pb_test_compact()  {
 
 
 }
-
+*/

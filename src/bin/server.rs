@@ -39,31 +39,21 @@ async fn server_http(req: Request<Body>) -> Result<Response<Body>, Infallible> {
 async fn server_http_rpc(req: Request<Body>) -> Vec<u8> {
     let bo = req.into_body();
     let bts = body::to_bytes(bo).await.unwrap();
-    // let b = &bts;
-
-    // let mm = bts.to_vec();
-    println!("$$$$ bytes got: {:?}", bts);
 
     let mut bytes: Vec<u8> = bts.to_vec();
     let mut bytes_reader: Vec<u8> = vec![];
-    println!("$$$$ ves got: {:?}", bytes);
 
     let invoke = BytesReader::from_bytes(&bytes_reader).read_message::<pb::Invoke>(&bytes);
-    // let invoke = pb::Invoke::from_reader(&mut reader, &bts);
-
-    // let mut reader = BytesReader::from_bytes(&bytes_reader);
-    // let invoke = pb::Invoke::from_reader(&mut reader, &bts);
 
     if let Ok(act) = invoke {
         println!("act {:?}", act);
-        // let pb_bts = server_rpc(act).unwrap_or("vec![]".as_bytes().to_owned());
         let pb_bts = rpc::server_rpc(act).unwrap_or("vec![]".as_bytes().to_owned());
         return pb_bts;
     };
 
-    println!("{:#?}", invoke);
+    println!("Error in reading pb::Invoke - Err: {:?} bytes {:?}", invoke, bytes);
 
-    "error in rpc ".as_bytes().to_owned()
+    "".as_bytes().to_owned()
 }
 
 /////////// Routing Funcs /////////////
