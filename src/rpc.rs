@@ -24,9 +24,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
     
@@ -42,9 +42,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1740258084 => {
@@ -58,9 +58,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         291193302 => {
@@ -74,9 +74,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1017957090 => {
@@ -90,9 +90,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1283119009 => {
@@ -106,9 +106,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
     
@@ -124,9 +124,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         189471894 => {
@@ -140,9 +140,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1494483355 => {
@@ -156,9 +156,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         780397316 => {
@@ -172,9 +172,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         93233821 => {
@@ -188,9 +188,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         419542304 => {
@@ -204,9 +204,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         744563779 => {
@@ -220,9 +220,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         959512423 => {
@@ -236,9 +236,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         869709257 => {
@@ -252,9 +252,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1367898912 => {
@@ -268,9 +268,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         858172401 => {
@@ -284,9 +284,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         729024592 => {
@@ -300,9 +300,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         79012409 => {
@@ -316,9 +316,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1582638498 => {
@@ -332,9 +332,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1912530021 => {
@@ -348,9 +348,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         983884462 => {
@@ -364,9 +364,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         2037016989 => {
@@ -380,9 +380,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1200751231 => {
@@ -396,9 +396,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         727437726 => {
@@ -412,9 +412,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         259263709 => {
@@ -428,9 +428,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         113943649 => {
@@ -444,9 +444,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         644189206 => {
@@ -460,9 +460,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         2124822181 => {
@@ -476,9 +476,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1164398815 => {
@@ -492,9 +492,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1021808696 => {
@@ -508,9 +508,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1968579501 => {
@@ -524,9 +524,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1626010891 => {
@@ -540,9 +540,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1925044843 => {
@@ -556,9 +556,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         973237257 => {
@@ -572,9 +572,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         792938145 => {
@@ -588,9 +588,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         2053528327 => {
@@ -604,9 +604,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1684531258 => {
@@ -620,9 +620,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1339072968 => {
@@ -636,9 +636,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         985772653 => {
@@ -652,9 +652,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1373284924 => {
@@ -668,9 +668,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1747172143 => {
@@ -684,9 +684,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1838438980 => {
@@ -700,9 +700,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         2146806736 => {
@@ -716,9 +716,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1674411747 => {
@@ -732,9 +732,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1403193015 => {
@@ -748,9 +748,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
     
@@ -766,9 +766,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1806258329 => {
@@ -782,9 +782,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         933526170 => {
@@ -798,9 +798,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1088992782 => {
@@ -814,9 +814,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1319324241 => {
@@ -830,9 +830,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1345425871 => {
@@ -846,9 +846,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1768678453 => {
@@ -862,9 +862,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         121549718 => {
@@ -878,9 +878,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1346774525 => {
@@ -894,9 +894,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
     
@@ -912,9 +912,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         2041790485 => {
@@ -928,9 +928,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         548699291 => {
@@ -944,9 +944,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1417285757 => {
@@ -960,9 +960,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1860345925 => {
@@ -976,9 +976,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1291891637 => {
@@ -992,9 +992,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1801774787 => {
@@ -1008,9 +1008,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         313746334 => {
@@ -1024,9 +1024,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1179089068 => {
@@ -1040,9 +1040,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1517245560 => {
@@ -1056,9 +1056,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1441782770 => {
@@ -1072,9 +1072,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1951553867 => {
@@ -1088,9 +1088,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         904052140 => {
@@ -1104,9 +1104,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1138477048 => {
@@ -1120,9 +1120,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1691834263 => {
@@ -1136,9 +1136,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1878673022 => {
@@ -1152,9 +1152,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1861381591 => {
@@ -1168,9 +1168,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1818954127 => {
@@ -1184,9 +1184,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1264591958 => {
@@ -1200,9 +1200,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         962281627 => {
@@ -1216,9 +1216,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1570934969 => {
@@ -1232,9 +1232,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         545957996 => {
@@ -1248,9 +1248,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1608173619 => {
@@ -1264,9 +1264,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1384523712 => {
@@ -1280,9 +1280,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         611850722 => {
@@ -1296,9 +1296,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
     
@@ -1314,9 +1314,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1897027349 => {
@@ -1330,9 +1330,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
     
@@ -1348,9 +1348,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1665019493 => {
@@ -1364,9 +1364,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         365183375 => {
@@ -1380,9 +1380,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         958971956 => {
@@ -1396,9 +1396,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         676599227 => {
@@ -1412,9 +1412,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         2012702964 => {
@@ -1428,9 +1428,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         589574238 => {
@@ -1444,9 +1444,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         2132464067 => {
@@ -1460,9 +1460,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         591743429 => {
@@ -1476,9 +1476,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         361834630 => {
@@ -1492,9 +1492,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         548504852 => {
@@ -1508,9 +1508,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1497988410 => {
@@ -1524,9 +1524,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         605792138 => {
@@ -1540,9 +1540,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         406592509 => {
@@ -1556,9 +1556,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         832997038 => {
@@ -1572,9 +1572,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         599852950 => {
@@ -1588,9 +1588,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         742937895 => {
@@ -1604,9 +1604,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         184560027 => {
@@ -1620,9 +1620,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1290613173 => {
@@ -1636,9 +1636,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         393991035 => {
@@ -1652,9 +1652,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         276700675 => {
@@ -1668,9 +1668,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1270953793 => {
@@ -1684,9 +1684,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1352552449 => {
@@ -1700,9 +1700,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1202058216 => {
@@ -1716,9 +1716,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         108612523 => {
@@ -1732,9 +1732,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         775862697 => {
@@ -1748,9 +1748,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         939443722 => {
@@ -1764,9 +1764,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         2022474356 => {
@@ -1780,9 +1780,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1759704420 => {
@@ -1796,9 +1796,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         200351324 => {
@@ -1812,9 +1812,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1541835459 => {
@@ -1828,9 +1828,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         2143016912 => {
@@ -1844,9 +1844,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         429215412 => {
@@ -1860,9 +1860,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         332260610 => {
@@ -1876,9 +1876,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         77668156 => {
@@ -1892,9 +1892,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
     
@@ -1910,9 +1910,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1684680875 => {
@@ -1926,9 +1926,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         527415306 => {
@@ -1942,9 +1942,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         2086146002 => {
@@ -1958,9 +1958,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1118533600 => {
@@ -1974,9 +1974,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1313969677 => {
@@ -1990,9 +1990,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1332796256 => {
@@ -2006,9 +2006,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         655898778 => {
@@ -2022,9 +2022,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         483078047 => {
@@ -2038,9 +2038,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1225489769 => {
@@ -2054,9 +2054,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1585401362 => {
@@ -2070,9 +2070,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         1902848482 => {
@@ -2086,9 +2086,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
         305468874 => {
@@ -2102,9 +2102,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
     
@@ -2120,9 +2120,9 @@ pub fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
                 let mut out_bytes = Vec::new();
                 let _result = Writer::new(&mut out_bytes).write_message(&result);
 
-                return Ok(out_bytes)
+                Ok(out_bytes)
             } else {
-                return Err(GenErr::ReadingPbParam)
+                Err(GenErr::ReadingPbParam)
             }
         },
     
