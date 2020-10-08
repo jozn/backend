@@ -1,26 +1,22 @@
-
 #![allow(dead_code)]
 #![allow(unused_imports)]
 #![allow(unused_variables)]
 #![allow(warnings)]
 #![allow(soft_unstable)]
 
+extern crate backbone;
+
 use std::convert::Infallible;
 use std::net::SocketAddr;
-use hyper::{Body, Request, Response, Server};
-use hyper::service::{make_service_fn, service_fn};
-use hyper::body;
-use serde::{Deserialize, Serialize};
-use quick_protobuf::{BytesReader, BytesWriter};
-use quick_protobuf::{MessageRead,MessageWrite,Writer};
 
-extern crate backbone;
+use hyper::{Body, Request, Response, Server};
+use hyper::body;
+use hyper::service::{make_service_fn, service_fn};
+use quick_protobuf::{BytesReader, BytesWriter};
+use quick_protobuf::{MessageRead, MessageWrite, Writer};
 
 use backbone::pb;
 use backbone::rpc;
-
-use pb::pb::sys::*;
-use prost::Message;
 
 fn to_bin(s: String) -> Vec<u8> {
     s.as_bytes().to_owned()
@@ -82,59 +78,11 @@ async fn main() {
 
     let server = Server::bind(&addr).serve(make_svc);
 
+    println!("Server is running");
+
     // Run this server for... forever!
     if let Err(e) = server.await {
         eprintln!("server error: {}", e);
     }
 }
 
-////////////// Archives ////////////////
-fn mem_size(){
-
-    let s = std::mem::size_of::<pb::store::Message>();
-    println!("size: {}", s );
-
-    let s = std::mem::size_of::<pb::store::MessageCount>();
-    println!("size msg count: {}", s );
-
-    let s = std::mem::size_of::<pb::ActionView>();
-    println!("size compact: {}", s );
-
-}
-
-fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
-    let up = UserParam{};
-    match act.method {
-        45 => {
-            let vec = "funk ".as_bytes().to_owned();
-
-            let mut reader = BytesReader::from_bytes(&act.rpc_data);
-            let rpc_param= pb::rpc_general::EchoParam::from_reader(&mut reader, &act.rpc_data);
-
-            if let Ok(param) = rpc_param {
-                println!("param {:?}", param);
-                let result = rpc_old::check_username(&up,param)?;
-
-                let mut out_bytes = Vec::new();
-                let mut writer = Writer::new(&mut out_bytes);
-                let out = writer.write_message(&result);
-                return Ok(out_bytes)
-            } else {
-            }
-            Ok(vec)
-        },
-        _ => {
-            Err(GenErr{})
-        }
-    }
-}
-
-mod rpc_old {
-    use super::*;
-    pub fn check_username(up: &UserParam, param: pb::EchoParam) -> Result<pb::EchoResponse, GenErr> {
-        Ok(pb::EchoResponse::default())
-    }
-}
-
-pub struct GenErr {}
-pub struct UserParam {}
