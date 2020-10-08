@@ -125,9 +125,9 @@ async fn repeat(u: &http::Uri) -> String {
     u.query().unwrap_or("[empty]").repeat(10)
 }
 
-// #[tokio::main]
-async fn main2() {
-    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+#[tokio::main]
+async fn main() {
+    let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
 
     play();
 
@@ -148,7 +148,7 @@ async fn main2() {
     }
 }
 
-use cassandra_cpp::*;
+/*use cassandra_cpp::*;
 #[tokio::main]
 async fn main() {
     let query = stmt!("SELECT keyspace_name FROM system_schema.keyspaces;");
@@ -171,4 +171,4 @@ async fn main() {
         }
         err => println!("{:?}", err),
     }
-}
+}*/

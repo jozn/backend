@@ -227,6 +227,7 @@ dependencies = [
  "prost-types",
  "quick-protobuf",
  "rand 0.7.3",
+ "reqwest",
  "rusqlite",
  "serde",
  "serde_json",

@@ -30,7 +30,7 @@ mod xc;
 mod pb;
 
 
-fn main() {
+fn main_run() {
     let user = "user";
     let password = "password";
     let auth = StaticPasswordAuthenticator::new(&user, &password);
