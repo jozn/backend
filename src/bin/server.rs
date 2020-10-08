@@ -22,28 +22,6 @@ use backbone::rpc;
 use pb::pb::sys::*;
 use prost::Message;
 
-
-#[derive(Debug, Default, PartialEq, Clone)]
-pub struct Inv {
-    pub method: u32,
-    pub action_id: u64,
-    pub is_response: bool,
-    pub rpc_data: Vec<u8>,
-}
-
-fn play(){
-
-    let s = std::mem::size_of::<pb::store::Message>();
-    println!("size: {}", s );
-
-    let s = std::mem::size_of::<pb::store::MessageCount>();
-    println!("size msg count: {}", s );
-
-    let s = std::mem::size_of::<pb::MediaView>();
-    println!("size compact: {}", s );
-
-}
-
 fn to_bin(s: String) -> Vec<u8> {
     s.as_bytes().to_owned()
 }
@@ -55,7 +33,7 @@ async fn server_http(req: Request<Body>) -> Result<Response<Body>, Infallible> {
         "/rpc" => {
             (200, server_http_rpc(req).await)
         },
-        _ => (404, to_bin("Not found".to_string()))
+        _ => (404, to_bin("Not found.".to_string()))
     };
 
     Ok(Response::builder().status(res.0).body(Body::from(res.1)).unwrap())
@@ -79,6 +57,49 @@ async fn server_http_rpc(req: Request<Body>) -> Vec<u8> {
     };
 
     "error in rpc ".as_bytes().to_owned()
+}
+
+/////////// Routing Funcs /////////////
+async fn echo() -> String {
+    "echo me".to_string()
+}
+async fn repeat(u: &http::Uri) -> String {
+    u.query().unwrap_or("[empty]").repeat(10)
+}
+
+#[tokio::main]
+async fn main() {
+    let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
+
+    // A `Service` is needed for every connection, so this
+    // creates one from our `hello_world` function.
+    let make_svc = make_service_fn(|_conn| async {
+        // service_fn converts our function into a `Service`
+        // println!("server xxxxxxx {:?}", _conn.clone());
+        // Ok::<_, Infallible>(service_fn(hello_world))
+        Ok::<_, Infallible>(service_fn(server_http))
+    });
+
+    let server = Server::bind(&addr).serve(make_svc);
+
+    // Run this server for... forever!
+    if let Err(e) = server.await {
+        eprintln!("server error: {}", e);
+    }
+}
+
+////////////// Archives ////////////////
+fn mem_size(){
+
+    let s = std::mem::size_of::<pb::store::Message>();
+    println!("size: {}", s );
+
+    let s = std::mem::size_of::<pb::store::MessageCount>();
+    println!("size msg count: {}", s );
+
+    let s = std::mem::size_of::<pb::ActionView>();
+    println!("size compact: {}", s );
+
 }
 
 fn server_rpc(act : Invoke) -> Result<Vec<u8>,GenErr> {
@@ -117,58 +138,3 @@ mod rpc_old {
 
 pub struct GenErr {}
 pub struct UserParam {}
-
-async fn echo() -> String {
-    "echo me".to_string()
-}
-async fn repeat(u: &http::Uri) -> String {
-    u.query().unwrap_or("[empty]").repeat(10)
-}
-
-#[tokio::main]
-async fn main() {
-    let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
-
-    play();
-
-    // A `Service` is needed for every connection, so this
-    // creates one from our `hello_world` function.
-    let make_svc = make_service_fn(|_conn| async {
-        // service_fn converts our function into a `Service`
-        // println!("server xxxxxxx {:?}", _conn.clone());
-        // Ok::<_, Infallible>(service_fn(hello_world))
-        Ok::<_, Infallible>(service_fn(server_http))
-    });
-
-    let server = Server::bind(&addr).serve(make_svc);
-
-    // Run this server for... forever!
-    if let Err(e) = server.await {
-        eprintln!("server error: {}", e);
-    }
-}
-
-/*use cassandra_cpp::*;
-#[tokio::main]
-async fn main() {
-    let query = stmt!("SELECT keyspace_name FROM system_schema.keyspaces;");
-    let col_name = "keyspace_name";
-
-    let contact_points = "127.0.0.1";
-
-    let mut cluster = Cluster::default();
-    cluster.set_contact_points(contact_points).unwrap();
-    cluster.set_load_balance_round_robin();
-
-    match cluster.connect_async().await {
-        Ok(ref mut session) => {
-            let result = session.execute(&query).await.unwrap();
-            println!("{}", result);
-            for row in result.iter() {
-                let col: String = row.get_by_name(col_name).unwrap();
-                println!("ks name = {}", col);
-            }
-        }
-        err => println!("{:?}", err),
-    }
-}*/
