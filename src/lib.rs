@@ -16,6 +16,8 @@ use std::net::SocketAddr;
 pub mod com;
 pub mod pb;
 pub mod rpc;
+pub mod rpc_fns;
+pub mod rpc_fns_default;
 
 use pb::pb::sys::*;
 use prost::Message;
