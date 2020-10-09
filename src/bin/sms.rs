@@ -10,31 +10,24 @@ async fn main()  {
 }
 
 async fn sample2() -> Result<(), reqwest::Error> {
-    // let body = format!("message={}&receptor={}&linenumber={}", "mymsg","09015132328",10008642);
     let params = [("message", "myسیبmsg"), ("receptor","09015132328"), ("linenumber", "10008566")];
 
     let req = reqwest::Client::new()
-        // .post("https://httpdump.io/0pkd7")
         .post("http://api.ghasedak.io/v2/sms/send/simple")
         .header("apikey","57d606af03970b8713840cdef028fff46fe2f677243a8547d1a3ebfbe4c3ab23")
-        // .header("Accept","application/json")
-        // .header("Charset","utf-8")
-        // .header("Content-Type", "application/x-www-form-urlencoded")
+        .header("Accept","application/json")
+        .header("Charset","UTF-8")
+        .header("Content-Type", "application/x-www-form-urlencoded")
         .form(&params);
 
     println!("{:#?}", req);
 
-    // let new_post :Result<SmsResult,reqwest::Error> = req
     let new_post  = req
         .send()
         .await?
         .bytes().await;
-        // .json()
-        // .await?;
-
 
     println!("Done ");
-    // println!("{:#?}", new_post);
 
     println!("{:#?}", new_post);
     let val:SmsResult =  serde_json::from_slice(&new_post.unwrap()).unwrap();
@@ -43,7 +36,6 @@ async fn sample2() -> Result<(), reqwest::Error> {
 
     Ok(())
 }
-
 
 #[derive(Default, Debug, Clone, PartialEq, serde_derive::Serialize, serde_derive::Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -58,7 +50,3 @@ pub struct ResultOut {
     pub code: i64,
     pub message: String,
 }
-
-
-
-
