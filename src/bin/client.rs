@@ -6,9 +6,9 @@
 
 extern crate backbone;
 
+use backbone::pb;
+use quick_protobuf::{deserialize_from_slice, BytesReader, MessageRead, MessageWrite, Writer};
 use serde::{Deserialize, Serialize};
-use backbone::{pb};
-use quick_protobuf::{MessageWrite, Writer, BytesReader, MessageRead, deserialize_from_slice};
 
 #[tokio::main]
 async fn main() -> Result<(), reqwest::Error> {
@@ -16,18 +16,17 @@ async fn main() -> Result<(), reqwest::Error> {
 }
 
 async fn me1() -> Result<(), reqwest::Error> {
-    let data =  pb::ChangePhoneNumberParam{
-    };
+    let data = pb::ChangePhoneNumberParam {};
 
     let mut out_bytes = Vec::new();
-    println!("$$$$ aize {:} {}", out_bytes.len() , data.get_size());
+    println!("$$$$ aize {:} {}", out_bytes.len(), data.get_size());
 
     let mut writer = Writer::new(&mut out_bytes);
     let _result = writer.write_message(&data);
 
-    println!("$$$$ method to send: {:?} {:}", out_bytes , out_bytes.len());
+    println!("$$$$ method to send: {:?} {:}", out_bytes, out_bytes.len());
 
-    let act = pb::Invoke{
+    let act = pb::Invoke {
         namespace: 0,
         method: 706069694,
         action_id: 2,
@@ -41,7 +40,6 @@ async fn me1() -> Result<(), reqwest::Error> {
     let _result = writer.write_message(&act);
 
     println!("$$$$ bytes to send: {:?}", out_invoke);
-
 
     let new_post = reqwest::Client::new()
         .post("http://127.0.0.1:3000/rpc")

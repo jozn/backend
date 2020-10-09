@@ -51,7 +51,10 @@ async fn server_http_rpc(req: Request<Body>) -> Vec<u8> {
         return pb_bts;
     };
 
-    println!("Error in reading pb::Invoke - Err: {:?} bytes {:?}", invoke, bytes);
+    println!(
+        "Error in reading pb::Invoke - Err: {:?} bytes {:?}",
+        invoke, bytes
+    );
 
     "".as_bytes().to_owned()
 }

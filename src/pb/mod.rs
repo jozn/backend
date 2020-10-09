@@ -15,10 +15,9 @@ pub use pb::rpc_channel::*;
 pub use pb::rpc_chat::*;
 pub use pb::rpc_direct::*;
 pub use pb::rpc_general::*;
+pub use pb::rpc_group::*;
 pub use pb::rpc_social::*;
 pub use pb::rpc_upload::*;
-pub use pb::rpc_group::*;
-
 
 pub use pb::enums::*;
 pub use pb::global::*;
