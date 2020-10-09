@@ -1,36 +1,39 @@
-use serde::{Deserialize, Serialize};
 use reqwest::header::USER_AGENT;
+use serde::{Deserialize, Serialize};
 use serde_json;
 
 #[tokio::main]
-async fn main()  {
+async fn main() {
     let res = sample2().await;
     println!("ewa: {:#?}", res);
-
 }
 
 async fn sample2() -> Result<(), reqwest::Error> {
-    let params = [("message", "myسیبmsg"), ("receptor","09015132328"), ("linenumber", "10008566")];
+    let params = [
+        ("message", "myسیبmsg"),
+        ("receptor", "09015132328"),
+        ("linenumber", "10008566"),
+    ];
 
     let req = reqwest::Client::new()
         .post("http://api.ghasedak.io/v2/sms/send/simple")
-        .header("apikey","57d606af03970b8713840cdef028fff46fe2f677243a8547d1a3ebfbe4c3ab23")
-        .header("Accept","application/json")
-        .header("Charset","UTF-8")
+        .header(
+            "apikey",
+            "57d606af03970b8713840cdef028fff46fe2f677243a8547d1a3ebfbe4c3ab23",
+        )
+        .header("Accept", "application/json")
+        .header("Charset", "UTF-8")
         .header("Content-Type", "application/x-www-form-urlencoded")
         .form(&params);
 
     println!("{:#?}", req);
 
-    let new_post  = req
-        .send()
-        .await?
-        .bytes().await;
+    let new_post = req.send().await?.bytes().await;
 
     println!("Done ");
 
     println!("{:#?}", new_post);
-    let val:SmsResult =  serde_json::from_slice(&new_post.unwrap()).unwrap();
+    let val: SmsResult = serde_json::from_slice(&new_post.unwrap()).unwrap();
 
     println!(" val {:#?}", val);
 

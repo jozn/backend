@@ -6,14 +6,21 @@
 
 extern crate backbone;
 
-use backbone::pb;
+use backbone::{pb, com::*, rpc::method_ids};
 use quick_protobuf::{deserialize_from_slice, BytesReader, MessageRead, MessageWrite, Writer};
 use serde::{Deserialize, Serialize};
 
 #[tokio::main]
-async fn main() -> Result<(), reqwest::Error> {
-    me1().await
+async fn main()  {
+    client_test().await;
 }
+
+async fn client_test()  {
+    let crpc = RpcClient{endpoint:""};
+    let res = crpc.ChangePhoneNumber(pb::ChangePhoneNumberParam{}).await;
+    println!("{:#?}",res);
+}
+
 
 async fn me1() -> Result<(), reqwest::Error> {
     let data = pb::ChangePhoneNumberParam {};
@@ -59,3 +66,50 @@ async fn me1() -> Result<(), reqwest::Error> {
 
     Ok(())
 }
+
+async fn send_rpc(){
+
+}
+
+struct RpcClient {
+    endpoint: &'static str,
+}
+
+impl RpcClient {
+    fn get_action_id(&self) -> u64 {
+        8
+    }
+}
+
+impl RpcClient {
+
+    pub async fn ChangePhoneNumber (&self, param: pb::ChangePhoneNumberParam) -> Result<pb::ChangePhoneNumberResponse,GenErr>{
+
+        let mut buff = Vec::new();
+        Writer::new(&mut buff).write_message(&param).unwrap();
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChangePhoneNumber,
+            action_id: self.get_action_id() ,
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = Vec::new();
+        Writer::new(&mut buff).write_message(&invoke).unwrap();
+
+        let req = reqwest::Client::new()
+            .post("http://127.0.0.1:3000/rpc")
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res =  deserialize_from_slice::<pb::ChangePhoneNumberResponse>(&res_bytes)?;
+        Ok(pb_res)
+    }
+}
+

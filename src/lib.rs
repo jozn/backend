@@ -18,6 +18,7 @@ pub mod pb;
 pub mod rpc;
 pub mod rpc_fns;
 pub mod rpc_fns_default;
+pub mod rpc_impl;
 
 use pb::pb::sys::*;
 use prost::Message;
@@ -30,5 +31,5 @@ pub struct Inv {
     pub rpc_data: Vec<u8>,
 }
 
-pub struct GenErr {}
-pub struct UserParam {}
+// pub struct GenErr {}
+// pub struct UserParam {}

@@ -1,8 +1,6 @@
-
-
 use crate::rpc_fns_default as def;
 
-use crate::{com, com::*, pb};
+use crate::{com, com::*, pb, rpc_impl};
 
 pub use def::RPC_Account::*;
 pub use def::RPC_Auth::*;
@@ -14,7 +12,11 @@ pub use def::RPC_Group::*;
 pub use def::RPC_Social::*;
 pub use def::RPC_Upload::*;
 
-pub fn ChangePhoneNumber(up: &UserParam, param: pb::ChangePhoneNumberParam) -> Result<pb::ChangePhoneNumberResponse, GenErr> {
+pub fn ChangePhoneNumber(
+    up: &UserParam,
+    param: pb::ChangePhoneNumberParam,
+) -> Result<pb::ChangePhoneNumberResponse, GenErr> {
     Ok(pb::ChangePhoneNumberResponse::default())
 }
 
+pub use rpc_impl::rpc_auth::SendConfirmCode;
