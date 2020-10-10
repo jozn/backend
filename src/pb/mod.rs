@@ -7,6 +7,8 @@
 // pub use ps::*;
 // pub use pb::*;
 pub mod pb;
+pub mod pb2;
+
 pub use pb::*;
 
 pub use pb::rpc_account::*;
@@ -24,3 +26,5 @@ pub use pb::global::*;
 pub use pb::store::*;
 pub use pb::sys::*;
 pub use pb::views::*;
+
+// pub use pb2;
