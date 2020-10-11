@@ -5,7 +5,7 @@ use crate::{com, com::*, pb};
 pub mod RPC_Account {
     use super::*;
     
-    pub fn ChangePhoneNumber(up: &UserParam, param: pb::ChangePhoneNumberParam) -> Result<pb::ChangePhoneNumberResponse, GenErr> {
+    pub async fn ChangePhoneNumber(up: &UserParam, param: pb::ChangePhoneNumberParam) -> Result<pb::ChangePhoneNumberResponse, GenErr> {
         Ok(pb::ChangePhoneNumberResponse::default())
     }
 }
@@ -14,19 +14,19 @@ pub mod RPC_Account {
 pub mod RPC_Auth {
     use super::*;
     
-    pub fn SendConfirmCode(up: &UserParam, param: pb::SendConfirmCodeParam) -> Result<pb::SendConfirmCodeResponse, GenErr> {
+    pub async fn SendConfirmCode(up: &UserParam, param: pb::SendConfirmCodeParam) -> Result<pb::SendConfirmCodeResponse, GenErr> {
         Ok(pb::SendConfirmCodeResponse::default())
     }
-    pub fn ConfirmCode(up: &UserParam, param: pb::ConfirmCodeParam) -> Result<pb::ConfirmCodeResponse, GenErr> {
+    pub async fn ConfirmCode(up: &UserParam, param: pb::ConfirmCodeParam) -> Result<pb::ConfirmCodeResponse, GenErr> {
         Ok(pb::ConfirmCodeResponse::default())
     }
-    pub fn SingUp(up: &UserParam, param: pb::SingUpParam) -> Result<pb::SingUpResponse, GenErr> {
+    pub async fn SingUp(up: &UserParam, param: pb::SingUpParam) -> Result<pb::SingUpResponse, GenErr> {
         Ok(pb::SingUpResponse::default())
     }
-    pub fn SingIn(up: &UserParam, param: pb::SingInParam) -> Result<pb::SingInResponse, GenErr> {
+    pub async fn SingIn(up: &UserParam, param: pb::SingInParam) -> Result<pb::SingInResponse, GenErr> {
         Ok(pb::SingInResponse::default())
     }
-    pub fn LogOut(up: &UserParam, param: pb::LogOutParam) -> Result<pb::LogOutResponse, GenErr> {
+    pub async fn LogOut(up: &UserParam, param: pb::LogOutParam) -> Result<pb::LogOutResponse, GenErr> {
         Ok(pb::LogOutResponse::default())
     }
 }
@@ -35,124 +35,124 @@ pub mod RPC_Auth {
 pub mod RPC_Channel {
     use super::*;
     
-    pub fn ChannelCreateChannel(up: &UserParam, param: pb::ChannelCreateChannelParam) -> Result<pb::ChannelCreateChannelResponse, GenErr> {
+    pub async fn ChannelCreateChannel(up: &UserParam, param: pb::ChannelCreateChannelParam) -> Result<pb::ChannelCreateChannelResponse, GenErr> {
         Ok(pb::ChannelCreateChannelResponse::default())
     }
-    pub fn ChannelEditChannel(up: &UserParam, param: pb::ChannelEditChannelParam) -> Result<pb::ChannelEditChannelResponse, GenErr> {
+    pub async fn ChannelEditChannel(up: &UserParam, param: pb::ChannelEditChannelParam) -> Result<pb::ChannelEditChannelResponse, GenErr> {
         Ok(pb::ChannelEditChannelResponse::default())
     }
-    pub fn ChannelDeleteChannel(up: &UserParam, param: pb::ChannelDeleteChannelParam) -> Result<pb::ChannelDeleteChannelResponse, GenErr> {
+    pub async fn ChannelDeleteChannel(up: &UserParam, param: pb::ChannelDeleteChannelParam) -> Result<pb::ChannelDeleteChannelResponse, GenErr> {
         Ok(pb::ChannelDeleteChannelResponse::default())
     }
-    pub fn ChannelAddAuthor(up: &UserParam, param: pb::ChannelAddAuthorParam) -> Result<pb::ChannelAddAuthorResponse, GenErr> {
+    pub async fn ChannelAddAuthor(up: &UserParam, param: pb::ChannelAddAuthorParam) -> Result<pb::ChannelAddAuthorResponse, GenErr> {
         Ok(pb::ChannelAddAuthorResponse::default())
     }
-    pub fn ChannelChangeAuthorPermission(up: &UserParam, param: pb::ChannelChangeAuthorPermissionParam) -> Result<pb::ChannelChangeAuthorPermissionResponse, GenErr> {
+    pub async fn ChannelChangeAuthorPermission(up: &UserParam, param: pb::ChannelChangeAuthorPermissionParam) -> Result<pb::ChannelChangeAuthorPermissionResponse, GenErr> {
         Ok(pb::ChannelChangeAuthorPermissionResponse::default())
     }
-    pub fn ChannelRemoveAuthor(up: &UserParam, param: pb::ChannelRemoveAuthorParam) -> Result<pb::ChannelRemoveAuthorResponse, GenErr> {
+    pub async fn ChannelRemoveAuthor(up: &UserParam, param: pb::ChannelRemoveAuthorParam) -> Result<pb::ChannelRemoveAuthorResponse, GenErr> {
         Ok(pb::ChannelRemoveAuthorResponse::default())
     }
-    pub fn ChannelFollowChannel(up: &UserParam, param: pb::ChannelFollowChannelParam) -> Result<pb::ChannelFollowChannelResponse, GenErr> {
+    pub async fn ChannelFollowChannel(up: &UserParam, param: pb::ChannelFollowChannelParam) -> Result<pb::ChannelFollowChannelResponse, GenErr> {
         Ok(pb::ChannelFollowChannelResponse::default())
     }
-    pub fn ChannelUnFollowChannel(up: &UserParam, param: pb::ChannelUnFollowChannelParam) -> Result<pb::ChannelUnFollowChannelResponse, GenErr> {
+    pub async fn ChannelUnFollowChannel(up: &UserParam, param: pb::ChannelUnFollowChannelParam) -> Result<pb::ChannelUnFollowChannelResponse, GenErr> {
         Ok(pb::ChannelUnFollowChannelResponse::default())
     }
-    pub fn ChannelRemoveFollowers(up: &UserParam, param: pb::ChannelRemoveFollowersParam) -> Result<pb::ChannelRemoveFollowersResponse, GenErr> {
+    pub async fn ChannelRemoveFollowers(up: &UserParam, param: pb::ChannelRemoveFollowersParam) -> Result<pb::ChannelRemoveFollowersResponse, GenErr> {
         Ok(pb::ChannelRemoveFollowersResponse::default())
     }
-    pub fn ChannelSubscribe(up: &UserParam, param: pb::ChannelSubscribeParam) -> Result<pb::ChannelSubscribeResponse, GenErr> {
+    pub async fn ChannelSubscribe(up: &UserParam, param: pb::ChannelSubscribeParam) -> Result<pb::ChannelSubscribeResponse, GenErr> {
         Ok(pb::ChannelSubscribeResponse::default())
     }
-    pub fn ChannelUnSubscribe(up: &UserParam, param: pb::ChannelUnSubscribeParam) -> Result<pb::ChannelUnSubscribeResponse, GenErr> {
+    pub async fn ChannelUnSubscribe(up: &UserParam, param: pb::ChannelUnSubscribeParam) -> Result<pb::ChannelUnSubscribeResponse, GenErr> {
         Ok(pb::ChannelUnSubscribeResponse::default())
     }
-    pub fn ChannelRemoveSubscribers(up: &UserParam, param: pb::ChannelRemoveSubscribersParam) -> Result<pb::ChannelRemoveSubscribersResponse, GenErr> {
+    pub async fn ChannelRemoveSubscribers(up: &UserParam, param: pb::ChannelRemoveSubscribersParam) -> Result<pb::ChannelRemoveSubscribersResponse, GenErr> {
         Ok(pb::ChannelRemoveSubscribersResponse::default())
     }
-    pub fn ChannelChangePrivacy(up: &UserParam, param: pb::ChannelChangePrivacyParam) -> Result<pb::ChannelChangePrivacyResponse, GenErr> {
+    pub async fn ChannelChangePrivacy(up: &UserParam, param: pb::ChannelChangePrivacyParam) -> Result<pb::ChannelChangePrivacyResponse, GenErr> {
         Ok(pb::ChannelChangePrivacyResponse::default())
     }
-    pub fn ChannelChangeDefaultPermission(up: &UserParam, param: pb::ChannelChangeDefaultPermissionParam) -> Result<pb::ChannelChangeDefaultPermissionResponse, GenErr> {
+    pub async fn ChannelChangeDefaultPermission(up: &UserParam, param: pb::ChannelChangeDefaultPermissionParam) -> Result<pb::ChannelChangeDefaultPermissionResponse, GenErr> {
         Ok(pb::ChannelChangeDefaultPermissionResponse::default())
     }
-    pub fn ChannelRevokeLink(up: &UserParam, param: pb::ChannelRevokeLinkParam) -> Result<pb::ChannelRevokeLinkResponse, GenErr> {
+    pub async fn ChannelRevokeLink(up: &UserParam, param: pb::ChannelRevokeLinkParam) -> Result<pb::ChannelRevokeLinkResponse, GenErr> {
         Ok(pb::ChannelRevokeLinkResponse::default())
     }
-    pub fn ChannelChangeUsername(up: &UserParam, param: pb::ChannelChangeUsernameParam) -> Result<pb::ChannelChangeUsernameResponse, GenErr> {
+    pub async fn ChannelChangeUsername(up: &UserParam, param: pb::ChannelChangeUsernameParam) -> Result<pb::ChannelChangeUsernameResponse, GenErr> {
         Ok(pb::ChannelChangeUsernameResponse::default())
     }
-    pub fn ChannelBlockChannel(up: &UserParam, param: pb::ChannelBlockChannelParam) -> Result<pb::ChannelBlockChannelResponse, GenErr> {
+    pub async fn ChannelBlockChannel(up: &UserParam, param: pb::ChannelBlockChannelParam) -> Result<pb::ChannelBlockChannelResponse, GenErr> {
         Ok(pb::ChannelBlockChannelResponse::default())
     }
-    pub fn ChannelSendMessage(up: &UserParam, param: pb::ChannelSendMessageParam) -> Result<pb::ChannelSendMessageResponse, GenErr> {
+    pub async fn ChannelSendMessage(up: &UserParam, param: pb::ChannelSendMessageParam) -> Result<pb::ChannelSendMessageResponse, GenErr> {
         Ok(pb::ChannelSendMessageResponse::default())
     }
-    pub fn ChannelEditMessage(up: &UserParam, param: pb::ChannelEditMessageParam) -> Result<pb::ChannelEditMessageResponse, GenErr> {
+    pub async fn ChannelEditMessage(up: &UserParam, param: pb::ChannelEditMessageParam) -> Result<pb::ChannelEditMessageResponse, GenErr> {
         Ok(pb::ChannelEditMessageResponse::default())
     }
-    pub fn ChannelPinMessage(up: &UserParam, param: pb::ChannelPinMessageParam) -> Result<pb::ChannelPinMessageResponse, GenErr> {
+    pub async fn ChannelPinMessage(up: &UserParam, param: pb::ChannelPinMessageParam) -> Result<pb::ChannelPinMessageResponse, GenErr> {
         Ok(pb::ChannelPinMessageResponse::default())
     }
-    pub fn ChannelUnPinMessage(up: &UserParam, param: pb::ChannelUnPinMessageParam) -> Result<pb::ChannelUnPinMessageResponse, GenErr> {
+    pub async fn ChannelUnPinMessage(up: &UserParam, param: pb::ChannelUnPinMessageParam) -> Result<pb::ChannelUnPinMessageResponse, GenErr> {
         Ok(pb::ChannelUnPinMessageResponse::default())
     }
-    pub fn ChannelDeleteMessage(up: &UserParam, param: pb::ChannelDeleteMessageParam) -> Result<pb::ChannelDeleteMessageResponse, GenErr> {
+    pub async fn ChannelDeleteMessage(up: &UserParam, param: pb::ChannelDeleteMessageParam) -> Result<pb::ChannelDeleteMessageResponse, GenErr> {
         Ok(pb::ChannelDeleteMessageResponse::default())
     }
-    pub fn ChannelDeleteMessages(up: &UserParam, param: pb::ChannelDeleteMessagesParam) -> Result<pb::ChannelDeleteMessagesResponse, GenErr> {
+    pub async fn ChannelDeleteMessages(up: &UserParam, param: pb::ChannelDeleteMessagesParam) -> Result<pb::ChannelDeleteMessagesResponse, GenErr> {
         Ok(pb::ChannelDeleteMessagesResponse::default())
     }
-    pub fn ChannelClearHistory(up: &UserParam, param: pb::ChannelClearHistoryParam) -> Result<pb::ChannelClearHistoryResponse, GenErr> {
+    pub async fn ChannelClearHistory(up: &UserParam, param: pb::ChannelClearHistoryParam) -> Result<pb::ChannelClearHistoryResponse, GenErr> {
         Ok(pb::ChannelClearHistoryResponse::default())
     }
-    pub fn ChannelAvatarAdd(up: &UserParam, param: pb::ChannelAvatarAddParam) -> Result<pb::ChannelAvatarAddResponse, GenErr> {
+    pub async fn ChannelAvatarAdd(up: &UserParam, param: pb::ChannelAvatarAddParam) -> Result<pb::ChannelAvatarAddResponse, GenErr> {
         Ok(pb::ChannelAvatarAddResponse::default())
     }
-    pub fn ChannelAvatarChange(up: &UserParam, param: pb::ChannelAvatarChangeParam) -> Result<pb::ChannelAvatarChangeResponse, GenErr> {
+    pub async fn ChannelAvatarChange(up: &UserParam, param: pb::ChannelAvatarChangeParam) -> Result<pb::ChannelAvatarChangeResponse, GenErr> {
         Ok(pb::ChannelAvatarChangeResponse::default())
     }
-    pub fn ChannelAvatarDelete(up: &UserParam, param: pb::ChannelAvatarDeleteParam) -> Result<pb::ChannelAvatarDeleteResponse, GenErr> {
+    pub async fn ChannelAvatarDelete(up: &UserParam, param: pb::ChannelAvatarDeleteParam) -> Result<pb::ChannelAvatarDeleteResponse, GenErr> {
         Ok(pb::ChannelAvatarDeleteResponse::default())
     }
-    pub fn ChannelAvatarGetList(up: &UserParam, param: pb::ChannelAvatarGetListParam) -> Result<pb::ChannelAvatarGetListResponse, GenErr> {
+    pub async fn ChannelAvatarGetList(up: &UserParam, param: pb::ChannelAvatarGetListParam) -> Result<pb::ChannelAvatarGetListResponse, GenErr> {
         Ok(pb::ChannelAvatarGetListResponse::default())
     }
-    pub fn ChannelSendDoingAction(up: &UserParam, param: pb::ChannelSendDoingActionParam) -> Result<pb::ChannelSendDoingActionResponse, GenErr> {
+    pub async fn ChannelSendDoingAction(up: &UserParam, param: pb::ChannelSendDoingActionParam) -> Result<pb::ChannelSendDoingActionResponse, GenErr> {
         Ok(pb::ChannelSendDoingActionResponse::default())
     }
-    pub fn ChannelReportChannel(up: &UserParam, param: pb::ChannelReportChannelParam) -> Result<pb::ChannelReportChannelResponse, GenErr> {
+    pub async fn ChannelReportChannel(up: &UserParam, param: pb::ChannelReportChannelParam) -> Result<pb::ChannelReportChannelResponse, GenErr> {
         Ok(pb::ChannelReportChannelResponse::default())
     }
-    pub fn ChannelReportMessage(up: &UserParam, param: pb::ChannelReportMessageParam) -> Result<pb::ChannelReportMessageResponse, GenErr> {
+    pub async fn ChannelReportMessage(up: &UserParam, param: pb::ChannelReportMessageParam) -> Result<pb::ChannelReportMessageResponse, GenErr> {
         Ok(pb::ChannelReportMessageResponse::default())
     }
-    pub fn ChannelGetFull(up: &UserParam, param: pb::ChannelGetFullParam) -> Result<pb::ChannelGetFullResponse, GenErr> {
+    pub async fn ChannelGetFull(up: &UserParam, param: pb::ChannelGetFullParam) -> Result<pb::ChannelGetFullResponse, GenErr> {
         Ok(pb::ChannelGetFullResponse::default())
     }
-    pub fn ChannelGetMessagesList(up: &UserParam, param: pb::ChannelGetMessagesListParam) -> Result<pb::ChannelGetMessagesListResponse, GenErr> {
+    pub async fn ChannelGetMessagesList(up: &UserParam, param: pb::ChannelGetMessagesListParam) -> Result<pb::ChannelGetMessagesListResponse, GenErr> {
         Ok(pb::ChannelGetMessagesListResponse::default())
     }
-    pub fn ChannelGetMediaList(up: &UserParam, param: pb::ChannelGetMediaListParam) -> Result<pb::ChannelGetMediaListResponse, GenErr> {
+    pub async fn ChannelGetMediaList(up: &UserParam, param: pb::ChannelGetMediaListParam) -> Result<pb::ChannelGetMediaListResponse, GenErr> {
         Ok(pb::ChannelGetMediaListResponse::default())
     }
-    pub fn ChannelGetAuthors(up: &UserParam, param: pb::ChannelGetAuthorsParam) -> Result<pb::ChannelGetAuthorsResponse, GenErr> {
+    pub async fn ChannelGetAuthors(up: &UserParam, param: pb::ChannelGetAuthorsParam) -> Result<pb::ChannelGetAuthorsResponse, GenErr> {
         Ok(pb::ChannelGetAuthorsResponse::default())
     }
-    pub fn ChannelGetFollowers(up: &UserParam, param: pb::ChannelGetFollowersParam) -> Result<pb::ChannelGetFollowersResponse, GenErr> {
+    pub async fn ChannelGetFollowers(up: &UserParam, param: pb::ChannelGetFollowersParam) -> Result<pb::ChannelGetFollowersResponse, GenErr> {
         Ok(pb::ChannelGetFollowersResponse::default())
     }
-    pub fn ChannelGetFollowings(up: &UserParam, param: pb::ChannelGetFollowingsParam) -> Result<pb::ChannelGetFollowingsResponse, GenErr> {
+    pub async fn ChannelGetFollowings(up: &UserParam, param: pb::ChannelGetFollowingsParam) -> Result<pb::ChannelGetFollowingsResponse, GenErr> {
         Ok(pb::ChannelGetFollowingsResponse::default())
     }
-    pub fn ChannelGetSubscribers(up: &UserParam, param: pb::ChannelGetSubscribersParam) -> Result<pb::ChannelGetSubscribersResponse, GenErr> {
+    pub async fn ChannelGetSubscribers(up: &UserParam, param: pb::ChannelGetSubscribersParam) -> Result<pb::ChannelGetSubscribersResponse, GenErr> {
         Ok(pb::ChannelGetSubscribersResponse::default())
     }
-    pub fn ChannelBlocked(up: &UserParam, param: pb::ChannelBlockedParam) -> Result<pb::ChannelBlockedResponse, GenErr> {
+    pub async fn ChannelBlocked(up: &UserParam, param: pb::ChannelBlockedParam) -> Result<pb::ChannelBlockedResponse, GenErr> {
         Ok(pb::ChannelBlockedResponse::default())
     }
-    pub fn ChannelSetDraft(up: &UserParam, param: pb::ChannelSetDraftParam) -> Result<pb::ChannelSetDraftResponse, GenErr> {
+    pub async fn ChannelSetDraft(up: &UserParam, param: pb::ChannelSetDraftParam) -> Result<pb::ChannelSetDraftResponse, GenErr> {
         Ok(pb::ChannelSetDraftResponse::default())
     }
 }
@@ -161,31 +161,31 @@ pub mod RPC_Channel {
 pub mod RPC_Chat {
     use super::*;
     
-    pub fn ChatSendMessage(up: &UserParam, param: pb::ChatSendMessageParam) -> Result<pb::ChatSendMessageResponse, GenErr> {
+    pub async fn ChatSendMessage(up: &UserParam, param: pb::ChatSendMessageParam) -> Result<pb::ChatSendMessageResponse, GenErr> {
         Ok(pb::ChatSendMessageResponse::default())
     }
-    pub fn ChatEditMessage(up: &UserParam, param: pb::ChatEditMessageParam) -> Result<pb::ChatEditMessageResponse, GenErr> {
+    pub async fn ChatEditMessage(up: &UserParam, param: pb::ChatEditMessageParam) -> Result<pb::ChatEditMessageResponse, GenErr> {
         Ok(pb::ChatEditMessageResponse::default())
     }
-    pub fn ChatDeleteMessages(up: &UserParam, param: pb::ChatDeleteMessagesParam) -> Result<pb::ChatDeleteMessagesResponse, GenErr> {
+    pub async fn ChatDeleteMessages(up: &UserParam, param: pb::ChatDeleteMessagesParam) -> Result<pb::ChatDeleteMessagesResponse, GenErr> {
         Ok(pb::ChatDeleteMessagesResponse::default())
     }
-    pub fn ChatDeleteHistory(up: &UserParam, param: pb::ChatDeleteHistoryParam) -> Result<pb::ChatDeleteHistoryResponse, GenErr> {
+    pub async fn ChatDeleteHistory(up: &UserParam, param: pb::ChatDeleteHistoryParam) -> Result<pb::ChatDeleteHistoryResponse, GenErr> {
         Ok(pb::ChatDeleteHistoryResponse::default())
     }
-    pub fn ChatSendDoingAction(up: &UserParam, param: pb::ChatSendDoingActionParam) -> Result<pb::ChatSendDoingActionResponse, GenErr> {
+    pub async fn ChatSendDoingAction(up: &UserParam, param: pb::ChatSendDoingActionParam) -> Result<pb::ChatSendDoingActionResponse, GenErr> {
         Ok(pb::ChatSendDoingActionResponse::default())
     }
-    pub fn ChatReportChat(up: &UserParam, param: pb::ChatReportChatParam) -> Result<pb::ChatReportChatResponse, GenErr> {
+    pub async fn ChatReportChat(up: &UserParam, param: pb::ChatReportChatParam) -> Result<pb::ChatReportChatResponse, GenErr> {
         Ok(pb::ChatReportChatResponse::default())
     }
-    pub fn ChatGetFull(up: &UserParam, param: pb::ChatGetFullMessageParam) -> Result<pb::ChatGetFullMessageResponse, GenErr> {
+    pub async fn ChatGetFull(up: &UserParam, param: pb::ChatGetFullMessageParam) -> Result<pb::ChatGetFullMessageResponse, GenErr> {
         Ok(pb::ChatGetFullMessageResponse::default())
     }
-    pub fn ChatGetMessagesList(up: &UserParam, param: pb::ChatGetMessagesListParam) -> Result<pb::ChatGetMessagesListResponse, GenErr> {
+    pub async fn ChatGetMessagesList(up: &UserParam, param: pb::ChatGetMessagesListParam) -> Result<pb::ChatGetMessagesListResponse, GenErr> {
         Ok(pb::ChatGetMessagesListResponse::default())
     }
-    pub fn ChatGetMediaList(up: &UserParam, param: pb::ChatGetMediaListParam) -> Result<pb::ChatGetMediaListResponse, GenErr> {
+    pub async fn ChatGetMediaList(up: &UserParam, param: pb::ChatGetMediaListParam) -> Result<pb::ChatGetMediaListResponse, GenErr> {
         Ok(pb::ChatGetMediaListResponse::default())
     }
 }
@@ -194,79 +194,79 @@ pub mod RPC_Chat {
 pub mod RPC_Direct {
     use super::*;
     
-    pub fn DirectDeleteDirect(up: &UserParam, param: pb::DirectDeleteDirectParam) -> Result<pb::DirectDeleteDirectResponse, GenErr> {
+    pub async fn DirectDeleteDirect(up: &UserParam, param: pb::DirectDeleteDirectParam) -> Result<pb::DirectDeleteDirectResponse, GenErr> {
         Ok(pb::DirectDeleteDirectResponse::default())
     }
-    pub fn DirectChangeTitle(up: &UserParam, param: pb::DirectChangeTitleParam) -> Result<pb::DirectChangeTitleResponse, GenErr> {
+    pub async fn DirectChangeTitle(up: &UserParam, param: pb::DirectChangeTitleParam) -> Result<pb::DirectChangeTitleResponse, GenErr> {
         Ok(pb::DirectChangeTitleResponse::default())
     }
-    pub fn DirectSetCustomNotification(up: &UserParam, param: pb::DirectSetCustomNotificationParam) -> Result<pb::DirectSetCustomNotificationResponse, GenErr> {
+    pub async fn DirectSetCustomNotification(up: &UserParam, param: pb::DirectSetCustomNotificationParam) -> Result<pb::DirectSetCustomNotificationResponse, GenErr> {
         Ok(pb::DirectSetCustomNotificationResponse::default())
     }
-    pub fn DirectSendActionDoing(up: &UserParam, param: pb::DirectSendActionDoingParam) -> Result<pb::DirectSendActionDoingResponse, GenErr> {
+    pub async fn DirectSendActionDoing(up: &UserParam, param: pb::DirectSendActionDoingParam) -> Result<pb::DirectSendActionDoingResponse, GenErr> {
         Ok(pb::DirectSendActionDoingResponse::default())
     }
-    pub fn DirectSetDraft(up: &UserParam, param: pb::DirectSetDraftParam) -> Result<pb::DirectSetDraftResponse, GenErr> {
+    pub async fn DirectSetDraft(up: &UserParam, param: pb::DirectSetDraftParam) -> Result<pb::DirectSetDraftResponse, GenErr> {
         Ok(pb::DirectSetDraftResponse::default())
     }
-    pub fn DirectDeleteDirects(up: &UserParam, param: pb::DirectDeleteDirectsParam) -> Result<pb::DirectDeleteDirectsResponse, GenErr> {
+    pub async fn DirectDeleteDirects(up: &UserParam, param: pb::DirectDeleteDirectsParam) -> Result<pb::DirectDeleteDirectsResponse, GenErr> {
         Ok(pb::DirectDeleteDirectsResponse::default())
     }
-    pub fn DirectMarkAsRead(up: &UserParam, param: pb::DirectMarkAsReadParam) -> Result<pb::DirectMarkAsReadResponse, GenErr> {
+    pub async fn DirectMarkAsRead(up: &UserParam, param: pb::DirectMarkAsReadParam) -> Result<pb::DirectMarkAsReadResponse, GenErr> {
         Ok(pb::DirectMarkAsReadResponse::default())
     }
-    pub fn DirectMarkAsUnRead(up: &UserParam, param: pb::DirectMarkAsUnReadParam) -> Result<pb::DirectMarkAsUnReadResponse, GenErr> {
+    pub async fn DirectMarkAsUnRead(up: &UserParam, param: pb::DirectMarkAsUnReadParam) -> Result<pb::DirectMarkAsUnReadResponse, GenErr> {
         Ok(pb::DirectMarkAsUnReadResponse::default())
     }
-    pub fn DirectPinDirects(up: &UserParam, param: pb::DirectPinDirectsParam) -> Result<pb::DirectPinDirectsResponse, GenErr> {
+    pub async fn DirectPinDirects(up: &UserParam, param: pb::DirectPinDirectsParam) -> Result<pb::DirectPinDirectsResponse, GenErr> {
         Ok(pb::DirectPinDirectsResponse::default())
     }
-    pub fn DirectUnPinDirects(up: &UserParam, param: pb::DirectUnPinDirectsParam) -> Result<pb::DirectUnPinDirectsResponse, GenErr> {
+    pub async fn DirectUnPinDirects(up: &UserParam, param: pb::DirectUnPinDirectsParam) -> Result<pb::DirectUnPinDirectsResponse, GenErr> {
         Ok(pb::DirectUnPinDirectsResponse::default())
     }
-    pub fn DirectArchiveDirects(up: &UserParam, param: pb::DirectArchiveDirectsParam) -> Result<pb::DirectArchiveDirectsResponse, GenErr> {
+    pub async fn DirectArchiveDirects(up: &UserParam, param: pb::DirectArchiveDirectsParam) -> Result<pb::DirectArchiveDirectsResponse, GenErr> {
         Ok(pb::DirectArchiveDirectsResponse::default())
     }
-    pub fn DirectUnArchiveDirects(up: &UserParam, param: pb::DirectUnArchiveDirectsParam) -> Result<pb::DirectUnArchiveDirectsResponse, GenErr> {
+    pub async fn DirectUnArchiveDirects(up: &UserParam, param: pb::DirectUnArchiveDirectsParam) -> Result<pb::DirectUnArchiveDirectsResponse, GenErr> {
         Ok(pb::DirectUnArchiveDirectsResponse::default())
     }
-    pub fn DirectClearHistories(up: &UserParam, param: pb::DirectClearHistoriesParam) -> Result<pb::DirectClearHistoriesResponse, GenErr> {
+    pub async fn DirectClearHistories(up: &UserParam, param: pb::DirectClearHistoriesParam) -> Result<pb::DirectClearHistoriesResponse, GenErr> {
         Ok(pb::DirectClearHistoriesResponse::default())
     }
-    pub fn DirectMuteDirects(up: &UserParam, param: pb::DirectMuteDirectsParam) -> Result<pb::DirectMuteDirectsResponse, GenErr> {
+    pub async fn DirectMuteDirects(up: &UserParam, param: pb::DirectMuteDirectsParam) -> Result<pb::DirectMuteDirectsResponse, GenErr> {
         Ok(pb::DirectMuteDirectsResponse::default())
     }
-    pub fn DirectUnMuteDirects(up: &UserParam, param: pb::DirectUnMuteDirectsParam) -> Result<pb::DirectUnMuteDirectsResponse, GenErr> {
+    pub async fn DirectUnMuteDirects(up: &UserParam, param: pb::DirectUnMuteDirectsParam) -> Result<pb::DirectUnMuteDirectsResponse, GenErr> {
         Ok(pb::DirectUnMuteDirectsResponse::default())
     }
-    pub fn DirectCreateFolder(up: &UserParam, param: pb::DirectCreateFolderParam) -> Result<pb::DirectCreateFolderResponse, GenErr> {
+    pub async fn DirectCreateFolder(up: &UserParam, param: pb::DirectCreateFolderParam) -> Result<pb::DirectCreateFolderResponse, GenErr> {
         Ok(pb::DirectCreateFolderResponse::default())
     }
-    pub fn DirectChangeFolder(up: &UserParam, param: pb::DirectChangeFolderParam) -> Result<pb::DirectChangeFolderResponse, GenErr> {
+    pub async fn DirectChangeFolder(up: &UserParam, param: pb::DirectChangeFolderParam) -> Result<pb::DirectChangeFolderResponse, GenErr> {
         Ok(pb::DirectChangeFolderResponse::default())
     }
-    pub fn DirectRemoveFromFolder(up: &UserParam, param: pb::DirectRemoveFromFolderParam) -> Result<pb::DirectRemoveFromFolderResponse, GenErr> {
+    pub async fn DirectRemoveFromFolder(up: &UserParam, param: pb::DirectRemoveFromFolderParam) -> Result<pb::DirectRemoveFromFolderResponse, GenErr> {
         Ok(pb::DirectRemoveFromFolderResponse::default())
     }
-    pub fn DirectReordersFolder(up: &UserParam, param: pb::DirectReordersFolderParam) -> Result<pb::DirectReordersFolderResponse, GenErr> {
+    pub async fn DirectReordersFolder(up: &UserParam, param: pb::DirectReordersFolderParam) -> Result<pb::DirectReordersFolderResponse, GenErr> {
         Ok(pb::DirectReordersFolderResponse::default())
     }
-    pub fn DirectDeleteFolder(up: &UserParam, param: pb::DirectDeleteFolderParam) -> Result<pb::DirectDeleteFolderResponse, GenErr> {
+    pub async fn DirectDeleteFolder(up: &UserParam, param: pb::DirectDeleteFolderParam) -> Result<pb::DirectDeleteFolderResponse, GenErr> {
         Ok(pb::DirectDeleteFolderResponse::default())
     }
-    pub fn DirectGetChatsList(up: &UserParam, param: pb::DirectGetChatsListParam) -> Result<pb::DirectGetChatsListResponse, GenErr> {
+    pub async fn DirectGetChatsList(up: &UserParam, param: pb::DirectGetChatsListParam) -> Result<pb::DirectGetChatsListResponse, GenErr> {
         Ok(pb::DirectGetChatsListResponse::default())
     }
-    pub fn DirectGetGroupsList(up: &UserParam, param: pb::DirectGetGroupsListParam) -> Result<pb::DirectGetGroupsListResponse, GenErr> {
+    pub async fn DirectGetGroupsList(up: &UserParam, param: pb::DirectGetGroupsListParam) -> Result<pb::DirectGetGroupsListResponse, GenErr> {
         Ok(pb::DirectGetGroupsListResponse::default())
     }
-    pub fn DirectGetChannelsList(up: &UserParam, param: pb::DirectGetChannelsListParam) -> Result<pb::DirectGetChannelsListResponse, GenErr> {
+    pub async fn DirectGetChannelsList(up: &UserParam, param: pb::DirectGetChannelsListParam) -> Result<pb::DirectGetChannelsListResponse, GenErr> {
         Ok(pb::DirectGetChannelsListResponse::default())
     }
-    pub fn DirectGetFoldersList(up: &UserParam, param: pb::DirectGetFoldersListParam) -> Result<pb::DirectGetFoldersListResponse, GenErr> {
+    pub async fn DirectGetFoldersList(up: &UserParam, param: pb::DirectGetFoldersListParam) -> Result<pb::DirectGetFoldersListResponse, GenErr> {
         Ok(pb::DirectGetFoldersListResponse::default())
     }
-    pub fn DirectGetFoldersFullList(up: &UserParam, param: pb::DirectGetFoldersFullListParam) -> Result<pb::DirectGetFoldersFullListResponse, GenErr> {
+    pub async fn DirectGetFoldersFullList(up: &UserParam, param: pb::DirectGetFoldersFullListParam) -> Result<pb::DirectGetFoldersFullListResponse, GenErr> {
         Ok(pb::DirectGetFoldersFullListResponse::default())
     }
 }
@@ -275,10 +275,10 @@ pub mod RPC_Direct {
 pub mod RPC_General {
     use super::*;
     
-    pub fn Echo(up: &UserParam, param: pb::EchoParam) -> Result<pb::EchoResponse, GenErr> {
+    pub async fn Echo(up: &UserParam, param: pb::EchoParam) -> Result<pb::EchoResponse, GenErr> {
         Ok(pb::EchoResponse::default())
     }
-    pub fn CheckUserName(up: &UserParam, param: pb::CheckUserNameParam) -> Result<pb::CheckUserNameResponse, GenErr> {
+    pub async fn CheckUserName(up: &UserParam, param: pb::CheckUserNameParam) -> Result<pb::CheckUserNameResponse, GenErr> {
         Ok(pb::CheckUserNameResponse::default())
     }
 }
@@ -287,109 +287,109 @@ pub mod RPC_General {
 pub mod RPC_Group {
     use super::*;
     
-    pub fn GroupCreateGroup(up: &UserParam, param: pb::GroupCreateGroupParam) -> Result<pb::GroupCreateGroupResponse, GenErr> {
+    pub async fn GroupCreateGroup(up: &UserParam, param: pb::GroupCreateGroupParam) -> Result<pb::GroupCreateGroupResponse, GenErr> {
         Ok(pb::GroupCreateGroupResponse::default())
     }
-    pub fn GroupEditGroup(up: &UserParam, param: pb::GroupEditGroupParam) -> Result<pb::GroupEditGroupResponse, GenErr> {
+    pub async fn GroupEditGroup(up: &UserParam, param: pb::GroupEditGroupParam) -> Result<pb::GroupEditGroupResponse, GenErr> {
         Ok(pb::GroupEditGroupResponse::default())
     }
-    pub fn GroupDeleteGroup(up: &UserParam, param: pb::GroupDeleteGroupParam) -> Result<pb::GroupDeleteGroupResponse, GenErr> {
+    pub async fn GroupDeleteGroup(up: &UserParam, param: pb::GroupDeleteGroupParam) -> Result<pb::GroupDeleteGroupResponse, GenErr> {
         Ok(pb::GroupDeleteGroupResponse::default())
     }
-    pub fn GroupAddAdmin(up: &UserParam, param: pb::GroupAddAdminParam) -> Result<pb::GroupAddAdminResponse, GenErr> {
+    pub async fn GroupAddAdmin(up: &UserParam, param: pb::GroupAddAdminParam) -> Result<pb::GroupAddAdminResponse, GenErr> {
         Ok(pb::GroupAddAdminResponse::default())
     }
-    pub fn GroupAddMember(up: &UserParam, param: pb::GroupAddMemberParam) -> Result<pb::GroupAddMemberResponse, GenErr> {
+    pub async fn GroupAddMember(up: &UserParam, param: pb::GroupAddMemberParam) -> Result<pb::GroupAddMemberResponse, GenErr> {
         Ok(pb::GroupAddMemberResponse::default())
     }
-    pub fn GroupRemoveMember(up: &UserParam, param: pb::GroupRemoveMemberParam) -> Result<pb::GroupRemoveMemberResponse, GenErr> {
+    pub async fn GroupRemoveMember(up: &UserParam, param: pb::GroupRemoveMemberParam) -> Result<pb::GroupRemoveMemberResponse, GenErr> {
         Ok(pb::GroupRemoveMemberResponse::default())
     }
-    pub fn GroupChangeMemberLevel(up: &UserParam, param: pb::GroupChangeMemberLevelParam) -> Result<pb::GroupChangeMemberLevelResponse, GenErr> {
+    pub async fn GroupChangeMemberLevel(up: &UserParam, param: pb::GroupChangeMemberLevelParam) -> Result<pb::GroupChangeMemberLevelResponse, GenErr> {
         Ok(pb::GroupChangeMemberLevelResponse::default())
     }
-    pub fn GroupChangeMemberPermission(up: &UserParam, param: pb::GroupChangeMemberPermissionParam) -> Result<pb::GroupChangeMemberPermissionResponse, GenErr> {
+    pub async fn GroupChangeMemberPermission(up: &UserParam, param: pb::GroupChangeMemberPermissionParam) -> Result<pb::GroupChangeMemberPermissionResponse, GenErr> {
         Ok(pb::GroupChangeMemberPermissionResponse::default())
     }
-    pub fn GroupJoinGroup(up: &UserParam, param: pb::JoinGroupParam) -> Result<pb::JoinGroupResponse, GenErr> {
+    pub async fn GroupJoinGroup(up: &UserParam, param: pb::JoinGroupParam) -> Result<pb::JoinGroupResponse, GenErr> {
         Ok(pb::JoinGroupResponse::default())
     }
-    pub fn GroupLeaveGroup(up: &UserParam, param: pb::GroupLeaveGroupParam) -> Result<pb::GroupLeaveGroupResponse, GenErr> {
+    pub async fn GroupLeaveGroup(up: &UserParam, param: pb::GroupLeaveGroupParam) -> Result<pb::GroupLeaveGroupResponse, GenErr> {
         Ok(pb::GroupLeaveGroupResponse::default())
     }
-    pub fn GroupBanMember(up: &UserParam, param: pb::GroupBanMemberParam) -> Result<pb::GroupBanMemberResponse, GenErr> {
+    pub async fn GroupBanMember(up: &UserParam, param: pb::GroupBanMemberParam) -> Result<pb::GroupBanMemberResponse, GenErr> {
         Ok(pb::GroupBanMemberResponse::default())
     }
-    pub fn GroupChangePrivacy(up: &UserParam, param: pb::GroupChangePrivacyParam) -> Result<pb::GroupChangePrivacyResponse, GenErr> {
+    pub async fn GroupChangePrivacy(up: &UserParam, param: pb::GroupChangePrivacyParam) -> Result<pb::GroupChangePrivacyResponse, GenErr> {
         Ok(pb::GroupChangePrivacyResponse::default())
     }
-    pub fn GroupChangeDefaultPermission(up: &UserParam, param: pb::GroupChangeDefaultPermissionParam) -> Result<pb::GroupChangeDefaultPermissionResponse, GenErr> {
+    pub async fn GroupChangeDefaultPermission(up: &UserParam, param: pb::GroupChangeDefaultPermissionParam) -> Result<pb::GroupChangeDefaultPermissionResponse, GenErr> {
         Ok(pb::GroupChangeDefaultPermissionResponse::default())
     }
-    pub fn GroupRevokeLink(up: &UserParam, param: pb::GroupRevokeLinkParam) -> Result<pb::GroupRevokeLinkResponse, GenErr> {
+    pub async fn GroupRevokeLink(up: &UserParam, param: pb::GroupRevokeLinkParam) -> Result<pb::GroupRevokeLinkResponse, GenErr> {
         Ok(pb::GroupRevokeLinkResponse::default())
     }
-    pub fn GroupChangeUsername(up: &UserParam, param: pb::GroupChangeUsernameParam) -> Result<pb::GroupChangeUsernameResponse, GenErr> {
+    pub async fn GroupChangeUsername(up: &UserParam, param: pb::GroupChangeUsernameParam) -> Result<pb::GroupChangeUsernameResponse, GenErr> {
         Ok(pb::GroupChangeUsernameResponse::default())
     }
-    pub fn GroupSendMessage(up: &UserParam, param: pb::GroupSendMessageParam) -> Result<pb::GroupSendMessageResponse, GenErr> {
+    pub async fn GroupSendMessage(up: &UserParam, param: pb::GroupSendMessageParam) -> Result<pb::GroupSendMessageResponse, GenErr> {
         Ok(pb::GroupSendMessageResponse::default())
     }
-    pub fn GroupEditMessage(up: &UserParam, param: pb::GroupEditMessageParam) -> Result<pb::GroupEditMessageResponse, GenErr> {
+    pub async fn GroupEditMessage(up: &UserParam, param: pb::GroupEditMessageParam) -> Result<pb::GroupEditMessageResponse, GenErr> {
         Ok(pb::GroupEditMessageResponse::default())
     }
-    pub fn GroupPinMessage(up: &UserParam, param: pb::GroupPinMessageParam) -> Result<pb::GroupPinMessageResponse, GenErr> {
+    pub async fn GroupPinMessage(up: &UserParam, param: pb::GroupPinMessageParam) -> Result<pb::GroupPinMessageResponse, GenErr> {
         Ok(pb::GroupPinMessageResponse::default())
     }
-    pub fn GroupUnPinMessage(up: &UserParam, param: pb::GroupUnPinMessageParam) -> Result<pb::GroupUnPinMessageResponse, GenErr> {
+    pub async fn GroupUnPinMessage(up: &UserParam, param: pb::GroupUnPinMessageParam) -> Result<pb::GroupUnPinMessageResponse, GenErr> {
         Ok(pb::GroupUnPinMessageResponse::default())
     }
-    pub fn GroupDeleteMessage(up: &UserParam, param: pb::GroupDeleteMessageParam) -> Result<pb::GroupDeleteMessageResponse, GenErr> {
+    pub async fn GroupDeleteMessage(up: &UserParam, param: pb::GroupDeleteMessageParam) -> Result<pb::GroupDeleteMessageResponse, GenErr> {
         Ok(pb::GroupDeleteMessageResponse::default())
     }
-    pub fn GroupDeleteMessages(up: &UserParam, param: pb::GroupDeleteMessagesParam) -> Result<pb::GroupDeleteMessagesResponse, GenErr> {
+    pub async fn GroupDeleteMessages(up: &UserParam, param: pb::GroupDeleteMessagesParam) -> Result<pb::GroupDeleteMessagesResponse, GenErr> {
         Ok(pb::GroupDeleteMessagesResponse::default())
     }
-    pub fn GroupDeleteHistory(up: &UserParam, param: pb::GroupDeleteHistoryParam) -> Result<pb::GroupDeleteHistoryResponse, GenErr> {
+    pub async fn GroupDeleteHistory(up: &UserParam, param: pb::GroupDeleteHistoryParam) -> Result<pb::GroupDeleteHistoryResponse, GenErr> {
         Ok(pb::GroupDeleteHistoryResponse::default())
     }
-    pub fn GroupClearHistory(up: &UserParam, param: pb::GroupClearHistoryParam) -> Result<pb::GroupClearHistoryResponse, GenErr> {
+    pub async fn GroupClearHistory(up: &UserParam, param: pb::GroupClearHistoryParam) -> Result<pb::GroupClearHistoryResponse, GenErr> {
         Ok(pb::GroupClearHistoryResponse::default())
     }
-    pub fn GroupAvatarAdd(up: &UserParam, param: pb::GroupAvatarAddParam) -> Result<pb::GroupAvatarAddResponse, GenErr> {
+    pub async fn GroupAvatarAdd(up: &UserParam, param: pb::GroupAvatarAddParam) -> Result<pb::GroupAvatarAddResponse, GenErr> {
         Ok(pb::GroupAvatarAddResponse::default())
     }
-    pub fn GroupAvatarChange(up: &UserParam, param: pb::GroupAvatarChangeParam) -> Result<pb::GroupAvatarChangeResponse, GenErr> {
+    pub async fn GroupAvatarChange(up: &UserParam, param: pb::GroupAvatarChangeParam) -> Result<pb::GroupAvatarChangeResponse, GenErr> {
         Ok(pb::GroupAvatarChangeResponse::default())
     }
-    pub fn GroupAvatarDelete(up: &UserParam, param: pb::GroupAvatarDeleteParam) -> Result<pb::GroupAvatarDeleteResponse, GenErr> {
+    pub async fn GroupAvatarDelete(up: &UserParam, param: pb::GroupAvatarDeleteParam) -> Result<pb::GroupAvatarDeleteResponse, GenErr> {
         Ok(pb::GroupAvatarDeleteResponse::default())
     }
-    pub fn GroupAvatarGetList(up: &UserParam, param: pb::GroupAvatarGetListParam) -> Result<pb::GroupAvatarGetListResponse, GenErr> {
+    pub async fn GroupAvatarGetList(up: &UserParam, param: pb::GroupAvatarGetListParam) -> Result<pb::GroupAvatarGetListResponse, GenErr> {
         Ok(pb::GroupAvatarGetListResponse::default())
     }
-    pub fn GroupSendDoingAction(up: &UserParam, param: pb::GroupSendDoingActionParam) -> Result<pb::GroupSendDoingActionResponse, GenErr> {
+    pub async fn GroupSendDoingAction(up: &UserParam, param: pb::GroupSendDoingActionParam) -> Result<pb::GroupSendDoingActionResponse, GenErr> {
         Ok(pb::GroupSendDoingActionResponse::default())
     }
-    pub fn GroupReportGroup(up: &UserParam, param: pb::GroupReportGroupParam) -> Result<pb::GroupReportGroupResponse, GenErr> {
+    pub async fn GroupReportGroup(up: &UserParam, param: pb::GroupReportGroupParam) -> Result<pb::GroupReportGroupResponse, GenErr> {
         Ok(pb::GroupReportGroupResponse::default())
     }
-    pub fn GroupGetFull(up: &UserParam, param: pb::GroupGetFullMessageParam) -> Result<pb::GroupGetFullMessageResponse, GenErr> {
+    pub async fn GroupGetFull(up: &UserParam, param: pb::GroupGetFullMessageParam) -> Result<pb::GroupGetFullMessageResponse, GenErr> {
         Ok(pb::GroupGetFullMessageResponse::default())
     }
-    pub fn GroupGetMessagesList(up: &UserParam, param: pb::GroupGetMessagesListParam) -> Result<pb::GroupGetMessagesListResponse, GenErr> {
+    pub async fn GroupGetMessagesList(up: &UserParam, param: pb::GroupGetMessagesListParam) -> Result<pb::GroupGetMessagesListResponse, GenErr> {
         Ok(pb::GroupGetMessagesListResponse::default())
     }
-    pub fn GroupGetMediaList(up: &UserParam, param: pb::GroupGetMediaListParam) -> Result<pb::GroupGetMediaListResponse, GenErr> {
+    pub async fn GroupGetMediaList(up: &UserParam, param: pb::GroupGetMediaListParam) -> Result<pb::GroupGetMediaListResponse, GenErr> {
         Ok(pb::GroupGetMediaListResponse::default())
     }
-    pub fn GroupGetMembersList(up: &UserParam, param: pb::GroupGetMembersListParam) -> Result<pb::GroupGetMembersListResponse, GenErr> {
+    pub async fn GroupGetMembersList(up: &UserParam, param: pb::GroupGetMembersListParam) -> Result<pb::GroupGetMembersListResponse, GenErr> {
         Ok(pb::GroupGetMembersListResponse::default())
     }
-    pub fn GroupGetAdminsList(up: &UserParam, param: pb::GroupGetAdminsListParam) -> Result<pb::GroupGetAdminsListResponse, GenErr> {
+    pub async fn GroupGetAdminsList(up: &UserParam, param: pb::GroupGetAdminsListParam) -> Result<pb::GroupGetAdminsListResponse, GenErr> {
         Ok(pb::GroupGetAdminsListResponse::default())
     }
-    pub fn GroupSetDraft(up: &UserParam, param: pb::GroupSetDraftParam) -> Result<pb::GroupSetDraftResponse, GenErr> {
+    pub async fn GroupSetDraft(up: &UserParam, param: pb::GroupSetDraftParam) -> Result<pb::GroupSetDraftResponse, GenErr> {
         Ok(pb::GroupSetDraftResponse::default())
     }
 }
@@ -398,43 +398,43 @@ pub mod RPC_Group {
 pub mod RPC_Social {
     use super::*;
     
-    pub fn AddComment(up: &UserParam, param: pb::AddCommentParam) -> Result<pb::AddCommentResponse, GenErr> {
+    pub async fn AddComment(up: &UserParam, param: pb::AddCommentParam) -> Result<pb::AddCommentResponse, GenErr> {
         Ok(pb::AddCommentResponse::default())
     }
-    pub fn DeleteComment(up: &UserParam, param: pb::DeleteCommentParam) -> Result<pb::DeleteCommentResponse, GenErr> {
+    pub async fn DeleteComment(up: &UserParam, param: pb::DeleteCommentParam) -> Result<pb::DeleteCommentResponse, GenErr> {
         Ok(pb::DeleteCommentResponse::default())
     }
-    pub fn EditComment(up: &UserParam, param: pb::EditCommentParam) -> Result<pb::EditCommentResponse, GenErr> {
+    pub async fn EditComment(up: &UserParam, param: pb::EditCommentParam) -> Result<pb::EditCommentResponse, GenErr> {
         Ok(pb::EditCommentResponse::default())
     }
-    pub fn LikeComment(up: &UserParam, param: pb::LikeCommentParam) -> Result<pb::LikeCommentResponse, GenErr> {
+    pub async fn LikeComment(up: &UserParam, param: pb::LikeCommentParam) -> Result<pb::LikeCommentResponse, GenErr> {
         Ok(pb::LikeCommentResponse::default())
     }
-    pub fn AddSeenPosts(up: &UserParam, param: pb::AddSeenPostsParam) -> Result<pb::AddSeenPostsResponse, GenErr> {
+    pub async fn AddSeenPosts(up: &UserParam, param: pb::AddSeenPostsParam) -> Result<pb::AddSeenPostsResponse, GenErr> {
         Ok(pb::AddSeenPostsResponse::default())
     }
-    pub fn LikePost(up: &UserParam, param: pb::LikePostParam) -> Result<pb::LikePostResponse, GenErr> {
+    pub async fn LikePost(up: &UserParam, param: pb::LikePostParam) -> Result<pb::LikePostResponse, GenErr> {
         Ok(pb::LikePostResponse::default())
     }
-    pub fn UnLikePost(up: &UserParam, param: pb::UnLikePostParam) -> Result<pb::UnLikePostResponse, GenErr> {
+    pub async fn UnLikePost(up: &UserParam, param: pb::UnLikePostParam) -> Result<pb::UnLikePostResponse, GenErr> {
         Ok(pb::UnLikePostResponse::default())
     }
-    pub fn FollowChannel(up: &UserParam, param: pb::FollowChannelParam) -> Result<pb::FollowChannelResponse, GenErr> {
+    pub async fn FollowChannel(up: &UserParam, param: pb::FollowChannelParam) -> Result<pb::FollowChannelResponse, GenErr> {
         Ok(pb::FollowChannelResponse::default())
     }
-    pub fn UnFollowChannel(up: &UserParam, param: pb::UnFollowChannelParam) -> Result<pb::UnFollowChannelResponse, GenErr> {
+    pub async fn UnFollowChannel(up: &UserParam, param: pb::UnFollowChannelParam) -> Result<pb::UnFollowChannelResponse, GenErr> {
         Ok(pb::UnFollowChannelResponse::default())
     }
-    pub fn PinChannel(up: &UserParam, param: pb::PinChannelParam) -> Result<pb::PinChannelResponse, GenErr> {
+    pub async fn PinChannel(up: &UserParam, param: pb::PinChannelParam) -> Result<pb::PinChannelResponse, GenErr> {
         Ok(pb::PinChannelResponse::default())
     }
-    pub fn UnPinChannel(up: &UserParam, param: pb::UnPinChannelParam) -> Result<pb::UnPinChannelResponse, GenErr> {
+    pub async fn UnPinChannel(up: &UserParam, param: pb::UnPinChannelParam) -> Result<pb::UnPinChannelResponse, GenErr> {
         Ok(pb::UnPinChannelResponse::default())
     }
-    pub fn BlockChannel(up: &UserParam, param: pb::BlockChannelParam) -> Result<pb::BlockChannelResponse, GenErr> {
+    pub async fn BlockChannel(up: &UserParam, param: pb::BlockChannelParam) -> Result<pb::BlockChannelResponse, GenErr> {
         Ok(pb::BlockChannelResponse::default())
     }
-    pub fn UnBlockChannel(up: &UserParam, param: pb::UnBlockChannelParam) -> Result<pb::UnBlockChannelResponse, GenErr> {
+    pub async fn UnBlockChannel(up: &UserParam, param: pb::UnBlockChannelParam) -> Result<pb::UnBlockChannelResponse, GenErr> {
         Ok(pb::UnBlockChannelResponse::default())
     }
 }
@@ -443,7 +443,7 @@ pub mod RPC_Social {
 pub mod RPC_Upload {
     use super::*;
     
-    pub fn UploadFile(up: &UserParam, param: pb::UploadFileParam) -> Result<pb::UploadFileResponse, GenErr> {
+    pub async fn UploadFile(up: &UserParam, param: pb::UploadFileParam) -> Result<pb::UploadFileResponse, GenErr> {
         Ok(pb::UploadFileResponse::default())
     }
 }

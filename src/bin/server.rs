@@ -49,9 +49,9 @@ async fn handle_invoke(invoke_buff:Vec<u8>) -> Vec<u8> {
     let buff = invoke_buff;
     let invoke : Result<pb::Invoke, ::prost::DecodeError> = prost::Message::decode(buff.as_slice());
 
-    if let Ok(act) = invoke {
-        println!("act {:?}", act);
-        let pb_bts = rpc::server_rpc(act).unwrap_or("vec![]".as_bytes().to_owned());
+    if let Ok(pb_invoke) = invoke {
+        println!("act {:?}", pb_invoke);
+        let pb_bts = rpc::server_rpc(pb_invoke).await.unwrap_or("".as_bytes().to_owned());
         return pb_bts;
     };
 

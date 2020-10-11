@@ -10,7 +10,7 @@ use backbone::{pb};
 use prost;
 
 fn main() {
-   let p = pb::pb2::Invoke{
+   let p = pb::Invoke{
        namespace: 1,
        method: 0,
        action_id: 0,

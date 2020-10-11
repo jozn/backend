@@ -160,7 +160,7 @@ pub mod method_ids {
     pub const ChangePhoneNumber8 : u32 = 79874;
 }
 
-pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
+pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
     let up = UserParam{};
 
     match act.method {
@@ -172,7 +172,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChangePhoneNumber(&up, param)?;
+                let response = rpc_fns::ChangePhoneNumber(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -190,7 +190,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::SendConfirmCode(&up, param)?;
+                let response = rpc_fns::SendConfirmCode(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -206,7 +206,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ConfirmCode(&up, param)?;
+                let response = rpc_fns::ConfirmCode(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -222,7 +222,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::SingUp(&up, param)?;
+                let response = rpc_fns::SingUp(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -238,7 +238,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::SingIn(&up, param)?;
+                let response = rpc_fns::SingIn(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -254,7 +254,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::LogOut(&up, param)?;
+                let response = rpc_fns::LogOut(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -272,7 +272,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelCreateChannel(&up, param)?;
+                let response = rpc_fns::ChannelCreateChannel(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -288,7 +288,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelEditChannel(&up, param)?;
+                let response = rpc_fns::ChannelEditChannel(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -304,7 +304,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelDeleteChannel(&up, param)?;
+                let response = rpc_fns::ChannelDeleteChannel(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -320,7 +320,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelAddAuthor(&up, param)?;
+                let response = rpc_fns::ChannelAddAuthor(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -336,7 +336,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelChangeAuthorPermission(&up, param)?;
+                let response = rpc_fns::ChannelChangeAuthorPermission(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -352,7 +352,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelRemoveAuthor(&up, param)?;
+                let response = rpc_fns::ChannelRemoveAuthor(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -368,7 +368,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelFollowChannel(&up, param)?;
+                let response = rpc_fns::ChannelFollowChannel(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -384,7 +384,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelUnFollowChannel(&up, param)?;
+                let response = rpc_fns::ChannelUnFollowChannel(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -400,7 +400,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelRemoveFollowers(&up, param)?;
+                let response = rpc_fns::ChannelRemoveFollowers(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -416,7 +416,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelSubscribe(&up, param)?;
+                let response = rpc_fns::ChannelSubscribe(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -432,7 +432,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelUnSubscribe(&up, param)?;
+                let response = rpc_fns::ChannelUnSubscribe(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -448,7 +448,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelRemoveSubscribers(&up, param)?;
+                let response = rpc_fns::ChannelRemoveSubscribers(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -464,7 +464,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelChangePrivacy(&up, param)?;
+                let response = rpc_fns::ChannelChangePrivacy(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -480,7 +480,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelChangeDefaultPermission(&up, param)?;
+                let response = rpc_fns::ChannelChangeDefaultPermission(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -496,7 +496,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelRevokeLink(&up, param)?;
+                let response = rpc_fns::ChannelRevokeLink(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -512,7 +512,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelChangeUsername(&up, param)?;
+                let response = rpc_fns::ChannelChangeUsername(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -528,7 +528,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelBlockChannel(&up, param)?;
+                let response = rpc_fns::ChannelBlockChannel(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -544,7 +544,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelSendMessage(&up, param)?;
+                let response = rpc_fns::ChannelSendMessage(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -560,7 +560,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelEditMessage(&up, param)?;
+                let response = rpc_fns::ChannelEditMessage(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -576,7 +576,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelPinMessage(&up, param)?;
+                let response = rpc_fns::ChannelPinMessage(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -592,7 +592,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelUnPinMessage(&up, param)?;
+                let response = rpc_fns::ChannelUnPinMessage(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -608,7 +608,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelDeleteMessage(&up, param)?;
+                let response = rpc_fns::ChannelDeleteMessage(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -624,7 +624,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelDeleteMessages(&up, param)?;
+                let response = rpc_fns::ChannelDeleteMessages(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -640,7 +640,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelClearHistory(&up, param)?;
+                let response = rpc_fns::ChannelClearHistory(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -656,7 +656,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelAvatarAdd(&up, param)?;
+                let response = rpc_fns::ChannelAvatarAdd(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -672,7 +672,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelAvatarChange(&up, param)?;
+                let response = rpc_fns::ChannelAvatarChange(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -688,7 +688,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelAvatarDelete(&up, param)?;
+                let response = rpc_fns::ChannelAvatarDelete(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -704,7 +704,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelAvatarGetList(&up, param)?;
+                let response = rpc_fns::ChannelAvatarGetList(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -720,7 +720,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelSendDoingAction(&up, param)?;
+                let response = rpc_fns::ChannelSendDoingAction(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -736,7 +736,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelReportChannel(&up, param)?;
+                let response = rpc_fns::ChannelReportChannel(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -752,7 +752,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelReportMessage(&up, param)?;
+                let response = rpc_fns::ChannelReportMessage(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -768,7 +768,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelGetFull(&up, param)?;
+                let response = rpc_fns::ChannelGetFull(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -784,7 +784,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelGetMessagesList(&up, param)?;
+                let response = rpc_fns::ChannelGetMessagesList(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -800,7 +800,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelGetMediaList(&up, param)?;
+                let response = rpc_fns::ChannelGetMediaList(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -816,7 +816,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelGetAuthors(&up, param)?;
+                let response = rpc_fns::ChannelGetAuthors(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -832,7 +832,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelGetFollowers(&up, param)?;
+                let response = rpc_fns::ChannelGetFollowers(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -848,7 +848,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelGetFollowings(&up, param)?;
+                let response = rpc_fns::ChannelGetFollowings(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -864,7 +864,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelGetSubscribers(&up, param)?;
+                let response = rpc_fns::ChannelGetSubscribers(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -880,7 +880,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelBlocked(&up, param)?;
+                let response = rpc_fns::ChannelBlocked(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -896,7 +896,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChannelSetDraft(&up, param)?;
+                let response = rpc_fns::ChannelSetDraft(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -914,7 +914,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChatSendMessage(&up, param)?;
+                let response = rpc_fns::ChatSendMessage(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -930,7 +930,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChatEditMessage(&up, param)?;
+                let response = rpc_fns::ChatEditMessage(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -946,7 +946,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChatDeleteMessages(&up, param)?;
+                let response = rpc_fns::ChatDeleteMessages(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -962,7 +962,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChatDeleteHistory(&up, param)?;
+                let response = rpc_fns::ChatDeleteHistory(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -978,7 +978,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChatSendDoingAction(&up, param)?;
+                let response = rpc_fns::ChatSendDoingAction(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -994,7 +994,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChatReportChat(&up, param)?;
+                let response = rpc_fns::ChatReportChat(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1010,7 +1010,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChatGetFull(&up, param)?;
+                let response = rpc_fns::ChatGetFull(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1026,7 +1026,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChatGetMessagesList(&up, param)?;
+                let response = rpc_fns::ChatGetMessagesList(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1042,7 +1042,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::ChatGetMediaList(&up, param)?;
+                let response = rpc_fns::ChatGetMediaList(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1060,7 +1060,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DirectDeleteDirect(&up, param)?;
+                let response = rpc_fns::DirectDeleteDirect(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1076,7 +1076,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DirectChangeTitle(&up, param)?;
+                let response = rpc_fns::DirectChangeTitle(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1092,7 +1092,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DirectSetCustomNotification(&up, param)?;
+                let response = rpc_fns::DirectSetCustomNotification(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1108,7 +1108,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DirectSendActionDoing(&up, param)?;
+                let response = rpc_fns::DirectSendActionDoing(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1124,7 +1124,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DirectSetDraft(&up, param)?;
+                let response = rpc_fns::DirectSetDraft(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1140,7 +1140,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DirectDeleteDirects(&up, param)?;
+                let response = rpc_fns::DirectDeleteDirects(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1156,7 +1156,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DirectMarkAsRead(&up, param)?;
+                let response = rpc_fns::DirectMarkAsRead(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1172,7 +1172,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DirectMarkAsUnRead(&up, param)?;
+                let response = rpc_fns::DirectMarkAsUnRead(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1188,7 +1188,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DirectPinDirects(&up, param)?;
+                let response = rpc_fns::DirectPinDirects(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1204,7 +1204,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DirectUnPinDirects(&up, param)?;
+                let response = rpc_fns::DirectUnPinDirects(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1220,7 +1220,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DirectArchiveDirects(&up, param)?;
+                let response = rpc_fns::DirectArchiveDirects(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1236,7 +1236,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DirectUnArchiveDirects(&up, param)?;
+                let response = rpc_fns::DirectUnArchiveDirects(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1252,7 +1252,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DirectClearHistories(&up, param)?;
+                let response = rpc_fns::DirectClearHistories(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1268,7 +1268,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DirectMuteDirects(&up, param)?;
+                let response = rpc_fns::DirectMuteDirects(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1284,7 +1284,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DirectUnMuteDirects(&up, param)?;
+                let response = rpc_fns::DirectUnMuteDirects(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1300,7 +1300,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DirectCreateFolder(&up, param)?;
+                let response = rpc_fns::DirectCreateFolder(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1316,7 +1316,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DirectChangeFolder(&up, param)?;
+                let response = rpc_fns::DirectChangeFolder(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1332,7 +1332,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DirectRemoveFromFolder(&up, param)?;
+                let response = rpc_fns::DirectRemoveFromFolder(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1348,7 +1348,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DirectReordersFolder(&up, param)?;
+                let response = rpc_fns::DirectReordersFolder(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1364,7 +1364,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DirectDeleteFolder(&up, param)?;
+                let response = rpc_fns::DirectDeleteFolder(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1380,7 +1380,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DirectGetChatsList(&up, param)?;
+                let response = rpc_fns::DirectGetChatsList(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1396,7 +1396,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DirectGetGroupsList(&up, param)?;
+                let response = rpc_fns::DirectGetGroupsList(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1412,7 +1412,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DirectGetChannelsList(&up, param)?;
+                let response = rpc_fns::DirectGetChannelsList(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1428,7 +1428,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DirectGetFoldersList(&up, param)?;
+                let response = rpc_fns::DirectGetFoldersList(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1444,7 +1444,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DirectGetFoldersFullList(&up, param)?;
+                let response = rpc_fns::DirectGetFoldersFullList(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1462,7 +1462,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::Echo(&up, param)?;
+                let response = rpc_fns::Echo(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1478,7 +1478,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::CheckUserName(&up, param)?;
+                let response = rpc_fns::CheckUserName(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1496,7 +1496,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupCreateGroup(&up, param)?;
+                let response = rpc_fns::GroupCreateGroup(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1512,7 +1512,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupEditGroup(&up, param)?;
+                let response = rpc_fns::GroupEditGroup(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1528,7 +1528,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupDeleteGroup(&up, param)?;
+                let response = rpc_fns::GroupDeleteGroup(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1544,7 +1544,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupAddAdmin(&up, param)?;
+                let response = rpc_fns::GroupAddAdmin(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1560,7 +1560,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupAddMember(&up, param)?;
+                let response = rpc_fns::GroupAddMember(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1576,7 +1576,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupRemoveMember(&up, param)?;
+                let response = rpc_fns::GroupRemoveMember(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1592,7 +1592,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupChangeMemberLevel(&up, param)?;
+                let response = rpc_fns::GroupChangeMemberLevel(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1608,7 +1608,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupChangeMemberPermission(&up, param)?;
+                let response = rpc_fns::GroupChangeMemberPermission(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1624,7 +1624,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupJoinGroup(&up, param)?;
+                let response = rpc_fns::GroupJoinGroup(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1640,7 +1640,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupLeaveGroup(&up, param)?;
+                let response = rpc_fns::GroupLeaveGroup(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1656,7 +1656,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupBanMember(&up, param)?;
+                let response = rpc_fns::GroupBanMember(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1672,7 +1672,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupChangePrivacy(&up, param)?;
+                let response = rpc_fns::GroupChangePrivacy(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1688,7 +1688,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupChangeDefaultPermission(&up, param)?;
+                let response = rpc_fns::GroupChangeDefaultPermission(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1704,7 +1704,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupRevokeLink(&up, param)?;
+                let response = rpc_fns::GroupRevokeLink(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1720,7 +1720,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupChangeUsername(&up, param)?;
+                let response = rpc_fns::GroupChangeUsername(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1736,7 +1736,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupSendMessage(&up, param)?;
+                let response = rpc_fns::GroupSendMessage(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1752,7 +1752,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupEditMessage(&up, param)?;
+                let response = rpc_fns::GroupEditMessage(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1768,7 +1768,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupPinMessage(&up, param)?;
+                let response = rpc_fns::GroupPinMessage(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1784,7 +1784,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupUnPinMessage(&up, param)?;
+                let response = rpc_fns::GroupUnPinMessage(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1800,7 +1800,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupDeleteMessage(&up, param)?;
+                let response = rpc_fns::GroupDeleteMessage(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1816,7 +1816,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupDeleteMessages(&up, param)?;
+                let response = rpc_fns::GroupDeleteMessages(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1832,7 +1832,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupDeleteHistory(&up, param)?;
+                let response = rpc_fns::GroupDeleteHistory(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1848,7 +1848,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupClearHistory(&up, param)?;
+                let response = rpc_fns::GroupClearHistory(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1864,7 +1864,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupAvatarAdd(&up, param)?;
+                let response = rpc_fns::GroupAvatarAdd(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1880,7 +1880,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupAvatarChange(&up, param)?;
+                let response = rpc_fns::GroupAvatarChange(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1896,7 +1896,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupAvatarDelete(&up, param)?;
+                let response = rpc_fns::GroupAvatarDelete(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1912,7 +1912,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupAvatarGetList(&up, param)?;
+                let response = rpc_fns::GroupAvatarGetList(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1928,7 +1928,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupSendDoingAction(&up, param)?;
+                let response = rpc_fns::GroupSendDoingAction(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1944,7 +1944,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupReportGroup(&up, param)?;
+                let response = rpc_fns::GroupReportGroup(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1960,7 +1960,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupGetFull(&up, param)?;
+                let response = rpc_fns::GroupGetFull(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1976,7 +1976,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupGetMessagesList(&up, param)?;
+                let response = rpc_fns::GroupGetMessagesList(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -1992,7 +1992,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupGetMediaList(&up, param)?;
+                let response = rpc_fns::GroupGetMediaList(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -2008,7 +2008,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupGetMembersList(&up, param)?;
+                let response = rpc_fns::GroupGetMembersList(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -2024,7 +2024,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupGetAdminsList(&up, param)?;
+                let response = rpc_fns::GroupGetAdminsList(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -2040,7 +2040,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::GroupSetDraft(&up, param)?;
+                let response = rpc_fns::GroupSetDraft(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -2058,7 +2058,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::AddComment(&up, param)?;
+                let response = rpc_fns::AddComment(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -2074,7 +2074,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DeleteComment(&up, param)?;
+                let response = rpc_fns::DeleteComment(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -2090,7 +2090,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::EditComment(&up, param)?;
+                let response = rpc_fns::EditComment(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -2106,7 +2106,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::LikeComment(&up, param)?;
+                let response = rpc_fns::LikeComment(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -2122,7 +2122,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::AddSeenPosts(&up, param)?;
+                let response = rpc_fns::AddSeenPosts(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -2138,7 +2138,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::LikePost(&up, param)?;
+                let response = rpc_fns::LikePost(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -2154,7 +2154,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::UnLikePost(&up, param)?;
+                let response = rpc_fns::UnLikePost(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -2170,7 +2170,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::FollowChannel(&up, param)?;
+                let response = rpc_fns::FollowChannel(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -2186,7 +2186,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::UnFollowChannel(&up, param)?;
+                let response = rpc_fns::UnFollowChannel(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -2202,7 +2202,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::PinChannel(&up, param)?;
+                let response = rpc_fns::PinChannel(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -2218,7 +2218,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::UnPinChannel(&up, param)?;
+                let response = rpc_fns::UnPinChannel(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -2234,7 +2234,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::BlockChannel(&up, param)?;
+                let response = rpc_fns::BlockChannel(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -2250,7 +2250,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::UnBlockChannel(&up, param)?;
+                let response = rpc_fns::UnBlockChannel(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -2268,7 +2268,7 @@ pub fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::UploadFile(&up, param)?;
+                let response = rpc_fns::UploadFile(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
