@@ -12,12 +12,12 @@ pub use def::RPC_Group::*;
 pub use def::RPC_Social::*;
 pub use def::RPC_Upload::*;
 
-pub fn AddComment2(
+/*pub fn AddComment2(
     up: &UserParam,
     param: pb::pb2::AddCommentParam,
 ) -> Result<pb::pb2::AddCommentResponse, GenErr> {
     println!("inside add comment {:?}", param);
     Ok(pb::pb2::AddCommentResponse::default())
 }
-
+*/
 pub use rpc_impl::rpc_auth::SendConfirmCode;

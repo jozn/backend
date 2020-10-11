@@ -20,7 +20,7 @@ pub mod rpc_fns;
 pub mod rpc_fns_default;
 pub mod rpc_impl;
 
-use pb::pb::sys::*;
+// use pb::pb::sys::*;
 use prost::Message;
 
 #[derive(Debug, Default, PartialEq, Clone)]

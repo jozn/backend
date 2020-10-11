@@ -47,11 +47,11 @@ async fn server_http_rpc(req: Request<Body>) -> Vec<u8> {
 
 async fn handle_invoke(invoke_buff:Vec<u8>) -> Vec<u8> {
     let buff = invoke_buff;
-    let invoke : Result<pb::pb2::Invoke, ::prost::DecodeError> = prost::Message::decode(buff.as_slice());
+    let invoke : Result<pb::Invoke, ::prost::DecodeError> = prost::Message::decode(buff.as_slice());
 
     if let Ok(act) = invoke {
         println!("act {:?}", act);
-        let pb_bts = rpc::server_rpc2(act).unwrap_or("vec![]".as_bytes().to_owned());
+        let pb_bts = rpc::server_rpc(act).unwrap_or("vec![]".as_bytes().to_owned());
         return pb_bts;
     };
 
@@ -65,10 +65,10 @@ async fn handle_invoke(invoke_buff:Vec<u8>) -> Vec<u8> {
 
 async fn sample_invoke_test() {
     let mut buff =vec![];
-    let parm = pb::pb2::AddCommentParam{ text: "sdfdsf".to_string() };
+    let parm = pb::AddCommentParam{ text: "sdfdsf".to_string() };
     let m = prost::Message::encode(&parm, &mut buff).unwrap();
 
-    let inoke = pb::pb2::Invoke{
+    let inoke = pb::Invoke{
         namespace: 1,
         method: 1222124115,
         action_id: 0,
@@ -86,29 +86,6 @@ async fn sample_invoke_test() {
     // let dec : Result<pb::pb2::Invoke, ::prost::DecodeError> = prost::Message::decode(buff_invoke.as_slice());
     //
     // println!("dec: {:?}", dec);
-}
-
-async fn server_http_rpc_old_qucik_pb(req: Request<Body>) -> Vec<u8> {
-    let bo = req.into_body();
-    let bts = body::to_bytes(bo).await.unwrap();
-
-    let mut bytes: Vec<u8> = bts.to_vec();
-    let mut bytes_reader: Vec<u8> = vec![];
-
-    let invoke = BytesReader::from_bytes(&bytes_reader).read_message::<pb::Invoke>(&bytes);
-
-    if let Ok(act) = invoke {
-        println!("act {:?}", act);
-        let pb_bts = rpc::server_rpc(act).unwrap_or("vec![]".as_bytes().to_owned());
-        return pb_bts;
-    };
-
-    println!(
-        "Error in reading pb::Invoke - Err: {:?} bytes {:?}",
-        invoke, bytes
-    );
-
-    "".as_bytes().to_owned()
 }
 
 /////////// Routing Funcs /////////////

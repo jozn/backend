@@ -1,7 +1,4 @@
 extern crate prost_build;
-
-use std::borrow::Borrow;
-
 fn main() {
     let protos_files = [
         "enums.proto",
@@ -22,11 +19,11 @@ fn main() {
 
     let mut vec_protos = vec![];
     for p in &protos_files {
-        vec_protos.push(format!("src/pb/proto/{}",p));
+        vec_protos.push(format!("src/protos/proto/{}",p));
     }
 
     let mut config = prost_build::Config::default();
-    config.out_dir("src/pb/");
+    config.out_dir("src/");
     config.compile_well_known_types();
     config.retain_enum_prefix();
     let v = config.compile_protos(&vec_protos, &["src/pb/proto/".to_string()]);
