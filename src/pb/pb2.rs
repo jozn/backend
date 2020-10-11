@@ -2491,7 +2491,7 @@ pub struct PbNotify {
     #[prost(int32, tag="10")]
     pub created_time: i32,
 }
-#[derive(Clone, PartialEq, ::prost::Message)]
+#[derive(Clone,PartialEq, ::prost::Message)]
 pub struct Invoke {
     #[prost(uint32, tag="6")]
     pub namespace: u32,
