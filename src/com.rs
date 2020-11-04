@@ -1,5 +1,4 @@
 
-// pub struct GenErr {}
 pub struct UserParam {}
 
 #[derive(Debug)]
