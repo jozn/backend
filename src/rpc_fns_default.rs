@@ -1,15 +1,6 @@
 use crate::{com, com::*, pb};
 
 
-// Service: RPC_Account
-pub mod RPC_Account {
-    use super::*;
-    
-    pub async fn ChangePhoneNumber(up: &UserParam, param: pb::ChangePhoneNumberParam) -> Result<pb::ChangePhoneNumberResponse, GenErr> {
-        Ok(pb::ChangePhoneNumberResponse::default())
-    }
-}
-
 // Service: RPC_Auth
 pub mod RPC_Auth {
     use super::*;
@@ -271,18 +262,6 @@ pub mod RPC_Direct {
     }
 }
 
-// Service: RPC_General
-pub mod RPC_General {
-    use super::*;
-    
-    pub async fn Echo(up: &UserParam, param: pb::EchoParam) -> Result<pb::EchoResponse, GenErr> {
-        Ok(pb::EchoResponse::default())
-    }
-    pub async fn CheckUserName(up: &UserParam, param: pb::CheckUserNameParam) -> Result<pb::CheckUserNameResponse, GenErr> {
-        Ok(pb::CheckUserNameResponse::default())
-    }
-}
-
 // Service: RPC_Group
 pub mod RPC_Group {
     use super::*;
@@ -403,48 +382,15 @@ pub mod RPC_Sample {
     }
 }
 
-// Service: RPC_Social
-pub mod RPC_Social {
+// Service: RPC_Shared
+pub mod RPC_Shared {
     use super::*;
     
-    pub async fn AddComment(up: &UserParam, param: pb::AddCommentParam) -> Result<pb::AddCommentResponse, GenErr> {
-        Ok(pb::AddCommentResponse::default())
+    pub async fn Echo(up: &UserParam, param: pb::EchoParam) -> Result<pb::EchoResponse, GenErr> {
+        Ok(pb::EchoResponse::default())
     }
-    pub async fn DeleteComment(up: &UserParam, param: pb::DeleteCommentParam) -> Result<pb::DeleteCommentResponse, GenErr> {
-        Ok(pb::DeleteCommentResponse::default())
-    }
-    pub async fn EditComment(up: &UserParam, param: pb::EditCommentParam) -> Result<pb::EditCommentResponse, GenErr> {
-        Ok(pb::EditCommentResponse::default())
-    }
-    pub async fn LikeComment(up: &UserParam, param: pb::LikeCommentParam) -> Result<pb::LikeCommentResponse, GenErr> {
-        Ok(pb::LikeCommentResponse::default())
-    }
-    pub async fn AddSeenPosts(up: &UserParam, param: pb::AddSeenPostsParam) -> Result<pb::AddSeenPostsResponse, GenErr> {
-        Ok(pb::AddSeenPostsResponse::default())
-    }
-    pub async fn LikePost(up: &UserParam, param: pb::LikePostParam) -> Result<pb::LikePostResponse, GenErr> {
-        Ok(pb::LikePostResponse::default())
-    }
-    pub async fn UnLikePost(up: &UserParam, param: pb::UnLikePostParam) -> Result<pb::UnLikePostResponse, GenErr> {
-        Ok(pb::UnLikePostResponse::default())
-    }
-    pub async fn FollowChannel(up: &UserParam, param: pb::FollowChannelParam) -> Result<pb::FollowChannelResponse, GenErr> {
-        Ok(pb::FollowChannelResponse::default())
-    }
-    pub async fn UnFollowChannel(up: &UserParam, param: pb::UnFollowChannelParam) -> Result<pb::UnFollowChannelResponse, GenErr> {
-        Ok(pb::UnFollowChannelResponse::default())
-    }
-    pub async fn PinChannel(up: &UserParam, param: pb::PinChannelParam) -> Result<pb::PinChannelResponse, GenErr> {
-        Ok(pb::PinChannelResponse::default())
-    }
-    pub async fn UnPinChannel(up: &UserParam, param: pb::UnPinChannelParam) -> Result<pb::UnPinChannelResponse, GenErr> {
-        Ok(pb::UnPinChannelResponse::default())
-    }
-    pub async fn BlockChannel(up: &UserParam, param: pb::BlockChannelParam) -> Result<pb::BlockChannelResponse, GenErr> {
-        Ok(pb::BlockChannelResponse::default())
-    }
-    pub async fn UnBlockChannel(up: &UserParam, param: pb::UnBlockChannelParam) -> Result<pb::UnBlockChannelResponse, GenErr> {
-        Ok(pb::UnBlockChannelResponse::default())
+    pub async fn CheckUserName(up: &UserParam, param: pb::CheckUserNameParam) -> Result<pb::CheckUserNameResponse, GenErr> {
+        Ok(pb::CheckUserNameResponse::default())
     }
 }
 
@@ -457,17 +403,25 @@ pub mod RPC_Upload {
     }
 }
 
+// Service: RPC_User
+pub mod RPC_User {
+    use super::*;
+    
+    pub async fn ChangePhoneNumber(up: &UserParam, param: pb::ChangePhoneNumberParam) -> Result<pb::ChangePhoneNumberResponse, GenErr> {
+        Ok(pb::ChangePhoneNumberResponse::default())
+    }
+}
+
 
 /*
-pub use def::RPC_Account::*;
 pub use def::RPC_Auth::*;
 pub use def::RPC_Channel::*;
 pub use def::RPC_Chat::*;
 pub use def::RPC_Direct::*;
-pub use def::RPC_General::*;
 pub use def::RPC_Group::*;
 pub use def::RPC_Sample::*;
-pub use def::RPC_Social::*;
+pub use def::RPC_Shared::*;
 pub use def::RPC_Upload::*;
+pub use def::RPC_User::*;
 
  */

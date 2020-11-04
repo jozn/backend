@@ -63,7 +63,7 @@ async fn handle_invoke(invoke_buff:Vec<u8>) -> Vec<u8> {
     "".as_bytes().to_owned()
 }
 
-async fn sample_invoke_test() {
+/*async fn sample_invoke_test() {
     let mut buff =vec![];
     let parm = pb::AddCommentParam{ text: "sdfdsf".to_string() };
     let m = prost::Message::encode(&parm, &mut buff).unwrap();
@@ -86,7 +86,7 @@ async fn sample_invoke_test() {
     // let dec : Result<pb::pb2::Invoke, ::prost::DecodeError> = prost::Message::decode(buff_invoke.as_slice());
     //
     // println!("dec: {:?}", dec);
-}
+}*/
 
 /////////// Routing Funcs /////////////
 async fn echo() -> String {
@@ -113,7 +113,7 @@ async fn main() {
 
     println!("Server is running");
 
-    sample_invoke_test().await;
+    // sample_invoke_test().await;
 
     // Run this server for... forever!
     if let Err(e) = server.await {

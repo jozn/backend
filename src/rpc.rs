@@ -8,157 +8,142 @@ use quick_protobuf::{MessageRead,MessageWrite,Writer,deserialize_from_slice};
 use crate::{pb,com,com::*, rpc_fns};
 
 pub mod method_ids {
-    // Service: RPC_Account
-    pub const ChangePhoneNumber: u32 = 706069694;
-    
     // Service: RPC_Auth
-    pub const SendConfirmCode: u32 = 939965206;
-    pub const ConfirmCode: u32 = 1740258084;
-    pub const SingUp: u32 = 291193302;
-    pub const SingIn: u32 = 1017957090;
-    pub const LogOut: u32 = 1283119009;
+    pub const SendConfirmCode: u32 = 99432981;
+    pub const ConfirmCode: u32 = 1139849846;
+    pub const SingUp: u32 = 344412789;
+    pub const SingIn: u32 = 5700586;
+    pub const LogOut: u32 = 548012719;
     
     // Service: RPC_Channel
-    pub const ChannelCreateChannel: u32 = 143251225;
-    pub const ChannelEditChannel: u32 = 189471894;
-    pub const ChannelDeleteChannel: u32 = 1494483355;
-    pub const ChannelAddAuthor: u32 = 780397316;
-    pub const ChannelChangeAuthorPermission: u32 = 93233821;
-    pub const ChannelRemoveAuthor: u32 = 419542304;
-    pub const ChannelFollowChannel: u32 = 744563779;
-    pub const ChannelUnFollowChannel: u32 = 959512423;
-    pub const ChannelRemoveFollowers: u32 = 869709257;
-    pub const ChannelSubscribe: u32 = 1367898912;
-    pub const ChannelUnSubscribe: u32 = 858172401;
-    pub const ChannelRemoveSubscribers: u32 = 729024592;
-    pub const ChannelChangePrivacy: u32 = 79012409;
-    pub const ChannelChangeDefaultPermission: u32 = 1582638498;
-    pub const ChannelRevokeLink: u32 = 1912530021;
-    pub const ChannelChangeUsername: u32 = 983884462;
-    pub const ChannelBlockChannel: u32 = 2037016989;
-    pub const ChannelSendMessage: u32 = 1200751231;
-    pub const ChannelEditMessage: u32 = 727437726;
-    pub const ChannelPinMessage: u32 = 259263709;
-    pub const ChannelUnPinMessage: u32 = 113943649;
-    pub const ChannelDeleteMessage: u32 = 644189206;
-    pub const ChannelDeleteMessages: u32 = 2124822181;
-    pub const ChannelClearHistory: u32 = 1164398815;
-    pub const ChannelAvatarAdd: u32 = 1021808696;
-    pub const ChannelAvatarChange: u32 = 1968579501;
-    pub const ChannelAvatarDelete: u32 = 1626010891;
-    pub const ChannelAvatarGetList: u32 = 1925044843;
-    pub const ChannelSendDoingAction: u32 = 973237257;
-    pub const ChannelReportChannel: u32 = 792938145;
-    pub const ChannelReportMessage: u32 = 2053528327;
-    pub const ChannelGetFull: u32 = 1684531258;
-    pub const ChannelGetMessagesList: u32 = 1339072968;
-    pub const ChannelGetMediaList: u32 = 985772653;
-    pub const ChannelGetAuthors: u32 = 1373284924;
-    pub const ChannelGetFollowers: u32 = 1747172143;
-    pub const ChannelGetFollowings: u32 = 1838438980;
-    pub const ChannelGetSubscribers: u32 = 2146806736;
-    pub const ChannelBlocked: u32 = 1674411747;
-    pub const ChannelSetDraft: u32 = 1403193015;
+    pub const ChannelCreateChannel: u32 = 740341541;
+    pub const ChannelEditChannel: u32 = 329231200;
+    pub const ChannelDeleteChannel: u32 = 177944127;
+    pub const ChannelAddAuthor: u32 = 1711825211;
+    pub const ChannelChangeAuthorPermission: u32 = 151376166;
+    pub const ChannelRemoveAuthor: u32 = 738902973;
+    pub const ChannelFollowChannel: u32 = 1627479123;
+    pub const ChannelUnFollowChannel: u32 = 1037521736;
+    pub const ChannelRemoveFollowers: u32 = 308740721;
+    pub const ChannelSubscribe: u32 = 757900782;
+    pub const ChannelUnSubscribe: u32 = 358413629;
+    pub const ChannelRemoveSubscribers: u32 = 505495602;
+    pub const ChannelChangePrivacy: u32 = 1733100870;
+    pub const ChannelChangeDefaultPermission: u32 = 2017309544;
+    pub const ChannelRevokeLink: u32 = 996833555;
+    pub const ChannelChangeUsername: u32 = 1670162010;
+    pub const ChannelBlockChannel: u32 = 712464279;
+    pub const ChannelSendMessage: u32 = 1957690884;
+    pub const ChannelEditMessage: u32 = 2096144443;
+    pub const ChannelPinMessage: u32 = 1642528121;
+    pub const ChannelUnPinMessage: u32 = 2083192996;
+    pub const ChannelDeleteMessage: u32 = 1167266448;
+    pub const ChannelDeleteMessages: u32 = 789593552;
+    pub const ChannelClearHistory: u32 = 1169273718;
+    pub const ChannelAvatarAdd: u32 = 1289673888;
+    pub const ChannelAvatarChange: u32 = 886893206;
+    pub const ChannelAvatarDelete: u32 = 1452867901;
+    pub const ChannelAvatarGetList: u32 = 988947981;
+    pub const ChannelSendDoingAction: u32 = 1633866869;
+    pub const ChannelReportChannel: u32 = 1764489847;
+    pub const ChannelReportMessage: u32 = 241326631;
+    pub const ChannelGetFull: u32 = 259375337;
+    pub const ChannelGetMessagesList: u32 = 427631986;
+    pub const ChannelGetMediaList: u32 = 250698167;
+    pub const ChannelGetAuthors: u32 = 1778309222;
+    pub const ChannelGetFollowers: u32 = 1196343214;
+    pub const ChannelGetFollowings: u32 = 35449020;
+    pub const ChannelGetSubscribers: u32 = 1954004522;
+    pub const ChannelBlocked: u32 = 1670519893;
+    pub const ChannelSetDraft: u32 = 1563299078;
     
     // Service: RPC_Chat
-    pub const ChatSendMessage: u32 = 1131621475;
-    pub const ChatEditMessage: u32 = 1806258329;
-    pub const ChatDeleteMessages: u32 = 933526170;
-    pub const ChatDeleteHistory: u32 = 1088992782;
-    pub const ChatSendDoingAction: u32 = 1319324241;
-    pub const ChatReportChat: u32 = 1345425871;
-    pub const ChatGetFull: u32 = 1768678453;
-    pub const ChatGetMessagesList: u32 = 121549718;
-    pub const ChatGetMediaList: u32 = 1346774525;
+    pub const ChatSendMessage: u32 = 872296057;
+    pub const ChatEditMessage: u32 = 548752544;
+    pub const ChatDeleteMessages: u32 = 475175726;
+    pub const ChatDeleteHistory: u32 = 2090393303;
+    pub const ChatSendDoingAction: u32 = 1654010294;
+    pub const ChatReportChat: u32 = 1433006017;
+    pub const ChatGetFull: u32 = 1399898814;
+    pub const ChatGetMessagesList: u32 = 2031841962;
+    pub const ChatGetMediaList: u32 = 162122201;
     
     // Service: RPC_Direct
-    pub const DirectDeleteDirect: u32 = 1478067518;
-    pub const DirectChangeTitle: u32 = 2041790485;
-    pub const DirectSetCustomNotification: u32 = 548699291;
-    pub const DirectSendActionDoing: u32 = 1417285757;
-    pub const DirectSetDraft: u32 = 1860345925;
-    pub const DirectDeleteDirects: u32 = 1291891637;
-    pub const DirectMarkAsRead: u32 = 1801774787;
-    pub const DirectMarkAsUnRead: u32 = 313746334;
-    pub const DirectPinDirects: u32 = 1179089068;
-    pub const DirectUnPinDirects: u32 = 1517245560;
-    pub const DirectArchiveDirects: u32 = 1441782770;
-    pub const DirectUnArchiveDirects: u32 = 1951553867;
-    pub const DirectClearHistories: u32 = 904052140;
-    pub const DirectMuteDirects: u32 = 1138477048;
-    pub const DirectUnMuteDirects: u32 = 1691834263;
-    pub const DirectCreateFolder: u32 = 1878673022;
-    pub const DirectChangeFolder: u32 = 1861381591;
-    pub const DirectRemoveFromFolder: u32 = 1818954127;
-    pub const DirectReordersFolder: u32 = 1264591958;
-    pub const DirectDeleteFolder: u32 = 962281627;
-    pub const DirectGetChatsList: u32 = 1570934969;
-    pub const DirectGetGroupsList: u32 = 545957996;
-    pub const DirectGetChannelsList: u32 = 1608173619;
-    pub const DirectGetFoldersList: u32 = 1384523712;
-    pub const DirectGetFoldersFullList: u32 = 611850722;
-    
-    // Service: RPC_General
-    pub const Echo: u32 = 101973561;
-    pub const CheckUserName: u32 = 1897027349;
+    pub const DirectDeleteDirect: u32 = 95323214;
+    pub const DirectChangeTitle: u32 = 250554551;
+    pub const DirectSetCustomNotification: u32 = 458248252;
+    pub const DirectSendActionDoing: u32 = 658009933;
+    pub const DirectSetDraft: u32 = 712749707;
+    pub const DirectDeleteDirects: u32 = 1197087360;
+    pub const DirectMarkAsRead: u32 = 1429996148;
+    pub const DirectMarkAsUnRead: u32 = 233319325;
+    pub const DirectPinDirects: u32 = 1375511294;
+    pub const DirectUnPinDirects: u32 = 293925235;
+    pub const DirectArchiveDirects: u32 = 1416265881;
+    pub const DirectUnArchiveDirects: u32 = 1615356451;
+    pub const DirectClearHistories: u32 = 1518839919;
+    pub const DirectMuteDirects: u32 = 179035912;
+    pub const DirectUnMuteDirects: u32 = 719725946;
+    pub const DirectCreateFolder: u32 = 2001408305;
+    pub const DirectChangeFolder: u32 = 1814658660;
+    pub const DirectRemoveFromFolder: u32 = 151098714;
+    pub const DirectReordersFolder: u32 = 1957624017;
+    pub const DirectDeleteFolder: u32 = 977344730;
+    pub const DirectGetChatsList: u32 = 1003954339;
+    pub const DirectGetGroupsList: u32 = 1110873556;
+    pub const DirectGetChannelsList: u32 = 427433511;
+    pub const DirectGetFoldersList: u32 = 1067480006;
+    pub const DirectGetFoldersFullList: u32 = 1657882950;
     
     // Service: RPC_Group
-    pub const GroupCreateGroup: u32 = 1205960678;
-    pub const GroupEditGroup: u32 = 1665019493;
-    pub const GroupDeleteGroup: u32 = 365183375;
-    pub const GroupAddAdmin: u32 = 958971956;
-    pub const GroupAddMember: u32 = 676599227;
-    pub const GroupRemoveMember: u32 = 2012702964;
-    pub const GroupChangeMemberLevel: u32 = 589574238;
-    pub const GroupChangeMemberPermission: u32 = 2132464067;
-    pub const GroupJoinGroup: u32 = 591743429;
-    pub const GroupLeaveGroup: u32 = 361834630;
-    pub const GroupBanMember: u32 = 548504852;
-    pub const GroupChangePrivacy: u32 = 1497988410;
-    pub const GroupChangeDefaultPermission: u32 = 605792138;
-    pub const GroupRevokeLink: u32 = 406592509;
-    pub const GroupChangeUsername: u32 = 832997038;
-    pub const GroupSendMessage: u32 = 599852950;
-    pub const GroupEditMessage: u32 = 742937895;
-    pub const GroupPinMessage: u32 = 184560027;
-    pub const GroupUnPinMessage: u32 = 1290613173;
-    pub const GroupDeleteMessage: u32 = 393991035;
-    pub const GroupDeleteMessages: u32 = 276700675;
-    pub const GroupDeleteHistory: u32 = 1270953793;
-    pub const GroupClearHistory: u32 = 1352552449;
-    pub const GroupAvatarAdd: u32 = 1202058216;
-    pub const GroupAvatarChange: u32 = 108612523;
-    pub const GroupAvatarDelete: u32 = 775862697;
-    pub const GroupAvatarGetList: u32 = 939443722;
-    pub const GroupSendDoingAction: u32 = 2022474356;
-    pub const GroupReportGroup: u32 = 1759704420;
-    pub const GroupGetFull: u32 = 200351324;
-    pub const GroupGetMessagesList: u32 = 1541835459;
-    pub const GroupGetMediaList: u32 = 2143016912;
-    pub const GroupGetMembersList: u32 = 429215412;
-    pub const GroupGetAdminsList: u32 = 332260610;
-    pub const GroupSetDraft: u32 = 77668156;
+    pub const GroupCreateGroup: u32 = 1140942978;
+    pub const GroupEditGroup: u32 = 1880514193;
+    pub const GroupDeleteGroup: u32 = 1459388602;
+    pub const GroupAddAdmin: u32 = 2134185330;
+    pub const GroupAddMember: u32 = 606751933;
+    pub const GroupRemoveMember: u32 = 1837375022;
+    pub const GroupChangeMemberLevel: u32 = 1539340173;
+    pub const GroupChangeMemberPermission: u32 = 483512268;
+    pub const GroupJoinGroup: u32 = 655613339;
+    pub const GroupLeaveGroup: u32 = 579241895;
+    pub const GroupBanMember: u32 = 1045673431;
+    pub const GroupChangePrivacy: u32 = 600263304;
+    pub const GroupChangeDefaultPermission: u32 = 954689199;
+    pub const GroupRevokeLink: u32 = 1764467684;
+    pub const GroupChangeUsername: u32 = 1191090261;
+    pub const GroupSendMessage: u32 = 684584436;
+    pub const GroupEditMessage: u32 = 1787622934;
+    pub const GroupPinMessage: u32 = 1238271536;
+    pub const GroupUnPinMessage: u32 = 631852378;
+    pub const GroupDeleteMessage: u32 = 1194346075;
+    pub const GroupDeleteMessages: u32 = 1584921307;
+    pub const GroupDeleteHistory: u32 = 953107081;
+    pub const GroupClearHistory: u32 = 1430468467;
+    pub const GroupAvatarAdd: u32 = 1167941254;
+    pub const GroupAvatarChange: u32 = 406803098;
+    pub const GroupAvatarDelete: u32 = 854193498;
+    pub const GroupAvatarGetList: u32 = 1102046093;
+    pub const GroupSendDoingAction: u32 = 1686585448;
+    pub const GroupReportGroup: u32 = 220798382;
+    pub const GroupGetFull: u32 = 499140930;
+    pub const GroupGetMessagesList: u32 = 1617930178;
+    pub const GroupGetMediaList: u32 = 1490669886;
+    pub const GroupGetMembersList: u32 = 502288128;
+    pub const GroupGetAdminsList: u32 = 1772981789;
+    pub const GroupSetDraft: u32 = 411748258;
     
     // Service: RPC_Sample
-    pub const GetUsers1: u32 = 486248681;
+    pub const GetUsers1: u32 = 920502617;
     
-    // Service: RPC_Social
-    pub const AddComment: u32 = 1222124115;
-    pub const DeleteComment: u32 = 1684680875;
-    pub const EditComment: u32 = 527415306;
-    pub const LikeComment: u32 = 2086146002;
-    pub const AddSeenPosts: u32 = 1118533600;
-    pub const LikePost: u32 = 1313969677;
-    pub const UnLikePost: u32 = 1332796256;
-    pub const FollowChannel: u32 = 655898778;
-    pub const UnFollowChannel: u32 = 483078047;
-    pub const PinChannel: u32 = 1225489769;
-    pub const UnPinChannel: u32 = 1585401362;
-    pub const BlockChannel: u32 = 1902848482;
-    pub const UnBlockChannel: u32 = 305468874;
+    // Service: RPC_Shared
+    pub const Echo: u32 = 1239211125;
+    pub const CheckUserName: u32 = 1759322581;
     
     // Service: RPC_Upload
-    pub const UploadFile: u32 = 1702285478;
+    pub const UploadFile: u32 = 422068969;
+    
+    // Service: RPC_User
+    pub const ChangePhoneNumber: u32 = 605934586;
     
     pub const ChangePhoneNumber8 : u32 = 79874;
 }
@@ -168,26 +153,8 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
 
     match act.method {
     
-    // service: RPC_Account
-        method_ids::ChangePhoneNumber => { // 706069694
-            let vec: Vec<u8> = vec![];
-            let rpc_param  : Result<pb::ChangePhoneNumberParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
-
-            if let Ok(param) = rpc_param {
-                println!("param {:?}", param);
-                let response = rpc_fns::ChangePhoneNumber(&up, param).await?;
-
-                let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-
-                Ok(buff)
-            } else {
-                Err(GenErr::ReadingPbParam)
-            }
-        }
-    
     // service: RPC_Auth
-        method_ids::SendConfirmCode => { // 939965206
+        method_ids::SendConfirmCode => { // 99432981
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::SendConfirmCodeParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -203,7 +170,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ConfirmCode => { // 1740258084
+        method_ids::ConfirmCode => { // 1139849846
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ConfirmCodeParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -219,7 +186,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::SingUp => { // 291193302
+        method_ids::SingUp => { // 344412789
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::SingUpParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -235,7 +202,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::SingIn => { // 1017957090
+        method_ids::SingIn => { // 5700586
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::SingInParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -251,7 +218,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::LogOut => { // 1283119009
+        method_ids::LogOut => { // 548012719
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::LogOutParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -269,7 +236,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
         }
     
     // service: RPC_Channel
-        method_ids::ChannelCreateChannel => { // 143251225
+        method_ids::ChannelCreateChannel => { // 740341541
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelCreateChannelParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -285,7 +252,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelEditChannel => { // 189471894
+        method_ids::ChannelEditChannel => { // 329231200
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelEditChannelParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -301,7 +268,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelDeleteChannel => { // 1494483355
+        method_ids::ChannelDeleteChannel => { // 177944127
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelDeleteChannelParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -317,7 +284,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelAddAuthor => { // 780397316
+        method_ids::ChannelAddAuthor => { // 1711825211
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelAddAuthorParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -333,7 +300,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelChangeAuthorPermission => { // 93233821
+        method_ids::ChannelChangeAuthorPermission => { // 151376166
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelChangeAuthorPermissionParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -349,7 +316,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelRemoveAuthor => { // 419542304
+        method_ids::ChannelRemoveAuthor => { // 738902973
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelRemoveAuthorParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -365,7 +332,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelFollowChannel => { // 744563779
+        method_ids::ChannelFollowChannel => { // 1627479123
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelFollowChannelParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -381,7 +348,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelUnFollowChannel => { // 959512423
+        method_ids::ChannelUnFollowChannel => { // 1037521736
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelUnFollowChannelParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -397,7 +364,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelRemoveFollowers => { // 869709257
+        method_ids::ChannelRemoveFollowers => { // 308740721
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelRemoveFollowersParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -413,7 +380,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelSubscribe => { // 1367898912
+        method_ids::ChannelSubscribe => { // 757900782
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelSubscribeParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -429,7 +396,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelUnSubscribe => { // 858172401
+        method_ids::ChannelUnSubscribe => { // 358413629
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelUnSubscribeParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -445,7 +412,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelRemoveSubscribers => { // 729024592
+        method_ids::ChannelRemoveSubscribers => { // 505495602
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelRemoveSubscribersParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -461,7 +428,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelChangePrivacy => { // 79012409
+        method_ids::ChannelChangePrivacy => { // 1733100870
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelChangePrivacyParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -477,7 +444,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelChangeDefaultPermission => { // 1582638498
+        method_ids::ChannelChangeDefaultPermission => { // 2017309544
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelChangeDefaultPermissionParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -493,7 +460,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelRevokeLink => { // 1912530021
+        method_ids::ChannelRevokeLink => { // 996833555
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelRevokeLinkParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -509,7 +476,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelChangeUsername => { // 983884462
+        method_ids::ChannelChangeUsername => { // 1670162010
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelChangeUsernameParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -525,7 +492,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelBlockChannel => { // 2037016989
+        method_ids::ChannelBlockChannel => { // 712464279
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelBlockChannelParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -541,7 +508,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelSendMessage => { // 1200751231
+        method_ids::ChannelSendMessage => { // 1957690884
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelSendMessageParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -557,7 +524,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelEditMessage => { // 727437726
+        method_ids::ChannelEditMessage => { // 2096144443
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelEditMessageParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -573,7 +540,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelPinMessage => { // 259263709
+        method_ids::ChannelPinMessage => { // 1642528121
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelPinMessageParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -589,7 +556,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelUnPinMessage => { // 113943649
+        method_ids::ChannelUnPinMessage => { // 2083192996
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelUnPinMessageParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -605,7 +572,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelDeleteMessage => { // 644189206
+        method_ids::ChannelDeleteMessage => { // 1167266448
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelDeleteMessageParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -621,7 +588,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelDeleteMessages => { // 2124822181
+        method_ids::ChannelDeleteMessages => { // 789593552
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelDeleteMessagesParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -637,7 +604,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelClearHistory => { // 1164398815
+        method_ids::ChannelClearHistory => { // 1169273718
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelClearHistoryParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -653,7 +620,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelAvatarAdd => { // 1021808696
+        method_ids::ChannelAvatarAdd => { // 1289673888
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelAvatarAddParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -669,7 +636,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelAvatarChange => { // 1968579501
+        method_ids::ChannelAvatarChange => { // 886893206
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelAvatarChangeParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -685,7 +652,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelAvatarDelete => { // 1626010891
+        method_ids::ChannelAvatarDelete => { // 1452867901
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelAvatarDeleteParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -701,7 +668,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelAvatarGetList => { // 1925044843
+        method_ids::ChannelAvatarGetList => { // 988947981
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelAvatarGetListParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -717,7 +684,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelSendDoingAction => { // 973237257
+        method_ids::ChannelSendDoingAction => { // 1633866869
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelSendDoingActionParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -733,7 +700,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelReportChannel => { // 792938145
+        method_ids::ChannelReportChannel => { // 1764489847
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelReportChannelParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -749,7 +716,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelReportMessage => { // 2053528327
+        method_ids::ChannelReportMessage => { // 241326631
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelReportMessageParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -765,7 +732,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelGetFull => { // 1684531258
+        method_ids::ChannelGetFull => { // 259375337
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelGetFullParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -781,7 +748,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelGetMessagesList => { // 1339072968
+        method_ids::ChannelGetMessagesList => { // 427631986
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelGetMessagesListParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -797,7 +764,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelGetMediaList => { // 985772653
+        method_ids::ChannelGetMediaList => { // 250698167
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelGetMediaListParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -813,7 +780,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelGetAuthors => { // 1373284924
+        method_ids::ChannelGetAuthors => { // 1778309222
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelGetAuthorsParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -829,7 +796,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelGetFollowers => { // 1747172143
+        method_ids::ChannelGetFollowers => { // 1196343214
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelGetFollowersParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -845,7 +812,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelGetFollowings => { // 1838438980
+        method_ids::ChannelGetFollowings => { // 35449020
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelGetFollowingsParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -861,7 +828,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelGetSubscribers => { // 2146806736
+        method_ids::ChannelGetSubscribers => { // 1954004522
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelGetSubscribersParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -877,7 +844,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelBlocked => { // 1674411747
+        method_ids::ChannelBlocked => { // 1670519893
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelBlockedParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -893,7 +860,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChannelSetDraft => { // 1403193015
+        method_ids::ChannelSetDraft => { // 1563299078
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChannelSetDraftParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -911,7 +878,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
         }
     
     // service: RPC_Chat
-        method_ids::ChatSendMessage => { // 1131621475
+        method_ids::ChatSendMessage => { // 872296057
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChatSendMessageParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -927,7 +894,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChatEditMessage => { // 1806258329
+        method_ids::ChatEditMessage => { // 548752544
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChatEditMessageParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -943,7 +910,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChatDeleteMessages => { // 933526170
+        method_ids::ChatDeleteMessages => { // 475175726
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChatDeleteMessagesParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -959,7 +926,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChatDeleteHistory => { // 1088992782
+        method_ids::ChatDeleteHistory => { // 2090393303
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChatDeleteHistoryParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -975,7 +942,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChatSendDoingAction => { // 1319324241
+        method_ids::ChatSendDoingAction => { // 1654010294
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChatSendDoingActionParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -991,7 +958,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChatReportChat => { // 1345425871
+        method_ids::ChatReportChat => { // 1433006017
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChatReportChatParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1007,7 +974,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChatGetFull => { // 1768678453
+        method_ids::ChatGetFull => { // 1399898814
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChatGetFullMessageParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1023,7 +990,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChatGetMessagesList => { // 121549718
+        method_ids::ChatGetMessagesList => { // 2031841962
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChatGetMessagesListParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1039,7 +1006,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::ChatGetMediaList => { // 1346774525
+        method_ids::ChatGetMediaList => { // 162122201
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::ChatGetMediaListParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1057,7 +1024,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
         }
     
     // service: RPC_Direct
-        method_ids::DirectDeleteDirect => { // 1478067518
+        method_ids::DirectDeleteDirect => { // 95323214
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::DirectDeleteDirectParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1073,7 +1040,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::DirectChangeTitle => { // 2041790485
+        method_ids::DirectChangeTitle => { // 250554551
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::DirectChangeTitleParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1089,7 +1056,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::DirectSetCustomNotification => { // 548699291
+        method_ids::DirectSetCustomNotification => { // 458248252
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::DirectSetCustomNotificationParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1105,7 +1072,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::DirectSendActionDoing => { // 1417285757
+        method_ids::DirectSendActionDoing => { // 658009933
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::DirectSendActionDoingParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1121,7 +1088,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::DirectSetDraft => { // 1860345925
+        method_ids::DirectSetDraft => { // 712749707
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::DirectSetDraftParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1137,7 +1104,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::DirectDeleteDirects => { // 1291891637
+        method_ids::DirectDeleteDirects => { // 1197087360
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::DirectDeleteDirectsParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1153,7 +1120,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::DirectMarkAsRead => { // 1801774787
+        method_ids::DirectMarkAsRead => { // 1429996148
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::DirectMarkAsReadParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1169,7 +1136,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::DirectMarkAsUnRead => { // 313746334
+        method_ids::DirectMarkAsUnRead => { // 233319325
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::DirectMarkAsUnReadParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1185,7 +1152,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::DirectPinDirects => { // 1179089068
+        method_ids::DirectPinDirects => { // 1375511294
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::DirectPinDirectsParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1201,7 +1168,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::DirectUnPinDirects => { // 1517245560
+        method_ids::DirectUnPinDirects => { // 293925235
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::DirectUnPinDirectsParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1217,7 +1184,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::DirectArchiveDirects => { // 1441782770
+        method_ids::DirectArchiveDirects => { // 1416265881
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::DirectArchiveDirectsParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1233,7 +1200,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::DirectUnArchiveDirects => { // 1951553867
+        method_ids::DirectUnArchiveDirects => { // 1615356451
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::DirectUnArchiveDirectsParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1249,7 +1216,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::DirectClearHistories => { // 904052140
+        method_ids::DirectClearHistories => { // 1518839919
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::DirectClearHistoriesParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1265,7 +1232,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::DirectMuteDirects => { // 1138477048
+        method_ids::DirectMuteDirects => { // 179035912
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::DirectMuteDirectsParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1281,7 +1248,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::DirectUnMuteDirects => { // 1691834263
+        method_ids::DirectUnMuteDirects => { // 719725946
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::DirectUnMuteDirectsParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1297,7 +1264,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::DirectCreateFolder => { // 1878673022
+        method_ids::DirectCreateFolder => { // 2001408305
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::DirectCreateFolderParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1313,7 +1280,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::DirectChangeFolder => { // 1861381591
+        method_ids::DirectChangeFolder => { // 1814658660
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::DirectChangeFolderParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1329,7 +1296,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::DirectRemoveFromFolder => { // 1818954127
+        method_ids::DirectRemoveFromFolder => { // 151098714
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::DirectRemoveFromFolderParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1345,7 +1312,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::DirectReordersFolder => { // 1264591958
+        method_ids::DirectReordersFolder => { // 1957624017
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::DirectReordersFolderParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1361,7 +1328,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::DirectDeleteFolder => { // 962281627
+        method_ids::DirectDeleteFolder => { // 977344730
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::DirectDeleteFolderParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1377,7 +1344,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::DirectGetChatsList => { // 1570934969
+        method_ids::DirectGetChatsList => { // 1003954339
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::DirectGetChatsListParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1393,7 +1360,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::DirectGetGroupsList => { // 545957996
+        method_ids::DirectGetGroupsList => { // 1110873556
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::DirectGetGroupsListParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1409,7 +1376,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::DirectGetChannelsList => { // 1608173619
+        method_ids::DirectGetChannelsList => { // 427433511
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::DirectGetChannelsListParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1425,7 +1392,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::DirectGetFoldersList => { // 1384523712
+        method_ids::DirectGetFoldersList => { // 1067480006
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::DirectGetFoldersListParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1441,7 +1408,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::DirectGetFoldersFullList => { // 611850722
+        method_ids::DirectGetFoldersFullList => { // 1657882950
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::DirectGetFoldersFullListParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1458,42 +1425,8 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
             }
         }
     
-    // service: RPC_General
-        method_ids::Echo => { // 101973561
-            let vec: Vec<u8> = vec![];
-            let rpc_param  : Result<pb::EchoParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
-
-            if let Ok(param) = rpc_param {
-                println!("param {:?}", param);
-                let response = rpc_fns::Echo(&up, param).await?;
-
-                let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-
-                Ok(buff)
-            } else {
-                Err(GenErr::ReadingPbParam)
-            }
-        }
-        method_ids::CheckUserName => { // 1897027349
-            let vec: Vec<u8> = vec![];
-            let rpc_param  : Result<pb::CheckUserNameParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
-
-            if let Ok(param) = rpc_param {
-                println!("param {:?}", param);
-                let response = rpc_fns::CheckUserName(&up, param).await?;
-
-                let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-
-                Ok(buff)
-            } else {
-                Err(GenErr::ReadingPbParam)
-            }
-        }
-    
     // service: RPC_Group
-        method_ids::GroupCreateGroup => { // 1205960678
+        method_ids::GroupCreateGroup => { // 1140942978
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupCreateGroupParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1509,7 +1442,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupEditGroup => { // 1665019493
+        method_ids::GroupEditGroup => { // 1880514193
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupEditGroupParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1525,7 +1458,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupDeleteGroup => { // 365183375
+        method_ids::GroupDeleteGroup => { // 1459388602
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupDeleteGroupParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1541,7 +1474,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupAddAdmin => { // 958971956
+        method_ids::GroupAddAdmin => { // 2134185330
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupAddAdminParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1557,7 +1490,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupAddMember => { // 676599227
+        method_ids::GroupAddMember => { // 606751933
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupAddMemberParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1573,7 +1506,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupRemoveMember => { // 2012702964
+        method_ids::GroupRemoveMember => { // 1837375022
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupRemoveMemberParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1589,7 +1522,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupChangeMemberLevel => { // 589574238
+        method_ids::GroupChangeMemberLevel => { // 1539340173
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupChangeMemberLevelParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1605,7 +1538,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupChangeMemberPermission => { // 2132464067
+        method_ids::GroupChangeMemberPermission => { // 483512268
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupChangeMemberPermissionParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1621,7 +1554,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupJoinGroup => { // 591743429
+        method_ids::GroupJoinGroup => { // 655613339
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::JoinGroupParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1637,7 +1570,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupLeaveGroup => { // 361834630
+        method_ids::GroupLeaveGroup => { // 579241895
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupLeaveGroupParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1653,7 +1586,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupBanMember => { // 548504852
+        method_ids::GroupBanMember => { // 1045673431
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupBanMemberParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1669,7 +1602,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupChangePrivacy => { // 1497988410
+        method_ids::GroupChangePrivacy => { // 600263304
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupChangePrivacyParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1685,7 +1618,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupChangeDefaultPermission => { // 605792138
+        method_ids::GroupChangeDefaultPermission => { // 954689199
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupChangeDefaultPermissionParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1701,7 +1634,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupRevokeLink => { // 406592509
+        method_ids::GroupRevokeLink => { // 1764467684
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupRevokeLinkParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1717,7 +1650,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupChangeUsername => { // 832997038
+        method_ids::GroupChangeUsername => { // 1191090261
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupChangeUsernameParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1733,7 +1666,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupSendMessage => { // 599852950
+        method_ids::GroupSendMessage => { // 684584436
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupSendMessageParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1749,7 +1682,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupEditMessage => { // 742937895
+        method_ids::GroupEditMessage => { // 1787622934
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupEditMessageParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1765,7 +1698,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupPinMessage => { // 184560027
+        method_ids::GroupPinMessage => { // 1238271536
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupPinMessageParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1781,7 +1714,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupUnPinMessage => { // 1290613173
+        method_ids::GroupUnPinMessage => { // 631852378
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupUnPinMessageParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1797,7 +1730,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupDeleteMessage => { // 393991035
+        method_ids::GroupDeleteMessage => { // 1194346075
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupDeleteMessageParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1813,7 +1746,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupDeleteMessages => { // 276700675
+        method_ids::GroupDeleteMessages => { // 1584921307
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupDeleteMessagesParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1829,7 +1762,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupDeleteHistory => { // 1270953793
+        method_ids::GroupDeleteHistory => { // 953107081
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupDeleteHistoryParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1845,7 +1778,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupClearHistory => { // 1352552449
+        method_ids::GroupClearHistory => { // 1430468467
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupClearHistoryParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1861,7 +1794,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupAvatarAdd => { // 1202058216
+        method_ids::GroupAvatarAdd => { // 1167941254
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupAvatarAddParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1877,7 +1810,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupAvatarChange => { // 108612523
+        method_ids::GroupAvatarChange => { // 406803098
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupAvatarChangeParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1893,7 +1826,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupAvatarDelete => { // 775862697
+        method_ids::GroupAvatarDelete => { // 854193498
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupAvatarDeleteParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1909,7 +1842,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupAvatarGetList => { // 939443722
+        method_ids::GroupAvatarGetList => { // 1102046093
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupAvatarGetListParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1925,7 +1858,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupSendDoingAction => { // 2022474356
+        method_ids::GroupSendDoingAction => { // 1686585448
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupSendDoingActionParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1941,7 +1874,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupReportGroup => { // 1759704420
+        method_ids::GroupReportGroup => { // 220798382
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupReportGroupParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1957,7 +1890,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupGetFull => { // 200351324
+        method_ids::GroupGetFull => { // 499140930
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupGetFullMessageParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1973,7 +1906,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupGetMessagesList => { // 1541835459
+        method_ids::GroupGetMessagesList => { // 1617930178
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupGetMessagesListParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -1989,7 +1922,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupGetMediaList => { // 2143016912
+        method_ids::GroupGetMediaList => { // 1490669886
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupGetMediaListParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -2005,7 +1938,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupGetMembersList => { // 429215412
+        method_ids::GroupGetMembersList => { // 502288128
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupGetMembersListParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -2021,7 +1954,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupGetAdminsList => { // 332260610
+        method_ids::GroupGetAdminsList => { // 1772981789
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupGetAdminsListParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -2037,7 +1970,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::GroupSetDraft => { // 77668156
+        method_ids::GroupSetDraft => { // 411748258
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GroupSetDraftParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -2055,7 +1988,7 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
         }
     
     // service: RPC_Sample
-        method_ids::GetUsers1 => { // 486248681
+        method_ids::GetUsers1 => { // 920502617
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::GetUsers1Param, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
@@ -2072,14 +2005,14 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
             }
         }
     
-    // service: RPC_Social
-        method_ids::AddComment => { // 1222124115
+    // service: RPC_Shared
+        method_ids::Echo => { // 1239211125
             let vec: Vec<u8> = vec![];
-            let rpc_param  : Result<pb::AddCommentParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
+            let rpc_param  : Result<pb::EchoParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::AddComment(&up, param).await?;
+                let response = rpc_fns::Echo(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -2089,189 +2022,13 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
                 Err(GenErr::ReadingPbParam)
             }
         }
-        method_ids::DeleteComment => { // 1684680875
+        method_ids::CheckUserName => { // 1759322581
             let vec: Vec<u8> = vec![];
-            let rpc_param  : Result<pb::DeleteCommentParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
+            let rpc_param  : Result<pb::CheckUserNameParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
-                let response = rpc_fns::DeleteComment(&up, param).await?;
-
-                let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-
-                Ok(buff)
-            } else {
-                Err(GenErr::ReadingPbParam)
-            }
-        }
-        method_ids::EditComment => { // 527415306
-            let vec: Vec<u8> = vec![];
-            let rpc_param  : Result<pb::EditCommentParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
-
-            if let Ok(param) = rpc_param {
-                println!("param {:?}", param);
-                let response = rpc_fns::EditComment(&up, param).await?;
-
-                let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-
-                Ok(buff)
-            } else {
-                Err(GenErr::ReadingPbParam)
-            }
-        }
-        method_ids::LikeComment => { // 2086146002
-            let vec: Vec<u8> = vec![];
-            let rpc_param  : Result<pb::LikeCommentParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
-
-            if let Ok(param) = rpc_param {
-                println!("param {:?}", param);
-                let response = rpc_fns::LikeComment(&up, param).await?;
-
-                let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-
-                Ok(buff)
-            } else {
-                Err(GenErr::ReadingPbParam)
-            }
-        }
-        method_ids::AddSeenPosts => { // 1118533600
-            let vec: Vec<u8> = vec![];
-            let rpc_param  : Result<pb::AddSeenPostsParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
-
-            if let Ok(param) = rpc_param {
-                println!("param {:?}", param);
-                let response = rpc_fns::AddSeenPosts(&up, param).await?;
-
-                let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-
-                Ok(buff)
-            } else {
-                Err(GenErr::ReadingPbParam)
-            }
-        }
-        method_ids::LikePost => { // 1313969677
-            let vec: Vec<u8> = vec![];
-            let rpc_param  : Result<pb::LikePostParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
-
-            if let Ok(param) = rpc_param {
-                println!("param {:?}", param);
-                let response = rpc_fns::LikePost(&up, param).await?;
-
-                let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-
-                Ok(buff)
-            } else {
-                Err(GenErr::ReadingPbParam)
-            }
-        }
-        method_ids::UnLikePost => { // 1332796256
-            let vec: Vec<u8> = vec![];
-            let rpc_param  : Result<pb::UnLikePostParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
-
-            if let Ok(param) = rpc_param {
-                println!("param {:?}", param);
-                let response = rpc_fns::UnLikePost(&up, param).await?;
-
-                let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-
-                Ok(buff)
-            } else {
-                Err(GenErr::ReadingPbParam)
-            }
-        }
-        method_ids::FollowChannel => { // 655898778
-            let vec: Vec<u8> = vec![];
-            let rpc_param  : Result<pb::FollowChannelParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
-
-            if let Ok(param) = rpc_param {
-                println!("param {:?}", param);
-                let response = rpc_fns::FollowChannel(&up, param).await?;
-
-                let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-
-                Ok(buff)
-            } else {
-                Err(GenErr::ReadingPbParam)
-            }
-        }
-        method_ids::UnFollowChannel => { // 483078047
-            let vec: Vec<u8> = vec![];
-            let rpc_param  : Result<pb::UnFollowChannelParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
-
-            if let Ok(param) = rpc_param {
-                println!("param {:?}", param);
-                let response = rpc_fns::UnFollowChannel(&up, param).await?;
-
-                let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-
-                Ok(buff)
-            } else {
-                Err(GenErr::ReadingPbParam)
-            }
-        }
-        method_ids::PinChannel => { // 1225489769
-            let vec: Vec<u8> = vec![];
-            let rpc_param  : Result<pb::PinChannelParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
-
-            if let Ok(param) = rpc_param {
-                println!("param {:?}", param);
-                let response = rpc_fns::PinChannel(&up, param).await?;
-
-                let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-
-                Ok(buff)
-            } else {
-                Err(GenErr::ReadingPbParam)
-            }
-        }
-        method_ids::UnPinChannel => { // 1585401362
-            let vec: Vec<u8> = vec![];
-            let rpc_param  : Result<pb::UnPinChannelParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
-
-            if let Ok(param) = rpc_param {
-                println!("param {:?}", param);
-                let response = rpc_fns::UnPinChannel(&up, param).await?;
-
-                let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-
-                Ok(buff)
-            } else {
-                Err(GenErr::ReadingPbParam)
-            }
-        }
-        method_ids::BlockChannel => { // 1902848482
-            let vec: Vec<u8> = vec![];
-            let rpc_param  : Result<pb::BlockChannelParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
-
-            if let Ok(param) = rpc_param {
-                println!("param {:?}", param);
-                let response = rpc_fns::BlockChannel(&up, param).await?;
-
-                let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-
-                Ok(buff)
-            } else {
-                Err(GenErr::ReadingPbParam)
-            }
-        }
-        method_ids::UnBlockChannel => { // 305468874
-            let vec: Vec<u8> = vec![];
-            let rpc_param  : Result<pb::UnBlockChannelParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
-
-            if let Ok(param) = rpc_param {
-                println!("param {:?}", param);
-                let response = rpc_fns::UnBlockChannel(&up, param).await?;
+                let response = rpc_fns::CheckUserName(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -2283,13 +2040,31 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
         }
     
     // service: RPC_Upload
-        method_ids::UploadFile => { // 1702285478
+        method_ids::UploadFile => { // 422068969
             let vec: Vec<u8> = vec![];
             let rpc_param  : Result<pb::UploadFileParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
 
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
                 let response = rpc_fns::UploadFile(&up, param).await?;
+
+                let mut buff =vec![];
+                prost::Message::encode(&response, &mut buff)?;
+
+                Ok(buff)
+            } else {
+                Err(GenErr::ReadingPbParam)
+            }
+        }
+    
+    // service: RPC_User
+        method_ids::ChangePhoneNumber => { // 605934586
+            let vec: Vec<u8> = vec![];
+            let rpc_param  : Result<pb::ChangePhoneNumberParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
+
+            if let Ok(param) = rpc_param {
+                println!("param {:?}", param);
+                let response = rpc_fns::ChangePhoneNumber(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -2321,39 +2096,6 @@ impl RpcClient {
         8
     }
 
-// service: RPC_Account
-    pub async fn ChangePhoneNumber (&self, param: pb::ChangePhoneNumberParam) -> Result<pb::ChangePhoneNumberResponse,GenErr>{
-
-        let mut buff =vec![];
-        ::prost::Message::encode(&param, &mut buff)?;
-
-        let invoke = pb::Invoke {
-            namespace: 0,
-            method: method_ids::ChangePhoneNumber,
-            action_id: self.get_next_action_id() ,
-            is_response: false,
-            rpc_data: buff,
-        };
-
-        let mut buff =vec![];
-        let m = prost::Message::encode(&invoke, &mut buff);
-
-        let mut buff = Vec::new();
-        ::prost::Message::encode(&invoke, &mut buff)?;
-
-        let req = reqwest::Client::new()
-            .post(self.endpoint)
-            .body(buff)
-            .send()
-            .await?;
-
-        let res_bytes = req.bytes().await?;
-        let res_bytes = res_bytes.to_vec();
-
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
-        Ok(pb_res)
-    }
-    
 // service: RPC_Auth
     pub async fn SendConfirmCode (&self, param: pb::SendConfirmCodeParam) -> Result<pb::SendConfirmCodeResponse,GenErr>{
 
@@ -4886,71 +4628,6 @@ impl RpcClient {
         Ok(pb_res)
     }
     
-// service: RPC_General
-    pub async fn Echo (&self, param: pb::EchoParam) -> Result<pb::EchoResponse,GenErr>{
-
-        let mut buff =vec![];
-        ::prost::Message::encode(&param, &mut buff)?;
-
-        let invoke = pb::Invoke {
-            namespace: 0,
-            method: method_ids::Echo,
-            action_id: self.get_next_action_id() ,
-            is_response: false,
-            rpc_data: buff,
-        };
-
-        let mut buff =vec![];
-        let m = prost::Message::encode(&invoke, &mut buff);
-
-        let mut buff = Vec::new();
-        ::prost::Message::encode(&invoke, &mut buff)?;
-
-        let req = reqwest::Client::new()
-            .post(self.endpoint)
-            .body(buff)
-            .send()
-            .await?;
-
-        let res_bytes = req.bytes().await?;
-        let res_bytes = res_bytes.to_vec();
-
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
-        Ok(pb_res)
-    }
-    
-    pub async fn CheckUserName (&self, param: pb::CheckUserNameParam) -> Result<pb::CheckUserNameResponse,GenErr>{
-
-        let mut buff =vec![];
-        ::prost::Message::encode(&param, &mut buff)?;
-
-        let invoke = pb::Invoke {
-            namespace: 0,
-            method: method_ids::CheckUserName,
-            action_id: self.get_next_action_id() ,
-            is_response: false,
-            rpc_data: buff,
-        };
-
-        let mut buff =vec![];
-        let m = prost::Message::encode(&invoke, &mut buff);
-
-        let mut buff = Vec::new();
-        ::prost::Message::encode(&invoke, &mut buff)?;
-
-        let req = reqwest::Client::new()
-            .post(self.endpoint)
-            .body(buff)
-            .send()
-            .await?;
-
-        let res_bytes = req.bytes().await?;
-        let res_bytes = res_bytes.to_vec();
-
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
-        Ok(pb_res)
-    }
-    
 // service: RPC_Group
     pub async fn GroupCreateGroup (&self, param: pb::GroupCreateGroupParam) -> Result<pb::GroupCreateGroupResponse,GenErr>{
 
@@ -6105,15 +5782,15 @@ impl RpcClient {
         Ok(pb_res)
     }
     
-// service: RPC_Social
-    pub async fn AddComment (&self, param: pb::AddCommentParam) -> Result<pb::AddCommentResponse,GenErr>{
+// service: RPC_Shared
+    pub async fn Echo (&self, param: pb::EchoParam) -> Result<pb::EchoResponse,GenErr>{
 
         let mut buff =vec![];
         ::prost::Message::encode(&param, &mut buff)?;
 
         let invoke = pb::Invoke {
             namespace: 0,
-            method: method_ids::AddComment,
+            method: method_ids::Echo,
             action_id: self.get_next_action_id() ,
             is_response: false,
             rpc_data: buff,
@@ -6138,366 +5815,14 @@ impl RpcClient {
         Ok(pb_res)
     }
     
-    pub async fn DeleteComment (&self, param: pb::DeleteCommentParam) -> Result<pb::DeleteCommentResponse,GenErr>{
+    pub async fn CheckUserName (&self, param: pb::CheckUserNameParam) -> Result<pb::CheckUserNameResponse,GenErr>{
 
         let mut buff =vec![];
         ::prost::Message::encode(&param, &mut buff)?;
 
         let invoke = pb::Invoke {
             namespace: 0,
-            method: method_ids::DeleteComment,
-            action_id: self.get_next_action_id() ,
-            is_response: false,
-            rpc_data: buff,
-        };
-
-        let mut buff =vec![];
-        let m = prost::Message::encode(&invoke, &mut buff);
-
-        let mut buff = Vec::new();
-        ::prost::Message::encode(&invoke, &mut buff)?;
-
-        let req = reqwest::Client::new()
-            .post(self.endpoint)
-            .body(buff)
-            .send()
-            .await?;
-
-        let res_bytes = req.bytes().await?;
-        let res_bytes = res_bytes.to_vec();
-
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
-        Ok(pb_res)
-    }
-    
-    pub async fn EditComment (&self, param: pb::EditCommentParam) -> Result<pb::EditCommentResponse,GenErr>{
-
-        let mut buff =vec![];
-        ::prost::Message::encode(&param, &mut buff)?;
-
-        let invoke = pb::Invoke {
-            namespace: 0,
-            method: method_ids::EditComment,
-            action_id: self.get_next_action_id() ,
-            is_response: false,
-            rpc_data: buff,
-        };
-
-        let mut buff =vec![];
-        let m = prost::Message::encode(&invoke, &mut buff);
-
-        let mut buff = Vec::new();
-        ::prost::Message::encode(&invoke, &mut buff)?;
-
-        let req = reqwest::Client::new()
-            .post(self.endpoint)
-            .body(buff)
-            .send()
-            .await?;
-
-        let res_bytes = req.bytes().await?;
-        let res_bytes = res_bytes.to_vec();
-
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
-        Ok(pb_res)
-    }
-    
-    pub async fn LikeComment (&self, param: pb::LikeCommentParam) -> Result<pb::LikeCommentResponse,GenErr>{
-
-        let mut buff =vec![];
-        ::prost::Message::encode(&param, &mut buff)?;
-
-        let invoke = pb::Invoke {
-            namespace: 0,
-            method: method_ids::LikeComment,
-            action_id: self.get_next_action_id() ,
-            is_response: false,
-            rpc_data: buff,
-        };
-
-        let mut buff =vec![];
-        let m = prost::Message::encode(&invoke, &mut buff);
-
-        let mut buff = Vec::new();
-        ::prost::Message::encode(&invoke, &mut buff)?;
-
-        let req = reqwest::Client::new()
-            .post(self.endpoint)
-            .body(buff)
-            .send()
-            .await?;
-
-        let res_bytes = req.bytes().await?;
-        let res_bytes = res_bytes.to_vec();
-
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
-        Ok(pb_res)
-    }
-    
-    pub async fn AddSeenPosts (&self, param: pb::AddSeenPostsParam) -> Result<pb::AddSeenPostsResponse,GenErr>{
-
-        let mut buff =vec![];
-        ::prost::Message::encode(&param, &mut buff)?;
-
-        let invoke = pb::Invoke {
-            namespace: 0,
-            method: method_ids::AddSeenPosts,
-            action_id: self.get_next_action_id() ,
-            is_response: false,
-            rpc_data: buff,
-        };
-
-        let mut buff =vec![];
-        let m = prost::Message::encode(&invoke, &mut buff);
-
-        let mut buff = Vec::new();
-        ::prost::Message::encode(&invoke, &mut buff)?;
-
-        let req = reqwest::Client::new()
-            .post(self.endpoint)
-            .body(buff)
-            .send()
-            .await?;
-
-        let res_bytes = req.bytes().await?;
-        let res_bytes = res_bytes.to_vec();
-
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
-        Ok(pb_res)
-    }
-    
-    pub async fn LikePost (&self, param: pb::LikePostParam) -> Result<pb::LikePostResponse,GenErr>{
-
-        let mut buff =vec![];
-        ::prost::Message::encode(&param, &mut buff)?;
-
-        let invoke = pb::Invoke {
-            namespace: 0,
-            method: method_ids::LikePost,
-            action_id: self.get_next_action_id() ,
-            is_response: false,
-            rpc_data: buff,
-        };
-
-        let mut buff =vec![];
-        let m = prost::Message::encode(&invoke, &mut buff);
-
-        let mut buff = Vec::new();
-        ::prost::Message::encode(&invoke, &mut buff)?;
-
-        let req = reqwest::Client::new()
-            .post(self.endpoint)
-            .body(buff)
-            .send()
-            .await?;
-
-        let res_bytes = req.bytes().await?;
-        let res_bytes = res_bytes.to_vec();
-
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
-        Ok(pb_res)
-    }
-    
-    pub async fn UnLikePost (&self, param: pb::UnLikePostParam) -> Result<pb::UnLikePostResponse,GenErr>{
-
-        let mut buff =vec![];
-        ::prost::Message::encode(&param, &mut buff)?;
-
-        let invoke = pb::Invoke {
-            namespace: 0,
-            method: method_ids::UnLikePost,
-            action_id: self.get_next_action_id() ,
-            is_response: false,
-            rpc_data: buff,
-        };
-
-        let mut buff =vec![];
-        let m = prost::Message::encode(&invoke, &mut buff);
-
-        let mut buff = Vec::new();
-        ::prost::Message::encode(&invoke, &mut buff)?;
-
-        let req = reqwest::Client::new()
-            .post(self.endpoint)
-            .body(buff)
-            .send()
-            .await?;
-
-        let res_bytes = req.bytes().await?;
-        let res_bytes = res_bytes.to_vec();
-
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
-        Ok(pb_res)
-    }
-    
-    pub async fn FollowChannel (&self, param: pb::FollowChannelParam) -> Result<pb::FollowChannelResponse,GenErr>{
-
-        let mut buff =vec![];
-        ::prost::Message::encode(&param, &mut buff)?;
-
-        let invoke = pb::Invoke {
-            namespace: 0,
-            method: method_ids::FollowChannel,
-            action_id: self.get_next_action_id() ,
-            is_response: false,
-            rpc_data: buff,
-        };
-
-        let mut buff =vec![];
-        let m = prost::Message::encode(&invoke, &mut buff);
-
-        let mut buff = Vec::new();
-        ::prost::Message::encode(&invoke, &mut buff)?;
-
-        let req = reqwest::Client::new()
-            .post(self.endpoint)
-            .body(buff)
-            .send()
-            .await?;
-
-        let res_bytes = req.bytes().await?;
-        let res_bytes = res_bytes.to_vec();
-
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
-        Ok(pb_res)
-    }
-    
-    pub async fn UnFollowChannel (&self, param: pb::UnFollowChannelParam) -> Result<pb::UnFollowChannelResponse,GenErr>{
-
-        let mut buff =vec![];
-        ::prost::Message::encode(&param, &mut buff)?;
-
-        let invoke = pb::Invoke {
-            namespace: 0,
-            method: method_ids::UnFollowChannel,
-            action_id: self.get_next_action_id() ,
-            is_response: false,
-            rpc_data: buff,
-        };
-
-        let mut buff =vec![];
-        let m = prost::Message::encode(&invoke, &mut buff);
-
-        let mut buff = Vec::new();
-        ::prost::Message::encode(&invoke, &mut buff)?;
-
-        let req = reqwest::Client::new()
-            .post(self.endpoint)
-            .body(buff)
-            .send()
-            .await?;
-
-        let res_bytes = req.bytes().await?;
-        let res_bytes = res_bytes.to_vec();
-
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
-        Ok(pb_res)
-    }
-    
-    pub async fn PinChannel (&self, param: pb::PinChannelParam) -> Result<pb::PinChannelResponse,GenErr>{
-
-        let mut buff =vec![];
-        ::prost::Message::encode(&param, &mut buff)?;
-
-        let invoke = pb::Invoke {
-            namespace: 0,
-            method: method_ids::PinChannel,
-            action_id: self.get_next_action_id() ,
-            is_response: false,
-            rpc_data: buff,
-        };
-
-        let mut buff =vec![];
-        let m = prost::Message::encode(&invoke, &mut buff);
-
-        let mut buff = Vec::new();
-        ::prost::Message::encode(&invoke, &mut buff)?;
-
-        let req = reqwest::Client::new()
-            .post(self.endpoint)
-            .body(buff)
-            .send()
-            .await?;
-
-        let res_bytes = req.bytes().await?;
-        let res_bytes = res_bytes.to_vec();
-
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
-        Ok(pb_res)
-    }
-    
-    pub async fn UnPinChannel (&self, param: pb::UnPinChannelParam) -> Result<pb::UnPinChannelResponse,GenErr>{
-
-        let mut buff =vec![];
-        ::prost::Message::encode(&param, &mut buff)?;
-
-        let invoke = pb::Invoke {
-            namespace: 0,
-            method: method_ids::UnPinChannel,
-            action_id: self.get_next_action_id() ,
-            is_response: false,
-            rpc_data: buff,
-        };
-
-        let mut buff =vec![];
-        let m = prost::Message::encode(&invoke, &mut buff);
-
-        let mut buff = Vec::new();
-        ::prost::Message::encode(&invoke, &mut buff)?;
-
-        let req = reqwest::Client::new()
-            .post(self.endpoint)
-            .body(buff)
-            .send()
-            .await?;
-
-        let res_bytes = req.bytes().await?;
-        let res_bytes = res_bytes.to_vec();
-
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
-        Ok(pb_res)
-    }
-    
-    pub async fn BlockChannel (&self, param: pb::BlockChannelParam) -> Result<pb::BlockChannelResponse,GenErr>{
-
-        let mut buff =vec![];
-        ::prost::Message::encode(&param, &mut buff)?;
-
-        let invoke = pb::Invoke {
-            namespace: 0,
-            method: method_ids::BlockChannel,
-            action_id: self.get_next_action_id() ,
-            is_response: false,
-            rpc_data: buff,
-        };
-
-        let mut buff =vec![];
-        let m = prost::Message::encode(&invoke, &mut buff);
-
-        let mut buff = Vec::new();
-        ::prost::Message::encode(&invoke, &mut buff)?;
-
-        let req = reqwest::Client::new()
-            .post(self.endpoint)
-            .body(buff)
-            .send()
-            .await?;
-
-        let res_bytes = req.bytes().await?;
-        let res_bytes = res_bytes.to_vec();
-
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
-        Ok(pb_res)
-    }
-    
-    pub async fn UnBlockChannel (&self, param: pb::UnBlockChannelParam) -> Result<pb::UnBlockChannelResponse,GenErr>{
-
-        let mut buff =vec![];
-        ::prost::Message::encode(&param, &mut buff)?;
-
-        let invoke = pb::Invoke {
-            namespace: 0,
-            method: method_ids::UnBlockChannel,
+            method: method_ids::CheckUserName,
             action_id: self.get_next_action_id() ,
             is_response: false,
             rpc_data: buff,
@@ -6531,6 +5856,39 @@ impl RpcClient {
         let invoke = pb::Invoke {
             namespace: 0,
             method: method_ids::UploadFile,
+            action_id: self.get_next_action_id() ,
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff =vec![];
+        let m = prost::Message::encode(&invoke, &mut buff);
+
+        let mut buff = Vec::new();
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+    
+// service: RPC_User
+    pub async fn ChangePhoneNumber (&self, param: pb::ChangePhoneNumberParam) -> Result<pb::ChangePhoneNumberResponse,GenErr>{
+
+        let mut buff =vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChangePhoneNumber,
             action_id: self.get_next_action_id() ,
             is_response: false,
             rpc_data: buff,
