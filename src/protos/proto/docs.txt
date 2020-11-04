@@ -1,0 +1,5 @@
+migrate to new folder:
++ rpc modules to drop prefix (ex: Direct, Group,...) > we use local methods name > in gen out for those program that support moudles we use leverge it
+    and in those that does not we use rpc_{moudleName} to build prefix for those ( like Golang)
++ there is only one global namespace for common data types (ex: User, Channel, Group, ...)
+
