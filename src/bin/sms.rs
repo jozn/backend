@@ -6,6 +6,9 @@ use serde_json;
 async fn main() {
     let res = sample2().await;
     println!("ewa: {:#?}", res);
+
+    let o= std::path::Path::new("like/tes.te");
+    println!("{:?}",o);
 }
 
 async fn sample2() -> Result<(), reqwest::Error> {
@@ -26,9 +29,18 @@ async fn sample2() -> Result<(), reqwest::Error> {
         .header("Content-Type", "application/x-www-form-urlencoded")
         .form(&params);
 
+    println!("+++++++++++++++++++++++++++++++++++++++");
+    dbg!(&req);
+
     println!("{:#?}", req);
 
-    let new_post = req.send().await?.bytes().await;
+    println!("+++++++++++++++++++++++++++++++++++++++");
+
+    let mm = req.send().await?;
+
+    println!("+++++++++++++++++++++++++++++++++++++++");
+    dbg!(&mm);
+    let new_post = dbg!(mm.bytes().await);
 
     println!("Done ");
 

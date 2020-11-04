@@ -16,7 +16,7 @@ async fn main()  {
 }
 
 async fn client_test()  {
-    let crpc = rpc::RpcClient::new("http://127.0.0.1:3001/rpc");
+    let crpc = rpc::RpcClient::new("http://127.0.0.1:3002/rpc");
     let res = crpc.ChangePhoneNumber(pb::ChangePhoneNumberParam{}).await;
     println!("{:#?}",res);
 

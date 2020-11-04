@@ -98,7 +98,7 @@ async fn repeat(u: &http::Uri) -> String {
 
 #[tokio::main]
 async fn main() {
-    let addr = SocketAddr::from(([0, 0, 0, 0], 3001));
+    let addr = SocketAddr::from(([0, 0, 0, 0], 3002));
 
     // A `Service` is needed for every connection, so this
     // creates one from our `hello_world` function.
