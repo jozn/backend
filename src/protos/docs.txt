@@ -3,3 +3,6 @@ migrate to new folder:
     and in those that does not we use rpc_{moudleName} to build prefix for those ( like Golang)
 + there is only one global namespace for common data types (ex: User, Channel, Group, ...)
 
+
+// For dart
+~/life/bin/protoc /hamid/life/_active/backbone/src/protos/proto/* -I=/hamid/life/_active/backbone/src/protos/proto --dart_out=/hamid/life/flip/flip_app/flip_app/lib/pb /hamid/life/_active/backbone/src/protos/proto/*
