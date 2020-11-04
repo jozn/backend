@@ -1,33 +1,18 @@
-
 use crate::com::GenErr;
 use rand::prelude::*;
 use std::borrow::Borrow;
 
-const MSG2: &str =
-r#"<#> کد تایید: :code:
-Flip
-این کد را در اختیار بقیه قرار ندهید.
-rqwerljk"#;
-
-const MSG: &str =
-r#"<#> کد تایید: :code:
-Flip
-rqwerljk"#;
-
-fn get_msg (code :u32) -> String {
+fn get_confirm_msg(code :u32) -> String {
     format!(
 r#"<#> کد تایید:  {}
 Flip-ir
 rqwerljk"#,
 code )
 }
-pub async fn send_confirm_sms(to_phone: &str, code_len :u32) -> Result<(), GenErr> {
 
+pub async fn send_confirm_sms(to_phone: &str, code_len :u32) -> Result<(), GenErr> {
     let code: u32 = rand::thread_rng().gen_range( 10_u32.pow(code_len-1) , 10_u32.pow(code_len));
-    // let s2 = "{} {}";
-    // let msg = MSG.replace(":code:", code.to_string().borrow());
-    let msg = get_msg(code);
-    // let msg = format!(s2,MSG, code );
+    let msg = get_confirm_msg(code);
     send_sms(to_phone, &msg).await
 }
 
@@ -42,12 +27,6 @@ mod ghasedak {
     use serde_json;
 
     pub async fn send(to_phone: &str, message :&str) -> Result<(), reqwest::Error> {
-/*        let params = [
-            ("message", "myسیبmsg"),
-            ("receptor", "09015132328"),
-            ("linenumber", "10008566"),
-        ];*/
-
         let params = [
             ("message", message),
             ("receptor", to_phone),
