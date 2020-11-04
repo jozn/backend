@@ -1501,6 +1501,14 @@ pub struct GroupGetAdminsListResponse {
 //import "pb_enum.proto";
 
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetUsers1Param {
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetUsers1Response {
+}
+//import "pb_enum.proto";
+
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AddCommentParam {
     #[prost(string, tag="1")]
     pub text: std::string::String,

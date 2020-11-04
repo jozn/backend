@@ -139,6 +139,9 @@ pub mod method_ids {
     pub const GroupGetAdminsList: u32 = 332260610;
     pub const GroupSetDraft: u32 = 77668156;
     
+    // Service: RPC_Sample
+    pub const GetUsers1: u32 = 486248681;
+    
     // Service: RPC_Social
     pub const AddComment: u32 = 1222124115;
     pub const DeleteComment: u32 = 1684680875;
@@ -2041,6 +2044,24 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
                 let response = rpc_fns::GroupSetDraft(&up, param).await?;
+
+                let mut buff =vec![];
+                prost::Message::encode(&response, &mut buff)?;
+
+                Ok(buff)
+            } else {
+                Err(GenErr::ReadingPbParam)
+            }
+        }
+    
+    // service: RPC_Sample
+        method_ids::GetUsers1 => { // 486248681
+            let vec: Vec<u8> = vec![];
+            let rpc_param  : Result<pb::GetUsers1Param, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
+
+            if let Ok(param) = rpc_param {
+                println!("param {:?}", param);
+                let response = rpc_fns::GetUsers1(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -6027,6 +6048,39 @@ impl RpcClient {
         let invoke = pb::Invoke {
             namespace: 0,
             method: method_ids::GroupSetDraft,
+            action_id: self.get_next_action_id() ,
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff =vec![];
+        let m = prost::Message::encode(&invoke, &mut buff);
+
+        let mut buff = Vec::new();
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+    
+// service: RPC_Sample
+    pub async fn GetUsers1 (&self, param: pb::GetUsers1Param) -> Result<pb::GetUsers1Response,GenErr>{
+
+        let mut buff =vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GetUsers1,
             action_id: self.get_next_action_id() ,
             is_response: false,
             rpc_data: buff,

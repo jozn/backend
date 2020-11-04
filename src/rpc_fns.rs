@@ -11,6 +11,8 @@ pub use def::RPC_General::*;
 pub use def::RPC_Group::*;
 pub use def::RPC_Social::*;
 pub use def::RPC_Upload::*;
+pub use def::RPC_Sample::*;
+
 
 // Override explicitly
 pub use rpc_impl::rpc_auth::SendConfirmCode;

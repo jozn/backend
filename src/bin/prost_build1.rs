@@ -1,4 +1,4 @@
-extern crate prost_build;
+// extern crate prost_build;
 fn main() {
     let protos_files = [
         "enums.proto",
@@ -10,6 +10,7 @@ fn main() {
         "rpc_direct.proto",
         "rpc_general.proto",
         "rpc_group.proto",
+        "rpc_sample.proto",
         "rpc_social.proto",
         "rpc_upload.proto",
         "store.proto",

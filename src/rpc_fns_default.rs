@@ -394,6 +394,15 @@ pub mod RPC_Group {
     }
 }
 
+// Service: RPC_Sample
+pub mod RPC_Sample {
+    use super::*;
+    
+    pub async fn GetUsers1(up: &UserParam, param: pb::GetUsers1Param) -> Result<pb::GetUsers1Response, GenErr> {
+        Ok(pb::GetUsers1Response::default())
+    }
+}
+
 // Service: RPC_Social
 pub mod RPC_Social {
     use super::*;
@@ -457,6 +466,7 @@ pub use def::RPC_Chat::*;
 pub use def::RPC_Direct::*;
 pub use def::RPC_General::*;
 pub use def::RPC_Group::*;
+pub use def::RPC_Sample::*;
 pub use def::RPC_Social::*;
 pub use def::RPC_Upload::*;
 
