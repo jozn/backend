@@ -415,7 +415,7 @@ message ProductPriceInfo {
 }
 
 //==================== Group ==================
-message Group {
+message Group {//todo
   uint32 cid = 1;
   string group_title = 3;
   string user_name = 4;
@@ -466,7 +466,7 @@ message GroupMember {
 
 //==================== Others ==================
 
-message FileMsg {
+message FileMsg {//todo
   fixed64 gid = 1;
   uint32 access_hash = 2;
   uint32 file_type = 3;
@@ -480,7 +480,7 @@ message FileMsg {
 
 //==================== Utils ==================
 
-enum SessionPlatform {
+enum SessionPlatform { //todo
   UNKNOWN_PLATFORM = 0;
   ANDROID = 1;
   IOS = 2;
@@ -491,7 +491,7 @@ enum SessionPlatform {
   Web = 7;
 }
 
-message Session {
+message Session {//todo
   fixed64 gid = 1;
   string session_uuid = 2;
   uint32 user_cid = 3;
@@ -503,7 +503,7 @@ message Session {
   uint32 created_time = 7;
 }
 
-message Sms {
+message Sms {//todo
   fixed64 gid = 1;
   string hash = 2;
   string app_uuid = 3;
