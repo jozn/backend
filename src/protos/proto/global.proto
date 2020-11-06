@@ -6,12 +6,14 @@ package pb;
 /*
 Some notes:
   + Reduced: No bloated types > just those we need to now.
+  + Seperate things that are diffrent: channles, store, directs,
 
 
 No Rpc_Account > Rpc_User + Rpc_Profile ,...
 
 next: user relations, shop, product, message log, store, file
 next2: message integrations: product, payment, contacts,...
+next3: follwing and subcripation in: channels or profiles
 gid = unique nano second time;
 sid = scoped id; for future - bot platforms
 cid = common id - seqentaily increase id for user, channels, groups, shops,..
@@ -200,22 +202,6 @@ message Message {
   // reply, pre msg, rich media
 
   // Views: channel, group, user,
-
-  // ????
-//  uint64 version_time = 108; //???
-//  uint64 version_seq = 113; //???
-//  uint64 previous_message_id = 180; //??
-//
-//  // Dep
-//  uint32 by_channel_cid = 100; //?? if we add this groups need too
-//  uint32 post_type1 = 3;
-//  int64 media_id = 4;
-//  int64 file_ref_id = 5;
-//  string post_key = 6;
-//  string rich_text = 8;
-//  //  uint32 media_count = 9;
-//  uint32 shared_to = 10;
-
 }
 
 enum MessageType {
@@ -286,10 +272,6 @@ enum MessageLogType {
   ROOM_CONVERTED_TO_PRIVATE = 7;
   MEMBER_JOINED_BY_INVITE_LINK = 8;
   ROOM_DELETED = 9;
-//  MISSED_VOICE_CALL = 10;
-//  MISSED_VIDEO_CALL = 11;
-//  MISSED_SCREEN_SHARE = 12;
-//  MISSED_SECRET_CHAT = 13;
   PINNED_MESSAGE = 14;
 }
 
@@ -297,7 +279,7 @@ enum MessageLogType {
 message Channel {
   uint32 cid = 1;
   string user_name = 2;
-  string channel_title = 3; // For default channels take if from User.
+  string channel_name = 3; // For default channels take if from User first and lastname.
   uint32 creator_profile_cid = 7;
   bool is_verified = 6;
   bool is_profile_channel = 101;
@@ -319,17 +301,6 @@ message Channel {
   Message last_message = 25;
   Message pinned_message = 26;
   FileMsg avatar = 100;
-
-  //  repeated Chat chats = 103;
-  //  repeated Contact contacts= 103;
-
-  // Dep
-//  string first_name = 4; // title
-//  string last_name = 5;
-  //  uint32 access_hash = 8;
-  //  uint32 last_post_time = 35;
-  //  fixed64 sort_time_ms = 20; //del
-
 }
 
 enum ChannelType {
@@ -356,7 +327,7 @@ message ChannelPrivacySetting {
   uint32 seen_message_privacy = 13;
 }
 
-message ChannelNotificationSetting {
+message ChannelNotificationSetting { //todo
   bool social_led_on = 2;
   string social_led_color = 3;
   bool request_to_follow_you = 4;
@@ -380,7 +351,7 @@ message ChannelNotificationSetting {
 
 message ChannelCounts {
   uint32 followers_count = 20;
-  uint32 following_count = 21;
+  uint32 following_count = 21; // ?? just profile
   uint32 posts_count = 22;
   uint32 media_count = 23;
   uint32 photo_count = 24;
@@ -397,35 +368,29 @@ message ChannelCounts {
 }
 
 //==================== Store ==================
-message ShoppingProfile {
+message ShoppingProfile { //todo
 
 }
 
 message Store {
   uint32 cid = 1;
   string user_name = 2;
-  string store_title = 3; // For default channels take if from User.
+  string store_name = 3; // For default channels take if from User.
   string address = 102;
   uint32 creator_user_cid = 7;
-  bool is_verified = 6;
   string about = 16;
   uint32 message_seq = 19;
   fixed64 sync_time_ms = 21; // version
   uint32 created_time = 36;
 
   uint32 is_banned = 39;
+  bool is_verified = 6;
 
-  ChannelNotificationSetting notification_setting = 90; // for owner
-  ChannelPrivacy privacy = 9;
-  ChannelType channel_type = 42;
-  ChannelCounts counts = 41;
-  Message last_message = 25;
-  Message pinned_message = 26;
   FileMsg avatar = 100;
 
 }
 
-message Product {
+message Product { //todo
   uint32 product_id = 1; // seq
   uint32 category_id = 53;
   string category = 50;
