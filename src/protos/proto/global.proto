@@ -4,6 +4,10 @@ package pb;
 
 /////////////////////////// Docs ///////////////////////////
 /*
+Some notes:
+  + Reduced: No bloated types > just those we need to now.
+
+
 No Rpc_Account > Rpc_User + Rpc_Profile ,...
 
 next: user relations, shop, product, message log, store, file
@@ -81,7 +85,7 @@ message Profile {
   uint32 created_time = 103; // imut
 
   ProfileSettings setting = 107; // imut
-  // collections > not really present > big > fetch with api
+  // Demonstration: collections > not really present > big > fetch with api
   repeated Channel channels = 104; // mut
   repeated Direct directs = 105;// mut
   repeated Group groups = 106; // mut
@@ -118,6 +122,7 @@ message Direct {
   fixed64 my_last_seen_seq = 16;
   fixed64 my_last_seen_msg_id = 17;
 
+  uint32 pined_msgs_count = 108;
   fixed64 visible_from_msg_gid = 11;
 
   Channel channel = 48;
@@ -162,42 +167,53 @@ message DirectCustomNotification {
 
 //==================== Messages ==================
 message Message {
-  fixed64 gid = 1;
-  uint32 by_user_cid = 2;
-  uint32 by_channel_cid = 100;
-  uint32 post_type = 3;
-  int64 media_id = 4;
-  int64 file_ref_id = 5;
-  string post_key = 6;
+  fixed64 gid = 1; // imut
+  uint32 by_profile_cid = 2; // imut
+  MessageType message_type =107; // imut - mostly
   string text = 7;
-  string rich_text = 8;
-  string title = 109;
-  //  uint32 media_count = 9;
-  uint32 shared_to = 10;
-  uint32 via = 12;
-  uint32 seq = 13;
-  uint64 version_time = 108;
+  uint32 via_app_id = 12; // imut
+  uint32 seq = 13; // imut
   uint32 edited_time = 17;
-  uint32 created_time = 18;
-  bool verified = 111;
+  uint32 created_time = 18; // imut
+  bool verified = 111; // imut - verified system messages - 2 bytes tag
 
   MessageDeliveryStatues delivery_status = 105;
-  uint32 delivery_time = 106;
+  uint32 delivery_time = 106; // mut-once
 
-  uint64 previous_message_id = 180;
-  bool deleted = 15; //??
+  bool deleted = 150; // maybe temp with a purge period - 2 bytes
 
   uint32 flags = 112;
   Message forward = 16; // forward is always live object from other channels, but not from other chats, groups
   Message reply_to = 50;
 
+  // For channels, stores
+  string title = 109; // For videos
   MessageCount counts = 101;
   MessageSetting setting = 102;
   Product Product = 110;
+
   repeated FileMsg files = 103;
 
   // add location, log, payment, proudcut, forward,
   // reply, pre msg, rich media
+
+  // Views: channel, group, user,
+
+  // ????
+//  uint64 version_time = 108; //???
+//  uint64 version_seq = 113; //???
+//  uint64 previous_message_id = 180; //??
+//
+//  // Dep
+//  uint32 by_channel_cid = 100; //?? if we add this groups need too
+//  uint32 post_type1 = 3;
+//  int64 media_id = 4;
+//  int64 file_ref_id = 5;
+//  string post_key = 6;
+//  string rich_text = 8;
+//  //  uint32 media_count = 9;
+//  uint32 shared_to = 10;
+
 }
 
 enum MessageType {
