@@ -93,19 +93,70 @@ message ProfileSettings {
 
 }
 
-//==================== Directs ==================
+//==================== Direct ==================
+enum DirectTypeEnum {
+  DEO = 0;
+  PROFILE =1 ;
+  CHANNEL =2;
+  GROUP =3;
+}
+
 message Direct {
-  fixed64 gid = 104; // imut
-  uint32 profile_cid = 1; // imut - ???
-  uint32 created_time = 102; // imut
-  fixed64 sort_time_ms = 20; // mut
-  fixed64 sync_time_ms = 21; //mut
+  fixed64 gid = 1;
+  uint32 profile_cid = 5;
+  DirectTypeEnum direct_type = 102;
+  string custom_title = 9;
+  fixed64 pin_time_ms = 10;
+  uint32 unseen_count = 12;
+  uint32 seq = 13;
+  bool is_active = 22;
+  uint32 mute_until = 29;
+  uint32 created_time = 33;
+  fixed64 sort_time_ms = 45;
+  fixed64 sync_time_ms = 104;
 
-  uint32 chat_starter_profile_cid = 7; // imut
-  string custom_title = 103;
-  fixed64 last_seen_message_id = 105;
-  uint32 last_seen_seq_id = 106;
+  fixed64 my_last_seen_seq = 16;
+  fixed64 my_last_seen_msg_id = 17;
 
+  // For chat
+  uint32 peer_profile_cid = 6; // ??
+  fixed64 peer_last_seen_msg_id = 18; // ??
+  fixed64 my_last_delivered_seq = 19; // ??
+  fixed64 my_last_delivered_msg_id = 20; // ??
+  fixed64 peer_last_delivered_msg_id = 21; // ??
+
+  // For channel
+  uint32 peer_channel_cid = 41; // ??
+
+  // For group
+  uint32 group_cid = 7; // ??
+  fixed64 visible_from_msg_gid = 11;
+
+  Channel channel = 48;
+  Contact contact = 49; // ?
+  Group group = 50;
+  Message last_message = 25;
+  Message pinned_message = 26;
+  FileMsg avatar = 44; // ??
+  GroupMember group_member = 43;
+  DirectDraft draft = 46;
+  DirectCustomNotification custom_notification = 47;
+}
+
+message DirectDraft {
+  string draft_text = 34;
+  int64 drat_reply_to_msg_id = 35;
+}
+
+message DirectCustomNotification {
+  bool alert = 13;
+  bool preview = 14;
+  bool led_on = 15;
+  bool led_color = 16;
+  bool vibrate = 17;
+  bool popup = 18;
+  bool sound = 19;
+  bool priority = 20;
 }
 
 //==================== Messages ==================
@@ -402,59 +453,6 @@ message GroupMember {
   uint32 by_channel_cid = 7;
   GroupMemberRole group_role = 5;
   uint32 created_time = 6;
-}
-
-//==================== Direct ==================
-message Chat {
-  fixed64 gid = 1;
-  uint32 user_cid = 5;
-  uint32 channel_cid = 40;
-  uint32 peer_user_cid = 6;
-  uint32 peer_channel_cid = 41;
-  uint32 group_cid = 7;
-  string custom_title = 9;
-  fixed64 pin_time_ms = 10;
-  int64 from_msg_gid = 11;
-  uint32 unseen_count = 12;
-  uint32 seq = 13;
-  uint32 my_last_seen_seq = 16;
-  int64 my_last_seen_msg_id = 17;
-  int64 peer_last_seen_msg_id = 18;
-  uint32 my_last_delivered_seq = 19;
-  int64 my_last_delivered_msg_id = 20;
-  int64 peer_last_delivered_msg_id = 21;
-  bool is_active = 22;
-  uint32 mute_until = 29;
-  int64 sort_time_ms = 30;
-  uint32 created_time = 33;
-
-  fixed64 sort_time = 45;
-
-  Channel channel = 48;
-  Contact contact = 49;
-  Group group = 50;
-  Message last_message = 25;
-  Message pinned_message = 26;
-  FileMsg avatar = 44;
-  GroupMember group_member = 43;
-  MessageDraft draft = 46;
-  ChatCustomNotification custom_notification = 47;
-}
-
-message MessageDraft {
-  string draft_text = 34;
-  int64 drat_reply_to_msg_id = 35;
-}
-
-message ChatCustomNotification {
-  bool alert = 13;
-  bool preview = 14;
-  bool led_on = 15;
-  bool led_color = 16;
-  bool vibrate = 17;
-  bool popup = 18;
-  bool sound = 19;
-  bool priority = 20;
 }
 
 //==================== Others ==================
