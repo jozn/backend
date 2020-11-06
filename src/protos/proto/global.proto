@@ -70,6 +70,8 @@ message User {
   repeated Session sessions = 102;
   ShoppingProfile shopping_profile = 111;
 
+  string first_name = 4;
+  string last_name = 5;
   // olds
   Channel UserCounts = 80; //???
 }
@@ -264,15 +266,17 @@ enum MessageDeliveryStatues {
 
 message MessageLog {
   MessageLogType log_type = 10;
-  uint32 by_user_cid = 2;
+  uint32 by_profile_cid = 2;
   uint32 by_channel_cid = 50;
-  uint32 target_user_cid = 3;
+  uint32 target_profile_cid = 3;
   uint32 target_channel_cid = 4;
   Channel target_channel_view = 11;
 }
 
+// Just for: groups and peer chats
 enum MessageLogType {
-  USER_JOINED = 0;
+  MLT_UNKNOWN= 0;
+  USER_JOINED = 15;
   USER_DELETED = 1;
   ROOM_CREATED = 2;
   MEMBER_ADDED = 3;
@@ -282,10 +286,10 @@ enum MessageLogType {
   ROOM_CONVERTED_TO_PRIVATE = 7;
   MEMBER_JOINED_BY_INVITE_LINK = 8;
   ROOM_DELETED = 9;
-  MISSED_VOICE_CALL = 10;
-  MISSED_VIDEO_CALL = 11;
-  MISSED_SCREEN_SHARE = 12;
-  MISSED_SECRET_CHAT = 13;
+//  MISSED_VOICE_CALL = 10;
+//  MISSED_VIDEO_CALL = 11;
+//  MISSED_SCREEN_SHARE = 12;
+//  MISSED_SECRET_CHAT = 13;
   PINNED_MESSAGE = 14;
 }
 
@@ -293,19 +297,15 @@ enum MessageLogType {
 message Channel {
   uint32 cid = 1;
   string user_name = 2;
-  string first_name = 4; // title
-  string last_name = 5;
-  //  string channel_title = 3;
-  uint32 creator_user_cid = 7;
-  uint32 is_verified = 6;
+  string channel_title = 3; // For default channels take if from User.
+  uint32 creator_profile_cid = 7;
+  bool is_verified = 6;
+  bool is_profile_channel = 101;
   int64 avatar_count = 40;
-  //  uint32 access_hash = 8;
   string about = 16;
   string invite_link_hash = 17;
-  uint32 post_seq = 19;
-  //  uint32 last_post_time = 35;
-  fixed64 sort_time_ms = 20; //del
-  fixed64 sync_time_ms = 21;
+  uint32 message_seq = 19;
+  fixed64 sync_time_ms = 21; // version
   uint32 created_time = 36;
 
   // conslidate in visivlity
@@ -318,25 +318,34 @@ message Channel {
   ChannelCounts counts = 41;
   Message last_message = 25;
   Message pinned_message = 26;
-  Message avatar = 100;
+  FileMsg avatar = 100;
 
   //  repeated Chat chats = 103;
   //  repeated Contact contacts= 103;
+
+  // Dep
+//  string first_name = 4; // title
+//  string last_name = 5;
+  //  uint32 access_hash = 8;
+  //  uint32 last_post_time = 35;
+  //  fixed64 sort_time_ms = 20; //del
+
 }
 
 enum ChannelType {
   CHANNEL_UNKNOWN = 0;
-  CHANNEL_PRIMARY = 1;
+  CHANNEL_PRIMARY = 1; // profile
   CHANNEL_NORMAL = 2;
   CHANNEL_SAVES = 3;
-  CHANNEL_STORE = 4;
+  CHANNEL_STORE = 4; // ?? or extract
 }
 
 enum ChannelPrivacy {
   CHANNEL_UNKNOWN_AB = 0;
   CHANNEL_OPEN = 1;
-  CHANNEL_PRIVATE_LINK = 2;
-  CHANNEL_CREATOR = 3; // For save
+  CHANNEL_PRIVATE_LINK = 2; // Just for none-default profile channels
+  CHANNEL_ACCEPT = 3;
+  CHANNEL_CREATOR = 4; // For save
 }
 
 // This channel or profile?
@@ -393,8 +402,26 @@ message ShoppingProfile {
 }
 
 message Store {
-  string address = 1;
-  string phone = 2;
+  uint32 cid = 1;
+  string user_name = 2;
+  string store_title = 3; // For default channels take if from User.
+  string address = 102;
+  uint32 creator_user_cid = 7;
+  bool is_verified = 6;
+  string about = 16;
+  uint32 message_seq = 19;
+  fixed64 sync_time_ms = 21; // version
+  uint32 created_time = 36;
+
+  uint32 is_banned = 39;
+
+  ChannelNotificationSetting notification_setting = 90; // for owner
+  ChannelPrivacy privacy = 9;
+  ChannelType channel_type = 42;
+  ChannelCounts counts = 41;
+  Message last_message = 25;
+  Message pinned_message = 26;
+  FileMsg avatar = 100;
 
 }
 
