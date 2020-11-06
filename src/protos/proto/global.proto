@@ -118,18 +118,6 @@ message Direct {
   fixed64 my_last_seen_seq = 16;
   fixed64 my_last_seen_msg_id = 17;
 
-  // For chat
-  uint32 peer_profile_cid = 6; // ??
-  fixed64 peer_last_seen_msg_id = 18; // ??
-  fixed64 my_last_delivered_seq = 19; // ??
-  fixed64 my_last_delivered_msg_id = 20; // ??
-  fixed64 peer_last_delivered_msg_id = 21; // ??
-
-  // For channel
-  uint32 peer_channel_cid = 41; // ??
-
-  // For group
-  uint32 group_cid = 7; // ??
   fixed64 visible_from_msg_gid = 11;
 
   Channel channel = 48;
@@ -137,10 +125,23 @@ message Direct {
   Group group = 50;
   Message last_message = 25;
   Message pinned_message = 26;
-  FileMsg avatar = 44; // ??
   GroupMember group_member = 43;
   DirectDraft draft = 46;
   DirectCustomNotification custom_notification = 47;
+
+  // dep - del all below
+  // For chat
+  uint32 peer_profile_cid = 6; // ??
+  fixed64 peer_last_seen_msg_id = 18; // ??
+  fixed64 my_last_delivered_seq = 19; // ??
+  fixed64 my_last_delivered_msg_id = 20; // ??
+  fixed64 peer_last_delivered_msg_id = 21; // ??
+  // For channel
+  uint32 peer_channel_cid = 41; // ??
+
+  // For group
+  uint32 group_cid = 7; // ??
+  FileMsg avatar = 44; // ??
 }
 
 message DirectDraft {
