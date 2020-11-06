@@ -162,3 +162,19 @@ enum ChannelType {
   CHANNEL_SAVES = 3;
   CHANNEL_STORE = 4; // ?? or extract
 }
+
+
+enum GroupPrivacy {
+  GROUP_UNKNOWN_GP = 0;
+  GROUP_OPEN = 1; // via username
+  GROUP_PRIVATE_LINK = 2;
+}
+
+
+//dep
+enum GroupMemberRole {
+  MEMBER_Unknown = 0;
+  MEMBER_CREATOR = 1;
+  MEMBER_MODERATOR = 3;
+  MEMBER_NORMAL_USER = 2;
+}

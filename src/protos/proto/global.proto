@@ -221,9 +221,7 @@ enum MessageType {
   // ??
   PRODUCT = 16;
   FORWARD = 17;
-
-  //??
-  POST_MEDIA = 100; // photo, video, gif
+  // Add multi
 }
 
 message MessageCount {
@@ -254,10 +252,8 @@ enum MessageDeliveryStatues {
 message MessageLog {
   MessageLogType log_type = 10;
   uint32 by_profile_cid = 2;
-  uint32 by_channel_cid = 50;
   uint32 target_profile_cid = 3;
-  uint32 target_channel_cid = 4;
-  Channel target_channel_view = 11;
+  Profile target_profile_view = 11;
 }
 
 // Just for: groups and peer chats
@@ -349,7 +345,6 @@ message Store {
   bool is_verified = 6;
 
   FileMsg avatar = 100;
-
 }
 
 message Product { //todo
@@ -389,21 +384,23 @@ message SavedChannel {
 }
 
 //==================== Group ==================
-message Group {//todo
+message Group {
   uint32 cid = 1;
-  string group_title = 3;
+  string group_title = 3; // or _name
   string user_name = 4;
-  uint32 creator_user_cid = 7;
-  uint32 creator_channel_cid = 31;
-  GroupPrivacy group_privacy = 8;
-  bool history_viewable = 9;
+  uint32 creator_profile_cid = 7;
+//  GroupPrivacy group_privacy = 8;
+  bool history_viewable = 8;
+  bool is_open_group = 9; // global searchable, view history without joining
   uint32 seq = 10;
   uint32 avatar_count = 14;
   string about = 15;
   string invite_link_hash = 16;
+  //Move to counts?
   uint32 members_count = 17;
   uint32 admins_count = 18;
   uint32 moderator_counts = 19;
+
   fixed64 sort_time = 20;
   fixed64 sync_time = 40;
   uint32 created_time = 21;
@@ -414,27 +411,24 @@ message Group {//todo
   FileMsg avatar = 27;
 }
 
-enum GroupPrivacy {
-  GROUP_UNKNOWN_GP = 0;
-  GROUP_OPEN = 1; // via username
-  GROUP_PRIVATE_LINK = 2;
-}
-
-enum GroupMemberRole {
-  MEMBER_Unknown = 0;
-  MEMBER_CREATOR = 1;
-  MEMBER_MODERATOR = 3;
-  MEMBER_NORMAL_USER = 2;
+message GroupCounts {
+  uint32 media_count = 23;
+  uint32 photo_count = 24;
+  uint32 video_count = 25;
+  uint32 gif_count = 26;
+  uint32 audio_count = 27;
+  uint32 voice_count = 28;
+  uint32 file_count = 29;
+  uint32 link_count = 30;
+  uint32 pined_count = 32;
 }
 
 message GroupMember {
   int64 gid = 1;
   int64 group_cid = 2;
-  uint32 user_cid = 3;
-  uint32 channel_cid = 8;
-  uint32 by_user_cid = 4;
-  uint32 by_channel_cid = 7;
-  GroupMemberRole group_role = 5;
+  uint32 profile_cid = 3;
+  uint32 by_profile_cid = 4;
+  bool is_moderator = 5;
   uint32 created_time = 6;
 }
 
@@ -454,48 +448,43 @@ message FileMsg {//todo
 
 //==================== Utils ==================
 
-enum SessionPlatform { //todo
+enum DevicePlatform {
   UNKNOWN_PLATFORM = 0;
   ANDROID = 1;
   IOS = 2;
-  MAC_OS = 3;
-  WINDOWS = 4;
+  WINDOWS = 3;
+  MAC_OS = 4;
   LINUX = 5;
-  BLACK_BERRY = 6;
   Web = 7;
 }
 
-message Session {//todo
+message Session {
   fixed64 gid = 1;
   string session_uuid = 2;
+  uint64 device_id = 100;
   uint32 user_cid = 3;
   string last_ip_address = 4;
   string user_agent = 8;
-  SessionPlatform platform = 9;
-  uint32 app_version = 5;
+  DevicePlatform platform = 9;
+  uint32 api_version = 5;
   uint32 active_time = 6;
   uint32 created_time = 7;
-  uint64 device_id = 100;
 }
 
-message Sms {//todo
+message Sms {
   fixed64 gid = 1;
-  string hash = 2;
-  string app_uuid = 3;
-  string client_phone = 4;
-  uint32 genrated_code = 5;
-  string sms_sender_number = 6;
-  string sms_send_statues = 7;
-  string sms_http_body = 8;
-  string err = 9;
-  string carrier = 10;
-  bytes country = 11;
-  uint32 is_valid_phone = 12;
-  uint32 is_confirmed = 13;
-  uint32 is_login = 14;
-  uint32 is_register = 15;
-  uint32 retried_count = 16;
-  uint32 ttl = 17;
+  string hash = 2; // ??
+  string install_uuid = 3;
+  string to_phone = 4;
+  bool for_confirmation = 103;
+  string confirm_code = 5;
+  string sms_gateway_number = 6;
+  string sms_body = 101;
+  uint32 created_time = 100;
+  // Below are for easier debugging purpose > stringy
+  string sms_gateway_error = 9; // some custom debug info: http header, code, body, ...
+  string intent = 14; // like "register" "login" "delete" "marketing" ,...
+  string result = 102; // like "confirmed" "unconfirmed" "sending" "gateway_error"
 }
 
 //==================== Views ==================
