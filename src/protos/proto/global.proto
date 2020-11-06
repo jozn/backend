@@ -29,16 +29,16 @@ enum ProfileLevelEnum {
 }
 
 /////////////////////////// Common Types ////////////////////
-message Invoke {
-  uint32 namespace = 6;
-  uint32 method = 1;
-  uint64 action_id = 2;
-  bool is_response = 3;
-  bytes rpc_data = 4;
+message Invoke { // imut all
+  uint32 namespace = 6; // imut
+  uint32 method = 1; // imut
+  uint64 action_id = 2; // imut
+  bool is_response = 3; // imut
+  bytes rpc_data = 4; // imut
 }
 
 //==================== User ==================
-message Contact {
+message Contact { //todo
   fixed64 gid = 1;
   uint32 user_cid = 2;
   uint32 channel_cid = 10;
@@ -61,8 +61,6 @@ message User {
   bool is_deleted = 38;
   bool is_banned = 39;
 
-//  uint32 primary_channel_changed_time = 50;
-
   repeated Profile profiles = 110;
   repeated Store stores = 113;
   repeated Session sessions = 102;
@@ -70,16 +68,10 @@ message User {
 
   // olds
   Channel UserCounts = 80; //???
-
-//  Channel primary_channel = 100;
-//  repeated Channel channels = 101;
-  //  repeated Chat chats = 103;
-  //  repeated Contact contacts= 103;
-
 }
 
-message ShoppingProfile {
-
+message UserCounts {
+  uint32 created_channels = 1; // Number of created channels
 }
 
 message Profile {
@@ -89,7 +81,7 @@ message Profile {
   uint32 created_time = 103; // imut
 
   ProfileSettings setting = 107; // imut
-  // collections > not really present > big
+  // collections > not really present > big > fetch with api
   repeated Channel channels = 104; // mut
   repeated Direct directs = 105;// mut
   repeated Group groups = 106; // mut
@@ -101,13 +93,19 @@ message ProfileSettings {
 
 }
 
-message UserCounts {
-  uint32 created_channels = 1; // Number of created channels
-}
-
 //==================== Directs ==================
 message Direct {
-  
+  fixed64 gid = 104; // imut
+  uint32 profile_cid = 1; // imut - ???
+  uint32 created_time = 102; // imut
+  fixed64 sort_time_ms = 20; // mut
+  fixed64 sync_time_ms = 21; //mut
+
+  uint32 chat_starter_profile_cid = 7; // imut
+  string custom_title = 103;
+  fixed64 last_seen_message_id = 105;
+  uint32 last_seen_seq_id = 106;
+
 }
 
 //==================== Messages ==================
@@ -238,7 +236,7 @@ message Channel {
   string invite_link_hash = 17;
   uint32 post_seq = 19;
   //  uint32 last_post_time = 35;
-  fixed64 sort_time_ms = 20;
+  fixed64 sort_time_ms = 20; //del
   fixed64 sync_time_ms = 21;
   uint32 created_time = 36;
 
@@ -322,6 +320,10 @@ message ChannelCounts {
 }
 
 //==================== Store ==================
+message ShoppingProfile {
+
+}
+
 message Store {
   string address = 1;
   string phone = 2;
@@ -516,165 +518,3 @@ message Sms {
 
 //==================== Views ==================
 
-//==================== To Review ==================
-
-// Shared common cid
-// todo to klass?
-// deprecated?
-enum Cast {
-  UNKNOWN = 0;
-  USER = 1 ;
-  CHANNEL = 2 ;
-  GROUP = 3 ;
-  BOT = 4;
-  STORE = 6;
-  //should be ??
-  TAG = 7;
-}
-
-// Reconsider: we do not redistribute this info anymore; why we have it?
-message Action {
-  fixed64 gid = 1;
-  uint32 actor_user_cid = 2;
-  uint32 actor_channel_cid = 50;
-  uint32 action_type = 3; // todo to enum
-  uint32 on_user_cid = 4;
-  fixed64 on_channel_cid = 9;
-  fixed64 message_gid = 5; //post
-  fixed64 comment_gid = 6;
-  int64 hash_murm64 = 7; //Murmur
-  uint32 created_time = 8;
-
-  enum ActionType {
-    UNKNOWN_AT = 0;
-    LIKED = 1;
-    FOLLOWED = 2;
-  }
-}
-
-message Blocked {
-  fixed64 gid = 1;
-  uint32 user_cid = 2;
-  uint32 blocked_user_cid = 6; // real active
-  uint32 blocked_channel_cid = 7; // for show to blocker
-  uint32 created_time = 5;
-}
-
-message Comment { // just by channels for now
-  fixed64 gid = 1;
-  uint32 channel_cid = 9;
-  uint32 by_cast_cid = 2; // user channel store - now just channel
-  //  Cast cast_type = 8;
-  fixed64 message_gid = 3; // post
-  string text = 4;
-  uint32 likes_count = 5;
-  uint32 edit_time = 6;
-  uint32 created_time = 7;
-}
-
-message Followed { // just by channels
-  fixed64 gid = 1;
-  uint32 by_user_cid = 2;
-  uint32 by_channel_cid = 10;
-  uint32 target_cid = 3;
-  uint32 target_channel_id = 11;
-  //  Cast cast_type = 8;
-  uint32 created_time = 4;
-}
-
-enum ReactionType {
-  NONE = 0;
-  LIKE = 1;
-}
-
-message Reaction { // like is reserved in RDMS(mysql)
-  fixed64 gid = 1;
-  int64 for_message_cid = 2;
-  int64 for_channel_cid = 11;
-  uint32 by_user_cid = 3;
-  uint32 by_channel_cid = 10;
-  //  Cast cast_type = 8;
-  //  uint32 message_type = 4;
-  uint32 created_time = 5;
-}
-
-message Tag {
-  fixed64 gid = 1;
-  string name = 2;
-  uint32 count = 3;
-  //  uint32 tag_status_enum = 4;
-  bool is_blocked = 5;
-  uint32 group_cid = 6;
-  uint32 created_time = 7;
-}
-
-////////////////////////// Backups //////////////////
-//==================== User ==================
-message Contact1 {
-  fixed64 gid = 1;
-  uint32 user_cid = 2;
-  uint32 channel_cid = 10;
-  int64 client_id = 3;
-  string phone = 4;
-  string first_name = 5;
-  string last_name = 6;
-  uint32 target_user_cid = 12;
-  uint32 target_channel_cid = 15;
-}
-
-message User1 {
-  uint32 cid = 1;
-  string phone = 14;
-  string email = 15;
-  string password_hash = 17;
-  string password_salt = 18;
-  uint32 created_time = 36;
-  uint32 version_time = 37;
-  uint32 is_deleted = 38;
-  uint32 is_banned = 39;
-
-  uint32 primary_channel_changed_time = 50;
-
-  Channel UserCounts = 80;
-
-  Channel primary_channel = 100;
-  repeated Channel channels = 101;
-  repeated Session sessions = 102;
-  //  repeated Chat chats = 103;
-  //  repeated Contact contacts= 103;
-
-}
-
-message UserCounts1 {
-  uint32 created_channels = 1; // Number of created channels
-}
-
-message UserRelation1 {
-  int64 rel_nano_id = 1;
-  uint32 user_cid = 2;
-  uint32 peer_user_id = 3;
-  uint32 follwing = 4;
-  uint32 followed = 5;
-  uint32 in_contacts = 6;
-  uint32 mutual_contact = 7;
-  uint32 is_favorite = 8;
-  uint32 notify = 9;
-}
-
-//==================== Profile ==================
-message Profile1 {
-
-  //defalut channel, user_id, sub channels, customer_profile(or in user?),
-}
-
-message UserRelation {
-  int64 rel_nano_id = 1;
-  uint32 user_cid = 2;
-  uint32 peer_user_id = 3;
-  uint32 follwing = 4;
-  uint32 followed = 5;
-  uint32 in_contacts = 6;
-  uint32 mutual_contact = 7;
-  uint32 is_favorite = 8;
-  uint32 notify = 9;
-}
