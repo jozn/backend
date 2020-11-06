@@ -6,7 +6,14 @@ package pb;
 /*
 No Rpc_Account > Rpc_User + Rpc_Profile ,...
 
+next: user relations, shop, product, message log, store, file
+next2: message integrations: product, payment, contacts,...
+gid = unique nano second time;
+sid = scoped id; for future - bot platforms
+cid = common id - seqentaily increase id for user, channels, groups, shops,..
 
+imut = immutable fields
+mut  = mutable fields
 */
 // Words: reshared/username/
 
@@ -30,13 +37,78 @@ message Invoke {
   bytes rpc_data = 4;
 }
 
-// next: user relations, shop, product, message log, store, file
-// next2: message integrations: product, payment, contacts,...
-// gid = unique nano second time;
-// sid = scoped id; for future - bot platforms
-// cid = common id - seqentaily increase id for user, channels, groups, shops,..
+//==================== User ==================
+message Contact {
+  fixed64 gid = 1;
+  uint32 user_cid = 2;
+  uint32 channel_cid = 10;
+  int64 client_id = 3;
+  string phone = 4;
+  string first_name = 5;
+  string last_name = 6;
+  uint32 target_user_cid = 12;
+  uint32 target_channel_cid = 15;
+}
 
+message User {
+  uint32 cid = 1;
+  string phone = 14;
+  string email = 15;
+  string password_hash = 17;
+  string password_salt = 18;
+  uint32 created_time = 36;
+  uint32 version_time = 37;
+  bool is_deleted = 38;
+  bool is_banned = 39;
 
+//  uint32 primary_channel_changed_time = 50;
+
+  repeated Profile profiles = 110;
+  repeated Store stores = 113;
+  repeated Session sessions = 102;
+  ShoppingProfile shopping_profile = 111;
+
+  // olds
+  Channel UserCounts = 80; //???
+
+//  Channel primary_channel = 100;
+//  repeated Channel channels = 101;
+  //  repeated Chat chats = 103;
+  //  repeated Contact contacts= 103;
+
+}
+
+message ShoppingProfile {
+
+}
+
+message Profile {
+  uint32 cid = 1; // imut - profile_cid
+  uint32 user_cid = 2;// imut
+  Channel primary_channel = 100; // imut
+  uint32 created_time = 103; // imut
+
+  ProfileSettings setting = 107; // imut
+  // collections > not really present > big
+  repeated Channel channels = 104; // mut
+  repeated Direct directs = 105;// mut
+  repeated Group groups = 106; // mut
+  repeated Contact contacts = 108; // mut
+}
+
+message ProfileSettings {
+  uint32 profile_cid = 1; // imut - ???
+
+}
+
+message UserCounts {
+  uint32 created_channels = 1; // Number of created channels
+}
+
+//==================== Directs ==================
+message Direct {
+  
+}
 
 //==================== Messages ==================
 message Message {
@@ -383,61 +455,8 @@ message ChatCustomNotification {
   bool priority = 20;
 }
 
-//==================== Profile ==================
-
-
-//==================== User ==================
-message Contact {
-  fixed64 gid = 1;
-  uint32 user_cid = 2;
-  uint32 channel_cid = 10;
-  int64 client_id = 3;
-  string phone = 4;
-  string first_name = 5;
-  string last_name = 6;
-  uint32 target_user_cid = 12;
-  uint32 target_channel_cid = 15;
-}
-
-message User {
-  uint32 cid = 1;
-  string phone = 14;
-  string email = 15;
-  string password_hash = 17;
-  string password_salt = 18;
-  uint32 created_time = 36;
-  uint32 version_time = 37;
-  uint32 is_deleted = 38;
-  uint32 is_banned = 39;
-
-  uint32 primary_channel_changed_time = 50;
-
-  Channel UserCounts = 80;
-
-  Channel primary_channel = 100;
-  repeated Channel channels = 101;
-  repeated Session sessions = 102;
-  //  repeated Chat chats = 103;
-  //  repeated Contact contacts= 103;
-
-}
-
-message UserCounts {
-  uint32 created_channels = 1; // Number of created channels
-}
-
-message UserRelation {
-  int64 rel_nano_id = 1;
-  uint32 user_cid = 2;
-  uint32 peer_user_id = 3;
-  uint32 follwing = 4;
-  uint32 followed = 5;
-  uint32 in_contacts = 6;
-  uint32 mutual_contact = 7;
-  uint32 is_favorite = 8;
-  uint32 notify = 9;
-}
 //==================== Others ==================
+
 message FileMsg {
   fixed64 gid = 1;
   uint32 access_hash = 2;
@@ -495,8 +514,9 @@ message Sms {
   uint32 ttl = 17;
 }
 
-//==================== To Review ==================
+//==================== Views ==================
 
+//==================== To Review ==================
 
 // Shared common cid
 // todo to klass?
@@ -588,3 +608,73 @@ message Tag {
   uint32 created_time = 7;
 }
 
+////////////////////////// Backups //////////////////
+//==================== User ==================
+message Contact1 {
+  fixed64 gid = 1;
+  uint32 user_cid = 2;
+  uint32 channel_cid = 10;
+  int64 client_id = 3;
+  string phone = 4;
+  string first_name = 5;
+  string last_name = 6;
+  uint32 target_user_cid = 12;
+  uint32 target_channel_cid = 15;
+}
+
+message User1 {
+  uint32 cid = 1;
+  string phone = 14;
+  string email = 15;
+  string password_hash = 17;
+  string password_salt = 18;
+  uint32 created_time = 36;
+  uint32 version_time = 37;
+  uint32 is_deleted = 38;
+  uint32 is_banned = 39;
+
+  uint32 primary_channel_changed_time = 50;
+
+  Channel UserCounts = 80;
+
+  Channel primary_channel = 100;
+  repeated Channel channels = 101;
+  repeated Session sessions = 102;
+  //  repeated Chat chats = 103;
+  //  repeated Contact contacts= 103;
+
+}
+
+message UserCounts1 {
+  uint32 created_channels = 1; // Number of created channels
+}
+
+message UserRelation1 {
+  int64 rel_nano_id = 1;
+  uint32 user_cid = 2;
+  uint32 peer_user_id = 3;
+  uint32 follwing = 4;
+  uint32 followed = 5;
+  uint32 in_contacts = 6;
+  uint32 mutual_contact = 7;
+  uint32 is_favorite = 8;
+  uint32 notify = 9;
+}
+
+//==================== Profile ==================
+message Profile1 {
+
+  //defalut channel, user_id, sub channels, customer_profile(or in user?),
+}
+
+message UserRelation {
+  int64 rel_nano_id = 1;
+  uint32 user_cid = 2;
+  uint32 peer_user_id = 3;
+  uint32 follwing = 4;
+  uint32 followed = 5;
+  uint32 in_contacts = 6;
+  uint32 mutual_contact = 7;
+  uint32 is_favorite = 8;
+  uint32 notify = 9;
+}
