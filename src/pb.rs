@@ -20,18 +20,15 @@ pub struct Invoke {
     pub rpc_data: std::vec::Vec<u8>,
 }
 ///==================== User ==================
-///
-///todo
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Contact {
     #[prost(fixed64, tag="1")]
     pub gid: u64,
     #[prost(uint32, tag="2")]
-    pub user_cid: u32,
-    #[prost(uint32, tag="10")]
-    pub channel_cid: u32,
-    #[prost(int64, tag="3")]
-    pub client_id: i64,
+    pub profile_cid: u32,
+    /// From session
+    #[prost(uint64, tag="3")]
+    pub device_id: u64,
     #[prost(string, tag="4")]
     pub phone: std::string::String,
     #[prost(string, tag="5")]
@@ -39,9 +36,9 @@ pub struct Contact {
     #[prost(string, tag="6")]
     pub last_name: std::string::String,
     #[prost(uint32, tag="12")]
-    pub target_user_cid: u32,
-    #[prost(uint32, tag="15")]
-    pub target_channel_cid: u32,
+    pub peer_profile_cid: u32,
+    #[prost(uint32, tag="13")]
+    pub created_time: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct User {
@@ -644,6 +641,8 @@ pub struct Session {
     pub active_time: u32,
     #[prost(uint32, tag="7")]
     pub created_time: u32,
+    #[prost(uint64, tag="100")]
+    pub device_id: u64,
 }
 ///todo
 #[derive(Clone, PartialEq, ::prost::Message)]
