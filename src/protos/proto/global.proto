@@ -81,10 +81,12 @@ message UserCounts {
   uint32 created_channels = 1; // Number of created channels
 }
 
+//==================== Profile ==================
 message Profile {
   uint32 cid = 1; // imut - profile_cid
   uint32 user_cid = 2;// imut
   Channel primary_channel = 100; // imut
+  SavedChannel saved_channel = 109; // imut
   uint32 created_time = 103; // imut
 
   ProfileSettings setting = 107; // imut
@@ -261,17 +263,13 @@ message MessageLog {
 // Just for: groups and peer chats
 enum MessageLogType {
   MLT_UNKNOWN= 0;
-  USER_JOINED = 15;
-  USER_DELETED = 1;
-  ROOM_CREATED = 2;
+  USER_SINGED_UP = 1; // Just in chat
+  GROUP_CREATED = 2;
   MEMBER_ADDED = 3;
   MEMBER_KICKED = 4;
   MEMBER_LEFT = 5;
-  ROOM_CONVERTED_TO_PUBLIC = 6;
-  ROOM_CONVERTED_TO_PRIVATE = 7;
-  MEMBER_JOINED_BY_INVITE_LINK = 8;
+  MEMBER_JOINED_BY_LINK = 8;
   ROOM_DELETED = 9;
-  PINNED_MESSAGE = 14;
 }
 
 //==================== Channel ==================
@@ -293,21 +291,12 @@ message Channel {
   uint32 is_deleted = 38;
   uint32 is_banned = 39;
 
-  ChannelNotificationSetting notification_setting = 90; // for owner
+  ChannelOwnerNotification notification_setting = 90; // for owner
   ChannelPrivacy privacy = 9;
-  ChannelType channel_type = 42;
   ChannelCounts counts = 41;
   Message last_message = 25;
   Message pinned_message = 26;
   FileMsg avatar = 100;
-}
-
-enum ChannelType {
-  CHANNEL_UNKNOWN = 0;
-  CHANNEL_PRIMARY = 1; // profile
-  CHANNEL_NORMAL = 2;
-  CHANNEL_SAVES = 3;
-  CHANNEL_STORE = 4; // ?? or extract
 }
 
 enum ChannelPrivacy {
@@ -318,39 +307,13 @@ enum ChannelPrivacy {
   CHANNEL_CREATOR = 4; // For save
 }
 
-// This channel or profile?
-message ChannelPrivacySetting {
-  uint32 online_privacy = 10;
-  uint32 call_privacy = 11;
-  uint32 add_to_group_privacy = 12;
-  uint32 seen_message_privacy = 13;
-}
+message ChannelOwnerNotification { //todo
 
-message ChannelNotificationSetting { //todo
-  bool social_led_on = 2;
-  string social_led_color = 3;
-  bool request_to_follow_you = 4;
-  bool followed_channel = 5;
-  bool accepted_channel_follow_request = 6;
-  bool channel_message_liked = 7;
-  bool channel_message_commented = 8;
-  bool mentioned_channel_in_message = 9;
-  bool mentioned_channel_in_comment = 10;
-  bool contacts_joined = 11;
-  bool direct_message = 12;
-  bool direct_alert = 13;
-  bool direct_preview = 14;
-  bool direct_led_on = 15;
-  bool direct_led_color = 16;
-  bool direct_vibrate = 17;
-  bool direct_popup = 18;
-  bool direct_sound = 19;
-  bool direct_priority = 20;
 }
 
 message ChannelCounts {
   uint32 followers_count = 20;
-  uint32 following_count = 21; // ?? just profile
+  //uint32 following_count = 21; // ?? just profile
   uint32 posts_count = 22;
   uint32 media_count = 23;
   uint32 photo_count = 24;
@@ -411,6 +374,18 @@ message ProductPriceInfo {
   uint32 price = 1;
   uint32 discount_price = 6;
   uint32 rate = 3; // from 1000
+}
+
+//==================== Saved ==================
+message SavedChannel {
+  uint32 cid = 1;
+  uint32 creator_profile_cid = 7;
+  uint32 message_seq = 19;
+  fixed64 sync_time_ms = 21; // version
+  uint32 created_time = 36;
+
+  ChannelCounts counts = 41;
+  Message last_message = 25;
 }
 
 //==================== Group ==================
