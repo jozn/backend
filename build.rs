@@ -15,8 +15,9 @@ fn main() {
 
     let mut config = prost_build::Config::default();
     config.out_dir("src/");
-    config.compile_well_known_types();
-    config.retain_enum_prefix();
+    // config.compile_well_known_types();
+    // config.type_attribute(".", "#[derive(Debug)]");
+    // config.retain_enum_prefix();
     let v = config.compile_protos(&vec_protos, &["src/protos/proto".to_string()]);
     v.unwrap();
 }

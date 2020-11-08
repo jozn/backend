@@ -60,6 +60,8 @@ pub struct User {
     pub is_deleted: bool,
     #[prost(bool, tag="39")]
     pub is_banned: bool,
+    #[prost(message, optional, tag="1114")]
+    pub def_profile: ::std::option::Option<Profile>,
     #[prost(message, repeated, tag="110")]
     pub profiles: ::std::vec::Vec<Profile>,
     #[prost(message, repeated, tag="113")]

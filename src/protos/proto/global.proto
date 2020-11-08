@@ -66,6 +66,7 @@ message User {
   bool is_deleted = 38;
   bool is_banned = 39;
 
+  Profile def_profile = 1114;
   repeated Profile profiles = 110;
   repeated Store stores = 113;
   repeated Session sessions = 102;
