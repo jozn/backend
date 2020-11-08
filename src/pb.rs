@@ -84,6 +84,7 @@ pub struct UserCounts {
     #[prost(uint32, tag="1")]
     pub created_channels: u32,
 }
+///==================== Profile ==================
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Profile {
     /// imut - profile_cid
@@ -95,6 +96,9 @@ pub struct Profile {
     /// imut
     #[prost(message, optional, tag="100")]
     pub primary_channel: ::std::option::Option<Channel>,
+    /// imut
+    #[prost(message, optional, tag="109")]
+    pub saved_channel: ::std::option::Option<SavedChannel>,
     /// imut
     #[prost(uint32, tag="103")]
     pub created_time: u32,
@@ -315,14 +319,10 @@ pub struct MessageLog {
     pub log_type: i32,
     #[prost(uint32, tag="2")]
     pub by_profile_cid: u32,
-    #[prost(uint32, tag="50")]
-    pub by_channel_cid: u32,
     #[prost(uint32, tag="3")]
     pub target_profile_cid: u32,
-    #[prost(uint32, tag="4")]
-    pub target_channel_cid: u32,
     #[prost(message, optional, tag="11")]
-    pub target_channel_view: ::std::option::Option<Channel>,
+    pub target_profile_view: ::std::option::Option<Profile>,
 }
 ///==================== Channel ==================
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -360,11 +360,9 @@ pub struct Channel {
     pub is_banned: u32,
     /// for owner
     #[prost(message, optional, tag="90")]
-    pub notification_setting: ::std::option::Option<ChannelNotificationSetting>,
+    pub notification_setting: ::std::option::Option<ChannelOwnerNotification>,
     #[prost(enumeration="ChannelPrivacy", tag="9")]
     pub privacy: i32,
-    #[prost(enumeration="ChannelType", tag="42")]
-    pub channel_type: i32,
     #[prost(message, optional, tag="41")]
     pub counts: ::std::option::Option<ChannelCounts>,
     #[prost(message, optional, tag="25")]
@@ -374,67 +372,15 @@ pub struct Channel {
     #[prost(message, optional, tag="100")]
     pub avatar: ::std::option::Option<FileMsg>,
 }
-/// This channel or profile?
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelPrivacySetting {
-    #[prost(uint32, tag="10")]
-    pub online_privacy: u32,
-    #[prost(uint32, tag="11")]
-    pub call_privacy: u32,
-    #[prost(uint32, tag="12")]
-    pub add_to_group_privacy: u32,
-    #[prost(uint32, tag="13")]
-    pub seen_message_privacy: u32,
-}
 ///todo
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelNotificationSetting {
-    #[prost(bool, tag="2")]
-    pub social_led_on: bool,
-    #[prost(string, tag="3")]
-    pub social_led_color: std::string::String,
-    #[prost(bool, tag="4")]
-    pub request_to_follow_you: bool,
-    #[prost(bool, tag="5")]
-    pub followed_channel: bool,
-    #[prost(bool, tag="6")]
-    pub accepted_channel_follow_request: bool,
-    #[prost(bool, tag="7")]
-    pub channel_message_liked: bool,
-    #[prost(bool, tag="8")]
-    pub channel_message_commented: bool,
-    #[prost(bool, tag="9")]
-    pub mentioned_channel_in_message: bool,
-    #[prost(bool, tag="10")]
-    pub mentioned_channel_in_comment: bool,
-    #[prost(bool, tag="11")]
-    pub contacts_joined: bool,
-    #[prost(bool, tag="12")]
-    pub direct_message: bool,
-    #[prost(bool, tag="13")]
-    pub direct_alert: bool,
-    #[prost(bool, tag="14")]
-    pub direct_preview: bool,
-    #[prost(bool, tag="15")]
-    pub direct_led_on: bool,
-    #[prost(bool, tag="16")]
-    pub direct_led_color: bool,
-    #[prost(bool, tag="17")]
-    pub direct_vibrate: bool,
-    #[prost(bool, tag="18")]
-    pub direct_popup: bool,
-    #[prost(bool, tag="19")]
-    pub direct_sound: bool,
-    #[prost(bool, tag="20")]
-    pub direct_priority: bool,
+pub struct ChannelOwnerNotification {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelCounts {
     #[prost(uint32, tag="20")]
     pub followers_count: u32,
-    /// ?? just profile
-    #[prost(uint32, tag="21")]
-    pub following_count: u32,
+    ///uint32 following_count = 21; // ?? just profile
     #[prost(uint32, tag="22")]
     pub posts_count: u32,
     #[prost(uint32, tag="23")]
@@ -527,25 +473,44 @@ pub struct ProductPriceInfo {
     #[prost(uint32, tag="3")]
     pub rate: u32,
 }
+///==================== Saved ==================
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SavedChannel {
+    #[prost(uint32, tag="1")]
+    pub cid: u32,
+    #[prost(uint32, tag="7")]
+    pub creator_profile_cid: u32,
+    #[prost(uint32, tag="19")]
+    pub message_seq: u32,
+    /// version
+    #[prost(fixed64, tag="21")]
+    pub sync_time_ms: u64,
+    #[prost(uint32, tag="36")]
+    pub created_time: u32,
+    #[prost(message, optional, tag="41")]
+    pub counts: ::std::option::Option<ChannelCounts>,
+    #[prost(message, optional, tag="25")]
+    pub last_message: ::std::option::Option<Message>,
+}
 ///==================== Group ==================
-///
-///todo
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Group {
     #[prost(uint32, tag="1")]
     pub cid: u32,
+    /// or _name
     #[prost(string, tag="3")]
     pub group_title: std::string::String,
+    /// with "group" suffix > not now > all is private now
     #[prost(string, tag="4")]
     pub user_name: std::string::String,
     #[prost(uint32, tag="7")]
-    pub creator_user_cid: u32,
-    #[prost(uint32, tag="31")]
-    pub creator_channel_cid: u32,
-    #[prost(enumeration="GroupPrivacy", tag="8")]
-    pub group_privacy: i32,
-    #[prost(bool, tag="9")]
+    pub creator_profile_cid: u32,
+    ///  GroupPrivacy group_privacy = 8;
+    #[prost(bool, tag="8")]
     pub history_viewable: bool,
+    /// global searchable, view history without joining
+    #[prost(bool, tag="9")]
+    pub is_open_group: bool,
     #[prost(uint32, tag="10")]
     pub seq: u32,
     #[prost(uint32, tag="14")]
@@ -554,6 +519,7 @@ pub struct Group {
     pub about: std::string::String,
     #[prost(string, tag="16")]
     pub invite_link_hash: std::string::String,
+    ///Move to counts?
     #[prost(uint32, tag="17")]
     pub members_count: u32,
     #[prost(uint32, tag="18")]
@@ -578,21 +544,38 @@ pub struct Group {
     pub avatar: ::std::option::Option<FileMsg>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupCounts {
+    #[prost(uint32, tag="23")]
+    pub media_count: u32,
+    #[prost(uint32, tag="24")]
+    pub photo_count: u32,
+    #[prost(uint32, tag="25")]
+    pub video_count: u32,
+    #[prost(uint32, tag="26")]
+    pub gif_count: u32,
+    #[prost(uint32, tag="27")]
+    pub audio_count: u32,
+    #[prost(uint32, tag="28")]
+    pub voice_count: u32,
+    #[prost(uint32, tag="29")]
+    pub file_count: u32,
+    #[prost(uint32, tag="30")]
+    pub link_count: u32,
+    #[prost(uint32, tag="32")]
+    pub pined_count: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupMember {
     #[prost(int64, tag="1")]
     pub gid: i64,
     #[prost(int64, tag="2")]
     pub group_cid: i64,
     #[prost(uint32, tag="3")]
-    pub user_cid: u32,
-    #[prost(uint32, tag="8")]
-    pub channel_cid: u32,
+    pub profile_cid: u32,
     #[prost(uint32, tag="4")]
-    pub by_user_cid: u32,
-    #[prost(uint32, tag="7")]
-    pub by_channel_cid: u32,
-    #[prost(enumeration="GroupMemberRole", tag="5")]
-    pub group_role: i32,
+    pub by_profile_cid: u32,
+    #[prost(bool, tag="5")]
+    pub is_moderator: bool,
     #[prost(uint32, tag="6")]
     pub created_time: u32,
 }
@@ -620,67 +603,58 @@ pub struct FileMsg {
     #[prost(bytes, tag="9")]
     pub data: std::vec::Vec<u8>,
 }
-///todo
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Session {
     #[prost(fixed64, tag="1")]
     pub gid: u64,
     #[prost(string, tag="2")]
     pub session_uuid: std::string::String,
+    #[prost(uint64, tag="100")]
+    pub device_id: u64,
     #[prost(uint32, tag="3")]
     pub user_cid: u32,
     #[prost(string, tag="4")]
     pub last_ip_address: std::string::String,
     #[prost(string, tag="8")]
     pub user_agent: std::string::String,
-    #[prost(enumeration="SessionPlatform", tag="9")]
+    #[prost(enumeration="DevicePlatform", tag="9")]
     pub platform: i32,
     #[prost(uint32, tag="5")]
-    pub app_version: u32,
+    pub api_version: u32,
     #[prost(uint32, tag="6")]
     pub active_time: u32,
     #[prost(uint32, tag="7")]
     pub created_time: u32,
-    #[prost(uint64, tag="100")]
-    pub device_id: u64,
 }
-///todo
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Sms {
     #[prost(fixed64, tag="1")]
     pub gid: u64,
-    #[prost(string, tag="2")]
-    pub hash: std::string::String,
     #[prost(string, tag="3")]
-    pub app_uuid: std::string::String,
+    pub install_uuid: std::string::String,
     #[prost(string, tag="4")]
-    pub client_phone: std::string::String,
-    #[prost(uint32, tag="5")]
-    pub genrated_code: u32,
+    pub to_phone: std::string::String,
+    #[prost(bool, tag="103")]
+    pub for_confirm: bool,
+    #[prost(string, tag="5")]
+    pub confirm_code: std::string::String,
     #[prost(string, tag="6")]
-    pub sms_sender_number: std::string::String,
-    #[prost(string, tag="7")]
-    pub sms_send_statues: std::string::String,
-    #[prost(string, tag="8")]
-    pub sms_http_body: std::string::String,
+    pub gateway_number: std::string::String,
+    #[prost(string, tag="101")]
+    pub text_body: std::string::String,
+    #[prost(uint32, tag="100")]
+    pub created_time: u32,
+    /// Below are for easier debugging purpose > stringy
+    ///
+    /// some custom debug info: http header, code, body, ...
     #[prost(string, tag="9")]
-    pub err: std::string::String,
-    #[prost(string, tag="10")]
-    pub carrier: std::string::String,
-    #[prost(bytes, tag="11")]
-    pub country: std::vec::Vec<u8>,
-    #[prost(uint32, tag="12")]
-    pub is_valid_phone: u32,
-    #[prost(uint32, tag="13")]
-    pub is_confirmed: u32,
-    #[prost(uint32, tag="14")]
-    pub is_login: u32,
-    #[prost(uint32, tag="15")]
-    pub is_register: u32,
-    #[prost(uint32, tag="16")]
-    pub retried_count: u32,
-    #[prost(uint32, tag="17")]
-    pub ttl: u32,
+    pub gateway_error: std::string::String,
+    /// like "register" "login" "delete" "marketing" ,...
+    #[prost(string, tag="14")]
+    pub intent: std::string::String,
+    /// like "confirmed" "unconfirmed" "sending" "gateway_error"
+    #[prost(string, tag="102")]
+    pub result: std::string::String,
 }
 /////////////////////////// Docs ///////////////////////////
 
@@ -742,11 +716,8 @@ pub enum MessageType {
     Wallet = 15,
     /// ??
     Product = 16,
+    /// Add multi
     Forward = 17,
-    ///??
-    ///
-    /// photo, video, gif
-    PostMedia = 100,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -767,28 +738,14 @@ pub enum MessageDeliveryStatues {
 #[repr(i32)]
 pub enum MessageLogType {
     MltUnknown = 0,
-    UserJoined = 15,
-    UserDeleted = 1,
-    RoomCreated = 2,
+    /// Just in chat
+    UserSingedUp = 1,
+    GroupCreated = 2,
     MemberAdded = 3,
     MemberKicked = 4,
     MemberLeft = 5,
-    RoomConvertedToPublic = 6,
-    RoomConvertedToPrivate = 7,
-    MemberJoinedByInviteLink = 8,
+    MemberJoinedByLink = 8,
     RoomDeleted = 9,
-    PinnedMessage = 14,
-}
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum ChannelType {
-    ChannelUnknown = 0,
-    /// profile
-    ChannelPrimary = 1,
-    ChannelNormal = 2,
-    ChannelSaves = 3,
-    /// ?? or extract
-    ChannelStore = 4,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -801,35 +758,17 @@ pub enum ChannelPrivacy {
     /// For save
     ChannelCreator = 4,
 }
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum GroupPrivacy {
-    GroupUnknownGp = 0,
-    /// via username
-    GroupOpen = 1,
-    GroupPrivateLink = 2,
-}
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum GroupMemberRole {
-    MemberUnknown = 0,
-    MemberCreator = 1,
-    MemberModerator = 3,
-    MemberNormalUser = 2,
-}
 //==================== Utils ==================
 
-///todo
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
-pub enum SessionPlatform {
+pub enum DevicePlatform {
     UnknownPlatform = 0,
     Android = 1,
     Ios = 2,
-    MacOs = 3,
-    Windows = 4,
+    Windows = 3,
+    MacOs = 4,
     Linux = 5,
-    BlackBerry = 6,
     Web = 7,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1735,6 +1674,8 @@ pub struct GetUsers1Param {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetUsers1Response {
+    #[prost(message, repeated, tag="1")]
+    pub users: ::std::vec::Vec<Profile>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EchoParam {

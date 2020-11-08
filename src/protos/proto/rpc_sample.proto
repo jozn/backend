@@ -9,7 +9,7 @@ message GetUsers1Param {
 }
 
 message GetUsers1Response {
-
+    repeated Profile users = 1;
 }
 
 service RPC_Sample {

@@ -387,7 +387,7 @@ message SavedChannel {
 message Group {
   uint32 cid = 1;
   string group_title = 3; // or _name
-  string user_name = 4;
+  string user_name = 4; // with "group" suffix > not now > all is private now
   uint32 creator_profile_cid = 7;
 //  GroupPrivacy group_privacy = 8;
   bool history_viewable = 8;
@@ -473,16 +473,15 @@ message Session {
 
 message Sms {
   fixed64 gid = 1;
-  string hash = 2; // ??
   string install_uuid = 3;
   string to_phone = 4;
-  bool for_confirmation = 103;
+  bool for_confirm = 103;
   string confirm_code = 5;
-  string sms_gateway_number = 6;
-  string sms_body = 101;
+  string gateway_number = 6;
+  string text_body = 101;
   uint32 created_time = 100;
   // Below are for easier debugging purpose > stringy
-  string sms_gateway_error = 9; // some custom debug info: http header, code, body, ...
+  string gateway_error = 9; // some custom debug info: http header, code, body, ...
   string intent = 14; // like "register" "login" "delete" "marketing" ,...
   string result = 102; // like "confirmed" "unconfirmed" "sending" "gateway_error"
 }
