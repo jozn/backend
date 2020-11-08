@@ -120,7 +120,6 @@ impl MemDb {
         }
     }
 
-
     fn gen_messages(&mut self) {
         for u in &self.users.clone() {
             // profile msgs
@@ -165,55 +164,4 @@ fn make_channel_msgs(ch: pb::Channel, pid :u32) -> Vec<pb::Message>{
         v.push(m);
     }
     v
-}
-
-
-fn s1(){
-    // let db = MemDb{},
-    // let users = vec![];
-
-    let mut cid = 0;
-
-    for u in 1..100 {
-        let ch = pb::Channel{
-            cid: u,
-            user_name: format!("profile{}",u),
-            channel_name: format!("channel def u#{}",u),
-            creator_profile_cid: u,
-            is_profile_channel: true,
-            about: format!("my about user def ch {}", u),
-            ..Default::default()
-        };
-
-        let pro = pb::Profile{
-            cid: u,
-            user_cid: u,
-            primary_channel: Some(ch),
-            saved_channel: None,
-            created_time: 1,
-            setting: None,
-            channels: vec![],
-            directs: vec![],
-            groups: vec![],
-            contacts: vec![]
-        };
-
-        let msg = pb::Message{
-            gid: 1,
-            by_profile_cid: 5,
-            message_type: pb::MessageType::Text as i32,
-            text: format!("my message text {}", u),
-            via_app_id: 1,
-            seq: 1,
-            created_time: 2,
-            delivery_status: pb::MessageDeliveryStatues::Seen as i32,
-            delivery_time: 1,
-            counts: None,
-            setting: None,
-            product: None,
-            files: vec![],
-            ..Default::default()
-        };
-    }
-
 }
