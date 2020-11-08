@@ -10,12 +10,13 @@ pub async fn GetUsers1(up: &UserParam, param: pb::GetUsers1Param) -> Result<pb::
         users
     })*/
 }
-const MAX_USER : u32= 1;
+const MAX_USER : u32= 5;
 #[derive(Debug)]
 pub struct MemDb {
     users: Vec<pb::User>,
     messages: HashMap<u32, Vec<pb::Message>>,
-   gid_gen: utils::id_gen::SeqTimeIdGen,
+    contacts: HashMap<u32, Vec<pb::Contact>>,
+    gid_gen: utils::id_gen::SeqTimeIdGen,
    //  cid3: Cell<u32>,
     cid: u32,
 }
@@ -27,6 +28,7 @@ impl Default for MemDb {
             gid_gen: Default::default(),
             cid: 1,
             messages: HashMap::new(),
+            contacts: HashMap::new(),
             // ..Default::default() > will stackoverflow
         }
     }
@@ -36,7 +38,8 @@ impl MemDb {
     pub fn build(&mut self) {
         self.gen_users();
         self.gen_extra_channels();
-        self.gen_messages();
+        // self.gen_messages();
+        self.gen_contacts();
     }
     pub fn get_next_cid(&mut self) -> u32{
         let res = self.cid;
@@ -70,7 +73,8 @@ impl MemDb {
                 channels: vec![],
                 directs: vec![],
                 groups: vec![],
-                contacts: vec![]
+                // contacts: //make_contacts(pro_cid, &self),
+                ..Default::default()
             };
 
             let user = pb::User{
@@ -133,6 +137,13 @@ impl MemDb {
             }
         }
     }
+
+    fn gen_contacts(&mut self) {
+        for u in &self.users.clone() {
+            let profile = u.def_profile.as_ref().unwrap();
+            self.contacts.insert(profile.cid,make_contacts(profile.cid,&self));
+        }
+    }
 }
 
 fn make_channel_msgs(ch: pb::Channel, pid :u32) -> Vec<pb::Message>{
@@ -161,6 +172,30 @@ fn make_channel_msgs(ch: pb::Channel, pid :u32) -> Vec<pb::Message>{
             product: None,
             files: vec![]
         };
+        v.push(m);
+    }
+    v
+}
+
+fn make_contacts(pid :u32, db: &MemDb) -> Vec<pb::Contact>{
+    let mut v =  vec![];
+    let mut genid = utils::id_gen::SeqTimeIdGen::new(15);
+    for u in &db.users {
+        let peer_cid = u.def_profile.as_ref().unwrap().cid;
+        if peer_cid == pid {
+            continue
+        }
+        let m = pb::Contact {
+            gid: genid.get_next_id().to_u64(),
+            profile_cid: pid,
+            device_id: 0,
+            phone: "+989015132328".to_string(),
+            first_name: "dev name".to_string(),
+            last_name: "last".to_string(),
+            peer_profile_cid: peer_cid,
+            created_time: 123412341
+        };
+
         v.push(m);
     }
     v

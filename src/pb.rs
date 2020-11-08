@@ -31,8 +31,10 @@ pub struct Contact {
     pub device_id: u64,
     #[prost(string, tag="4")]
     pub phone: std::string::String,
+    /// In device
     #[prost(string, tag="5")]
     pub first_name: std::string::String,
+    /// In device
     #[prost(string, tag="6")]
     pub last_name: std::string::String,
     #[prost(uint32, tag="12")]
@@ -121,6 +123,11 @@ pub struct Profile {
     /// mut
     #[prost(message, repeated, tag="108")]
     pub contacts: ::std::vec::Vec<Contact>,
+    /// Views
+    ///
+    /// When sending profile to others set this if they have this profile in their contacts
+    #[prost(message, optional, tag="111")]
+    pub contact_info: ::std::option::Option<Contact>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProfileSettings {

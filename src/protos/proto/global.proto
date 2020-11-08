@@ -49,8 +49,8 @@ message Contact {
   uint32 profile_cid = 2;
   uint64 device_id = 3; // From session
   string phone = 4;
-  string first_name = 5;
-  string last_name = 6;
+  string first_name = 5; // In device
+  string last_name = 6; // In device
   uint32 peer_profile_cid = 12;
   uint32 created_time = 13;
 }
@@ -96,6 +96,9 @@ message Profile {
   repeated Direct directs = 105;// mut
   repeated Group groups = 106; // mut
   repeated Contact contacts = 108; // mut
+
+  // Views
+  Contact contact_info = 111; // When sending profile to others set this if they have this profile in their contacts
 }
 
 message ProfileSettings {
