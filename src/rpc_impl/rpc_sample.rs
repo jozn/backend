@@ -1,5 +1,7 @@
 use crate::{com, com::*, pb, sms_sender, utils};
 use std::cell::Cell;
+use std::borrow::Borrow;
+use std::collections::HashMap;
 
 
 pub async fn GetUsers1(up: &UserParam, param: pb::GetUsers1Param) -> Result<pb::GetUsers1Response, GenErr> {
@@ -12,6 +14,7 @@ const MAX_USER : u32= 1;
 #[derive(Debug)]
 pub struct MemDb {
     users: Vec<pb::User>,
+    messages: HashMap<u32, Vec<pb::Message>>,
    gid_gen: utils::id_gen::SeqTimeIdGen,
    //  cid3: Cell<u32>,
     cid: u32,
@@ -23,6 +26,7 @@ impl Default for MemDb {
             users: vec![],
             gid_gen: Default::default(),
             cid: 1,
+            messages: HashMap::new(),
             // ..Default::default() > will stackoverflow
         }
     }
@@ -31,6 +35,8 @@ impl Default for MemDb {
 impl MemDb {
     pub fn build(&mut self) {
         self.gen_users();
+        self.gen_extra_channels();
+        self.gen_messages();
     }
     pub fn get_next_cid(&mut self) -> u32{
         let res = self.cid;
@@ -90,7 +96,77 @@ impl MemDb {
             self.users.push(user);
         }
     }
+
+    fn gen_extra_channels(&mut self) {
+        let user_cid = self.get_next_cid();
+        let pro_cid = self.get_next_cid();
+        let chanel_cid = self.get_next_cid();
+
+        let id = 0;
+        for u in self.users.clone() {
+            let mut profile = u.def_profile.borrow().as_ref().unwrap();
+            let ch = pb::Channel{
+                cid: chanel_cid,
+                user_name: format!("Chan#{}",chanel_cid),
+                channel_name: format!("channel #{} u{}",chanel_cid, u.cid),
+                creator_profile_cid: profile.cid,
+                is_profile_channel: false,
+                about: format!("my about extra chan {}", u.first_name),
+                ..Default::default()
+            };
+
+            self.users.get_mut(id).unwrap().def_profile.as_mut().unwrap().channels.push(ch);
+           // profile.channels.push(ch);
+        }
+    }
+
+
+    fn gen_messages(&mut self) {
+        for u in &self.users.clone() {
+            // profile msgs
+            let profile = u.def_profile.as_ref().unwrap();
+            let def_ch = (profile.primary_channel.as_ref()).unwrap();
+            self.messages.insert(def_ch.cid, make_channel_msgs(def_ch.clone(), profile.cid));
+
+            // channels msgs
+            for ch in &profile.channels {
+                self.messages.insert(ch.cid, make_channel_msgs(ch.clone(), profile.cid));
+            }
+        }
+    }
 }
+
+fn make_channel_msgs(ch: pb::Channel, pid :u32) -> Vec<pb::Message>{
+    let mut v =  vec![];
+    let mut genid = utils::id_gen::SeqTimeIdGen::new(15);
+    for i in 0..40 {
+        let m = pb::Message {
+            gid: genid.get_next_id().to_u64(),
+            by_profile_cid: pid,
+            message_type: pb::MessageType::Text as i32,
+            text: format!("some random text {}", i),
+            via_app_id: 1,
+            seq: i+1,
+            edited_time: 0,
+            created_time: 123,
+            verified: false,
+            delivery_status: pb::MessageDeliveryStatues::Seen as i32,
+            delivery_time: 345,
+            deleted: false,
+            flags: 0,
+            forward: None,
+            reply_to: None,
+            title: "".to_string(),
+            counts: None,
+            setting: None,
+            product: None,
+            files: vec![]
+        };
+        v.push(m);
+    }
+    v
+}
+
 
 fn s1(){
     // let db = MemDb{},
