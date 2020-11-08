@@ -2,6 +2,12 @@ use crate::{com, com::*, pb, sms_sender, utils};
 use std::cell::Cell;
 use std::borrow::Borrow;
 use std::collections::HashMap;
+use rand::Rng;
+use image;
+use image::GenericImageView;
+use image::imageops::crop_imm;
+use once_cell::sync::OnceCell;
+use std::path::PathBuf;
 
 
 pub async fn GetUsers1(up: &UserParam, param: pb::GetUsers1Param) -> Result<pb::GetUsers1Response, GenErr> {
@@ -38,7 +44,7 @@ impl MemDb {
     pub fn build(&mut self) {
         self.gen_users();
         self.gen_extra_channels();
-        // self.gen_messages();
+        self.gen_messages();
         self.gen_contacts();
     }
     pub fn get_next_cid(&mut self) -> u32{
@@ -149,14 +155,14 @@ impl MemDb {
 fn make_channel_msgs(ch: pb::Channel, pid :u32) -> Vec<pb::Message>{
     let mut v =  vec![];
     let mut genid = utils::id_gen::SeqTimeIdGen::new(15);
-    for i in 0..40 {
-        let m = pb::Message {
+    for i in 1..40 {
+        let mut m = pb::Message {
             gid: genid.get_next_id().to_u64(),
             by_profile_cid: pid,
             message_type: pb::MessageType::Text as i32,
             text: format!("some random text {}", i),
             via_app_id: 1,
-            seq: i+1,
+            seq: i,
             edited_time: 0,
             created_time: 123,
             verified: false,
@@ -172,6 +178,10 @@ fn make_channel_msgs(ch: pb::Channel, pid :u32) -> Vec<pb::Message>{
             product: None,
             files: vec![]
         };
+        if i % 3 == 0 {
+            m.message_type = pb::MessageType::Image as i32;
+            m.files = vec![make_sample_file()];
+        }
         v.push(m);
     }
     v
@@ -199,4 +209,38 @@ fn make_contacts(pid :u32, db: &MemDb) -> Vec<pb::Contact>{
         v.push(m);
     }
     v
+}
+
+fn make_sample_file() -> pb::FileMsg{
+    let img = _get_sample_image();
+    pb::FileMsg{
+        gid: 234,
+        width: img.1,
+        height: img.2,
+        full_path: img.0,
+        ..Default::default()
+    }
+}
+
+static  IMAGE_FILES: OnceCell<Vec<std::path::PathBuf>> = OnceCell::new();
+
+fn _get_sample_image() -> (String, u32, u32){
+    let mut rng = rand::thread_rng();
+
+    let vec = IMAGE_FILES.get_or_init( || {
+        let imgs = std::fs::read_dir("/home/hamid/life/__files__/Telegram/images").unwrap();
+        println!("init vec of image files");
+        let mut vec = vec![];
+        for ig in imgs {
+            let ig = ig.unwrap();
+            vec.push(ig.path());
+        };
+        vec
+    });
+
+    let id = rng.gen_range(0, vec.len());
+
+    let img_path = vec.get(id).unwrap();
+    let dim = image::open(img_path).unwrap().dimensions();
+    (img_path.clone().into_os_string().into_string().unwrap(),dim.0,dim.1)
 }

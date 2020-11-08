@@ -445,6 +445,7 @@ message FileMsg {//todo
   uint32 width = 4;
   uint32 height = 5;
   string extension = 6;
+  string full_path = 61;
   uint32 user_cid = 7;
   bytes data_thumb = 8;
   bytes data = 9;

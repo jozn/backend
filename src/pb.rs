@@ -605,6 +605,8 @@ pub struct FileMsg {
     pub height: u32,
     #[prost(string, tag="6")]
     pub extension: std::string::String,
+    #[prost(string, tag="61")]
+    pub full_path: std::string::String,
     #[prost(uint32, tag="7")]
     pub user_cid: u32,
     #[prost(bytes, tag="8")]

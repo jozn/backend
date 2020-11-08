@@ -52,6 +52,7 @@ async-trait = "0.1.21"
 cdrs_helpers_derive = "0.3.3"
 maplit = "1.0.2"
 reqwest = "0.10.8"
+image = "0.23.11"
 
 [[bin]]
 name = "server"
