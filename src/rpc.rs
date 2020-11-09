@@ -134,6 +134,10 @@ pub mod method_ids {
     
     // Service: RPC_Sample
     pub const GetUsers1: u32 = 920502617;
+    pub const GetProfiles: u32 = 770967729;
+    pub const GetChannels: u32 = 88100100;
+    pub const GetDirects: u32 = 393387904;
+    pub const GetMessages: u32 = 1834253004;
     
     // Service: RPC_Shared
     pub const Echo: u32 = 1239211125;
@@ -1995,6 +1999,70 @@ pub async fn server_rpc(act : pb::Invoke) -> Result<Vec<u8>,GenErr> {
             if let Ok(param) = rpc_param {
                 println!("param {:?}", param);
                 let response = rpc_fns::GetUsers1(&up, param).await?;
+
+                let mut buff =vec![];
+                prost::Message::encode(&response, &mut buff)?;
+
+                Ok(buff)
+            } else {
+                Err(GenErr::ReadingPbParam)
+            }
+        }
+        method_ids::GetProfiles => { // 770967729
+            let vec: Vec<u8> = vec![];
+            let rpc_param  : Result<pb::GetProfilesParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
+
+            if let Ok(param) = rpc_param {
+                println!("param {:?}", param);
+                let response = rpc_fns::GetProfiles(&up, param).await?;
+
+                let mut buff =vec![];
+                prost::Message::encode(&response, &mut buff)?;
+
+                Ok(buff)
+            } else {
+                Err(GenErr::ReadingPbParam)
+            }
+        }
+        method_ids::GetChannels => { // 88100100
+            let vec: Vec<u8> = vec![];
+            let rpc_param  : Result<pb::GetChannelsParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
+
+            if let Ok(param) = rpc_param {
+                println!("param {:?}", param);
+                let response = rpc_fns::GetChannels(&up, param).await?;
+
+                let mut buff =vec![];
+                prost::Message::encode(&response, &mut buff)?;
+
+                Ok(buff)
+            } else {
+                Err(GenErr::ReadingPbParam)
+            }
+        }
+        method_ids::GetDirects => { // 393387904
+            let vec: Vec<u8> = vec![];
+            let rpc_param  : Result<pb::GetDirectsParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
+
+            if let Ok(param) = rpc_param {
+                println!("param {:?}", param);
+                let response = rpc_fns::GetDirects(&up, param).await?;
+
+                let mut buff =vec![];
+                prost::Message::encode(&response, &mut buff)?;
+
+                Ok(buff)
+            } else {
+                Err(GenErr::ReadingPbParam)
+            }
+        }
+        method_ids::GetMessages => { // 1834253004
+            let vec: Vec<u8> = vec![];
+            let rpc_param  : Result<pb::GetMessagesParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice());
+
+            if let Ok(param) = rpc_param {
+                println!("param {:?}", param);
+                let response = rpc_fns::GetMessages(&up, param).await?;
 
                 let mut buff =vec![];
                 prost::Message::encode(&response, &mut buff)?;
@@ -5758,6 +5826,134 @@ impl RpcClient {
         let invoke = pb::Invoke {
             namespace: 0,
             method: method_ids::GetUsers1,
+            action_id: self.get_next_action_id() ,
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff =vec![];
+        let m = prost::Message::encode(&invoke, &mut buff);
+
+        let mut buff = Vec::new();
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+    
+    pub async fn GetProfiles (&self, param: pb::GetProfilesParam) -> Result<pb::GetProfilesResponse,GenErr>{
+
+        let mut buff =vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GetProfiles,
+            action_id: self.get_next_action_id() ,
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff =vec![];
+        let m = prost::Message::encode(&invoke, &mut buff);
+
+        let mut buff = Vec::new();
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+    
+    pub async fn GetChannels (&self, param: pb::GetChannelsParam) -> Result<pb::GetChannelsResponse,GenErr>{
+
+        let mut buff =vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GetChannels,
+            action_id: self.get_next_action_id() ,
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff =vec![];
+        let m = prost::Message::encode(&invoke, &mut buff);
+
+        let mut buff = Vec::new();
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+    
+    pub async fn GetDirects (&self, param: pb::GetDirectsParam) -> Result<pb::GetDirectsResponse,GenErr>{
+
+        let mut buff =vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GetDirects,
+            action_id: self.get_next_action_id() ,
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff =vec![];
+        let m = prost::Message::encode(&invoke, &mut buff);
+
+        let mut buff = Vec::new();
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+    
+    pub async fn GetMessages (&self, param: pb::GetMessagesParam) -> Result<pb::GetMessagesResponse,GenErr>{
+
+        let mut buff =vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GetMessages,
             action_id: self.get_next_action_id() ,
             is_response: false,
             rpc_data: buff,

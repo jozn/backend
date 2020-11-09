@@ -9,12 +9,62 @@ use image::imageops::crop_imm;
 use once_cell::sync::OnceCell;
 use std::path::PathBuf;
 
+static  FACT: OnceCell<MemDb> = OnceCell::new();
+
+fn _get_fact() ->  &'static MemDb {
+    let vec = FACT.get_or_init( || {
+        let mut res = MemDb::default();
+        res.build();
+        res
+    });
+    vec
+}
 
 pub async fn GetUsers1(up: &UserParam, param: pb::GetUsers1Param) -> Result<pb::GetUsers1Response, GenErr> {
+    let db = _get_fact();
     Ok(pb::GetUsers1Response::default())
-    /*Ok(pb::GetUsers1Response{
-        users
-    })*/
+}
+pub async fn GetProfiles(up: &UserParam, param: pb::GetProfilesParam) -> Result<pb::GetProfilesResponse, GenErr> {
+    let db = _get_fact();
+    let mut pros = vec![];
+
+    for p in &db.users {
+        pros.push(p.def_profile.as_ref().unwrap().clone());
+    }
+
+    Ok(pb::GetProfilesResponse{
+        profiles: pros,
+    })
+}
+pub async fn GetChannels(up: &UserParam, param: pb::GetChannelsParam) -> Result<pb::GetChannelsResponse, GenErr> {
+    let db = _get_fact();
+    let mut vec = vec![];
+
+    for p in &db.users{
+        let pro = p.def_profile.as_ref().unwrap();
+        vec.push(p.def_profile.as_ref().unwrap().primary_channel.as_ref().unwrap().clone());
+        let chs = pro.channels.clone();
+        for c in chs {
+            // vec.push(c);
+        }
+        // vec.push_all(p.def_profile.unwrap().channels.clone());
+    }
+
+    Ok(pb::GetChannelsResponse{
+        channels: vec
+    })
+}
+pub async fn GetDirects(up: &UserParam, param: pb::GetDirectsParam) -> Result<pb::GetDirectsResponse, GenErr> {
+    Ok(pb::GetDirectsResponse::default())
+}
+pub async fn GetMessages(up: &UserParam, param: pb::GetMessagesParam) -> Result<pb::GetMessagesResponse, GenErr> {
+    let db = _get_fact();
+
+    let msgs = db.messages.get(&9).unwrap().clone();
+
+    Ok(pb::GetMessagesResponse{
+        directs: msgs
+    })
 }
 const MAX_USER : u32= 5;
 #[derive(Debug)]
@@ -44,7 +94,7 @@ impl MemDb {
     pub fn build(&mut self) {
         self.gen_users();
         self.gen_extra_channels();
-        self.gen_messages();
+        // self.gen_messages(); // very slow for images
         self.gen_contacts();
     }
     pub fn get_next_cid(&mut self) -> u32{
@@ -108,12 +158,12 @@ impl MemDb {
     }
 
     fn gen_extra_channels(&mut self) {
-        let user_cid = self.get_next_cid();
-        let pro_cid = self.get_next_cid();
-        let chanel_cid = self.get_next_cid();
-
-        let id = 0;
+        let mut id = 0;
         for u in self.users.clone() {
+            let user_cid = self.get_next_cid();
+            let pro_cid = self.get_next_cid();
+            let chanel_cid = self.get_next_cid();
+
             let mut profile = u.def_profile.borrow().as_ref().unwrap();
             let ch = pb::Channel{
                 cid: chanel_cid,
@@ -126,6 +176,7 @@ impl MemDb {
             };
 
             self.users.get_mut(id).unwrap().def_profile.as_mut().unwrap().channels.push(ch);
+            id +=1;
            // profile.channels.push(ch);
         }
     }

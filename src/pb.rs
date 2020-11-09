@@ -1689,6 +1689,38 @@ pub struct GetUsers1Response {
     pub users: ::std::vec::Vec<Profile>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetProfilesParam {
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetProfilesResponse {
+    #[prost(message, repeated, tag="1")]
+    pub profiles: ::std::vec::Vec<Profile>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetChannelsParam {
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetChannelsResponse {
+    #[prost(message, repeated, tag="1")]
+    pub channels: ::std::vec::Vec<Channel>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetDirectsParam {
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetDirectsResponse {
+    #[prost(message, repeated, tag="1")]
+    pub directs: ::std::vec::Vec<Direct>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetMessagesParam {
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetMessagesResponse {
+    #[prost(message, repeated, tag="1")]
+    pub directs: ::std::vec::Vec<Message>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EchoParam {
     #[prost(string, tag="1")]
     pub text: std::string::String,

@@ -4,16 +4,59 @@ package pb;
 
 import "global.proto";
 
-message GetUsers1Param {
-   
+service RPC_Sample {
+//  rpc (Param) returns (Response);
+    rpc GetUsers1(GetUsers1Param) returns (GetUsers1Response);
+    rpc GetProfiles(GetProfilesParam) returns (GetProfilesResponse);
+    rpc GetChannels(GetChannelsParam) returns (GetChannelsResponse);
+    rpc GetDirects (GetDirectsParam) returns (GetDirectsResponse);
+    rpc GetMessages(GetMessagesParam) returns (GetMessagesResponse);
+
 }
 
+message GetUsers1Param {
+
+}
 message GetUsers1Response {
     repeated Profile users = 1;
 }
 
-service RPC_Sample {
-    rpc GetUsers1 (GetUsers1Param) returns (GetUsers1Response);
+message GetProfilesParam {
+
+}
+message GetProfilesResponse {
+    repeated Profile profiles = 1;
 
 }
 
+message GetChannelsParam {
+
+}
+message GetChannelsResponse {
+    repeated Channel channels = 1;
+
+}
+
+message GetDirectsParam {
+
+}
+message GetDirectsResponse {
+    repeated Direct directs = 1;
+}
+
+message GetMessagesParam {
+
+}
+message GetMessagesResponse {
+    repeated Message directs = 1;
+
+}
+
+/*
+message Param {
+
+}
+message Response {
+
+}
+*/

@@ -380,6 +380,18 @@ pub mod RPC_Sample {
     pub async fn GetUsers1(up: &UserParam, param: pb::GetUsers1Param) -> Result<pb::GetUsers1Response, GenErr> {
         Ok(pb::GetUsers1Response::default())
     }
+    pub async fn GetProfiles(up: &UserParam, param: pb::GetProfilesParam) -> Result<pb::GetProfilesResponse, GenErr> {
+        Ok(pb::GetProfilesResponse::default())
+    }
+    pub async fn GetChannels(up: &UserParam, param: pb::GetChannelsParam) -> Result<pb::GetChannelsResponse, GenErr> {
+        Ok(pb::GetChannelsResponse::default())
+    }
+    pub async fn GetDirects(up: &UserParam, param: pb::GetDirectsParam) -> Result<pb::GetDirectsResponse, GenErr> {
+        Ok(pb::GetDirectsResponse::default())
+    }
+    pub async fn GetMessages(up: &UserParam, param: pb::GetMessagesParam) -> Result<pb::GetMessagesResponse, GenErr> {
+        Ok(pb::GetMessagesResponse::default())
+    }
 }
 
 // Service: RPC_Shared
