@@ -20,6 +20,15 @@ fn main() {
     // config.retain_enum_prefix();
     let v = config.compile_protos(&vec_protos, &["src/protos/proto".to_string()]);
     v.unwrap();
+
+    run_format_codes();
+}
+
+fn run_format_codes() {
+    std::process::Command::new("cargo")
+        .arg("fmt")
+        .output()
+        .expect("cargo fmt");
 }
 
 fn main_bk() {
