@@ -7,8 +7,15 @@ use image::GenericImageView;
 use std::ops::Add;
 
 fn main() {
-    _extract_images_mod("/home/hamid/life/__files__/Telegram/images", "./src/mock/images.rs");
-    _extract_images_mod("/home/hamid/life/__files__/avatars", "./src/mock/avatars.rs");
+    _extract_images_mod(
+        "/home/hamid/life/__files__/Telegram/images",
+        "./src/mock/images.rs",
+    );
+
+    _extract_images_mod(
+        "/home/hamid/life/__files__/avatars",
+        "./src/mock/avatars.rs",
+    );
 }
 
 fn _extract_images_mod(input_dir: &str, out_rust_file: &str) {
@@ -36,6 +43,7 @@ fn _extract_images_mod(input_dir: &str, out_rust_file: &str) {
 
     let out_file = format!(
         r#"//GENERATED CODE
+#![rustfmt::skip]
 
 pub struct Image {{
     pub src: &'static str,

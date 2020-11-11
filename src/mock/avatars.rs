@@ -1,4 +1,5 @@
 //GENERATED CODE
+#![rustfmt::skip]
 
 pub struct Image {
     pub src: &'static str,
