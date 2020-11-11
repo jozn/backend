@@ -7,7 +7,12 @@ use image::GenericImageView;
 use std::ops::Add;
 
 fn main() {
-    let imgs = std::fs::read_dir("/home/hamid/life/__files__/Telegram/images").unwrap();
+    _extract_images_mod("/home/hamid/life/__files__/Telegram/images", "./src/mock/images.rs");
+    _extract_images_mod("/home/hamid/life/__files__/avatars", "./src/mock/avatars.rs");
+}
+
+fn _extract_images_mod(input_dir: &str, out_rust_file: &str) {
+    let imgs = std::fs::read_dir(input_dir).unwrap();
     println!("init vec of image files");
 
     let mut buff = String::new();
@@ -50,5 +55,5 @@ pub fn get_images() -> Vec<Image> {{
 
     // println!("{}",&out_file);
 
-    std::fs::write("./src/mock/images.rs", out_file);
+    std::fs::write(out_rust_file, out_file);
 }
