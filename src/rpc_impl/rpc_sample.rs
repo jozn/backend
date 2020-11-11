@@ -1,9 +1,9 @@
-use crate::{com, com::*, pb, sms_sender, utils};
+use crate::{com, com::*, pb, sms_sender, utils, mock};
 use image;
 use image::imageops::crop_imm;
 use image::GenericImageView;
 use once_cell::sync::OnceCell;
-use rand::Rng;
+use rand::{Rng, RngCore};
 use std::borrow::Borrow;
 use std::cell::Cell;
 use std::collections::HashMap;
@@ -92,6 +92,7 @@ pub struct MemDb {
     users: Vec<pb::User>,
     messages: HashMap<u32, Vec<pb::Message>>,
     contacts: HashMap<u32, Vec<pb::Contact>>,
+    groups: Vec<pb::Group>,
     gid_gen: utils::id_gen::SeqTimeIdGen,
     //  cid3: Cell<u32>,
     cid: u32,
@@ -105,6 +106,7 @@ impl Default for MemDb {
             cid: 1,
             messages: HashMap::new(),
             contacts: HashMap::new(),
+            groups: vec![],
             // ..Default::default() > will stackoverflow
         }
     }
@@ -116,6 +118,7 @@ impl MemDb {
         self.gen_extra_channels();
         self.gen_messages(); // very slow for images
         self.gen_contacts();
+        self.gen_groups();
     }
     pub fn get_next_cid(&mut self) -> u32 {
         let res = self.cid;
@@ -136,6 +139,7 @@ impl MemDb {
                 creator_profile_cid: pro_cid,
                 is_profile_channel: true,
                 about: format!("my about user def ch {}", u),
+                avatar: Some(_get_sample_avatar()),
                 ..Default::default()
             };
 
@@ -192,6 +196,7 @@ impl MemDb {
                 creator_profile_cid: profile.cid,
                 is_profile_channel: false,
                 about: format!("my about extra chan {}", u.first_name),
+                avatar: Some(_get_sample_avatar()),
                 ..Default::default()
             };
 
@@ -231,6 +236,38 @@ impl MemDb {
                 .insert(profile.cid, make_contacts(profile.cid, &self));
         }
     }
+
+    fn gen_groups(&mut self) {
+        let u = &self.users.get(0).unwrap();
+        for i in 1..5 {
+            let cid = self.get_next_cid();
+            let g = pb::Group{
+                cid: cid,
+                group_title: format!("Group #{}",i),
+                user_name: "".to_string(),
+                creator_profile_cid: 0,
+                history_viewable: false,
+                is_open_group: false,
+                seq: 0,
+                avatar_count: 0,
+                about: format!("About Group #{}",i),
+                invite_link_hash: "abcd".to_string(),
+                members_count: 8,
+                admins_count: 2,
+                moderator_counts: 1,
+                sort_time: i,
+                sync_time: i,
+                created_time: i as u32,
+                is_deleted: false,
+                is_banned: false,
+                last_message: None,
+                pinned_message: None,
+                avatar: Some(_get_sample_avatar())
+            };
+            self.groups.push(g);
+        }
+    }
+
 }
 
 fn make_channel_msgs(ch: pb::Channel, pid: u32) -> Vec<pb::Message> {
@@ -330,4 +367,18 @@ fn _get_sample_image() -> (String, u32, u32) {
     )
 }
 
-fn _sample_images_to_json() {}
+fn _get_sample_avatar() -> pb::FileMsg {
+    let mut rnd = rand::thread_rng();
+    let avatars = mock::avatars::get_images();
+    let img = avatars.get(rnd.gen_range(0, avatars.len())).unwrap();
+    pb::FileMsg {
+        gid: rnd.next_u64(),
+        file_type: 0,
+        width: img.width,
+        height: img.height,
+        extension: ".jpg".to_string(),
+        full_path: img.src.to_string(),
+        user_cid: 1,
+        ..Default::default()
+    }
+}
