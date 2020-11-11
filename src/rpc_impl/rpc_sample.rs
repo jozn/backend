@@ -140,6 +140,7 @@ impl MemDb {
                 is_profile_channel: true,
                 about: format!("my about user def ch {}", u),
                 avatar: Some(_get_sample_avatar()),
+                last_message: Some(_make_last_msg(5)),
                 ..Default::default()
             };
 
@@ -197,6 +198,7 @@ impl MemDb {
                 is_profile_channel: false,
                 about: format!("my about extra chan {}", u.first_name),
                 avatar: Some(_get_sample_avatar()),
+                last_message: Some(_make_last_msg(5)),
                 ..Default::default()
             };
 
@@ -260,7 +262,7 @@ impl MemDb {
                 created_time: i as u32,
                 is_deleted: false,
                 is_banned: false,
-                last_message: None,
+                last_message: Some(_make_last_msg(5)),
                 pinned_message: None,
                 avatar: Some(_get_sample_avatar()),
             };
@@ -337,6 +339,37 @@ fn make_sample_file() -> pb::FileMsg {
         full_path: img.0,
         ..Default::default()
     }
+}
+
+fn _make_last_msg(pid: u32) -> pb::Message {
+    let mut genid = utils::id_gen::SeqTimeIdGen::new(15);
+    let mut m = pb::Message {
+        gid: genid.get_next_id().to_u64(),
+        by_profile_cid: pid,
+        message_type: pb::MessageType::Text as i32,
+        text: format!("some random text for last msgs"),
+        via_app_id: 1,
+        seq: 5,
+        edited_time: 0,
+        created_time: 123,
+        verified: false,
+        delivery_status: pb::MessageDeliveryStatues::Seen as i32,
+        delivery_time: 345,
+        deleted: false,
+        flags: 0,
+        forward: None,
+        reply_to: None,
+        title: "".to_string(),
+        counts: None,
+        setting: None,
+        product: None,
+        files: vec![],
+    };
+    if rand::thread_rng().gen_bool(1.2) {
+        m.message_type = pb::MessageType::Image as i32;
+        m.files = vec![_get_sample_image()];
+    }
+    m
 }
 
 static IMAGE_FILES: OnceCell<Vec<std::path::PathBuf>> = OnceCell::new();
