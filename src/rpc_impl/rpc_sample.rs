@@ -297,7 +297,7 @@ fn make_channel_msgs(ch: pb::Channel, pid: u32) -> Vec<pb::Message> {
         };
         if i % 3 == 0 {
             m.message_type = pb::MessageType::Image as i32;
-            m.files = vec![make_sample_file()];
+            m.files = vec![_get_sample_image()];
         }
         v.push(m);
     }
@@ -329,7 +329,7 @@ fn make_contacts(pid: u32, db: &MemDb) -> Vec<pb::Contact> {
 }
 
 fn make_sample_file() -> pb::FileMsg {
-    let img = _get_sample_image();
+    let img = _get_sample_image__slow_dep();
     pb::FileMsg {
         gid: 234,
         width: img.1,
@@ -341,7 +341,7 @@ fn make_sample_file() -> pb::FileMsg {
 
 static IMAGE_FILES: OnceCell<Vec<std::path::PathBuf>> = OnceCell::new();
 
-fn _get_sample_image() -> (String, u32, u32) {
+fn _get_sample_image__slow_dep() -> (String, u32, u32) {
     let mut rng = rand::thread_rng();
 
     let vec = IMAGE_FILES.get_or_init(|| {
@@ -370,6 +370,22 @@ fn _get_sample_avatar() -> pb::FileMsg {
     let mut rnd = rand::thread_rng();
     let avatars = mock::avatars::get_images();
     let img = avatars.get(rnd.gen_range(0, avatars.len())).unwrap();
+    pb::FileMsg {
+        gid: rnd.next_u64(),
+        file_type: 0,
+        width: img.width,
+        height: img.height,
+        extension: ".jpg".to_string(),
+        full_path: img.src.to_string(),
+        user_cid: 1,
+        ..Default::default()
+    }
+}
+
+fn _get_sample_image() -> pb::FileMsg {
+    let mut rnd = rand::thread_rng();
+    let imgs = mock::images::get_images();
+    let img = imgs.get(rnd.gen_range(0, imgs.len())).unwrap();
     pb::FileMsg {
         gid: rnd.next_u64(),
         file_type: 0,
