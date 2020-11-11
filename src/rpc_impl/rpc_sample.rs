@@ -1,4 +1,4 @@
-use crate::{com, com::*, pb, sms_sender, utils, mock};
+use crate::{com, com::*, mock, pb, sms_sender, utils};
 use image;
 use image::imageops::crop_imm;
 use image::GenericImageView;
@@ -241,16 +241,16 @@ impl MemDb {
         let u = &self.users.get(0).unwrap();
         for i in 1..5 {
             let cid = self.get_next_cid();
-            let g = pb::Group{
+            let g = pb::Group {
                 cid: cid,
-                group_title: format!("Group #{}",i),
+                group_title: format!("Group #{}", i),
                 user_name: "".to_string(),
                 creator_profile_cid: 0,
                 history_viewable: false,
                 is_open_group: false,
                 seq: 0,
                 avatar_count: 0,
-                about: format!("About Group #{}",i),
+                about: format!("About Group #{}", i),
                 invite_link_hash: "abcd".to_string(),
                 members_count: 8,
                 admins_count: 2,
@@ -262,12 +262,11 @@ impl MemDb {
                 is_banned: false,
                 last_message: None,
                 pinned_message: None,
-                avatar: Some(_get_sample_avatar())
+                avatar: Some(_get_sample_avatar()),
             };
             self.groups.push(g);
         }
     }
-
 }
 
 fn make_channel_msgs(ch: pb::Channel, pid: u32) -> Vec<pb::Message> {
