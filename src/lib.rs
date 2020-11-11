@@ -5,13 +5,13 @@
 #![allow(soft_unstable)]
 
 pub mod com;
+pub mod mock;
 pub mod pb;
 pub mod rpc;
 pub mod rpc_fns;
 pub mod rpc_fns_default;
 pub mod rpc_impl;
 pub mod sms_sender;
-pub mod mock;
 
 pub mod errors;
 

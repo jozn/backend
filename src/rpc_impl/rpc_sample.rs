@@ -7,8 +7,8 @@ use rand::Rng;
 use std::borrow::Borrow;
 use std::cell::Cell;
 use std::collections::HashMap;
-use std::path::PathBuf;
 use std::ops::Add;
+use std::path::PathBuf;
 
 static FACT: OnceCell<MemDb> = OnceCell::new();
 
@@ -330,10 +330,4 @@ fn _get_sample_image() -> (String, u32, u32) {
     )
 }
 
-fn _sample_images_to_json() {
-
-
-
-
-}
-
+fn _sample_images_to_json() {}
