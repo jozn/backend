@@ -3,4 +3,3 @@ use crate::errors;
 pub use errors::GenErr;
 
 pub struct UserParam {}
-

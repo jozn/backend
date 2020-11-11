@@ -1,18 +1,19 @@
 use crate::{com, com::*, pb, sms_sender, utils};
-use std::cell::Cell;
-use std::borrow::Borrow;
-use std::collections::HashMap;
-use rand::Rng;
 use image;
-use image::GenericImageView;
 use image::imageops::crop_imm;
+use image::GenericImageView;
 use once_cell::sync::OnceCell;
+use rand::Rng;
+use std::borrow::Borrow;
+use std::cell::Cell;
+use std::collections::HashMap;
 use std::path::PathBuf;
+use std::ops::Add;
 
-static  FACT: OnceCell<MemDb> = OnceCell::new();
+static FACT: OnceCell<MemDb> = OnceCell::new();
 
-fn _get_fact() ->  &'static MemDb {
-    let vec = FACT.get_or_init( || {
+fn _get_fact() -> &'static MemDb {
+    let vec = FACT.get_or_init(|| {
         let mut res = MemDb::default();
         res.build();
         res
@@ -20,11 +21,17 @@ fn _get_fact() ->  &'static MemDb {
     vec
 }
 
-pub async fn GetUsers1(up: &UserParam, param: pb::GetUsers1Param) -> Result<pb::GetUsers1Response, GenErr> {
+pub async fn GetUsers1(
+    up: &UserParam,
+    param: pb::GetUsers1Param,
+) -> Result<pb::GetUsers1Response, GenErr> {
     let db = _get_fact();
     Ok(pb::GetUsers1Response::default())
 }
-pub async fn GetProfiles(up: &UserParam, param: pb::GetProfilesParam) -> Result<pb::GetProfilesResponse, GenErr> {
+pub async fn GetProfiles(
+    up: &UserParam,
+    param: pb::GetProfilesParam,
+) -> Result<pb::GetProfilesResponse, GenErr> {
     let db = _get_fact();
     let mut pros = vec![];
 
@@ -32,17 +39,28 @@ pub async fn GetProfiles(up: &UserParam, param: pb::GetProfilesParam) -> Result<
         pros.push(p.def_profile.as_ref().unwrap().clone());
     }
 
-    Ok(pb::GetProfilesResponse{
-        profiles: pros,
-    })
+    let res = pb::GetProfilesResponse { profiles: pros };
+    println!("in proile {:#?}", &res);
+    Ok(res)
 }
-pub async fn GetChannels(up: &UserParam, param: pb::GetChannelsParam) -> Result<pb::GetChannelsResponse, GenErr> {
+pub async fn GetChannels(
+    up: &UserParam,
+    param: pb::GetChannelsParam,
+) -> Result<pb::GetChannelsResponse, GenErr> {
     let db = _get_fact();
     let mut vec = vec![];
 
-    for p in &db.users{
+    for p in &db.users {
         let pro = p.def_profile.as_ref().unwrap();
-        vec.push(p.def_profile.as_ref().unwrap().primary_channel.as_ref().unwrap().clone());
+        vec.push(
+            p.def_profile
+                .as_ref()
+                .unwrap()
+                .primary_channel
+                .as_ref()
+                .unwrap()
+                .clone(),
+        );
         let chs = pro.channels.clone();
         for c in chs {
             // vec.push(c);
@@ -50,30 +68,32 @@ pub async fn GetChannels(up: &UserParam, param: pb::GetChannelsParam) -> Result<
         // vec.push_all(p.def_profile.unwrap().channels.clone());
     }
 
-    Ok(pb::GetChannelsResponse{
-        channels: vec
-    })
+    Ok(pb::GetChannelsResponse { channels: vec })
 }
-pub async fn GetDirects(up: &UserParam, param: pb::GetDirectsParam) -> Result<pb::GetDirectsResponse, GenErr> {
+pub async fn GetDirects(
+    up: &UserParam,
+    param: pb::GetDirectsParam,
+) -> Result<pb::GetDirectsResponse, GenErr> {
     Ok(pb::GetDirectsResponse::default())
 }
-pub async fn GetMessages(up: &UserParam, param: pb::GetMessagesParam) -> Result<pb::GetMessagesResponse, GenErr> {
+pub async fn GetMessages(
+    up: &UserParam,
+    param: pb::GetMessagesParam,
+) -> Result<pb::GetMessagesResponse, GenErr> {
     let db = _get_fact();
 
     let msgs = db.messages.get(&9).unwrap().clone();
 
-    Ok(pb::GetMessagesResponse{
-        directs: msgs
-    })
+    Ok(pb::GetMessagesResponse { directs: msgs })
 }
-const MAX_USER : u32= 5;
+const MAX_USER: u32 = 5;
 #[derive(Debug)]
 pub struct MemDb {
     users: Vec<pb::User>,
     messages: HashMap<u32, Vec<pb::Message>>,
     contacts: HashMap<u32, Vec<pb::Contact>>,
     gid_gen: utils::id_gen::SeqTimeIdGen,
-   //  cid3: Cell<u32>,
+    //  cid3: Cell<u32>,
     cid: u32,
 }
 
@@ -94,10 +114,10 @@ impl MemDb {
     pub fn build(&mut self) {
         self.gen_users();
         self.gen_extra_channels();
-        // self.gen_messages(); // very slow for images
+        self.gen_messages(); // very slow for images
         self.gen_contacts();
     }
-    pub fn get_next_cid(&mut self) -> u32{
+    pub fn get_next_cid(&mut self) -> u32 {
         let res = self.cid;
         self.cid += 1;
         res
@@ -109,17 +129,17 @@ impl MemDb {
             let pro_cid = self.get_next_cid();
             let chanel_cid = self.get_next_cid();
 
-            let ch = pb::Channel{
+            let ch = pb::Channel {
                 cid: chanel_cid,
-                user_name: format!("profile{}",u),
-                channel_name: format!("channel def u#{}",u),
+                user_name: format!("profile{}", u),
+                channel_name: format!("channel def u#{}", u),
                 creator_profile_cid: pro_cid,
                 is_profile_channel: true,
                 about: format!("my about user def ch {}", u),
                 ..Default::default()
             };
 
-            let pro = pb::Profile{
+            let pro = pb::Profile {
                 cid: pro_cid,
                 user_cid: user_cid,
                 primary_channel: Some(ch),
@@ -133,7 +153,7 @@ impl MemDb {
                 ..Default::default()
             };
 
-            let user = pb::User{
+            let user = pb::User {
                 cid: user_cid,
                 phone: format!("+9890151323{}", u),
                 email: format!("exampl{}@gmail.com", u),
@@ -150,7 +170,7 @@ impl MemDb {
                 shopping_profile: None,
                 first_name: format!("first"),
                 last_name: format!("last #{}", u),
-                user_counts: None
+                user_counts: None,
             };
 
             self.users.push(user);
@@ -165,19 +185,26 @@ impl MemDb {
             let chanel_cid = self.get_next_cid();
 
             let mut profile = u.def_profile.borrow().as_ref().unwrap();
-            let ch = pb::Channel{
+            let ch = pb::Channel {
                 cid: chanel_cid,
-                user_name: format!("Chan#{}",chanel_cid),
-                channel_name: format!("channel #{} u{}",chanel_cid, u.cid),
+                user_name: format!("Chan#{}", chanel_cid),
+                channel_name: format!("channel #{} u{}", chanel_cid, u.cid),
                 creator_profile_cid: profile.cid,
                 is_profile_channel: false,
                 about: format!("my about extra chan {}", u.first_name),
                 ..Default::default()
             };
 
-            self.users.get_mut(id).unwrap().def_profile.as_mut().unwrap().channels.push(ch);
-            id +=1;
-           // profile.channels.push(ch);
+            self.users
+                .get_mut(id)
+                .unwrap()
+                .def_profile
+                .as_mut()
+                .unwrap()
+                .channels
+                .push(ch);
+            id += 1;
+            // profile.channels.push(ch);
         }
     }
 
@@ -186,11 +213,13 @@ impl MemDb {
             // profile msgs
             let profile = u.def_profile.as_ref().unwrap();
             let def_ch = (profile.primary_channel.as_ref()).unwrap();
-            self.messages.insert(def_ch.cid, make_channel_msgs(def_ch.clone(), profile.cid));
+            self.messages
+                .insert(def_ch.cid, make_channel_msgs(def_ch.clone(), profile.cid));
 
             // channels msgs
             for ch in &profile.channels {
-                self.messages.insert(ch.cid, make_channel_msgs(ch.clone(), profile.cid));
+                self.messages
+                    .insert(ch.cid, make_channel_msgs(ch.clone(), profile.cid));
             }
         }
     }
@@ -198,15 +227,16 @@ impl MemDb {
     fn gen_contacts(&mut self) {
         for u in &self.users.clone() {
             let profile = u.def_profile.as_ref().unwrap();
-            self.contacts.insert(profile.cid,make_contacts(profile.cid,&self));
+            self.contacts
+                .insert(profile.cid, make_contacts(profile.cid, &self));
         }
     }
 }
 
-fn make_channel_msgs(ch: pb::Channel, pid :u32) -> Vec<pb::Message>{
-    let mut v =  vec![];
+fn make_channel_msgs(ch: pb::Channel, pid: u32) -> Vec<pb::Message> {
+    let mut v = vec![];
     let mut genid = utils::id_gen::SeqTimeIdGen::new(15);
-    for i in 1..40 {
+    for i in 1..2 {
         let mut m = pb::Message {
             gid: genid.get_next_id().to_u64(),
             by_profile_cid: pid,
@@ -227,7 +257,7 @@ fn make_channel_msgs(ch: pb::Channel, pid :u32) -> Vec<pb::Message>{
             counts: None,
             setting: None,
             product: None,
-            files: vec![]
+            files: vec![],
         };
         if i % 3 == 0 {
             m.message_type = pb::MessageType::Image as i32;
@@ -238,13 +268,13 @@ fn make_channel_msgs(ch: pb::Channel, pid :u32) -> Vec<pb::Message>{
     v
 }
 
-fn make_contacts(pid :u32, db: &MemDb) -> Vec<pb::Contact>{
-    let mut v =  vec![];
+fn make_contacts(pid: u32, db: &MemDb) -> Vec<pb::Contact> {
+    let mut v = vec![];
     let mut genid = utils::id_gen::SeqTimeIdGen::new(15);
     for u in &db.users {
         let peer_cid = u.def_profile.as_ref().unwrap().cid;
         if peer_cid == pid {
-            continue
+            continue;
         }
         let m = pb::Contact {
             gid: genid.get_next_id().to_u64(),
@@ -254,7 +284,7 @@ fn make_contacts(pid :u32, db: &MemDb) -> Vec<pb::Contact>{
             first_name: "dev name".to_string(),
             last_name: "last".to_string(),
             peer_profile_cid: peer_cid,
-            created_time: 123412341
+            created_time: 123412341,
         };
 
         v.push(m);
@@ -262,9 +292,9 @@ fn make_contacts(pid :u32, db: &MemDb) -> Vec<pb::Contact>{
     v
 }
 
-fn make_sample_file() -> pb::FileMsg{
+fn make_sample_file() -> pb::FileMsg {
     let img = _get_sample_image();
-    pb::FileMsg{
+    pb::FileMsg {
         gid: 234,
         width: img.1,
         height: img.2,
@@ -273,19 +303,19 @@ fn make_sample_file() -> pb::FileMsg{
     }
 }
 
-static  IMAGE_FILES: OnceCell<Vec<std::path::PathBuf>> = OnceCell::new();
+static IMAGE_FILES: OnceCell<Vec<std::path::PathBuf>> = OnceCell::new();
 
-fn _get_sample_image() -> (String, u32, u32){
+fn _get_sample_image() -> (String, u32, u32) {
     let mut rng = rand::thread_rng();
 
-    let vec = IMAGE_FILES.get_or_init( || {
+    let vec = IMAGE_FILES.get_or_init(|| {
         let imgs = std::fs::read_dir("/home/hamid/life/__files__/Telegram/images").unwrap();
         println!("init vec of image files");
         let mut vec = vec![];
         for ig in imgs {
             let ig = ig.unwrap();
             vec.push(ig.path());
-        };
+        }
         vec
     });
 
@@ -293,5 +323,17 @@ fn _get_sample_image() -> (String, u32, u32){
 
     let img_path = vec.get(id).unwrap();
     let dim = image::open(img_path).unwrap().dimensions();
-    (img_path.clone().into_os_string().into_string().unwrap(),dim.0,dim.1)
+    (
+        img_path.clone().into_os_string().into_string().unwrap(),
+        dim.0,
+        dim.1,
+    )
 }
+
+fn _sample_images_to_json() {
+
+
+
+
+}
+

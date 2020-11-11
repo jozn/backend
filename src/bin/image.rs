@@ -12,10 +12,7 @@ fn main() {
         let ig = ig.unwrap();
         let img = image::open(ig.path()).unwrap();
 
-        println!("{:?}",img.dimensions());
-
+        println!("{:?}", img.dimensions());
     }
     // image::open()
-
 }
-

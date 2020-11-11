@@ -2,21 +2,22 @@ use crate::com::GenErr;
 use rand::prelude::*;
 use std::borrow::Borrow;
 
-fn get_confirm_msg(code :u32) -> String {
+fn get_confirm_msg(code: u32) -> String {
     format!(
-r#"<#> کد تایید:  {}
+        r#"<#> کد تایید:  {}
 Flip-ir
 rqwerljk"#,
-code )
+        code
+    )
 }
 
-pub async fn send_confirm_sms(to_phone: &str, code_len :u32) -> Result<(), GenErr> {
-    let code: u32 = rand::thread_rng().gen_range( 10_u32.pow(code_len-1) , 10_u32.pow(code_len));
+pub async fn send_confirm_sms(to_phone: &str, code_len: u32) -> Result<(), GenErr> {
+    let code: u32 = rand::thread_rng().gen_range(10_u32.pow(code_len - 1), 10_u32.pow(code_len));
     let msg = get_confirm_msg(code);
     send_sms(to_phone, &msg).await
 }
 
-async fn send_sms(to_phone: &str, message :&str) -> Result<(), GenErr> {
+async fn send_sms(to_phone: &str, message: &str) -> Result<(), GenErr> {
     ghasedak::send(to_phone, message).await?;
     Ok(())
 }
@@ -26,7 +27,7 @@ mod ghasedak {
     use serde::{Deserialize, Serialize};
     use serde_json;
 
-    pub async fn send(to_phone: &str, message :&str) -> Result<(), reqwest::Error> {
+    pub async fn send(to_phone: &str, message: &str) -> Result<(), reqwest::Error> {
         let params = [
             ("message", message),
             ("receptor", to_phone),
@@ -58,18 +59,21 @@ mod ghasedak {
         Ok(())
     }
 
-    #[derive(Default, Debug, Clone, PartialEq, serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(
+        Default, Debug, Clone, PartialEq, serde_derive::Serialize, serde_derive::Deserialize,
+    )]
     #[serde(rename_all = "camelCase")]
     pub struct SmsResult {
         pub result: ResultOut,
         pub items: Option<Vec<i64>>,
     }
 
-    #[derive(Default, Debug, Clone, PartialEq, serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(
+        Default, Debug, Clone, PartialEq, serde_derive::Serialize, serde_derive::Deserialize,
+    )]
     #[serde(rename_all = "camelCase")]
     pub struct ResultOut {
         pub code: i64,
         pub message: String,
     }
-
 }

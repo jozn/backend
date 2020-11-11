@@ -8,7 +8,7 @@ fn main() {
 
     let mut vec_protos = vec![];
     for fl in dir {
-        let path = format!("{:}",fl.unwrap().path().to_str().unwrap());
+        let path = format!("{:}", fl.unwrap().path().to_str().unwrap());
         vec_protos.push(path);
     }
     // println!("{:#?}", &vec_protos);
@@ -45,7 +45,7 @@ fn main_bk() {
 
     let mut vec_protos = vec![];
     for p in &protos_files {
-        vec_protos.push(format!("src/protos/proto/{}",p));
+        vec_protos.push(format!("src/protos/proto/{}", p));
     }
 
     let mut config = prost_build::Config::default();

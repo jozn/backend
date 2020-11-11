@@ -7,8 +7,8 @@ async fn main() {
     let res = sample2().await;
     println!("ewa: {:#?}", res);
 
-    let o= std::path::Path::new("like/tes.te");
-    println!("{:?}",o);
+    let o = std::path::Path::new("like/tes.te");
+    println!("{:?}", o);
 }
 
 async fn sample2() -> Result<(), reqwest::Error> {
