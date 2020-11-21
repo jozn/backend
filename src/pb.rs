@@ -171,9 +171,10 @@ pub struct Direct {
     pub visible_from_msg_gid: u64,
     #[prost(message, optional, tag = "48")]
     pub channel: ::std::option::Option<Channel>,
-    /// ?
+    /// ? must use profile
     #[prost(message, optional, tag = "49")]
     pub contact: ::std::option::Option<Contact>,
+    ///  Profile profile = 149;
     #[prost(message, optional, tag = "50")]
     pub group: ::std::option::Option<Group>,
     #[prost(message, optional, tag = "25")]

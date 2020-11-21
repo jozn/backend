@@ -1,3 +1,5 @@
 pb-rs --dont_use_cow proto/* -d pb
 
 + in the wire rpc names should not matters / just a namespace, only methods name should matters.
+
+sfz -b 0.0.0.0 /

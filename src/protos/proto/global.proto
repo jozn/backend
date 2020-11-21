@@ -135,7 +135,8 @@ message Direct {
   fixed64 visible_from_msg_gid = 11;
 
   Channel channel = 48;
-  Contact contact = 49; // ?
+  Contact contact = 49; // ? must use profile
+//  Profile profile = 149;
   Group group = 50;
   Message last_message = 25;
   Message pinned_message = 26;

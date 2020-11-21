@@ -40,7 +40,7 @@ pub async fn GetProfiles(
     }
 
     let res = pb::GetProfilesResponse { profiles: pros };
-    println!("in proile {:#?}", &res);
+    println!("in proile {:}", 1);
     Ok(res)
 }
 pub async fn GetChannels(
@@ -74,7 +74,11 @@ pub async fn GetDirects(
     up: &UserParam,
     param: pb::GetDirectsParam,
 ) -> Result<pb::GetDirectsResponse, GenErr> {
-    Ok(pb::GetDirectsResponse::default())
+    let db = _get_fact();
+    let mut vec = db.direct_groups.clone();
+    println!("sending GetDirect len = {}", vec.len());
+    Ok(pb::GetDirectsResponse { directs: vec })
+    // Ok(pb::GetDirectsResponse::default())
 }
 pub async fn GetMessages(
     up: &UserParam,
@@ -86,13 +90,16 @@ pub async fn GetMessages(
 
     Ok(pb::GetMessagesResponse { directs: msgs })
 }
-const MAX_USER: u32 = 5;
+const MAX_USER: u32 = 50;
 #[derive(Debug)]
 pub struct MemDb {
     users: Vec<pb::User>,
     messages: HashMap<u32, Vec<pb::Message>>,
     contacts: HashMap<u32, Vec<pb::Contact>>,
     groups: Vec<pb::Group>,
+    direct_chats: Vec<pb::Direct>,
+    direct_channels: Vec<pb::Direct>,
+    direct_groups: Vec<pb::Direct>,
     gid_gen: utils::id_gen::SeqTimeIdGen,
     //  cid3: Cell<u32>,
     cid: u32,
@@ -107,6 +114,9 @@ impl Default for MemDb {
             messages: HashMap::new(),
             contacts: HashMap::new(),
             groups: vec![],
+            direct_chats: vec![],
+            direct_channels: vec![],
+            direct_groups: vec![],
             // ..Default::default() > will stackoverflow
         }
     }
@@ -119,6 +129,7 @@ impl MemDb {
         self.gen_messages(); // very slow for images
         self.gen_contacts();
         self.gen_groups();
+        self.gen_directs();
     }
     pub fn get_next_cid(&mut self) -> u32 {
         let res = self.cid;
@@ -269,12 +280,49 @@ impl MemDb {
             self.groups.push(g);
         }
     }
+
+    fn gen_directs(&mut self) {
+        let u = &self.users.get(0).unwrap();
+        // for i in 1..5 {
+        let mut i = 1;
+        for group in &self.groups {
+            i += 1;
+            let gc = group.clone();
+            let d = pb::Direct {
+                gid: 6,
+                profile_cid: 4,
+                direct_type: pb::DirectTypeEnum::Group as i32,
+                custom_title: format!("direct groups {}", i),
+                pin_time_ms: 0,
+                unseen_count: i * 4,
+                seq: 6,
+                is_active: true,
+                created_time: i,
+                sort_time_ms: i as u64,
+                sync_time_ms: i as u64,
+                my_last_seen_seq: 0,
+                my_last_seen_msg_id: 0,
+                pined_msgs_count: 0,
+                visible_from_msg_gid: 0,
+                channel: None,
+                contact: None,
+                group: Some(gc),
+                last_message: None,
+                pinned_message: None,
+                group_member: None,
+                draft: None,
+                custom_notification: None,
+                ..Default::default()
+            };
+            self.direct_groups.push(d);
+        }
+    }
 }
 
 fn make_channel_msgs(ch: pb::Channel, pid: u32) -> Vec<pb::Message> {
     let mut v = vec![];
     let mut genid = utils::id_gen::SeqTimeIdGen::new(15);
-    for i in 1..2 {
+    for i in 1..20 {
         let mut m = pb::Message {
             gid: genid.get_next_id().to_u64(),
             by_profile_cid: pid,
@@ -365,7 +413,7 @@ fn _make_last_msg(pid: u32) -> pb::Message {
         product: None,
         files: vec![],
     };
-    if rand::thread_rng().gen_bool(1.2) {
+    if rand::thread_rng().gen_range(0, 10) < 5 {
         m.message_type = pb::MessageType::Image as i32;
         m.files = vec![_get_sample_image()];
     }
