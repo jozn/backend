@@ -30,8 +30,7 @@ async fn main() {
                     // println!("t {} {}", m, i);
                 }
             }
-        }
-        );
+        });
     }
 
     let mut c = 0;
