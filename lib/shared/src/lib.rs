@@ -17,6 +17,7 @@ pub mod errors;
 
 use errors::GenErr;
 
+mod user_space;
 pub mod utils;
 
 pub use utils::id_gen;
