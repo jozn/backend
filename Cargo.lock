@@ -222,43 +222,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cdb031dd78e28731d87d56cc8ffef4a8f36ca26c38fe2de700543e627f8a464a"
 
 [[package]]
-name = "backbone"
-version = "0.1.0"
-dependencies = [
- "async-std",
- "async-trait",
- "bincode",
- "bytes",
- "cdrs",
- "cdrs-async",
- "cdrs_helpers_derive",
- "crossbeam",
- "http",
- "hyper",
- "image",
- "lazy_static",
- "log",
- "maplit",
- "mime-db",
- "mysql",
- "once_cell",
- "pb-rs",
- "prost",
- "prost-build",
- "prost-types",
- "quick-protobuf",
- "rand 0.7.3",
- "reqwest",
- "rocksdb",
- "rusqlite",
- "serde",
- "serde_derive",
- "serde_json",
- "threadpool",
- "tokio",
-]
-
-[[package]]
 name = "backtrace"
 version = "0.3.52"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2602,6 +2565,43 @@ dependencies = [
  "digest",
  "fake-simd",
  "opaque-debug",
+]
+
+[[package]]
+name = "shared"
+version = "0.1.0"
+dependencies = [
+ "async-std",
+ "async-trait",
+ "bincode",
+ "bytes",
+ "cdrs",
+ "cdrs-async",
+ "cdrs_helpers_derive",
+ "crossbeam",
+ "http",
+ "hyper",
+ "image",
+ "lazy_static",
+ "log",
+ "maplit",
+ "mime-db",
+ "mysql",
+ "once_cell",
+ "pb-rs",
+ "prost",
+ "prost-build",
+ "prost-types",
+ "quick-protobuf",
+ "rand 0.7.3",
+ "reqwest",
+ "rocksdb",
+ "rusqlite",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "threadpool",
+ "tokio",
 ]
 
 [[package]]

@@ -1,5 +1,5 @@
 [package]
-name = "backbone"
+name = "shared"
 version = "0.1.0"
 authors = ["Hamid <7atashfeshan@gmail.com>"]
 edition = "2018"

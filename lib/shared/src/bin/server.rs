@@ -4,7 +4,7 @@
 #![allow(warnings)]
 #![allow(soft_unstable)]
 
-extern crate backbone;
+extern crate shared;
 
 use std::convert::Infallible;
 use std::net::SocketAddr;
@@ -15,8 +15,8 @@ use hyper::{Body, Request, Response, Server};
 use quick_protobuf::{BytesReader, BytesWriter};
 use quick_protobuf::{MessageRead, MessageWrite, Writer};
 
-use backbone::pb;
-use backbone::rpc;
+use shared::pb;
+use shared::rpc;
 
 fn to_bin(s: String) -> Vec<u8> {
     s.as_bytes().to_owned()

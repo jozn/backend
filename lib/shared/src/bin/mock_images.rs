@@ -1,9 +1,9 @@
-// extern crate backbone;
+// extern crate shared;
 
-use backbone;
 use image;
 use image::imageops::crop_imm;
 use image::GenericImageView;
+use shared;
 use std::ops::Add;
 
 fn main() {

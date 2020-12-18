@@ -1,10 +1,10 @@
-// extern crate backbone;
+// extern crate shared;
 
-use backbone;
+use shared;
 
 #[tokio::main]
 async fn main() {
-    backbone::sms_sender::send_confirm_sms("09015132328", 5).await;
+    shared::sms_sender::send_confirm_sms("09015132328", 5).await;
 
-    backbone::rpc::RpcClient
+    // shared::rpc::RpcClient
 }

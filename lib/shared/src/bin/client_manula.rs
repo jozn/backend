@@ -4,11 +4,11 @@
 #![allow(warnings)]
 #![allow(soft_unstable)]
 
-extern crate backbone;
+extern crate shared;
 
-use backbone::{com::*, pb, rpc::method_ids};
 use quick_protobuf::{deserialize_from_slice, BytesReader, MessageRead, MessageWrite, Writer};
 use serde::{Deserialize, Serialize};
+use shared::{com::*, pb, rpc::method_ids};
 
 #[tokio::main]
 async fn main() {

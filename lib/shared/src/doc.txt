@@ -6,3 +6,8 @@ sfz -b 0.0.0.0 /
 
 // http/2 bench > for hyper it's in ~200k range
  h2load -n1000000 -c100 -m10 http://localhost:8081/
+
+
+requirement of projects:
+gcc
+llvm (for rocksdb lib)
