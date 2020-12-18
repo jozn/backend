@@ -4,11 +4,11 @@
 #![allow(warnings)]
 #![allow(soft_unstable)]
 
-extern crate shared;
+extern crate shared2;
 
 use quick_protobuf::{deserialize_from_slice, BytesReader, MessageRead, MessageWrite, Writer};
 use serde::{Deserialize, Serialize};
-use shared::{com::*, pb, rpc::method_ids};
+use shared2::{com::*, pb, rpc::method_ids};
 
 #[tokio::main]
 async fn main() {

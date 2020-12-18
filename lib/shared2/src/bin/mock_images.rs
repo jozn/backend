@@ -1,9 +1,9 @@
-// extern crate shared;
+// extern crate shared2;
 
 use image;
 use image::imageops::crop_imm;
 use image::GenericImageView;
-use shared;
+use shared2;
 use std::ops::Add;
 
 fn main() {

@@ -4,10 +4,10 @@
 #![allow(warnings)]
 #![allow(soft_unstable)]
 
-extern crate shared;
+extern crate shared2;
 
 use prost;
-use shared::pb;
+use shared2::pb;
 
 fn main() {
     let p = pb::Invoke {

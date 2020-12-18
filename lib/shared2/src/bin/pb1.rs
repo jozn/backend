@@ -1,10 +1,10 @@
-extern crate shared;
+extern crate shared2;
 
 use quick_protobuf::{MessageRead, MessageWrite, Writer};
 use reqwest::header::USER_AGENT;
 use serde::{Deserialize, Serialize};
 use serde_json;
-use shared::pb;
+use shared2::pb;
 
 #[tokio::main]
 async fn main() {

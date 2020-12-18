@@ -1,8 +1,8 @@
-// extern crate shared;
+// extern crate shared2;
 
 use image;
 use image::GenericImageView;
-use shared;
+use shared2;
 
 fn main() {
     println!("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
