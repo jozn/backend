@@ -9,3 +9,4 @@ lessons:
 
 // For dart
 ~/life/bin/protoc /hamid/life/_active/backbone/src/protos/proto/* -I=/hamid/life/_active/backbone/src/protos/proto --dart_out=/hamid/life/flip/flip_app/flip_app/lib/pb /hamid/life/_active/backbone/src/protos/proto/*
+
