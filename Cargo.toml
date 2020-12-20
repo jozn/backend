@@ -3,4 +3,5 @@ members = [
     "lib/shared",
     "lib/shared2",
     "micro/cmaster",
+    "micro/play",
 ]

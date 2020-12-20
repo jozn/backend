@@ -1,4 +1,4 @@
-use crate::{com, com::*, pb, sms_sender};
+use crate::{com, com::*, pb};
 
 pub async fn SendConfirmCode(
     up: &UserParam,
@@ -6,6 +6,6 @@ pub async fn SendConfirmCode(
 ) -> Result<pb::SendConfirmCodeResponse, GenErr> {
     println!("called sms sender");
     // sms_sender::send().await;
-    sms_sender::send_confirm_sms("09015132328", 4).await;
+    // sms_sender::send_confirm_sms("09015132328", 4).await;
     Ok(pb::SendConfirmCodeResponse::default())
 }

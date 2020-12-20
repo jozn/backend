@@ -5,8 +5,8 @@
 #![allow(soft_unstable)]
 
 pub mod errors;
-pub mod utils;
 pub mod sms_sender;
+pub mod utils;
 
 #[cfg(test)]
 mod tests {
