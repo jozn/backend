@@ -1,4 +1,4 @@
-use crate::com::GenErr;
+use crate::errors::GenErr;
 use rand::prelude::*;
 use std::borrow::Borrow;
 

@@ -11,7 +11,6 @@ pub mod rpc;
 pub mod rpc_fns;
 pub mod rpc_fns_default;
 pub mod rpc_impl;
-pub mod sms_sender;
 
 pub mod errors;
 

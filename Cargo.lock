@@ -2586,6 +2586,9 @@ dependencies = [
  "rand 0.7.3",
  "reqwest",
  "rocksdb",
+ "serde",
+ "serde_derive",
+ "serde_json",
  "tokio",
 ]
 
