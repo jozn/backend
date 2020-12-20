@@ -2574,6 +2574,20 @@ dependencies = [
 [[package]]
 name = "shared"
 version = "0.1.0"
+dependencies = [
+ "bytes",
+ "http",
+ "hyper",
+ "image",
+ "once_cell",
+ "prost",
+ "prost-build",
+ "prost-types",
+ "rand 0.7.3",
+ "reqwest",
+ "rocksdb",
+ "tokio",
+]
 
 [[package]]
 name = "shared2"
