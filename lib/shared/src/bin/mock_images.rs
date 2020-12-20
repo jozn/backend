@@ -3,18 +3,17 @@
 use image;
 use image::imageops::crop_imm;
 use image::GenericImageView;
-use shared2;
 use std::ops::Add;
 
 fn main() {
     _extract_images_mod(
         "/home/hamid/life/__files__/Telegram/images",
-        "./src/mock/images.rs",
+        "./lib/shared/src/mock/images.rs",
     );
 
     _extract_images_mod(
         "/home/hamid/life/__files__/avatars",
-        "./src/mock/avatars.rs",
+        "./lib/shared/src/mock/avatars.rs",
     );
 }
 
@@ -63,5 +62,6 @@ pub fn get_images() -> Vec<Image> {{
 
     // println!("{}",&out_file);
 
-    std::fs::write(out_rust_file, out_file);
+    // std::;
+    std::fs::write(out_rust_file, out_file).unwrap();
 }
