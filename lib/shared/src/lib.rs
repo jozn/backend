@@ -5,8 +5,12 @@
 #![allow(soft_unstable)]
 
 pub mod errors;
+pub mod new_rpc;
+pub mod pb;
 pub mod sms_sender;
 pub mod utils;
+
+pub struct UserParam {}
 
 #[cfg(test)]
 mod tests {

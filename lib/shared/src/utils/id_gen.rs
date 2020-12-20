@@ -159,7 +159,7 @@ fn get_time_milli_debug() -> u64 {
 
 #[cfg(test)]
 mod tests {
-    use crate::id_gen::STARTING_TIME;
+    use super::STARTING_TIME;
     use std::collections::HashSet;
     use std::thread;
     use std::time;
