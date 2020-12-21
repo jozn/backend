@@ -69,7 +69,7 @@ pub type FHttpResponse = (u16, Vec<u8>);
 pub struct FHttpRequest {
     method: http::Method,
     path: String,
-    body: Vec<u8>,
+    body: bytes::Bytes,
 }
 
 trait ServeHttpRequest {
@@ -85,7 +85,7 @@ impl FIMicroService for SampleService {
         4040
     }
 
-    fn serve_http(&self, req: FHttpRequest) -> (u16, Vec<u8>) {
+    fn serve_request(req: FHttpRequest) -> (u16, Vec<u8>) {
         (200, b"hi there".to_vec())
     }
 }
@@ -93,24 +93,32 @@ impl FIMicroService for SampleService {
 #[async_trait]
 pub trait FIMicroService {
     fn port(&self) -> u16;
-    fn serve_http(&self, req: FHttpRequest) -> FHttpResponse;
+    fn serve_request(req: FHttpRequest) -> FHttpResponse;
 
-    async fn server_http_requests(&self) {
+    async fn listen_http_requests(&self) {
         let addr = SocketAddr::from(([0, 0, 0, 0], self.port()));
-
         println!("There will some sort.");
 
         let make_svc = make_service_fn(move |_| async {
             Ok::<_, HyperError>(service_fn(move |_req| async {
-                let m = 32;
-                // let v = self.port;
-                let res = Response::new(Body::from("Hello World"));
+                let path = _req.uri().path().to_string();
+                let bo = _req.into_body();
+                let bts = hyper::body::to_bytes(bo).await.unwrap();
+
+                let req = FHttpRequest {
+                    method: Default::default(),
+                    path: path,
+                    body: bts,
+                };
+
+                let respose = Self::serve_request(req);
+
+                let res = Response::new(Body::from(respose.1));
                 Ok::<_, HyperError>(res)
             }))
         });
 
         let server = Server::bind(&addr).serve(make_svc);
-        // println!("Server is running on port {}", self.port);
 
         if let Err(e) = server.await {
             eprintln!("server error: {}", e);
@@ -118,46 +126,7 @@ pub trait FIMicroService {
     }
 }
 
-/*impl FMicroService {
-    pub async fn server_http_requests(&self) {
-        let addr = SocketAddr::from(([0, 0, 0, 0], self.port));
-        // let make_svc =
-        //     make_service_fn(|_conn| async { Ok::<_, Infallible>(service_fn(server_http)) });
-        /*        let make_svc = make_service_fn(|_conn| async {
-            Ok::<_, Infallible>(service_fn(
-                |req: Request<Body>| -> Result<Response<Body>, Infallible> {
-                    Ok(Response::builder().status(200).body("sdf".into()).unwrap())
-                },
-            ))
-        });*/
-
-        /*        let service = service_fn(|req: Request<Body>| async move {
-            if req.version() == Version::HTTP_11 {
-                Ok(Response::new(Body::from("Hello World")))
-            } else {
-                // Note: it's usually better to return a Response
-                // with an appropriate StatusCode instead of an Err.
-                Err("not HTTP/1.1, abort connection")
-            }
-        });*/
-
-        let make_svc = make_service_fn(move |_| async {
-            Ok::<_, HyperError>(service_fn(move |_req| async {
-                let m = 32;
-                // let v = self.port;
-                Ok::<_, HyperError>(Response::new(Body::from("Hello World")))
-            }))
-        });
-
-        let server = Server::bind(&addr).serve(make_svc);
-        // println!("Server is running on port {}", self.port);
-
-        if let Err(e) = server.await {
-            eprintln!("server error: {}", e);
-        }
-    }
-}*/
-
+// dead code
 async fn server_http(req: Request<Body>) -> Result<Response<Body>, Infallible> {
     Ok(Response::builder().status(200).body("sdf".into()).unwrap())
 }
