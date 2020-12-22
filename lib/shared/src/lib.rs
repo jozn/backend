@@ -11,6 +11,7 @@ pub mod rpc2;
 // pub mod rpc;
 // mod rpc_fns_default;
 // mod play;
+// pub mod rpc;
 pub mod sms_sender;
 pub mod utils;
 

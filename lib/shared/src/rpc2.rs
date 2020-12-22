@@ -11,11 +11,13 @@ use hyper::{Body, Error as HyperError, Request, Response, Server};
 use std::convert::Infallible;
 use std::net::SocketAddr;
 
+#[derive(Debug)]
 pub struct RpcInvoke {
-    pub method_id: i64, // correct data type should be i32,
-    pub rpc_service: RpcServiceData,
+    method_id: i64, // correct data type should be i32,
+    rpc_service: RpcServiceData,
 }
 
+#[derive(Debug)]
 pub enum RpcServiceData {
     RPC_Auth(RPC_Auth_MethodData),
     RPC_Channel(RPC_Channel_MethodData),
@@ -28,6 +30,7 @@ pub enum RpcServiceData {
     RPC_User(RPC_User_MethodData),
 }
 
+#[derive(Debug)]
 pub enum RPC_Auth_MethodData {
     SendConfirmCode(pb::SendConfirmCodeParam),
     ConfirmCode(pb::ConfirmCodeParam),
@@ -35,6 +38,7 @@ pub enum RPC_Auth_MethodData {
     SingIn(pb::SingInParam),
     LogOut(pb::LogOutParam),
 }
+#[derive(Debug)]
 pub enum RPC_Channel_MethodData {
     ChannelCreateChannel(pb::ChannelCreateChannelParam),
     ChannelEditChannel(pb::ChannelEditChannelParam),
@@ -77,6 +81,7 @@ pub enum RPC_Channel_MethodData {
     ChannelBlocked(pb::ChannelBlockedParam),
     ChannelSetDraft(pb::ChannelSetDraftParam),
 }
+#[derive(Debug)]
 pub enum RPC_Chat_MethodData {
     ChatSendMessage(pb::ChatSendMessageParam),
     ChatEditMessage(pb::ChatEditMessageParam),
@@ -88,6 +93,7 @@ pub enum RPC_Chat_MethodData {
     ChatGetMessagesList(pb::ChatGetMessagesListParam),
     ChatGetMediaList(pb::ChatGetMediaListParam),
 }
+#[derive(Debug)]
 pub enum RPC_Direct_MethodData {
     DirectDeleteDirect(pb::DirectDeleteDirectParam),
     DirectChangeTitle(pb::DirectChangeTitleParam),
@@ -115,6 +121,7 @@ pub enum RPC_Direct_MethodData {
     DirectGetFoldersList(pb::DirectGetFoldersListParam),
     DirectGetFoldersFullList(pb::DirectGetFoldersFullListParam),
 }
+#[derive(Debug)]
 pub enum RPC_Group_MethodData {
     GroupCreateGroup(pb::GroupCreateGroupParam),
     GroupEditGroup(pb::GroupEditGroupParam),
@@ -152,6 +159,7 @@ pub enum RPC_Group_MethodData {
     GroupGetAdminsList(pb::GroupGetAdminsListParam),
     GroupSetDraft(pb::GroupSetDraftParam),
 }
+#[derive(Debug)]
 pub enum RPC_Sample_MethodData {
     GetUsers1(pb::GetUsers1Param),
     GetProfiles(pb::GetProfilesParam),
@@ -159,13 +167,16 @@ pub enum RPC_Sample_MethodData {
     GetDirects(pb::GetDirectsParam),
     GetMessages(pb::GetMessagesParam),
 }
+#[derive(Debug)]
 pub enum RPC_Shared_MethodData {
     Echo(pb::EchoParam),
     CheckUserName(pb::CheckUserNameParam),
 }
+#[derive(Debug)]
 pub enum RPC_Upload_MethodData {
     UploadFile(pb::UploadFileParam),
 }
+#[derive(Debug)]
 pub enum RPC_User_MethodData {
     ChangePhoneNumber(pb::ChangePhoneNumberParam),
 }
@@ -1837,6 +1848,7 @@ pub mod method_ids {
     pub const ExampleChangePhoneNumber8: u32 = 79874;
 }
 
+#[derive(Debug)]
 pub enum MethodIds {
     // Service: RPC_Auth
     SendConfirmCode = 939965206,
@@ -1981,6 +1993,7 @@ pub enum MethodIds {
 }
 
 pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
+    // println!("  #4 {}", invoke.method);
     use RpcServiceData::*;
     let rpc = match invoke.method {
         // RPC_Auth
@@ -3239,40 +3252,44 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
     Ok(rpc)
 }
 
-pub async fn server_rpc(act: RpcInvoke, reg: impl All_Rpc_Handler) -> Result<Vec<u8>, GenErr> {
+pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, GenErr> {
+    println!("  #4 {}", act.method_id);
+    println!("   there sfjs f");
+    println!("  #full {:?}", &act);
+
     let res_v8 = match act.rpc_service {
         RpcServiceData::RPC_Auth(method) => match method {
             RPC_Auth_MethodData::SendConfirmCode(param) => {
-                let reg = reg.clone();
-                let response = reg.SendConfirmCode(param).await?;
+                let handler = eror(&reg.RPC_Auth)?;
+                let response = handler.SendConfirmCode(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Auth_MethodData::ConfirmCode(param) => {
-                let reg = reg.clone();
-                let response = reg.ConfirmCode(param).await?;
+                let handler = eror(&reg.RPC_Auth)?;
+                let response = handler.ConfirmCode(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Auth_MethodData::SingUp(param) => {
-                let reg = reg.clone();
-                let response = reg.SingUp(param).await?;
+                let handler = eror(&reg.RPC_Auth)?;
+                let response = handler.SingUp(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Auth_MethodData::SingIn(param) => {
-                let reg = reg.clone();
-                let response = reg.SingIn(param).await?;
+                let handler = eror(&reg.RPC_Auth)?;
+                let response = handler.SingIn(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Auth_MethodData::LogOut(param) => {
-                let reg = reg.clone();
-                let response = reg.LogOut(param).await?;
+                let handler = eror(&reg.RPC_Auth)?;
+                let response = handler.LogOut(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -3280,281 +3297,281 @@ pub async fn server_rpc(act: RpcInvoke, reg: impl All_Rpc_Handler) -> Result<Vec
 
         RpcServiceData::RPC_Channel(method) => match method {
             RPC_Channel_MethodData::ChannelCreateChannel(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelCreateChannel(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelCreateChannel(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelEditChannel(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelEditChannel(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelEditChannel(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelDeleteChannel(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelDeleteChannel(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelDeleteChannel(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelAddAuthor(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelAddAuthor(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelAddAuthor(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelChangeAuthorPermission(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelChangeAuthorPermission(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelChangeAuthorPermission(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelRemoveAuthor(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelRemoveAuthor(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelRemoveAuthor(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelFollowChannel(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelFollowChannel(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelFollowChannel(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelUnFollowChannel(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelUnFollowChannel(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelUnFollowChannel(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelRemoveFollowers(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelRemoveFollowers(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelRemoveFollowers(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelSubscribe(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelSubscribe(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelSubscribe(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelUnSubscribe(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelUnSubscribe(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelUnSubscribe(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelRemoveSubscribers(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelRemoveSubscribers(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelRemoveSubscribers(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelChangePrivacy(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelChangePrivacy(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelChangePrivacy(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelChangeDefaultPermission(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelChangeDefaultPermission(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelChangeDefaultPermission(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelRevokeLink(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelRevokeLink(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelRevokeLink(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelChangeUsername(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelChangeUsername(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelChangeUsername(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelBlockChannel(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelBlockChannel(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelBlockChannel(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelSendMessage(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelSendMessage(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelSendMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelEditMessage(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelEditMessage(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelEditMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelPinMessage(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelPinMessage(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelPinMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelUnPinMessage(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelUnPinMessage(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelUnPinMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelDeleteMessage(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelDeleteMessage(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelDeleteMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelDeleteMessages(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelDeleteMessages(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelDeleteMessages(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelClearHistory(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelClearHistory(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelClearHistory(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelAvatarAdd(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelAvatarAdd(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelAvatarAdd(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelAvatarChange(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelAvatarChange(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelAvatarChange(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelAvatarDelete(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelAvatarDelete(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelAvatarDelete(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelAvatarGetList(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelAvatarGetList(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelAvatarGetList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelSendDoingAction(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelSendDoingAction(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelSendDoingAction(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelReportChannel(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelReportChannel(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelReportChannel(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelReportMessage(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelReportMessage(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelReportMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelGetFull(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelGetFull(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelGetFull(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelGetMessagesList(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelGetMessagesList(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelGetMessagesList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelGetMediaList(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelGetMediaList(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelGetMediaList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelGetAuthors(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelGetAuthors(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelGetAuthors(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelGetFollowers(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelGetFollowers(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelGetFollowers(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelGetFollowings(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelGetFollowings(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelGetFollowings(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelGetSubscribers(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelGetSubscribers(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelGetSubscribers(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelBlocked(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelBlocked(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelBlocked(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Channel_MethodData::ChannelSetDraft(param) => {
-                let reg = reg.clone();
-                let response = reg.ChannelSetDraft(param).await?;
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelSetDraft(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -3562,64 +3579,64 @@ pub async fn server_rpc(act: RpcInvoke, reg: impl All_Rpc_Handler) -> Result<Vec
 
         RpcServiceData::RPC_Chat(method) => match method {
             RPC_Chat_MethodData::ChatSendMessage(param) => {
-                let reg = reg.clone();
-                let response = reg.ChatSendMessage(param).await?;
+                let handler = eror(&reg.RPC_Chat)?;
+                let response = handler.ChatSendMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Chat_MethodData::ChatEditMessage(param) => {
-                let reg = reg.clone();
-                let response = reg.ChatEditMessage(param).await?;
+                let handler = eror(&reg.RPC_Chat)?;
+                let response = handler.ChatEditMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Chat_MethodData::ChatDeleteMessages(param) => {
-                let reg = reg.clone();
-                let response = reg.ChatDeleteMessages(param).await?;
+                let handler = eror(&reg.RPC_Chat)?;
+                let response = handler.ChatDeleteMessages(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Chat_MethodData::ChatDeleteHistory(param) => {
-                let reg = reg.clone();
-                let response = reg.ChatDeleteHistory(param).await?;
+                let handler = eror(&reg.RPC_Chat)?;
+                let response = handler.ChatDeleteHistory(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Chat_MethodData::ChatSendDoingAction(param) => {
-                let reg = reg.clone();
-                let response = reg.ChatSendDoingAction(param).await?;
+                let handler = eror(&reg.RPC_Chat)?;
+                let response = handler.ChatSendDoingAction(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Chat_MethodData::ChatReportChat(param) => {
-                let reg = reg.clone();
-                let response = reg.ChatReportChat(param).await?;
+                let handler = eror(&reg.RPC_Chat)?;
+                let response = handler.ChatReportChat(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Chat_MethodData::ChatGetFull(param) => {
-                let reg = reg.clone();
-                let response = reg.ChatGetFull(param).await?;
+                let handler = eror(&reg.RPC_Chat)?;
+                let response = handler.ChatGetFull(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Chat_MethodData::ChatGetMessagesList(param) => {
-                let reg = reg.clone();
-                let response = reg.ChatGetMessagesList(param).await?;
+                let handler = eror(&reg.RPC_Chat)?;
+                let response = handler.ChatGetMessagesList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Chat_MethodData::ChatGetMediaList(param) => {
-                let reg = reg.clone();
-                let response = reg.ChatGetMediaList(param).await?;
+                let handler = eror(&reg.RPC_Chat)?;
+                let response = handler.ChatGetMediaList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -3627,176 +3644,176 @@ pub async fn server_rpc(act: RpcInvoke, reg: impl All_Rpc_Handler) -> Result<Vec
 
         RpcServiceData::RPC_Direct(method) => match method {
             RPC_Direct_MethodData::DirectDeleteDirect(param) => {
-                let reg = reg.clone();
-                let response = reg.DirectDeleteDirect(param).await?;
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectDeleteDirect(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Direct_MethodData::DirectChangeTitle(param) => {
-                let reg = reg.clone();
-                let response = reg.DirectChangeTitle(param).await?;
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectChangeTitle(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Direct_MethodData::DirectSetCustomNotification(param) => {
-                let reg = reg.clone();
-                let response = reg.DirectSetCustomNotification(param).await?;
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectSetCustomNotification(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Direct_MethodData::DirectSendActionDoing(param) => {
-                let reg = reg.clone();
-                let response = reg.DirectSendActionDoing(param).await?;
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectSendActionDoing(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Direct_MethodData::DirectSetDraft(param) => {
-                let reg = reg.clone();
-                let response = reg.DirectSetDraft(param).await?;
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectSetDraft(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Direct_MethodData::DirectDeleteDirects(param) => {
-                let reg = reg.clone();
-                let response = reg.DirectDeleteDirects(param).await?;
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectDeleteDirects(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Direct_MethodData::DirectMarkAsRead(param) => {
-                let reg = reg.clone();
-                let response = reg.DirectMarkAsRead(param).await?;
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectMarkAsRead(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Direct_MethodData::DirectMarkAsUnRead(param) => {
-                let reg = reg.clone();
-                let response = reg.DirectMarkAsUnRead(param).await?;
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectMarkAsUnRead(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Direct_MethodData::DirectPinDirects(param) => {
-                let reg = reg.clone();
-                let response = reg.DirectPinDirects(param).await?;
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectPinDirects(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Direct_MethodData::DirectUnPinDirects(param) => {
-                let reg = reg.clone();
-                let response = reg.DirectUnPinDirects(param).await?;
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectUnPinDirects(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Direct_MethodData::DirectArchiveDirects(param) => {
-                let reg = reg.clone();
-                let response = reg.DirectArchiveDirects(param).await?;
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectArchiveDirects(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Direct_MethodData::DirectUnArchiveDirects(param) => {
-                let reg = reg.clone();
-                let response = reg.DirectUnArchiveDirects(param).await?;
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectUnArchiveDirects(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Direct_MethodData::DirectClearHistories(param) => {
-                let reg = reg.clone();
-                let response = reg.DirectClearHistories(param).await?;
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectClearHistories(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Direct_MethodData::DirectMuteDirects(param) => {
-                let reg = reg.clone();
-                let response = reg.DirectMuteDirects(param).await?;
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectMuteDirects(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Direct_MethodData::DirectUnMuteDirects(param) => {
-                let reg = reg.clone();
-                let response = reg.DirectUnMuteDirects(param).await?;
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectUnMuteDirects(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Direct_MethodData::DirectCreateFolder(param) => {
-                let reg = reg.clone();
-                let response = reg.DirectCreateFolder(param).await?;
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectCreateFolder(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Direct_MethodData::DirectChangeFolder(param) => {
-                let reg = reg.clone();
-                let response = reg.DirectChangeFolder(param).await?;
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectChangeFolder(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Direct_MethodData::DirectRemoveFromFolder(param) => {
-                let reg = reg.clone();
-                let response = reg.DirectRemoveFromFolder(param).await?;
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectRemoveFromFolder(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Direct_MethodData::DirectReordersFolder(param) => {
-                let reg = reg.clone();
-                let response = reg.DirectReordersFolder(param).await?;
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectReordersFolder(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Direct_MethodData::DirectDeleteFolder(param) => {
-                let reg = reg.clone();
-                let response = reg.DirectDeleteFolder(param).await?;
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectDeleteFolder(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Direct_MethodData::DirectGetChatsList(param) => {
-                let reg = reg.clone();
-                let response = reg.DirectGetChatsList(param).await?;
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectGetChatsList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Direct_MethodData::DirectGetGroupsList(param) => {
-                let reg = reg.clone();
-                let response = reg.DirectGetGroupsList(param).await?;
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectGetGroupsList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Direct_MethodData::DirectGetChannelsList(param) => {
-                let reg = reg.clone();
-                let response = reg.DirectGetChannelsList(param).await?;
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectGetChannelsList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Direct_MethodData::DirectGetFoldersList(param) => {
-                let reg = reg.clone();
-                let response = reg.DirectGetFoldersList(param).await?;
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectGetFoldersList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Direct_MethodData::DirectGetFoldersFullList(param) => {
-                let reg = reg.clone();
-                let response = reg.DirectGetFoldersFullList(param).await?;
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectGetFoldersFullList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -3804,246 +3821,246 @@ pub async fn server_rpc(act: RpcInvoke, reg: impl All_Rpc_Handler) -> Result<Vec
 
         RpcServiceData::RPC_Group(method) => match method {
             RPC_Group_MethodData::GroupCreateGroup(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupCreateGroup(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupCreateGroup(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupEditGroup(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupEditGroup(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupEditGroup(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupDeleteGroup(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupDeleteGroup(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupDeleteGroup(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupAddAdmin(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupAddAdmin(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupAddAdmin(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupAddMember(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupAddMember(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupAddMember(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupRemoveMember(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupRemoveMember(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupRemoveMember(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupChangeMemberLevel(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupChangeMemberLevel(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupChangeMemberLevel(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupChangeMemberPermission(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupChangeMemberPermission(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupChangeMemberPermission(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupJoinGroup(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupJoinGroup(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupJoinGroup(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupLeaveGroup(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupLeaveGroup(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupLeaveGroup(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupBanMember(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupBanMember(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupBanMember(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupChangePrivacy(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupChangePrivacy(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupChangePrivacy(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupChangeDefaultPermission(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupChangeDefaultPermission(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupChangeDefaultPermission(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupRevokeLink(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupRevokeLink(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupRevokeLink(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupChangeUsername(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupChangeUsername(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupChangeUsername(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupSendMessage(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupSendMessage(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupSendMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupEditMessage(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupEditMessage(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupEditMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupPinMessage(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupPinMessage(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupPinMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupUnPinMessage(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupUnPinMessage(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupUnPinMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupDeleteMessage(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupDeleteMessage(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupDeleteMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupDeleteMessages(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupDeleteMessages(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupDeleteMessages(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupDeleteHistory(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupDeleteHistory(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupDeleteHistory(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupClearHistory(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupClearHistory(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupClearHistory(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupAvatarAdd(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupAvatarAdd(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupAvatarAdd(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupAvatarChange(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupAvatarChange(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupAvatarChange(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupAvatarDelete(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupAvatarDelete(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupAvatarDelete(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupAvatarGetList(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupAvatarGetList(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupAvatarGetList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupSendDoingAction(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupSendDoingAction(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupSendDoingAction(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupReportGroup(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupReportGroup(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupReportGroup(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupGetFull(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupGetFull(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupGetFull(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupGetMessagesList(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupGetMessagesList(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupGetMessagesList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupGetMediaList(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupGetMediaList(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupGetMediaList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupGetMembersList(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupGetMembersList(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupGetMembersList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupGetAdminsList(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupGetAdminsList(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupGetAdminsList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Group_MethodData::GroupSetDraft(param) => {
-                let reg = reg.clone();
-                let response = reg.GroupSetDraft(param).await?;
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupSetDraft(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -4051,36 +4068,36 @@ pub async fn server_rpc(act: RpcInvoke, reg: impl All_Rpc_Handler) -> Result<Vec
 
         RpcServiceData::RPC_Sample(method) => match method {
             RPC_Sample_MethodData::GetUsers1(param) => {
-                let reg = reg.clone();
-                let response = reg.GetUsers1(param).await?;
+                let handler = eror(&reg.RPC_Sample)?;
+                let response = handler.GetUsers1(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Sample_MethodData::GetProfiles(param) => {
-                let reg = reg.clone();
-                let response = reg.GetProfiles(param).await?;
+                let handler = eror(&reg.RPC_Sample)?;
+                let response = handler.GetProfiles(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Sample_MethodData::GetChannels(param) => {
-                let reg = reg.clone();
-                let response = reg.GetChannels(param).await?;
+                let handler = eror(&reg.RPC_Sample)?;
+                let response = handler.GetChannels(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Sample_MethodData::GetDirects(param) => {
-                let reg = reg.clone();
-                let response = reg.GetDirects(param).await?;
+                let handler = eror(&reg.RPC_Sample)?;
+                let response = handler.GetDirects(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Sample_MethodData::GetMessages(param) => {
-                let reg = reg.clone();
-                let response = reg.GetMessages(param).await?;
+                let handler = eror(&reg.RPC_Sample)?;
+                let response = handler.GetMessages(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -4088,15 +4105,15 @@ pub async fn server_rpc(act: RpcInvoke, reg: impl All_Rpc_Handler) -> Result<Vec
 
         RpcServiceData::RPC_Shared(method) => match method {
             RPC_Shared_MethodData::Echo(param) => {
-                let reg = reg.clone();
-                let response = reg.Echo(param).await?;
+                let handler = eror(&reg.RPC_Shared)?;
+                let response = handler.Echo(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
             RPC_Shared_MethodData::CheckUserName(param) => {
-                let reg = reg.clone();
-                let response = reg.CheckUserName(param).await?;
+                let handler = eror(&reg.RPC_Shared)?;
+                let response = handler.CheckUserName(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -4104,8 +4121,8 @@ pub async fn server_rpc(act: RpcInvoke, reg: impl All_Rpc_Handler) -> Result<Vec
 
         RpcServiceData::RPC_Upload(method) => match method {
             RPC_Upload_MethodData::UploadFile(param) => {
-                let reg = reg.clone();
-                let response = reg.UploadFile(param).await?;
+                let handler = eror(&reg.RPC_Upload)?;
+                let response = handler.UploadFile(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -4113,8 +4130,8 @@ pub async fn server_rpc(act: RpcInvoke, reg: impl All_Rpc_Handler) -> Result<Vec
 
         RpcServiceData::RPC_User(method) => match method {
             RPC_User_MethodData::ChangePhoneNumber(param) => {
-                let reg = reg.clone();
-                let response = reg.ChangePhoneNumber(param).await?;
+                let handler = eror(&reg.RPC_User)?;
+                let response = handler.ChangePhoneNumber(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -4125,8 +4142,15 @@ pub async fn server_rpc(act: RpcInvoke, reg: impl All_Rpc_Handler) -> Result<Vec
 }
 
 pub struct RPC_Registry {
-    // RPC_Shared: RPC_Shared,
-// RPC_Chat: RPC_Chat,
+    pub RPC_Auth: Option<Box<RPC_Auth_Handler2>>,
+    pub RPC_Channel: Option<Box<RPC_Channel_Handler2>>,
+    pub RPC_Chat: Option<Box<RPC_Chat_Handler2>>,
+    pub RPC_Direct: Option<Box<RPC_Direct_Handler2>>,
+    pub RPC_Group: Option<Box<RPC_Group_Handler2>>,
+    pub RPC_Sample: Option<Box<RPC_Sample_Handler2>>,
+    pub RPC_Shared: Option<Box<RPC_Shared_Handler2>>,
+    pub RPC_Upload: Option<Box<RPC_Upload_Handler2>>,
+    pub RPC_User: Option<Box<RPC_User_Handler2>>,
 }
 
 impl RPC_Auth_Handler for RPC_Registry {}
@@ -4152,4 +4176,3837 @@ fn to_vev8(msg: &impl prost::Message) -> Result<Vec<u8>, GenErr> {
     let mut buff = vec![];
     prost::Message::encode(msg, &mut buff)?;
     Ok(buff)
+}
+
+fn eror<T>(input: &Option<T>) -> Result<&T, GenErr> {
+    match input {
+        Some(inbox) => Ok(inbox),
+        None => Err(GenErr::NoRpcRegistry),
+    }
+}
+
+///////////////////////////////// Rpc Client ///////////////////////
+#[derive(Debug)]
+pub struct RpcClient {
+    endpoint: &'static str,
+}
+
+impl RpcClient {
+    pub fn new(endpoint: &'static str) -> Self {
+        RpcClient { endpoint: endpoint }
+    }
+
+    fn get_next_action_id(&self) -> u64 {
+        8
+    }
+
+    // service: RPC_Auth
+    pub async fn SendConfirmCode(
+        &self,
+        param: pb::SendConfirmCodeParam,
+    ) -> Result<pb::SendConfirmCodeResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::SendConfirmCode,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ConfirmCode(
+        &self,
+        param: pb::ConfirmCodeParam,
+    ) -> Result<pb::ConfirmCodeResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ConfirmCode,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn SingUp(&self, param: pb::SingUpParam) -> Result<pb::SingUpResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::SingUp,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn SingIn(&self, param: pb::SingInParam) -> Result<pb::SingInResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::SingIn,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn LogOut(&self, param: pb::LogOutParam) -> Result<pb::LogOutResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::LogOut,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    // service: RPC_Channel
+    pub async fn ChannelCreateChannel(
+        &self,
+        param: pb::ChannelCreateChannelParam,
+    ) -> Result<pb::ChannelCreateChannelResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelCreateChannel,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelEditChannel(
+        &self,
+        param: pb::ChannelEditChannelParam,
+    ) -> Result<pb::ChannelEditChannelResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelEditChannel,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelDeleteChannel(
+        &self,
+        param: pb::ChannelDeleteChannelParam,
+    ) -> Result<pb::ChannelDeleteChannelResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelDeleteChannel,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelAddAuthor(
+        &self,
+        param: pb::ChannelAddAuthorParam,
+    ) -> Result<pb::ChannelAddAuthorResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelAddAuthor,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelChangeAuthorPermission(
+        &self,
+        param: pb::ChannelChangeAuthorPermissionParam,
+    ) -> Result<pb::ChannelChangeAuthorPermissionResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelChangeAuthorPermission,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelRemoveAuthor(
+        &self,
+        param: pb::ChannelRemoveAuthorParam,
+    ) -> Result<pb::ChannelRemoveAuthorResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelRemoveAuthor,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelFollowChannel(
+        &self,
+        param: pb::ChannelFollowChannelParam,
+    ) -> Result<pb::ChannelFollowChannelResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelFollowChannel,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelUnFollowChannel(
+        &self,
+        param: pb::ChannelUnFollowChannelParam,
+    ) -> Result<pb::ChannelUnFollowChannelResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelUnFollowChannel,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelRemoveFollowers(
+        &self,
+        param: pb::ChannelRemoveFollowersParam,
+    ) -> Result<pb::ChannelRemoveFollowersResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelRemoveFollowers,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelSubscribe(
+        &self,
+        param: pb::ChannelSubscribeParam,
+    ) -> Result<pb::ChannelSubscribeResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelSubscribe,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelUnSubscribe(
+        &self,
+        param: pb::ChannelUnSubscribeParam,
+    ) -> Result<pb::ChannelUnSubscribeResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelUnSubscribe,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelRemoveSubscribers(
+        &self,
+        param: pb::ChannelRemoveSubscribersParam,
+    ) -> Result<pb::ChannelRemoveSubscribersResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelRemoveSubscribers,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelChangePrivacy(
+        &self,
+        param: pb::ChannelChangePrivacyParam,
+    ) -> Result<pb::ChannelChangePrivacyResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelChangePrivacy,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelChangeDefaultPermission(
+        &self,
+        param: pb::ChannelChangeDefaultPermissionParam,
+    ) -> Result<pb::ChannelChangeDefaultPermissionResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelChangeDefaultPermission,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelRevokeLink(
+        &self,
+        param: pb::ChannelRevokeLinkParam,
+    ) -> Result<pb::ChannelRevokeLinkResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelRevokeLink,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelChangeUsername(
+        &self,
+        param: pb::ChannelChangeUsernameParam,
+    ) -> Result<pb::ChannelChangeUsernameResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelChangeUsername,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelBlockChannel(
+        &self,
+        param: pb::ChannelBlockChannelParam,
+    ) -> Result<pb::ChannelBlockChannelResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelBlockChannel,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelSendMessage(
+        &self,
+        param: pb::ChannelSendMessageParam,
+    ) -> Result<pb::ChannelSendMessageResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelSendMessage,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelEditMessage(
+        &self,
+        param: pb::ChannelEditMessageParam,
+    ) -> Result<pb::ChannelEditMessageResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelEditMessage,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelPinMessage(
+        &self,
+        param: pb::ChannelPinMessageParam,
+    ) -> Result<pb::ChannelPinMessageResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelPinMessage,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelUnPinMessage(
+        &self,
+        param: pb::ChannelUnPinMessageParam,
+    ) -> Result<pb::ChannelUnPinMessageResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelUnPinMessage,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelDeleteMessage(
+        &self,
+        param: pb::ChannelDeleteMessageParam,
+    ) -> Result<pb::ChannelDeleteMessageResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelDeleteMessage,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelDeleteMessages(
+        &self,
+        param: pb::ChannelDeleteMessagesParam,
+    ) -> Result<pb::ChannelDeleteMessagesResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelDeleteMessages,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelClearHistory(
+        &self,
+        param: pb::ChannelClearHistoryParam,
+    ) -> Result<pb::ChannelClearHistoryResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelClearHistory,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelAvatarAdd(
+        &self,
+        param: pb::ChannelAvatarAddParam,
+    ) -> Result<pb::ChannelAvatarAddResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelAvatarAdd,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelAvatarChange(
+        &self,
+        param: pb::ChannelAvatarChangeParam,
+    ) -> Result<pb::ChannelAvatarChangeResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelAvatarChange,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelAvatarDelete(
+        &self,
+        param: pb::ChannelAvatarDeleteParam,
+    ) -> Result<pb::ChannelAvatarDeleteResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelAvatarDelete,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelAvatarGetList(
+        &self,
+        param: pb::ChannelAvatarGetListParam,
+    ) -> Result<pb::ChannelAvatarGetListResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelAvatarGetList,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelSendDoingAction(
+        &self,
+        param: pb::ChannelSendDoingActionParam,
+    ) -> Result<pb::ChannelSendDoingActionResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelSendDoingAction,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelReportChannel(
+        &self,
+        param: pb::ChannelReportChannelParam,
+    ) -> Result<pb::ChannelReportChannelResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelReportChannel,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelReportMessage(
+        &self,
+        param: pb::ChannelReportMessageParam,
+    ) -> Result<pb::ChannelReportMessageResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelReportMessage,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelGetFull(
+        &self,
+        param: pb::ChannelGetFullParam,
+    ) -> Result<pb::ChannelGetFullResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelGetFull,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelGetMessagesList(
+        &self,
+        param: pb::ChannelGetMessagesListParam,
+    ) -> Result<pb::ChannelGetMessagesListResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelGetMessagesList,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelGetMediaList(
+        &self,
+        param: pb::ChannelGetMediaListParam,
+    ) -> Result<pb::ChannelGetMediaListResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelGetMediaList,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelGetAuthors(
+        &self,
+        param: pb::ChannelGetAuthorsParam,
+    ) -> Result<pb::ChannelGetAuthorsResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelGetAuthors,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelGetFollowers(
+        &self,
+        param: pb::ChannelGetFollowersParam,
+    ) -> Result<pb::ChannelGetFollowersResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelGetFollowers,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelGetFollowings(
+        &self,
+        param: pb::ChannelGetFollowingsParam,
+    ) -> Result<pb::ChannelGetFollowingsResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelGetFollowings,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelGetSubscribers(
+        &self,
+        param: pb::ChannelGetSubscribersParam,
+    ) -> Result<pb::ChannelGetSubscribersResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelGetSubscribers,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelBlocked(
+        &self,
+        param: pb::ChannelBlockedParam,
+    ) -> Result<pb::ChannelBlockedResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelBlocked,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelSetDraft(
+        &self,
+        param: pb::ChannelSetDraftParam,
+    ) -> Result<pb::ChannelSetDraftResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChannelSetDraft,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    // service: RPC_Chat
+    pub async fn ChatSendMessage(
+        &self,
+        param: pb::ChatSendMessageParam,
+    ) -> Result<pb::ChatSendMessageResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChatSendMessage,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChatEditMessage(
+        &self,
+        param: pb::ChatEditMessageParam,
+    ) -> Result<pb::ChatEditMessageResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChatEditMessage,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChatDeleteMessages(
+        &self,
+        param: pb::ChatDeleteMessagesParam,
+    ) -> Result<pb::ChatDeleteMessagesResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChatDeleteMessages,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChatDeleteHistory(
+        &self,
+        param: pb::ChatDeleteHistoryParam,
+    ) -> Result<pb::ChatDeleteHistoryResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChatDeleteHistory,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChatSendDoingAction(
+        &self,
+        param: pb::ChatSendDoingActionParam,
+    ) -> Result<pb::ChatSendDoingActionResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChatSendDoingAction,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChatReportChat(
+        &self,
+        param: pb::ChatReportChatParam,
+    ) -> Result<pb::ChatReportChatResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChatReportChat,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChatGetFull(
+        &self,
+        param: pb::ChatGetFullMessageParam,
+    ) -> Result<pb::ChatGetFullMessageResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChatGetFull,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChatGetMessagesList(
+        &self,
+        param: pb::ChatGetMessagesListParam,
+    ) -> Result<pb::ChatGetMessagesListResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChatGetMessagesList,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChatGetMediaList(
+        &self,
+        param: pb::ChatGetMediaListParam,
+    ) -> Result<pb::ChatGetMediaListResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChatGetMediaList,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    // service: RPC_Direct
+    pub async fn DirectDeleteDirect(
+        &self,
+        param: pb::DirectDeleteDirectParam,
+    ) -> Result<pb::DirectDeleteDirectResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::DirectDeleteDirect,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectChangeTitle(
+        &self,
+        param: pb::DirectChangeTitleParam,
+    ) -> Result<pb::DirectChangeTitleResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::DirectChangeTitle,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectSetCustomNotification(
+        &self,
+        param: pb::DirectSetCustomNotificationParam,
+    ) -> Result<pb::DirectSetCustomNotificationResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::DirectSetCustomNotification,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectSendActionDoing(
+        &self,
+        param: pb::DirectSendActionDoingParam,
+    ) -> Result<pb::DirectSendActionDoingResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::DirectSendActionDoing,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectSetDraft(
+        &self,
+        param: pb::DirectSetDraftParam,
+    ) -> Result<pb::DirectSetDraftResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::DirectSetDraft,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectDeleteDirects(
+        &self,
+        param: pb::DirectDeleteDirectsParam,
+    ) -> Result<pb::DirectDeleteDirectsResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::DirectDeleteDirects,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectMarkAsRead(
+        &self,
+        param: pb::DirectMarkAsReadParam,
+    ) -> Result<pb::DirectMarkAsReadResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::DirectMarkAsRead,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectMarkAsUnRead(
+        &self,
+        param: pb::DirectMarkAsUnReadParam,
+    ) -> Result<pb::DirectMarkAsUnReadResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::DirectMarkAsUnRead,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectPinDirects(
+        &self,
+        param: pb::DirectPinDirectsParam,
+    ) -> Result<pb::DirectPinDirectsResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::DirectPinDirects,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectUnPinDirects(
+        &self,
+        param: pb::DirectUnPinDirectsParam,
+    ) -> Result<pb::DirectUnPinDirectsResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::DirectUnPinDirects,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectArchiveDirects(
+        &self,
+        param: pb::DirectArchiveDirectsParam,
+    ) -> Result<pb::DirectArchiveDirectsResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::DirectArchiveDirects,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectUnArchiveDirects(
+        &self,
+        param: pb::DirectUnArchiveDirectsParam,
+    ) -> Result<pb::DirectUnArchiveDirectsResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::DirectUnArchiveDirects,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectClearHistories(
+        &self,
+        param: pb::DirectClearHistoriesParam,
+    ) -> Result<pb::DirectClearHistoriesResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::DirectClearHistories,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectMuteDirects(
+        &self,
+        param: pb::DirectMuteDirectsParam,
+    ) -> Result<pb::DirectMuteDirectsResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::DirectMuteDirects,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectUnMuteDirects(
+        &self,
+        param: pb::DirectUnMuteDirectsParam,
+    ) -> Result<pb::DirectUnMuteDirectsResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::DirectUnMuteDirects,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectCreateFolder(
+        &self,
+        param: pb::DirectCreateFolderParam,
+    ) -> Result<pb::DirectCreateFolderResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::DirectCreateFolder,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectChangeFolder(
+        &self,
+        param: pb::DirectChangeFolderParam,
+    ) -> Result<pb::DirectChangeFolderResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::DirectChangeFolder,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectRemoveFromFolder(
+        &self,
+        param: pb::DirectRemoveFromFolderParam,
+    ) -> Result<pb::DirectRemoveFromFolderResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::DirectRemoveFromFolder,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectReordersFolder(
+        &self,
+        param: pb::DirectReordersFolderParam,
+    ) -> Result<pb::DirectReordersFolderResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::DirectReordersFolder,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectDeleteFolder(
+        &self,
+        param: pb::DirectDeleteFolderParam,
+    ) -> Result<pb::DirectDeleteFolderResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::DirectDeleteFolder,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectGetChatsList(
+        &self,
+        param: pb::DirectGetChatsListParam,
+    ) -> Result<pb::DirectGetChatsListResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::DirectGetChatsList,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectGetGroupsList(
+        &self,
+        param: pb::DirectGetGroupsListParam,
+    ) -> Result<pb::DirectGetGroupsListResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::DirectGetGroupsList,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectGetChannelsList(
+        &self,
+        param: pb::DirectGetChannelsListParam,
+    ) -> Result<pb::DirectGetChannelsListResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::DirectGetChannelsList,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectGetFoldersList(
+        &self,
+        param: pb::DirectGetFoldersListParam,
+    ) -> Result<pb::DirectGetFoldersListResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::DirectGetFoldersList,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectGetFoldersFullList(
+        &self,
+        param: pb::DirectGetFoldersFullListParam,
+    ) -> Result<pb::DirectGetFoldersFullListResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::DirectGetFoldersFullList,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    // service: RPC_Group
+    pub async fn GroupCreateGroup(
+        &self,
+        param: pb::GroupCreateGroupParam,
+    ) -> Result<pb::GroupCreateGroupResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupCreateGroup,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupEditGroup(
+        &self,
+        param: pb::GroupEditGroupParam,
+    ) -> Result<pb::GroupEditGroupResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupEditGroup,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupDeleteGroup(
+        &self,
+        param: pb::GroupDeleteGroupParam,
+    ) -> Result<pb::GroupDeleteGroupResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupDeleteGroup,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupAddAdmin(
+        &self,
+        param: pb::GroupAddAdminParam,
+    ) -> Result<pb::GroupAddAdminResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupAddAdmin,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupAddMember(
+        &self,
+        param: pb::GroupAddMemberParam,
+    ) -> Result<pb::GroupAddMemberResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupAddMember,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupRemoveMember(
+        &self,
+        param: pb::GroupRemoveMemberParam,
+    ) -> Result<pb::GroupRemoveMemberResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupRemoveMember,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupChangeMemberLevel(
+        &self,
+        param: pb::GroupChangeMemberLevelParam,
+    ) -> Result<pb::GroupChangeMemberLevelResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupChangeMemberLevel,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupChangeMemberPermission(
+        &self,
+        param: pb::GroupChangeMemberPermissionParam,
+    ) -> Result<pb::GroupChangeMemberPermissionResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupChangeMemberPermission,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupJoinGroup(
+        &self,
+        param: pb::JoinGroupParam,
+    ) -> Result<pb::JoinGroupResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupJoinGroup,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupLeaveGroup(
+        &self,
+        param: pb::GroupLeaveGroupParam,
+    ) -> Result<pb::GroupLeaveGroupResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupLeaveGroup,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupBanMember(
+        &self,
+        param: pb::GroupBanMemberParam,
+    ) -> Result<pb::GroupBanMemberResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupBanMember,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupChangePrivacy(
+        &self,
+        param: pb::GroupChangePrivacyParam,
+    ) -> Result<pb::GroupChangePrivacyResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupChangePrivacy,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupChangeDefaultPermission(
+        &self,
+        param: pb::GroupChangeDefaultPermissionParam,
+    ) -> Result<pb::GroupChangeDefaultPermissionResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupChangeDefaultPermission,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupRevokeLink(
+        &self,
+        param: pb::GroupRevokeLinkParam,
+    ) -> Result<pb::GroupRevokeLinkResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupRevokeLink,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupChangeUsername(
+        &self,
+        param: pb::GroupChangeUsernameParam,
+    ) -> Result<pb::GroupChangeUsernameResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupChangeUsername,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupSendMessage(
+        &self,
+        param: pb::GroupSendMessageParam,
+    ) -> Result<pb::GroupSendMessageResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupSendMessage,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupEditMessage(
+        &self,
+        param: pb::GroupEditMessageParam,
+    ) -> Result<pb::GroupEditMessageResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupEditMessage,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupPinMessage(
+        &self,
+        param: pb::GroupPinMessageParam,
+    ) -> Result<pb::GroupPinMessageResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupPinMessage,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupUnPinMessage(
+        &self,
+        param: pb::GroupUnPinMessageParam,
+    ) -> Result<pb::GroupUnPinMessageResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupUnPinMessage,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupDeleteMessage(
+        &self,
+        param: pb::GroupDeleteMessageParam,
+    ) -> Result<pb::GroupDeleteMessageResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupDeleteMessage,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupDeleteMessages(
+        &self,
+        param: pb::GroupDeleteMessagesParam,
+    ) -> Result<pb::GroupDeleteMessagesResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupDeleteMessages,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupDeleteHistory(
+        &self,
+        param: pb::GroupDeleteHistoryParam,
+    ) -> Result<pb::GroupDeleteHistoryResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupDeleteHistory,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupClearHistory(
+        &self,
+        param: pb::GroupClearHistoryParam,
+    ) -> Result<pb::GroupClearHistoryResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupClearHistory,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupAvatarAdd(
+        &self,
+        param: pb::GroupAvatarAddParam,
+    ) -> Result<pb::GroupAvatarAddResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupAvatarAdd,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupAvatarChange(
+        &self,
+        param: pb::GroupAvatarChangeParam,
+    ) -> Result<pb::GroupAvatarChangeResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupAvatarChange,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupAvatarDelete(
+        &self,
+        param: pb::GroupAvatarDeleteParam,
+    ) -> Result<pb::GroupAvatarDeleteResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupAvatarDelete,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupAvatarGetList(
+        &self,
+        param: pb::GroupAvatarGetListParam,
+    ) -> Result<pb::GroupAvatarGetListResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupAvatarGetList,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupSendDoingAction(
+        &self,
+        param: pb::GroupSendDoingActionParam,
+    ) -> Result<pb::GroupSendDoingActionResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupSendDoingAction,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupReportGroup(
+        &self,
+        param: pb::GroupReportGroupParam,
+    ) -> Result<pb::GroupReportGroupResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupReportGroup,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupGetFull(
+        &self,
+        param: pb::GroupGetFullMessageParam,
+    ) -> Result<pb::GroupGetFullMessageResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupGetFull,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupGetMessagesList(
+        &self,
+        param: pb::GroupGetMessagesListParam,
+    ) -> Result<pb::GroupGetMessagesListResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupGetMessagesList,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupGetMediaList(
+        &self,
+        param: pb::GroupGetMediaListParam,
+    ) -> Result<pb::GroupGetMediaListResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupGetMediaList,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupGetMembersList(
+        &self,
+        param: pb::GroupGetMembersListParam,
+    ) -> Result<pb::GroupGetMembersListResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupGetMembersList,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupGetAdminsList(
+        &self,
+        param: pb::GroupGetAdminsListParam,
+    ) -> Result<pb::GroupGetAdminsListResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupGetAdminsList,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupSetDraft(
+        &self,
+        param: pb::GroupSetDraftParam,
+    ) -> Result<pb::GroupSetDraftResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GroupSetDraft,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    // service: RPC_Sample
+    pub async fn GetUsers1(
+        &self,
+        param: pb::GetUsers1Param,
+    ) -> Result<pb::GetUsers1Response, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GetUsers1,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GetProfiles(
+        &self,
+        param: pb::GetProfilesParam,
+    ) -> Result<pb::GetProfilesResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GetProfiles,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GetChannels(
+        &self,
+        param: pb::GetChannelsParam,
+    ) -> Result<pb::GetChannelsResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GetChannels,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GetDirects(
+        &self,
+        param: pb::GetDirectsParam,
+    ) -> Result<pb::GetDirectsResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GetDirects,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn GetMessages(
+        &self,
+        param: pb::GetMessagesParam,
+    ) -> Result<pb::GetMessagesResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::GetMessages,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    // service: RPC_Shared
+    pub async fn Echo(&self, param: pb::EchoParam) -> Result<pb::EchoResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::Echo,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    pub async fn CheckUserName(
+        &self,
+        param: pb::CheckUserNameParam,
+    ) -> Result<pb::CheckUserNameResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::CheckUserName,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    // service: RPC_Upload
+    pub async fn UploadFile(
+        &self,
+        param: pb::UploadFileParam,
+    ) -> Result<pb::UploadFileResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::UploadFile,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
+
+    // service: RPC_User
+    pub async fn ChangePhoneNumber(
+        &self,
+        param: pb::ChangePhoneNumberParam,
+    ) -> Result<pb::ChangePhoneNumberResponse, GenErr> {
+        let mut buff = vec![];
+        ::prost::Message::encode(&param, &mut buff)?;
+
+        let invoke = pb::Invoke {
+            namespace: 0,
+            method: method_ids::ChangePhoneNumber,
+            action_id: self.get_next_action_id(),
+            is_response: false,
+            rpc_data: buff,
+        };
+
+        let mut buff = vec![];
+        ::prost::Message::encode(&invoke, &mut buff)?;
+
+        let req = reqwest::Client::new()
+            .post(self.endpoint)
+            .body(buff)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+
+        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        Ok(pb_res)
+    }
 }

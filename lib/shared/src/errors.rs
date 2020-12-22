@@ -5,6 +5,8 @@ pub enum GenErr {
     HttpClientErr(reqwest::Error),
     ProstDecode(::prost::DecodeError),
     ProstEncode(::prost::EncodeError),
+
+    NoRpcRegistry,
 }
 
 impl From<reqwest::Error> for GenErr {

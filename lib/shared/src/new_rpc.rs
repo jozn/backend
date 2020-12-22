@@ -100,10 +100,12 @@ impl RPC_Chat2_Trait for Ut {
 /////////////////////Http
 
 pub type FHttpResponse = (u16, Vec<u8>);
+
+#[derive(Debug)]
 pub struct FHttpRequest {
-    method: http::Method,
-    path: String,
-    body: bytes::Bytes,
+    pub method: http::Method,
+    pub path: String,
+    pub body: bytes::Bytes,
 }
 
 trait ServeHttpRequest {
@@ -114,12 +116,13 @@ pub struct SampleService {
     pub port: u16,
 }
 
+#[async_trait]
 impl FIMicroService for SampleService {
     fn port(&self) -> u16 {
         4040
     }
 
-    fn serve_request(req: FHttpRequest) -> (u16, Vec<u8>) {
+    async fn serve_request(req: FHttpRequest) -> (u16, Vec<u8>) {
         (200, b"hi there".to_vec())
     }
 }
@@ -127,7 +130,7 @@ impl FIMicroService for SampleService {
 #[async_trait]
 pub trait FIMicroService {
     fn port(&self) -> u16;
-    fn serve_request(req: FHttpRequest) -> FHttpResponse;
+    async fn serve_request(req: FHttpRequest) -> FHttpResponse;
 
     async fn listen_http_requests(&self) {
         let addr = SocketAddr::from(([0, 0, 0, 0], self.port()));
@@ -145,7 +148,7 @@ pub trait FIMicroService {
                     body: bts,
                 };
 
-                let respose = Self::serve_request(req);
+                let respose = Self::serve_request(req).await;
 
                 let res = Response::new(Body::from(respose.1));
                 Ok::<_, HyperError>(res)
