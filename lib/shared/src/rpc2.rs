@@ -12,8 +12,8 @@ use std::convert::Infallible;
 use std::net::SocketAddr;
 
 pub struct RpcInvoke {
-    method_id: i64, // correct data type should be i32,
-    rpc_service: RpcServiceData,
+    pub method_id: i64, // correct data type should be i32,
+    pub rpc_service: RpcServiceData,
 }
 
 pub enum RpcServiceData {
@@ -171,7 +171,7 @@ pub enum RPC_User_MethodData {
 }
 
 #[async_trait]
-trait RPC_Auth_Handler {
+pub trait RPC_Auth_Handler {
     async fn SendConfirmCode(
         up: &UserParam,
         param: pb::SendConfirmCodeParam,
@@ -195,7 +195,7 @@ trait RPC_Auth_Handler {
     }
 }
 #[async_trait]
-trait RPC_Channel_Handler {
+pub trait RPC_Channel_Handler {
     async fn ChannelCreateChannel(
         up: &UserParam,
         param: pb::ChannelCreateChannelParam,
@@ -438,7 +438,7 @@ trait RPC_Channel_Handler {
     }
 }
 #[async_trait]
-trait RPC_Chat_Handler {
+pub trait RPC_Chat_Handler {
     async fn ChatSendMessage(
         up: &UserParam,
         param: pb::ChatSendMessageParam,
@@ -495,7 +495,7 @@ trait RPC_Chat_Handler {
     }
 }
 #[async_trait]
-trait RPC_Direct_Handler {
+pub trait RPC_Direct_Handler {
     async fn DirectDeleteDirect(
         up: &UserParam,
         param: pb::DirectDeleteDirectParam,
@@ -648,7 +648,7 @@ trait RPC_Direct_Handler {
     }
 }
 #[async_trait]
-trait RPC_Group_Handler {
+pub trait RPC_Group_Handler {
     async fn GroupCreateGroup(
         up: &UserParam,
         param: pb::GroupCreateGroupParam,
@@ -861,7 +861,7 @@ trait RPC_Group_Handler {
     }
 }
 #[async_trait]
-trait RPC_Sample_Handler {
+pub trait RPC_Sample_Handler {
     async fn GetUsers1(
         up: &UserParam,
         param: pb::GetUsers1Param,
@@ -894,7 +894,7 @@ trait RPC_Sample_Handler {
     }
 }
 #[async_trait]
-trait RPC_Shared_Handler {
+pub trait RPC_Shared_Handler {
     async fn Echo(up: &UserParam, param: pb::EchoParam) -> Result<pb::EchoResponse, GenErr> {
         Ok(pb::EchoResponse::default())
     }
@@ -906,7 +906,7 @@ trait RPC_Shared_Handler {
     }
 }
 #[async_trait]
-trait RPC_Upload_Handler {
+pub trait RPC_Upload_Handler {
     async fn UploadFile(
         up: &UserParam,
         param: pb::UploadFileParam,
@@ -915,7 +915,7 @@ trait RPC_Upload_Handler {
     }
 }
 #[async_trait]
-trait RPC_User_Handler {
+pub trait RPC_User_Handler {
     async fn ChangePhoneNumber(
         up: &UserParam,
         param: pb::ChangePhoneNumberParam,
@@ -925,7 +925,7 @@ trait RPC_User_Handler {
 }
 
 #[async_trait]
-trait RPC_Auth_Handler2 {
+pub trait RPC_Auth_Handler2: Send + Sync {
     async fn SendConfirmCode(
         &self,
         param: pb::SendConfirmCodeParam,
@@ -949,7 +949,7 @@ trait RPC_Auth_Handler2 {
     }
 }
 #[async_trait]
-trait RPC_Channel_Handler2 {
+pub trait RPC_Channel_Handler2: Send + Sync {
     async fn ChannelCreateChannel(
         &self,
         param: pb::ChannelCreateChannelParam,
@@ -1192,7 +1192,7 @@ trait RPC_Channel_Handler2 {
     }
 }
 #[async_trait]
-trait RPC_Chat_Handler2 {
+pub trait RPC_Chat_Handler2: Send + Sync {
     async fn ChatSendMessage(
         &self,
         param: pb::ChatSendMessageParam,
@@ -1249,7 +1249,7 @@ trait RPC_Chat_Handler2 {
     }
 }
 #[async_trait]
-trait RPC_Direct_Handler2 {
+pub trait RPC_Direct_Handler2: Send + Sync {
     async fn DirectDeleteDirect(
         &self,
         param: pb::DirectDeleteDirectParam,
@@ -1402,7 +1402,7 @@ trait RPC_Direct_Handler2 {
     }
 }
 #[async_trait]
-trait RPC_Group_Handler2 {
+pub trait RPC_Group_Handler2: Send + Sync {
     async fn GroupCreateGroup(
         &self,
         param: pb::GroupCreateGroupParam,
@@ -1615,7 +1615,7 @@ trait RPC_Group_Handler2 {
     }
 }
 #[async_trait]
-trait RPC_Sample_Handler2 {
+pub trait RPC_Sample_Handler2: Send + Sync {
     async fn GetUsers1(&self, param: pb::GetUsers1Param) -> Result<pb::GetUsers1Response, GenErr> {
         Ok(pb::GetUsers1Response::default())
     }
@@ -1645,7 +1645,7 @@ trait RPC_Sample_Handler2 {
     }
 }
 #[async_trait]
-trait RPC_Shared_Handler2 {
+pub trait RPC_Shared_Handler2: Send + Sync {
     async fn Echo(&self, param: pb::EchoParam) -> Result<pb::EchoResponse, GenErr> {
         Ok(pb::EchoResponse::default())
     }
@@ -1657,7 +1657,7 @@ trait RPC_Shared_Handler2 {
     }
 }
 #[async_trait]
-trait RPC_Upload_Handler2 {
+pub trait RPC_Upload_Handler2: Send + Sync {
     async fn UploadFile(
         &self,
         param: pb::UploadFileParam,
@@ -1666,13 +1666,30 @@ trait RPC_Upload_Handler2 {
     }
 }
 #[async_trait]
-trait RPC_User_Handler2 {
+pub trait RPC_User_Handler2: Send + Sync {
     async fn ChangePhoneNumber(
         &self,
         param: pb::ChangePhoneNumberParam,
     ) -> Result<pb::ChangePhoneNumberResponse, GenErr> {
         Ok(pb::ChangePhoneNumberResponse::default())
     }
+}
+
+#[async_trait]
+pub trait All_Rpc_Handler:
+    RPC_Auth_Handler2
+    + RPC_Channel_Handler2
+    + RPC_Chat_Handler2
+    + RPC_Direct_Handler2
+    + RPC_Group_Handler2
+    + RPC_Sample_Handler2
+    + RPC_Shared_Handler2
+    + RPC_Upload_Handler2
+    + RPC_User_Handler2
+    + Clone
+    + Send
+    + Sync
+{
 }
 
 pub mod method_ids {
@@ -1818,6 +1835,149 @@ pub mod method_ids {
     pub const ChangePhoneNumber: u32 = 706069694;
 
     pub const ExampleChangePhoneNumber8: u32 = 79874;
+}
+
+pub enum MethodIds {
+    // Service: RPC_Auth
+    SendConfirmCode = 939965206,
+    ConfirmCode = 1740258084,
+    SingUp = 291193302,
+    SingIn = 1017957090,
+    LogOut = 1283119009,
+
+    // Service: RPC_Channel
+    ChannelCreateChannel = 143251225,
+    ChannelEditChannel = 189471894,
+    ChannelDeleteChannel = 1494483355,
+    ChannelAddAuthor = 780397316,
+    ChannelChangeAuthorPermission = 93233821,
+    ChannelRemoveAuthor = 419542304,
+    ChannelFollowChannel = 744563779,
+    ChannelUnFollowChannel = 959512423,
+    ChannelRemoveFollowers = 869709257,
+    ChannelSubscribe = 1367898912,
+    ChannelUnSubscribe = 858172401,
+    ChannelRemoveSubscribers = 729024592,
+    ChannelChangePrivacy = 79012409,
+    ChannelChangeDefaultPermission = 1582638498,
+    ChannelRevokeLink = 1912530021,
+    ChannelChangeUsername = 983884462,
+    ChannelBlockChannel = 2037016989,
+    ChannelSendMessage = 1200751231,
+    ChannelEditMessage = 727437726,
+    ChannelPinMessage = 259263709,
+    ChannelUnPinMessage = 113943649,
+    ChannelDeleteMessage = 644189206,
+    ChannelDeleteMessages = 2124822181,
+    ChannelClearHistory = 1164398815,
+    ChannelAvatarAdd = 1021808696,
+    ChannelAvatarChange = 1968579501,
+    ChannelAvatarDelete = 1626010891,
+    ChannelAvatarGetList = 1925044843,
+    ChannelSendDoingAction = 973237257,
+    ChannelReportChannel = 792938145,
+    ChannelReportMessage = 2053528327,
+    ChannelGetFull = 1684531258,
+    ChannelGetMessagesList = 1339072968,
+    ChannelGetMediaList = 985772653,
+    ChannelGetAuthors = 1373284924,
+    ChannelGetFollowers = 1747172143,
+    ChannelGetFollowings = 1838438980,
+    ChannelGetSubscribers = 2146806736,
+    ChannelBlocked = 1674411747,
+    ChannelSetDraft = 1403193015,
+
+    // Service: RPC_Chat
+    ChatSendMessage = 1131621475,
+    ChatEditMessage = 1806258329,
+    ChatDeleteMessages = 933526170,
+    ChatDeleteHistory = 1088992782,
+    ChatSendDoingAction = 1319324241,
+    ChatReportChat = 1345425871,
+    ChatGetFull = 1768678453,
+    ChatGetMessagesList = 121549718,
+    ChatGetMediaList = 1346774525,
+
+    // Service: RPC_Direct
+    DirectDeleteDirect = 1478067518,
+    DirectChangeTitle = 2041790485,
+    DirectSetCustomNotification = 548699291,
+    DirectSendActionDoing = 1417285757,
+    DirectSetDraft = 1860345925,
+    DirectDeleteDirects = 1291891637,
+    DirectMarkAsRead = 1801774787,
+    DirectMarkAsUnRead = 313746334,
+    DirectPinDirects = 1179089068,
+    DirectUnPinDirects = 1517245560,
+    DirectArchiveDirects = 1441782770,
+    DirectUnArchiveDirects = 1951553867,
+    DirectClearHistories = 904052140,
+    DirectMuteDirects = 1138477048,
+    DirectUnMuteDirects = 1691834263,
+    DirectCreateFolder = 1878673022,
+    DirectChangeFolder = 1861381591,
+    DirectRemoveFromFolder = 1818954127,
+    DirectReordersFolder = 1264591958,
+    DirectDeleteFolder = 962281627,
+    DirectGetChatsList = 1570934969,
+    DirectGetGroupsList = 545957996,
+    DirectGetChannelsList = 1608173619,
+    DirectGetFoldersList = 1384523712,
+    DirectGetFoldersFullList = 611850722,
+
+    // Service: RPC_Group
+    GroupCreateGroup = 1205960678,
+    GroupEditGroup = 1665019493,
+    GroupDeleteGroup = 365183375,
+    GroupAddAdmin = 958971956,
+    GroupAddMember = 676599227,
+    GroupRemoveMember = 2012702964,
+    GroupChangeMemberLevel = 589574238,
+    GroupChangeMemberPermission = 2132464067,
+    GroupJoinGroup = 591743429,
+    GroupLeaveGroup = 361834630,
+    GroupBanMember = 548504852,
+    GroupChangePrivacy = 1497988410,
+    GroupChangeDefaultPermission = 605792138,
+    GroupRevokeLink = 406592509,
+    GroupChangeUsername = 832997038,
+    GroupSendMessage = 599852950,
+    GroupEditMessage = 742937895,
+    GroupPinMessage = 184560027,
+    GroupUnPinMessage = 1290613173,
+    GroupDeleteMessage = 393991035,
+    GroupDeleteMessages = 276700675,
+    GroupDeleteHistory = 1270953793,
+    GroupClearHistory = 1352552449,
+    GroupAvatarAdd = 1202058216,
+    GroupAvatarChange = 108612523,
+    GroupAvatarDelete = 775862697,
+    GroupAvatarGetList = 939443722,
+    GroupSendDoingAction = 2022474356,
+    GroupReportGroup = 1759704420,
+    GroupGetFull = 200351324,
+    GroupGetMessagesList = 1541835459,
+    GroupGetMediaList = 2143016912,
+    GroupGetMembersList = 429215412,
+    GroupGetAdminsList = 332260610,
+    GroupSetDraft = 77668156,
+
+    // Service: RPC_Sample
+    GetUsers1 = 486248681,
+    GetProfiles = 822554282,
+    GetChannels = 1734748927,
+    GetDirects = 558085683,
+    GetMessages = 1160951872,
+
+    // Service: RPC_Shared
+    Echo = 101973561,
+    CheckUserName = 1897027349,
+
+    // Service: RPC_Upload
+    UploadFile = 1702285478,
+
+    // Service: RPC_User
+    ChangePhoneNumber = 706069694,
 }
 
 pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
@@ -3079,1376 +3239,884 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
     Ok(rpc)
 }
 
-pub async fn server_rpc(act: RpcInvoke, reg: RPC_Registry) -> Result<Vec<u8>, GenErr> {
+pub async fn server_rpc(act: RpcInvoke, reg: impl All_Rpc_Handler) -> Result<Vec<u8>, GenErr> {
     let res_v8 = match act.rpc_service {
         RpcServiceData::RPC_Auth(method) => match method {
             RPC_Auth_MethodData::SendConfirmCode(param) => {
-                // reg.SendConfirmCode();
+                let reg = reg.clone();
                 let response = reg.SendConfirmCode(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Auth_MethodData::ConfirmCode(param) => {
-                // reg.ConfirmCode();
+                let reg = reg.clone();
                 let response = reg.ConfirmCode(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Auth_MethodData::SingUp(param) => {
-                // reg.SingUp();
+                let reg = reg.clone();
                 let response = reg.SingUp(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Auth_MethodData::SingIn(param) => {
-                // reg.SingIn();
+                let reg = reg.clone();
                 let response = reg.SingIn(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Auth_MethodData::LogOut(param) => {
-                // reg.LogOut();
+                let reg = reg.clone();
                 let response = reg.LogOut(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
         },
 
         RpcServiceData::RPC_Channel(method) => match method {
             RPC_Channel_MethodData::ChannelCreateChannel(param) => {
-                // reg.ChannelCreateChannel();
+                let reg = reg.clone();
                 let response = reg.ChannelCreateChannel(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelEditChannel(param) => {
-                // reg.ChannelEditChannel();
+                let reg = reg.clone();
                 let response = reg.ChannelEditChannel(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelDeleteChannel(param) => {
-                // reg.ChannelDeleteChannel();
+                let reg = reg.clone();
                 let response = reg.ChannelDeleteChannel(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelAddAuthor(param) => {
-                // reg.ChannelAddAuthor();
+                let reg = reg.clone();
                 let response = reg.ChannelAddAuthor(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelChangeAuthorPermission(param) => {
-                // reg.ChannelChangeAuthorPermission();
+                let reg = reg.clone();
                 let response = reg.ChannelChangeAuthorPermission(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelRemoveAuthor(param) => {
-                // reg.ChannelRemoveAuthor();
+                let reg = reg.clone();
                 let response = reg.ChannelRemoveAuthor(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelFollowChannel(param) => {
-                // reg.ChannelFollowChannel();
+                let reg = reg.clone();
                 let response = reg.ChannelFollowChannel(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelUnFollowChannel(param) => {
-                // reg.ChannelUnFollowChannel();
+                let reg = reg.clone();
                 let response = reg.ChannelUnFollowChannel(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelRemoveFollowers(param) => {
-                // reg.ChannelRemoveFollowers();
+                let reg = reg.clone();
                 let response = reg.ChannelRemoveFollowers(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelSubscribe(param) => {
-                // reg.ChannelSubscribe();
+                let reg = reg.clone();
                 let response = reg.ChannelSubscribe(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelUnSubscribe(param) => {
-                // reg.ChannelUnSubscribe();
+                let reg = reg.clone();
                 let response = reg.ChannelUnSubscribe(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelRemoveSubscribers(param) => {
-                // reg.ChannelRemoveSubscribers();
+                let reg = reg.clone();
                 let response = reg.ChannelRemoveSubscribers(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelChangePrivacy(param) => {
-                // reg.ChannelChangePrivacy();
+                let reg = reg.clone();
                 let response = reg.ChannelChangePrivacy(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelChangeDefaultPermission(param) => {
-                // reg.ChannelChangeDefaultPermission();
+                let reg = reg.clone();
                 let response = reg.ChannelChangeDefaultPermission(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelRevokeLink(param) => {
-                // reg.ChannelRevokeLink();
+                let reg = reg.clone();
                 let response = reg.ChannelRevokeLink(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelChangeUsername(param) => {
-                // reg.ChannelChangeUsername();
+                let reg = reg.clone();
                 let response = reg.ChannelChangeUsername(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelBlockChannel(param) => {
-                // reg.ChannelBlockChannel();
+                let reg = reg.clone();
                 let response = reg.ChannelBlockChannel(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelSendMessage(param) => {
-                // reg.ChannelSendMessage();
+                let reg = reg.clone();
                 let response = reg.ChannelSendMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelEditMessage(param) => {
-                // reg.ChannelEditMessage();
+                let reg = reg.clone();
                 let response = reg.ChannelEditMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelPinMessage(param) => {
-                // reg.ChannelPinMessage();
+                let reg = reg.clone();
                 let response = reg.ChannelPinMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelUnPinMessage(param) => {
-                // reg.ChannelUnPinMessage();
+                let reg = reg.clone();
                 let response = reg.ChannelUnPinMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelDeleteMessage(param) => {
-                // reg.ChannelDeleteMessage();
+                let reg = reg.clone();
                 let response = reg.ChannelDeleteMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelDeleteMessages(param) => {
-                // reg.ChannelDeleteMessages();
+                let reg = reg.clone();
                 let response = reg.ChannelDeleteMessages(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelClearHistory(param) => {
-                // reg.ChannelClearHistory();
+                let reg = reg.clone();
                 let response = reg.ChannelClearHistory(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelAvatarAdd(param) => {
-                // reg.ChannelAvatarAdd();
+                let reg = reg.clone();
                 let response = reg.ChannelAvatarAdd(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelAvatarChange(param) => {
-                // reg.ChannelAvatarChange();
+                let reg = reg.clone();
                 let response = reg.ChannelAvatarChange(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelAvatarDelete(param) => {
-                // reg.ChannelAvatarDelete();
+                let reg = reg.clone();
                 let response = reg.ChannelAvatarDelete(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelAvatarGetList(param) => {
-                // reg.ChannelAvatarGetList();
+                let reg = reg.clone();
                 let response = reg.ChannelAvatarGetList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelSendDoingAction(param) => {
-                // reg.ChannelSendDoingAction();
+                let reg = reg.clone();
                 let response = reg.ChannelSendDoingAction(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelReportChannel(param) => {
-                // reg.ChannelReportChannel();
+                let reg = reg.clone();
                 let response = reg.ChannelReportChannel(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelReportMessage(param) => {
-                // reg.ChannelReportMessage();
+                let reg = reg.clone();
                 let response = reg.ChannelReportMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelGetFull(param) => {
-                // reg.ChannelGetFull();
+                let reg = reg.clone();
                 let response = reg.ChannelGetFull(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelGetMessagesList(param) => {
-                // reg.ChannelGetMessagesList();
+                let reg = reg.clone();
                 let response = reg.ChannelGetMessagesList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelGetMediaList(param) => {
-                // reg.ChannelGetMediaList();
+                let reg = reg.clone();
                 let response = reg.ChannelGetMediaList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelGetAuthors(param) => {
-                // reg.ChannelGetAuthors();
+                let reg = reg.clone();
                 let response = reg.ChannelGetAuthors(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelGetFollowers(param) => {
-                // reg.ChannelGetFollowers();
+                let reg = reg.clone();
                 let response = reg.ChannelGetFollowers(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelGetFollowings(param) => {
-                // reg.ChannelGetFollowings();
+                let reg = reg.clone();
                 let response = reg.ChannelGetFollowings(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelGetSubscribers(param) => {
-                // reg.ChannelGetSubscribers();
+                let reg = reg.clone();
                 let response = reg.ChannelGetSubscribers(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelBlocked(param) => {
-                // reg.ChannelBlocked();
+                let reg = reg.clone();
                 let response = reg.ChannelBlocked(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Channel_MethodData::ChannelSetDraft(param) => {
-                // reg.ChannelSetDraft();
+                let reg = reg.clone();
                 let response = reg.ChannelSetDraft(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
         },
 
         RpcServiceData::RPC_Chat(method) => match method {
             RPC_Chat_MethodData::ChatSendMessage(param) => {
-                // reg.ChatSendMessage();
+                let reg = reg.clone();
                 let response = reg.ChatSendMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Chat_MethodData::ChatEditMessage(param) => {
-                // reg.ChatEditMessage();
+                let reg = reg.clone();
                 let response = reg.ChatEditMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Chat_MethodData::ChatDeleteMessages(param) => {
-                // reg.ChatDeleteMessages();
+                let reg = reg.clone();
                 let response = reg.ChatDeleteMessages(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Chat_MethodData::ChatDeleteHistory(param) => {
-                // reg.ChatDeleteHistory();
+                let reg = reg.clone();
                 let response = reg.ChatDeleteHistory(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Chat_MethodData::ChatSendDoingAction(param) => {
-                // reg.ChatSendDoingAction();
+                let reg = reg.clone();
                 let response = reg.ChatSendDoingAction(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Chat_MethodData::ChatReportChat(param) => {
-                // reg.ChatReportChat();
+                let reg = reg.clone();
                 let response = reg.ChatReportChat(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Chat_MethodData::ChatGetFull(param) => {
-                // reg.ChatGetFull();
+                let reg = reg.clone();
                 let response = reg.ChatGetFull(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Chat_MethodData::ChatGetMessagesList(param) => {
-                // reg.ChatGetMessagesList();
+                let reg = reg.clone();
                 let response = reg.ChatGetMessagesList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Chat_MethodData::ChatGetMediaList(param) => {
-                // reg.ChatGetMediaList();
+                let reg = reg.clone();
                 let response = reg.ChatGetMediaList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
         },
 
         RpcServiceData::RPC_Direct(method) => match method {
             RPC_Direct_MethodData::DirectDeleteDirect(param) => {
-                // reg.DirectDeleteDirect();
+                let reg = reg.clone();
                 let response = reg.DirectDeleteDirect(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Direct_MethodData::DirectChangeTitle(param) => {
-                // reg.DirectChangeTitle();
+                let reg = reg.clone();
                 let response = reg.DirectChangeTitle(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Direct_MethodData::DirectSetCustomNotification(param) => {
-                // reg.DirectSetCustomNotification();
+                let reg = reg.clone();
                 let response = reg.DirectSetCustomNotification(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Direct_MethodData::DirectSendActionDoing(param) => {
-                // reg.DirectSendActionDoing();
+                let reg = reg.clone();
                 let response = reg.DirectSendActionDoing(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Direct_MethodData::DirectSetDraft(param) => {
-                // reg.DirectSetDraft();
+                let reg = reg.clone();
                 let response = reg.DirectSetDraft(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Direct_MethodData::DirectDeleteDirects(param) => {
-                // reg.DirectDeleteDirects();
+                let reg = reg.clone();
                 let response = reg.DirectDeleteDirects(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Direct_MethodData::DirectMarkAsRead(param) => {
-                // reg.DirectMarkAsRead();
+                let reg = reg.clone();
                 let response = reg.DirectMarkAsRead(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Direct_MethodData::DirectMarkAsUnRead(param) => {
-                // reg.DirectMarkAsUnRead();
+                let reg = reg.clone();
                 let response = reg.DirectMarkAsUnRead(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Direct_MethodData::DirectPinDirects(param) => {
-                // reg.DirectPinDirects();
+                let reg = reg.clone();
                 let response = reg.DirectPinDirects(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Direct_MethodData::DirectUnPinDirects(param) => {
-                // reg.DirectUnPinDirects();
+                let reg = reg.clone();
                 let response = reg.DirectUnPinDirects(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Direct_MethodData::DirectArchiveDirects(param) => {
-                // reg.DirectArchiveDirects();
+                let reg = reg.clone();
                 let response = reg.DirectArchiveDirects(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Direct_MethodData::DirectUnArchiveDirects(param) => {
-                // reg.DirectUnArchiveDirects();
+                let reg = reg.clone();
                 let response = reg.DirectUnArchiveDirects(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Direct_MethodData::DirectClearHistories(param) => {
-                // reg.DirectClearHistories();
+                let reg = reg.clone();
                 let response = reg.DirectClearHistories(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Direct_MethodData::DirectMuteDirects(param) => {
-                // reg.DirectMuteDirects();
+                let reg = reg.clone();
                 let response = reg.DirectMuteDirects(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Direct_MethodData::DirectUnMuteDirects(param) => {
-                // reg.DirectUnMuteDirects();
+                let reg = reg.clone();
                 let response = reg.DirectUnMuteDirects(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Direct_MethodData::DirectCreateFolder(param) => {
-                // reg.DirectCreateFolder();
+                let reg = reg.clone();
                 let response = reg.DirectCreateFolder(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Direct_MethodData::DirectChangeFolder(param) => {
-                // reg.DirectChangeFolder();
+                let reg = reg.clone();
                 let response = reg.DirectChangeFolder(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Direct_MethodData::DirectRemoveFromFolder(param) => {
-                // reg.DirectRemoveFromFolder();
+                let reg = reg.clone();
                 let response = reg.DirectRemoveFromFolder(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Direct_MethodData::DirectReordersFolder(param) => {
-                // reg.DirectReordersFolder();
+                let reg = reg.clone();
                 let response = reg.DirectReordersFolder(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Direct_MethodData::DirectDeleteFolder(param) => {
-                // reg.DirectDeleteFolder();
+                let reg = reg.clone();
                 let response = reg.DirectDeleteFolder(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Direct_MethodData::DirectGetChatsList(param) => {
-                // reg.DirectGetChatsList();
+                let reg = reg.clone();
                 let response = reg.DirectGetChatsList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Direct_MethodData::DirectGetGroupsList(param) => {
-                // reg.DirectGetGroupsList();
+                let reg = reg.clone();
                 let response = reg.DirectGetGroupsList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Direct_MethodData::DirectGetChannelsList(param) => {
-                // reg.DirectGetChannelsList();
+                let reg = reg.clone();
                 let response = reg.DirectGetChannelsList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Direct_MethodData::DirectGetFoldersList(param) => {
-                // reg.DirectGetFoldersList();
+                let reg = reg.clone();
                 let response = reg.DirectGetFoldersList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Direct_MethodData::DirectGetFoldersFullList(param) => {
-                // reg.DirectGetFoldersFullList();
+                let reg = reg.clone();
                 let response = reg.DirectGetFoldersFullList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
         },
 
         RpcServiceData::RPC_Group(method) => match method {
             RPC_Group_MethodData::GroupCreateGroup(param) => {
-                // reg.GroupCreateGroup();
+                let reg = reg.clone();
                 let response = reg.GroupCreateGroup(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupEditGroup(param) => {
-                // reg.GroupEditGroup();
+                let reg = reg.clone();
                 let response = reg.GroupEditGroup(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupDeleteGroup(param) => {
-                // reg.GroupDeleteGroup();
+                let reg = reg.clone();
                 let response = reg.GroupDeleteGroup(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupAddAdmin(param) => {
-                // reg.GroupAddAdmin();
+                let reg = reg.clone();
                 let response = reg.GroupAddAdmin(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupAddMember(param) => {
-                // reg.GroupAddMember();
+                let reg = reg.clone();
                 let response = reg.GroupAddMember(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupRemoveMember(param) => {
-                // reg.GroupRemoveMember();
+                let reg = reg.clone();
                 let response = reg.GroupRemoveMember(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupChangeMemberLevel(param) => {
-                // reg.GroupChangeMemberLevel();
+                let reg = reg.clone();
                 let response = reg.GroupChangeMemberLevel(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupChangeMemberPermission(param) => {
-                // reg.GroupChangeMemberPermission();
+                let reg = reg.clone();
                 let response = reg.GroupChangeMemberPermission(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupJoinGroup(param) => {
-                // reg.GroupJoinGroup();
+                let reg = reg.clone();
                 let response = reg.GroupJoinGroup(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupLeaveGroup(param) => {
-                // reg.GroupLeaveGroup();
+                let reg = reg.clone();
                 let response = reg.GroupLeaveGroup(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupBanMember(param) => {
-                // reg.GroupBanMember();
+                let reg = reg.clone();
                 let response = reg.GroupBanMember(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupChangePrivacy(param) => {
-                // reg.GroupChangePrivacy();
+                let reg = reg.clone();
                 let response = reg.GroupChangePrivacy(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupChangeDefaultPermission(param) => {
-                // reg.GroupChangeDefaultPermission();
+                let reg = reg.clone();
                 let response = reg.GroupChangeDefaultPermission(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupRevokeLink(param) => {
-                // reg.GroupRevokeLink();
+                let reg = reg.clone();
                 let response = reg.GroupRevokeLink(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupChangeUsername(param) => {
-                // reg.GroupChangeUsername();
+                let reg = reg.clone();
                 let response = reg.GroupChangeUsername(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupSendMessage(param) => {
-                // reg.GroupSendMessage();
+                let reg = reg.clone();
                 let response = reg.GroupSendMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupEditMessage(param) => {
-                // reg.GroupEditMessage();
+                let reg = reg.clone();
                 let response = reg.GroupEditMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupPinMessage(param) => {
-                // reg.GroupPinMessage();
+                let reg = reg.clone();
                 let response = reg.GroupPinMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupUnPinMessage(param) => {
-                // reg.GroupUnPinMessage();
+                let reg = reg.clone();
                 let response = reg.GroupUnPinMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupDeleteMessage(param) => {
-                // reg.GroupDeleteMessage();
+                let reg = reg.clone();
                 let response = reg.GroupDeleteMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupDeleteMessages(param) => {
-                // reg.GroupDeleteMessages();
+                let reg = reg.clone();
                 let response = reg.GroupDeleteMessages(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupDeleteHistory(param) => {
-                // reg.GroupDeleteHistory();
+                let reg = reg.clone();
                 let response = reg.GroupDeleteHistory(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupClearHistory(param) => {
-                // reg.GroupClearHistory();
+                let reg = reg.clone();
                 let response = reg.GroupClearHistory(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupAvatarAdd(param) => {
-                // reg.GroupAvatarAdd();
+                let reg = reg.clone();
                 let response = reg.GroupAvatarAdd(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupAvatarChange(param) => {
-                // reg.GroupAvatarChange();
+                let reg = reg.clone();
                 let response = reg.GroupAvatarChange(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupAvatarDelete(param) => {
-                // reg.GroupAvatarDelete();
+                let reg = reg.clone();
                 let response = reg.GroupAvatarDelete(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupAvatarGetList(param) => {
-                // reg.GroupAvatarGetList();
+                let reg = reg.clone();
                 let response = reg.GroupAvatarGetList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupSendDoingAction(param) => {
-                // reg.GroupSendDoingAction();
+                let reg = reg.clone();
                 let response = reg.GroupSendDoingAction(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupReportGroup(param) => {
-                // reg.GroupReportGroup();
+                let reg = reg.clone();
                 let response = reg.GroupReportGroup(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupGetFull(param) => {
-                // reg.GroupGetFull();
+                let reg = reg.clone();
                 let response = reg.GroupGetFull(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupGetMessagesList(param) => {
-                // reg.GroupGetMessagesList();
+                let reg = reg.clone();
                 let response = reg.GroupGetMessagesList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupGetMediaList(param) => {
-                // reg.GroupGetMediaList();
+                let reg = reg.clone();
                 let response = reg.GroupGetMediaList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupGetMembersList(param) => {
-                // reg.GroupGetMembersList();
+                let reg = reg.clone();
                 let response = reg.GroupGetMembersList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupGetAdminsList(param) => {
-                // reg.GroupGetAdminsList();
+                let reg = reg.clone();
                 let response = reg.GroupGetAdminsList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Group_MethodData::GroupSetDraft(param) => {
-                // reg.GroupSetDraft();
+                let reg = reg.clone();
                 let response = reg.GroupSetDraft(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
         },
 
         RpcServiceData::RPC_Sample(method) => match method {
             RPC_Sample_MethodData::GetUsers1(param) => {
-                // reg.GetUsers1();
+                let reg = reg.clone();
                 let response = reg.GetUsers1(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Sample_MethodData::GetProfiles(param) => {
-                // reg.GetProfiles();
+                let reg = reg.clone();
                 let response = reg.GetProfiles(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Sample_MethodData::GetChannels(param) => {
-                // reg.GetChannels();
+                let reg = reg.clone();
                 let response = reg.GetChannels(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Sample_MethodData::GetDirects(param) => {
-                // reg.GetDirects();
+                let reg = reg.clone();
                 let response = reg.GetDirects(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Sample_MethodData::GetMessages(param) => {
-                // reg.GetMessages();
+                let reg = reg.clone();
                 let response = reg.GetMessages(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
         },
 
         RpcServiceData::RPC_Shared(method) => match method {
             RPC_Shared_MethodData::Echo(param) => {
-                // reg.Echo();
+                let reg = reg.clone();
                 let response = reg.Echo(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
 
             RPC_Shared_MethodData::CheckUserName(param) => {
-                // reg.CheckUserName();
+                let reg = reg.clone();
                 let response = reg.CheckUserName(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
         },
 
         RpcServiceData::RPC_Upload(method) => match method {
             RPC_Upload_MethodData::UploadFile(param) => {
-                // reg.UploadFile();
+                let reg = reg.clone();
                 let response = reg.UploadFile(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
         },
 
         RpcServiceData::RPC_User(method) => match method {
             RPC_User_MethodData::ChangePhoneNumber(param) => {
-                // reg.ChangePhoneNumber();
+                let reg = reg.clone();
                 let response = reg.ChangePhoneNumber(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
-                //response
-                /*                    let mut buff =vec![];
-                prost::Message::encode(&response, &mut buff)?;
-                buff */
             }
         },
     };

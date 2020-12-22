@@ -3,17 +3,30 @@ use crate::pb::{EchoParam, EchoResponse};
 use crate::{errors::GenErr, UserParam};
 use async_trait::async_trait;
 
+use crate::rpc2;
 use http::Version;
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Error as HyperError, Request, Response, Server};
 use std::convert::Infallible;
 use std::net::SocketAddr;
 
-struct RPC_Registry {
-    // RPC_Shared: RPC_Shared,
-// RPC_Chat: RPC_Chat,
+enum Http2 {
+    Not = 40,
+    No = 2,
 }
-impl RPC_Chat2_Trait for RPC_Registry {}
+
+fn play() {
+    let v = Http2::No;
+    // Http2::from(2);
+}
+
+/*impl RPC_Registry {
+    fn new() -> RPC_Registry {
+        RPC_Registry { auth: None }
+    }
+}
+
+impl RPC_Chat2_Trait for RPC_Registry {}*/
 
 struct RpcInvoke {
     method_id: i64, // correct data type should be i32,
