@@ -9,3 +9,4 @@ edition = "2018"
 [dependencies]
 shared = {path = "../../lib/shared"}
 tokio = { version = "0.2.21", features = ["full"] }
+grammers-tl-types = "0.2.0"

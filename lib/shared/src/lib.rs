@@ -7,6 +7,7 @@
 pub mod errors;
 pub mod new_rpc;
 pub mod pb;
+pub mod rpc2;
 // pub mod rpc;
 // mod rpc_fns_default;
 pub mod sms_sender;

@@ -1076,6 +1076,34 @@ dependencies = [
 ]
 
 [[package]]
+name = "grammers-tl-gen"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8bdb391fffe737a89f9f04905395c0fc55ac10de69037f98f9443794cf3687ec"
+dependencies = [
+ "grammers-tl-parser",
+]
+
+[[package]]
+name = "grammers-tl-parser"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8ba932ee2ed4f49ee8f0209b6b9e922e793f03960ba679bd28101b8cf5e5bc29"
+dependencies = [
+ "crc32fast",
+]
+
+[[package]]
+name = "grammers-tl-types"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7ef01aed70e36f272be959acb35bd620918e678a668582200e9aa330191601da"
+dependencies = [
+ "grammers-tl-gen",
+ "grammers-tl-parser",
+]
+
+[[package]]
 name = "h2"
 version = "0.2.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2019,6 +2047,7 @@ checksum = "d36492546b6af1463394d46f0c834346f31548646f6ba10849802c9c9a27ac33"
 name = "play"
 version = "0.1.0"
 dependencies = [
+ "grammers-tl-types",
  "shared",
  "tokio",
 ]

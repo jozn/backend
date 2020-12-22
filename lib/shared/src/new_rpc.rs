@@ -9,6 +9,27 @@ use hyper::{Body, Error as HyperError, Request, Response, Server};
 use std::convert::Infallible;
 use std::net::SocketAddr;
 
+struct RPC_Registry {
+    // RPC_Shared: RPC_Shared,
+// RPC_Chat: RPC_Chat,
+}
+impl RPC_Chat2_Trait for RPC_Registry {}
+
+struct RpcInvoke {
+    method_id: i64, // correct data type should be i32,
+    rpc_service: RpcServiceData,
+}
+
+enum RpcServiceData {
+    RPC_Chat(RPC_Social_MethodData),
+    RPC_Social,
+}
+
+enum RPC_Social_MethodData {
+    SendConfirmCode(pb::SendConfirmCodeParam),
+    SingUp(pb::ChannelSetDraftParam),
+}
+
 #[async_trait]
 trait RPC_Shared {
     async fn Echo(up: &UserParam, param: pb::EchoParam) -> Result<pb::EchoResponse, GenErr> {
@@ -127,6 +148,68 @@ pub trait FIMicroService {
 }
 
 // dead code
-async fn server_http(req: Request<Body>) -> Result<Response<Body>, Infallible> {
-    Ok(Response::builder().status(200).body("sdf".into()).unwrap())
+
+/*
+pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr>{
+    use RpcServiceData::*;
+    let rpc = match invoke.method {
+        method_ids::SendConfirmCode => {
+            let rpc_param  : Result<pb::SendConfirmCodeParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice()).unwrap();
+            RpcInvoke{
+                method_id: 423423 as i64,
+                rpc_service: RPC_Chat(RPC_Chat_MethodData::ChatDeleteHistory(rpc_param)),
+            }
+        },
+        _ => { panic!("sdf")}
+    };
+    Ok(rpc)
 }
+
+pub fn parse_invoke(invoke: &pb::Invoke) -> Result<RpcInvoke>{
+    let rpc = match invoke.method {
+        method_ids::SendConfirmCode => {
+
+        },
+    }
+}
+
+pub async fn server_rpc_old(act: pb::Invoke) -> Result<Vec<u8>, GenErr> {
+    let up = UserParam {};
+
+    match act.method {
+        // service: RPC_Auth
+        method_ids::SendConfirmCode => {
+            // 939965206
+            let vec: Vec<u8> = vec![];
+            let rpc_param: Result<pb::SendConfirmCodeParam, ::prost::DecodeError> =
+                prost::Message::decode(act.rpc_data.as_slice());
+
+            if let Ok(param) = rpc_param {
+                println!("param {:?}", param);
+                let response = rpc_fns::SendConfirmCode(&up, param).await?;
+
+                let mut buff = vec![];
+                prost::Message::encode(&response, &mut buff)?;
+
+                Ok(buff)
+            } else {
+                Err(GenErr::ReadingPbParam)
+            }
+        }
+    }
+}
+
+pub async fn server_rpc(act: RpcInvoke, reg: RPC_Registery) -> Result<Vec<u8>, GenErr> {
+    match act.rpc_service {
+        RpcServiceData::RPC_Chat(method) => match method {
+            RPC_Social_MethodData::SendConfirmCode(rr) => {
+                reg.ChatSendMsg();
+            }
+            RPC_Social_MethodData::SingUp(rr) => RPC_Shared::Echo(),
+        },
+        RpcServiceData::RPC_Social => {}
+    };
+    Ok(vec![])
+}
+
+*/
