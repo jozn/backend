@@ -4,7 +4,10 @@ use async_trait::async_trait;
 use shared;
 use shared::errors::GenErr;
 use shared::new_rpc::{FHttpRequest, FHttpResponse, FIMicroService};
-use shared::pb::{ConfirmCodeParam, ConfirmCodeResponse, SendConfirmCodeParam, SendConfirmCodeResponse, EchoResponse, EchoParam};
+use shared::pb::{
+    ConfirmCodeParam, ConfirmCodeResponse, EchoParam, EchoResponse, SendConfirmCodeParam,
+    SendConfirmCodeResponse,
+};
 use shared::{pb, rpc2};
 
 #[derive(Clone)]
@@ -30,7 +33,7 @@ impl rpc2::RPC_Auth_Handler2 for CommonRpcHandler {
 #[async_trait]
 impl rpc2::RPC_Shared_Handler2 for CommonRpcHandler {
     async fn Echo(&self, param: EchoParam) -> Result<EchoResponse, GenErr> {
-        let res = EchoResponse{
+        let res = EchoResponse {
             done: true,
             text: format!("Res::>> {}", param.text),
         };

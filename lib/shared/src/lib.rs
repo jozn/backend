@@ -12,9 +12,9 @@ pub mod rpc2;
 // mod rpc_fns_default;
 // mod play;
 // pub mod rpc;
+pub mod common;
 pub mod sms_sender;
 pub mod utils;
-pub mod common;
 
 pub struct UserParam {}
 
