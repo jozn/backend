@@ -14,6 +14,7 @@ pub mod rpc2;
 // pub mod rpc;
 pub mod sms_sender;
 pub mod utils;
+pub mod common;
 
 pub struct UserParam {}
 

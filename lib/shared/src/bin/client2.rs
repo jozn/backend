@@ -11,27 +11,42 @@ use shared::{pb, rpc2};
 
 #[tokio::main]
 async fn main() {
-    client_test().await;
+    echo_loop_test().await;
 }
-
-async fn client_test() {
+async fn echo_test() {
     let crpc = rpc2::RpcClient::new("http://127.0.0.1:4020/rpc");
-
-    let param = pb::ChannelPinMessageParam { channel_id: 453 };
-    let mut buff = vec![];
-    ::prost::Message::encode_length_delimited(&param, &mut buff).unwrap();
 
     let out = crpc
         .Echo(pb::EchoParam {
             text: "sdfsd".to_string(),
         })
         .await;
+    println!("{:#?}", out);
 
-    let res = crpc.ChangePhoneNumber(pb::ChangePhoneNumberParam {}).await;
-    println!("{:#?}", res);
+}
+
+async fn echo_loop_test() {
+    let crpc = rpc2::RpcClient::new("http://127.0.0.1:4020/rpc");
+
+    for i in 0..10000{
+        let out = crpc
+            .Echo(pb::EchoParam {
+                text: format!("Hi there {}",i),
+            })
+            .await;
+        if i%10 == 0 {
+            println!("{:#?}", i);
+        }
+    }
+}
+
+async fn send_code_test() {
+    let crpc = rpc2::RpcClient::new("http://127.0.0.1:4020/rpc");
 
     let res = crpc
         .SendConfirmCode(pb::SendConfirmCodeParam::default())
         .await;
     println!("{:#?}", res);
+
 }
+

@@ -4,11 +4,10 @@ use async_trait::async_trait;
 use shared;
 use shared::errors::GenErr;
 use shared::new_rpc::{FHttpRequest, FHttpResponse, FIMicroService};
-use shared::pb::{
-    ConfirmCodeParam, ConfirmCodeResponse, SendConfirmCodeParam, SendConfirmCodeResponse,
-};
+use shared::pb::{ConfirmCodeParam, ConfirmCodeResponse, SendConfirmCodeParam, SendConfirmCodeResponse, EchoResponse, EchoParam};
 use shared::{pb, rpc2};
 
+#[derive(Clone)]
 struct rpc_auth {}
 
 #[async_trait]
@@ -27,6 +26,17 @@ impl rpc2::RPC_Auth_Handler2 for rpc_auth {
         })
     }
 }
+
+#[async_trait]
+impl rpc2::RPC_Shared_Handler2 for rpc_auth {
+    async fn Echo(&self, param: EchoParam) -> Result<EchoResponse, GenErr> {
+        let res = EchoResponse{
+            done: true,
+            text: format!("Res::>> {}", param.text),
+        };
+        Ok(res)
+    }
+}
 struct Cmaster {}
 
 #[async_trait]
@@ -36,31 +46,32 @@ impl FIMicroService for Cmaster {
     }
 
     async fn serve_request(req: FHttpRequest) -> Result<FHttpResponse, GenErr> {
-        println!("req{:?}", req);
+        // println!("req{:?}", req);
         let invoke: Result<pb::Invoke, ::prost::DecodeError> = prost::Message::decode(req.body);
 
         let rrr = rpc_auth {};
+        let rrr2 = rpc_auth {};
         match &invoke {
             Ok(invoker) => {
-                println!("#1");
+                // println!("#1");
                 let reg = shared::rpc2::RPC_Registry {
-                    RPC_Auth: Some(Box::new(rrr)),
+                    RPC_Auth: Some(Box::new(rrr.clone())),
                     RPC_Channel: None,
                     RPC_Chat: None,
                     RPC_Direct: None,
                     RPC_Group: None,
                     RPC_Sample: None,
-                    RPC_Shared: None,
+                    RPC_Shared: Some(Box::new(rrr2)),
                     RPC_Upload: None,
-                    RPC_User: None,
+                    ..Default::default()
                 };
 
                 let act = rpc2::invoke_to_parsed(invoker).unwrap();
-                println!("#2");
+                // println!("#2");
 
                 let res = shared::rpc2::server_rpc(act, &reg).await?;
                 let res = to_invoke_response(res, invoker)?;
-                println!("#end");
+                // println!("#end");
                 return Ok((200, res));
             }
 
