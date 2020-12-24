@@ -11,7 +11,7 @@ use shared::{pb, rpc2};
 
 #[tokio::main]
 async fn main() {
-    echo_test().await;
+    echo_loop_test().await;
 }
 async fn echo_test() {
     let crpc = shared::common::RpcClient::new("http://127.0.0.1:4020/rpc");
@@ -26,13 +26,13 @@ async fn echo_test() {
 async fn echo_loop_test() {
     let crpc = shared::common::RpcClient::new("http://127.0.0.1:4020/rpc");
 
-    for i in 0..100 {
+    for i in 0..100000 {
         let out = crpc
             .Echo(pb::EchoParam {
                 text: format!("Hi there {}", i),
             })
             .await;
-        if i % 10 == 0 {
+        if i % 1000 == 0 {
             println!("{:#?}", i);
         }
     }

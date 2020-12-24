@@ -20,11 +20,11 @@ pub async fn rpc_handle_registry(
 }
 
 fn to_invoke_response(data: Vec<u8>, req_invoke: &pb::Invoke) -> Result<Vec<u8>, GenErr> {
-    let invoke = pb::Invoke {
+    let invoke = pb::InvokeResponse {
         namespace: req_invoke.namespace,
         method: req_invoke.method,
+        user_id: 0,
         action_id: req_invoke.action_id,
-        is_response: true,
         rpc_data: data,
     };
     let mut buff = vec![];
@@ -47,8 +47,9 @@ pub fn param_to_invoke(param: &impl prost::Message, method_id: u32) -> Result<Ve
     let invoke = pb::Invoke {
         namespace: 0,
         method: method_id,
+        user_id: 0,
         action_id: 0,
-        is_response: false,
+        session: vec![],
         rpc_data: param_buff,
     };
 
@@ -94,7 +95,7 @@ impl RpcClient {
     ) -> Result<T, GenErr> {
         let invoke_vec = param_to_invoke(param, method_id)?;
         let res_body_vec = self.send_http_request(invoke_vec).await?;
-        let pb_res_invoke: pb::Invoke = prost_decode(res_body_vec.as_slice())?;
+        let pb_res_invoke: pb::InvokeResponse = prost_decode(res_body_vec.as_slice())?;
         let pb_response: T = prost_decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_response)
     }

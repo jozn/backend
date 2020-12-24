@@ -10,11 +10,37 @@ pub struct Invoke {
     #[prost(uint32, tag = "1")]
     pub method: u32,
     /// imut
+    #[prost(uint32, tag = "7")]
+    pub user_id: u32,
+    /// imut
     #[prost(uint64, tag = "2")]
     pub action_id: u64,
+    ///  bool is_response = 3; // imut // dep
+    ///
     /// imut
-    #[prost(bool, tag = "3")]
-    pub is_response: bool,
+    #[prost(bytes, tag = "8")]
+    pub session: std::vec::Vec<u8>,
+    /// imut
+    #[prost(bytes, tag = "4")]
+    pub rpc_data: std::vec::Vec<u8>,
+}
+/// imut all
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct InvokeResponse {
+    /// imut
+    #[prost(uint32, tag = "6")]
+    pub namespace: u32,
+    /// imut
+    #[prost(uint32, tag = "1")]
+    pub method: u32,
+    /// imut
+    #[prost(uint32, tag = "7")]
+    pub user_id: u32,
+    /// imut
+    #[prost(uint64, tag = "2")]
+    pub action_id: u64,
+    ///  bool is_response = 3; // imut
+    ///
     /// imut
     #[prost(bytes, tag = "4")]
     pub rpc_data: std::vec::Vec<u8>,

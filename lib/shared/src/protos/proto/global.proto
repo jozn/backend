@@ -38,8 +38,19 @@ enum ProfileLevelEnum {
 message Invoke { // imut all
   uint32 namespace = 6; // imut
   uint32 method = 1; // imut
+  uint32 user_id = 7; // imut
   uint64 action_id = 2; // imut
-  bool is_response = 3; // imut
+//  bool is_response = 3; // imut // dep
+  bytes session = 8; // imut
+  bytes rpc_data = 4; // imut
+}
+
+message InvokeResponse { // imut all
+  uint32 namespace = 6; // imut
+  uint32 method = 1; // imut
+  uint32 user_id = 7; // imut
+  uint64 action_id = 2; // imut
+//  bool is_response = 3; // imut
   bytes rpc_data = 4; // imut
 }
 
