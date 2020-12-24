@@ -28,7 +28,7 @@ async fn echo_test() {
 async fn echo_loop_test() {
     let crpc = rpc2::RpcClient::new("http://127.0.0.1:4020/rpc");
 
-    for i in 0..10000{
+    for i in 0..100{
         let out = crpc
             .Echo(pb::EchoParam {
                 text: format!("Hi there {}",i),
