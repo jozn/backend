@@ -14,7 +14,7 @@ async fn main() {
     echo_loop_test().await;
 }
 async fn echo_test() {
-    let crpc = shared::common::RpcClient::new("http://127.0.0.1:4020/rpc");
+    let crpc = shared::common::RpcClient::new("http://127.0.0.1:4010/rpc");
     let out = crpc
         .Echo(pb::EchoParam {
             text: "sdfsd".to_string(),
@@ -24,7 +24,7 @@ async fn echo_test() {
 }
 
 async fn echo_loop_test() {
-    let crpc = shared::common::RpcClient::new("http://127.0.0.1:4020/rpc");
+    let crpc = shared::common::RpcClient::new("http://127.0.0.1:4010/rpc");
 
     for i in 0..100000 {
         let out = crpc
@@ -39,7 +39,7 @@ async fn echo_loop_test() {
 }
 
 async fn send_code_test() {
-    let crpc = shared::common::RpcClient::new("http://127.0.0.1:4020/rpc");
+    let crpc = shared::common::RpcClient::new("http://127.0.0.1:4010/rpc");
 
     let res = crpc
         .SendConfirmCode(pb::SendConfirmCodeParam::default())

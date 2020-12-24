@@ -1,0 +1,97 @@
+use async_trait::async_trait;
+
+use shared;
+use shared::{pb, rpc2};
+use shared::errors::GenErr;
+use shared::new_rpc::{FHttpRequest, FHttpResponse, FIMicroService};
+use shared::pb::{
+    ConfirmCodeParam, ConfirmCodeResponse, EchoParam, EchoResponse, SendConfirmCodeParam,
+    SendConfirmCodeResponse,
+};
+use std::sync::Arc;
+use once_cell::sync::OnceCell;
+use bytes::Bytes;
+
+static GATEWAY_INSTANCE: OnceCell<Gateway> = OnceCell::new();
+
+#[derive(Debug)]
+struct Gateway {
+    pub endpoint: &'static str,
+    pub reqwest_client: reqwest::Client,
+}
+
+impl Gateway {
+    pub fn new(endpoint: &'static str) -> Self {
+        Gateway {
+            endpoint: endpoint,
+            reqwest_client: reqwest::Client::new(),
+        }
+    }
+
+    fn get_shared(&self) -> u64 {
+        println!("get shared ");
+        345
+    }
+
+    pub async fn send_http_request(&self, body_data: Vec<u8>) -> Result<Vec<u8>, GenErr> {
+        let req = self
+            .reqwest_client
+            .post(self.endpoint)
+            .body(body_data)
+            .send()
+            .await?;
+
+        let res_bytes = req.bytes().await?;
+        let res_bytes = res_bytes.to_vec();
+        Ok(res_bytes)
+    }
+
+}
+
+#[derive(Debug)]
+struct GatewayMicro {
+    // gateway: Arc<Gateway>,
+}
+
+#[async_trait]
+impl FIMicroService for GatewayMicro {
+    fn port(&self) -> u16 {
+        4010
+    }
+
+    async fn serve_request(req: FHttpRequest) -> Result<FHttpResponse, GenErr> {
+        let invoke: pb::Invoke = prost::Message::decode(req.body.clone())?;
+        let gate = GATEWAY_INSTANCE.get().unwrap();
+
+        match invoke.method {
+            rpc2::method_ids::GetProfiles => {
+                println!("rpc2::method_ids::Echo ");
+            },
+            _ => {
+                // println!("method {} ", invoke.method);
+                let res = gate.send_http_request(req.body.to_vec()).await?;
+                return Ok((200, res))
+            }
+        };
+        Ok((200,b" manula".to_vec()))
+    }
+}
+
+
+#[tokio::main]
+async fn main() {
+    println!("Hi gatwway1");
+
+    let gateway = Gateway{
+        endpoint: "http://127.0.0.1:4020/rpc",
+        reqwest_client: Default::default()
+    };
+
+    GATEWAY_INSTANCE.set(gateway).unwrap();
+
+    let c = GatewayMicro{
+        // gateway: gateway,
+    };
+
+    c.listen_http_requests().await;
+}

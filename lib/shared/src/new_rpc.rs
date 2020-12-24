@@ -120,13 +120,20 @@ impl FIMicroService for SampleService {
 }
 
 #[async_trait]
-pub trait FIMicroService {
+pub trait FIMicroService : Send + 'static {
     fn port(&self) -> u16;
     async fn serve_request(req: FHttpRequest) -> Result<FHttpResponse, GenErr>;
+    async fn serve_request2(&self, req: FHttpRequest) -> Result<FHttpResponse, GenErr> {
+        Ok((404, vec![]))
+    }
 
     async fn listen_http_requests(&self) {
         let addr = SocketAddr::from(([0, 0, 0, 0], self.port()));
         println!("There will some sort.");
+
+        // let celf = self;
+        let serlf_arc = std::sync::Arc::new(self);
+        let serlf_arc2 = serlf_arc.clone();
 
         let make_svc = make_service_fn(move |_| async {
             Ok::<_, HyperError>(service_fn(move |_req| async {
@@ -140,7 +147,10 @@ pub trait FIMicroService {
                     body: bts,
                 };
 
+                // serlf_arc2.clone();
+
                 let respose = Self::serve_request(req).await.unwrap();
+                // let respose = &(self).serve_request2(req).await.unwrap();
 
                 let res = Response::new(Body::from(respose.1));
                 Ok::<_, HyperError>(res)

@@ -11,6 +11,8 @@ pub async fn rpc_handle_registry(
     // println!("req{:?}", req);
     let invoke: pb::Invoke = prost::Message::decode(req.body)?;
 
+    // println!("hi3 reg > method_id: {} ", invoke.method);
+
     let act = rpc2::invoke_to_parsed(&invoke)?;
 
     let res = rpc2::server_rpc(act, &reg).await?;
@@ -98,11 +100,5 @@ impl RpcClient {
         let pb_res_invoke: pb::InvokeResponse = prost_decode(res_body_vec.as_slice())?;
         let pb_response: T = prost_decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_response)
-    }
-}
-
-impl RpcClient {
-    fn get_next_action_id3(&self) -> u64 {
-        8
     }
 }
