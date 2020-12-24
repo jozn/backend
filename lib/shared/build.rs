@@ -1,7 +1,9 @@
 extern crate prost_build;
 // If it must fail > it must panics > no output to concole without panic
 
-fn main() {
+fn main() {}
+
+fn build_pb() {
     println!("======================= INSIDE THE BUILD PROJECT =========================");
 
     let dir = std::fs::read_dir("src/protos/proto/").unwrap();

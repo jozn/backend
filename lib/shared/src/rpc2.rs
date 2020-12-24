@@ -1993,7 +1993,6 @@ pub enum MethodIds {
 }
 
 pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
-    // println!("  #4 {}", invoke.method);
     use RpcServiceData::*;
     let rpc = match invoke.method {
         // RPC_Auth
@@ -3253,10 +3252,6 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
 }
 
 pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, GenErr> {
-    println!("  #4 {}", act.method_id);
-    println!("   there sfjs f");
-    println!("  #full {:?}", &act);
-
     let res_v8 = match act.rpc_service {
         RpcServiceData::RPC_Auth(method) => match method {
             RPC_Auth_MethodData::SendConfirmCode(param) => {
@@ -4141,6 +4136,7 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
     Ok(res_v8)
 }
 
+#[derive(Default)]
 pub struct RPC_Registry {
     pub RPC_Auth: Option<Box<RPC_Auth_Handler2>>,
     pub RPC_Channel: Option<Box<RPC_Channel_Handler2>>,
@@ -4228,7 +4224,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -4259,7 +4256,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -4287,7 +4285,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -4315,7 +4314,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -4343,7 +4343,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -4375,7 +4376,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -4406,7 +4408,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -4437,7 +4440,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -4468,7 +4472,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -4499,7 +4504,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -4530,7 +4536,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -4561,7 +4568,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -4592,7 +4600,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -4623,7 +4632,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -4654,7 +4664,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -4685,7 +4696,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -4716,7 +4728,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -4747,7 +4760,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -4778,7 +4792,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -4809,7 +4824,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -4840,7 +4856,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -4871,7 +4888,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -4902,7 +4920,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -4933,7 +4952,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -4964,7 +4984,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -4995,7 +5016,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5026,7 +5048,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5057,7 +5080,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5088,7 +5112,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5119,7 +5144,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5150,7 +5176,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5181,7 +5208,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5212,7 +5240,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5243,7 +5272,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5274,7 +5304,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5305,7 +5336,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5336,7 +5368,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5367,7 +5400,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5398,7 +5432,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5429,7 +5464,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5460,7 +5496,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5491,7 +5528,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5522,7 +5560,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5553,7 +5592,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5584,7 +5624,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5616,7 +5657,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5647,7 +5689,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5678,7 +5721,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5709,7 +5753,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5740,7 +5785,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5771,7 +5817,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5802,7 +5849,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5833,7 +5881,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5864,7 +5913,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5896,7 +5946,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5927,7 +5978,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5958,7 +6010,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -5989,7 +6042,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6020,7 +6074,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6051,7 +6106,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6082,7 +6138,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6113,7 +6170,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6144,7 +6202,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6175,7 +6234,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6206,7 +6266,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6237,7 +6298,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6268,7 +6330,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6299,7 +6362,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6330,7 +6394,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6361,7 +6426,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6392,7 +6458,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6423,7 +6490,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6454,7 +6522,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6485,7 +6554,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6516,7 +6586,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6547,7 +6618,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6578,7 +6650,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6609,7 +6682,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6640,7 +6714,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6672,7 +6747,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6703,7 +6779,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6734,7 +6811,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6765,7 +6843,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6796,7 +6875,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6827,7 +6907,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6858,7 +6939,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6889,7 +6971,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6920,7 +7003,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6951,7 +7035,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -6982,7 +7067,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7013,7 +7099,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7044,7 +7131,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7075,7 +7163,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7106,7 +7195,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7137,7 +7227,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7168,7 +7259,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7199,7 +7291,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7230,7 +7323,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7261,7 +7355,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7292,7 +7387,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7323,7 +7419,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7354,7 +7451,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7385,7 +7483,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7416,7 +7515,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7447,7 +7547,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7478,7 +7579,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7509,7 +7611,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7540,7 +7643,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7571,7 +7675,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7602,7 +7707,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7633,7 +7739,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7664,7 +7771,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7695,7 +7803,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7726,7 +7835,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7758,7 +7868,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7789,7 +7900,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7820,7 +7932,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7851,7 +7964,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7882,7 +7996,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7911,7 +8026,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7942,7 +8058,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -7974,7 +8091,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 
@@ -8006,7 +8124,8 @@ impl RpcClient {
         let res_bytes = req.bytes().await?;
         let res_bytes = res_bytes.to_vec();
 
-        let pb_res = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res_invoke: pb::Invoke = ::prost::Message::decode(res_bytes.as_slice())?;
+        let pb_res = ::prost::Message::decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_res)
     }
 }

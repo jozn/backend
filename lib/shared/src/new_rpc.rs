@@ -20,14 +20,6 @@ fn play() {
     // Http2::from(2);
 }
 
-/*impl RPC_Registry {
-    fn new() -> RPC_Registry {
-        RPC_Registry { auth: None }
-    }
-}
-
-impl RPC_Chat2_Trait for RPC_Registry {}*/
-
 struct RpcInvoke {
     method_id: i64, // correct data type should be i32,
     rpc_service: RpcServiceData,
@@ -122,15 +114,15 @@ impl FIMicroService for SampleService {
         4040
     }
 
-    async fn serve_request(req: FHttpRequest) -> (u16, Vec<u8>) {
-        (200, b"hi there".to_vec())
+    async fn serve_request(req: FHttpRequest) -> Result<FHttpResponse, GenErr> {
+        Ok((200, b"hi there".to_vec()))
     }
 }
 
 #[async_trait]
 pub trait FIMicroService {
     fn port(&self) -> u16;
-    async fn serve_request(req: FHttpRequest) -> FHttpResponse;
+    async fn serve_request(req: FHttpRequest) -> Result<FHttpResponse, GenErr>;
 
     async fn listen_http_requests(&self) {
         let addr = SocketAddr::from(([0, 0, 0, 0], self.port()));
@@ -148,7 +140,7 @@ pub trait FIMicroService {
                     body: bts,
                 };
 
-                let respose = Self::serve_request(req).await;
+                let respose = Self::serve_request(req).await.unwrap();
 
                 let res = Response::new(Body::from(respose.1));
                 Ok::<_, HyperError>(res)
@@ -162,70 +154,3 @@ pub trait FIMicroService {
         }
     }
 }
-
-// dead code
-
-/*
-pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr>{
-    use RpcServiceData::*;
-    let rpc = match invoke.method {
-        method_ids::SendConfirmCode => {
-            let rpc_param  : Result<pb::SendConfirmCodeParam, ::prost::DecodeError> = prost::Message::decode(act.rpc_data.as_slice()).unwrap();
-            RpcInvoke{
-                method_id: 423423 as i64,
-                rpc_service: RPC_Chat(RPC_Chat_MethodData::ChatDeleteHistory(rpc_param)),
-            }
-        },
-        _ => { panic!("sdf")}
-    };
-    Ok(rpc)
-}
-
-pub fn parse_invoke(invoke: &pb::Invoke) -> Result<RpcInvoke>{
-    let rpc = match invoke.method {
-        method_ids::SendConfirmCode => {
-
-        },
-    }
-}
-
-pub async fn server_rpc_old(act: pb::Invoke) -> Result<Vec<u8>, GenErr> {
-    let up = UserParam {};
-
-    match act.method {
-        // service: RPC_Auth
-        method_ids::SendConfirmCode => {
-            // 939965206
-            let vec: Vec<u8> = vec![];
-            let rpc_param: Result<pb::SendConfirmCodeParam, ::prost::DecodeError> =
-                prost::Message::decode(act.rpc_data.as_slice());
-
-            if let Ok(param) = rpc_param {
-                println!("param {:?}", param);
-                let response = rpc_fns::SendConfirmCode(&up, param).await?;
-
-                let mut buff = vec![];
-                prost::Message::encode(&response, &mut buff)?;
-
-                Ok(buff)
-            } else {
-                Err(GenErr::ReadingPbParam)
-            }
-        }
-    }
-}
-
-pub async fn server_rpc(act: RpcInvoke, reg: RPC_Registery) -> Result<Vec<u8>, GenErr> {
-    match act.rpc_service {
-        RpcServiceData::RPC_Chat(method) => match method {
-            RPC_Social_MethodData::SendConfirmCode(rr) => {
-                reg.ChatSendMsg();
-            }
-            RPC_Social_MethodData::SingUp(rr) => RPC_Shared::Echo(),
-        },
-        RpcServiceData::RPC_Social => {}
-    };
-    Ok(vec![])
-}
-
-*/

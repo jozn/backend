@@ -3,7 +3,7 @@
 use async_trait::async_trait;
 use shared;
 use shared::errors::GenErr;
-use shared::new_rpc::{FHttpRequest, FIMicroService};
+use shared::new_rpc::{FHttpRequest, FHttpResponse, FIMicroService};
 use shared::pb::{
     ConfirmCodeParam, ConfirmCodeResponse, SendConfirmCodeParam, SendConfirmCodeResponse,
 };
@@ -35,12 +35,12 @@ impl FIMicroService for Cmaster {
         4020
     }
 
-    async fn serve_request(req: FHttpRequest) -> (u16, Vec<u8>) {
+    async fn serve_request(req: FHttpRequest) -> Result<FHttpResponse, GenErr> {
         println!("req{:?}", req);
         let invoke: Result<pb::Invoke, ::prost::DecodeError> = prost::Message::decode(req.body);
 
         let rrr = rpc_auth {};
-        match invoke {
+        match &invoke {
             Ok(invoker) => {
                 println!("#1");
                 let reg = shared::rpc2::RPC_Registry {
@@ -55,12 +55,13 @@ impl FIMicroService for Cmaster {
                     RPC_User: None,
                 };
 
-                let act = rpc2::invoke_to_parsed(&invoker).unwrap();
+                let act = rpc2::invoke_to_parsed(invoker).unwrap();
                 println!("#2");
 
-                let res = shared::rpc2::server_rpc(act, &reg).await;
+                let res = shared::rpc2::server_rpc(act, &reg).await?;
+                let res = to_invoke_response(res, invoker)?;
                 println!("#end");
-                return (200, res.unwrap());
+                return Ok((200, res));
             }
 
             Err(err) => {}
@@ -69,8 +70,21 @@ impl FIMicroService for Cmaster {
         let m = b"sdflk sdflksdf sdfsdfl sdfsdjfs d".to_vec();
         let f = std::fs::read("./img.jpg").unwrap();
         // (200, f)
-        (200, m)
+        Ok((200, m))
     }
+}
+
+fn to_invoke_response(data: Vec<u8>, req_invoke: &pb::Invoke) -> Result<Vec<u8>, GenErr> {
+    let invoke = pb::Invoke {
+        namespace: req_invoke.namespace,
+        method: req_invoke.method,
+        action_id: req_invoke.action_id,
+        is_response: true,
+        rpc_data: data,
+    };
+    let mut buff = vec![];
+    let out = prost::Message::encode(&invoke, &mut buff)?;
+    Ok(buff)
 }
 
 #[tokio::main]
