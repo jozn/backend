@@ -808,6 +808,18 @@ pub enum DevicePlatform {
     Web = 7,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetNextIdParam {
+    #[prost(string, tag = "1")]
+    pub key: std::string::String,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetNextIdResponse {
+    #[prost(uint64, tag = "1")]
+    pub next_id: u64,
+    #[prost(bool, tag = "2")]
+    pub error: bool,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SendConfirmCodeParam {
     #[prost(string, tag = "1")]
     pub hash: std::string::String,

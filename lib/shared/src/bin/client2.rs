@@ -11,8 +11,23 @@ use shared::{pb, rpc2};
 
 #[tokio::main]
 async fn main() {
-    echo_loop_test().await;
+    next_id().await;
 }
+async fn next_id() {
+    let crpc = shared::common::RpcClient::new("http://127.0.0.1:4001/rpc");
+
+    for i in 0..1000 {
+        let out = crpc
+            .GetNextId(pb::GetNextIdParam {
+                key: "shop_next".to_string(),
+            })
+            .await;
+        if i % 1 == 0 {
+            println!("{} {:#?}", i, out);
+        }
+    }
+}
+
 async fn echo_test() {
     let crpc = shared::common::RpcClient::new("http://127.0.0.1:4010/rpc");
     let out = crpc

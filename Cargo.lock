@@ -533,7 +533,13 @@ name = "cmaster"
 version = "0.1.0"
 dependencies = [
  "async-trait",
+ "bytes",
+ "http",
+ "hyper",
+ "image",
+ "once_cell",
  "prost",
+ "reqwest",
  "shared",
  "tokio",
 ]

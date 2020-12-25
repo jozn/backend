@@ -19,6 +19,7 @@ pub struct RpcInvoke {
 
 #[derive(Debug)]
 pub enum RpcServiceData {
+    IPC_CMaster(IPC_CMaster_MethodData),
     RPC_Auth(RPC_Auth_MethodData),
     RPC_Channel(RPC_Channel_MethodData),
     RPC_Chat(RPC_Chat_MethodData),
@@ -30,6 +31,10 @@ pub enum RpcServiceData {
     RPC_User(RPC_User_MethodData),
 }
 
+#[derive(Debug)]
+pub enum IPC_CMaster_MethodData {
+    GetNextId(pb::GetNextIdParam),
+}
 #[derive(Debug)]
 pub enum RPC_Auth_MethodData {
     SendConfirmCode(pb::SendConfirmCodeParam),
@@ -181,6 +186,15 @@ pub enum RPC_User_MethodData {
     ChangePhoneNumber(pb::ChangePhoneNumberParam),
 }
 
+#[async_trait]
+pub trait IPC_CMaster_Handler {
+    async fn GetNextId(
+        up: &UserParam,
+        param: pb::GetNextIdParam,
+    ) -> Result<pb::GetNextIdResponse, GenErr> {
+        Ok(pb::GetNextIdResponse::default())
+    }
+}
 #[async_trait]
 pub trait RPC_Auth_Handler {
     async fn SendConfirmCode(
@@ -936,6 +950,12 @@ pub trait RPC_User_Handler {
 }
 
 #[async_trait]
+pub trait IPC_CMaster_Handler2: Send + Sync {
+    async fn GetNextId(&self, param: pb::GetNextIdParam) -> Result<pb::GetNextIdResponse, GenErr> {
+        Ok(pb::GetNextIdResponse::default())
+    }
+}
+#[async_trait]
 pub trait RPC_Auth_Handler2: Send + Sync {
     async fn SendConfirmCode(
         &self,
@@ -1688,7 +1708,8 @@ pub trait RPC_User_Handler2: Send + Sync {
 
 #[async_trait]
 pub trait All_Rpc_Handler:
-    RPC_Auth_Handler2
+    IPC_CMaster_Handler2
+    + RPC_Auth_Handler2
     + RPC_Channel_Handler2
     + RPC_Chat_Handler2
     + RPC_Direct_Handler2
@@ -1704,6 +1725,9 @@ pub trait All_Rpc_Handler:
 }
 
 pub mod method_ids {
+    // Service: IPC_CMaster
+    pub const GetNextId: u32 = 929964228;
+
     // Service: RPC_Auth
     pub const SendConfirmCode: u32 = 939965206;
     pub const ConfirmCode: u32 = 1740258084;
@@ -1850,6 +1874,9 @@ pub mod method_ids {
 
 #[derive(Debug)]
 pub enum MethodIds {
+    // Service: IPC_CMaster
+    GetNextId = 929964228,
+
     // Service: RPC_Auth
     SendConfirmCode = 939965206,
     ConfirmCode = 1740258084,
@@ -1995,6 +2022,15 @@ pub enum MethodIds {
 pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
     use RpcServiceData::*;
     let rpc = match invoke.method {
+        // IPC_CMaster
+        method_ids::GetNextId => {
+            let rpc_param: pb::GetNextIdParam = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 929964228 as i64,
+                rpc_service: IPC_CMaster(IPC_CMaster_MethodData::GetNextId(rpc_param)),
+            }
+        }
+
         // RPC_Auth
         method_ids::SendConfirmCode => {
             let rpc_param: pb::SendConfirmCodeParam =
@@ -3124,6 +3160,15 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
 
 pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, GenErr> {
     let res_v8 = match act.rpc_service {
+        RpcServiceData::IPC_CMaster(method) => match method {
+            IPC_CMaster_MethodData::GetNextId(param) => {
+                let handler = eror(&reg.IPC_CMaster)?;
+                let response = handler.GetNextId(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+        },
+
         RpcServiceData::RPC_Auth(method) => match method {
             RPC_Auth_MethodData::SendConfirmCode(param) => {
                 let handler = eror(&reg.RPC_Auth)?;
@@ -4009,6 +4054,7 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
 
 #[derive(Default)]
 pub struct RPC_Registry {
+    pub IPC_CMaster: Option<Box<IPC_CMaster_Handler2>>,
     pub RPC_Auth: Option<Box<RPC_Auth_Handler2>>,
     pub RPC_Channel: Option<Box<RPC_Channel_Handler2>>,
     pub RPC_Chat: Option<Box<RPC_Chat_Handler2>>,
@@ -4020,6 +4066,8 @@ pub struct RPC_Registry {
     pub RPC_User: Option<Box<RPC_User_Handler2>>,
 }
 
+impl IPC_CMaster_Handler for RPC_Registry {}
+impl IPC_CMaster_Handler2 for RPC_Registry {}
 impl RPC_Auth_Handler for RPC_Registry {}
 impl RPC_Auth_Handler2 for RPC_Registry {}
 impl RPC_Channel_Handler for RPC_Registry {}
@@ -4053,6 +4101,15 @@ fn eror<T>(input: &Option<T>) -> Result<&T, GenErr> {
 }
 
 impl common::RpcClient {
+    // service: IPC_CMaster
+    pub async fn GetNextId(
+        &self,
+        param: pb::GetNextIdParam,
+    ) -> Result<pb::GetNextIdResponse, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::GetNextId).await?;
+        Ok(pb_res)
+    }
+
     // service: RPC_Auth
     pub async fn SendConfirmCode(
         &self,
@@ -5220,6 +5277,13 @@ impl common::RpcClient {
 /////////////////////// Code gen for def rpc //////////////
 struct _RRR_ {}
 
+#[async_trait]
+impl IPC_CMaster_Handler2 for _RRR_ {
+    async fn GetNextId(&self, param: pb::GetNextIdParam) -> Result<pb::GetNextIdResponse, GenErr> {
+        println!("called GetNextId in the impl code.");
+        Ok(pb::GetNextIdResponse::default())
+    }
+}
 #[async_trait]
 impl RPC_Auth_Handler2 for _RRR_ {
     async fn SendConfirmCode(

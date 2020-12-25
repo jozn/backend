@@ -5,7 +5,7 @@ package pb;
 import "global.proto";
 
 service RPC_Sample {
-//  rpc (Param) returns (Response);
+    //  rpc (Param) returns (Response);
     rpc GetUsers1(GetUsers1Param) returns (GetUsers1Response);
     rpc GetProfiles(GetProfilesParam) returns (GetProfilesResponse);
     rpc GetChannels(GetChannelsParam) returns (GetChannelsResponse);

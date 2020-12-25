@@ -3,7 +3,16 @@ use crate::new_rpc::{FHttpRequest, FHttpResponse};
 use crate::rpc2::RPC_Registry;
 use crate::{pb, rpc2};
 use std::panic::RefUnwindSafe;
+use rand::RngCore;
 
+
+//////////// Ranodm ////////////
+pub fn get_random_u64() -> u64 {
+    let mut rng = rand::thread_rng();
+    rng.next_u64()
+}
+
+//////////// Rpc ///////////////
 pub async fn rpc_handle_registry(
     reg: &RPC_Registry,
     req: FHttpRequest,

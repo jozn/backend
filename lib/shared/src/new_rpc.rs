@@ -120,7 +120,7 @@ impl FIMicroService for SampleService {
 }
 
 #[async_trait]
-pub trait FIMicroService : Send + 'static {
+pub trait FIMicroService: Send + 'static {
     fn port(&self) -> u16;
     async fn serve_request(req: FHttpRequest) -> Result<FHttpResponse, GenErr>;
     async fn serve_request2(&self, req: FHttpRequest) -> Result<FHttpResponse, GenErr> {
@@ -137,12 +137,13 @@ pub trait FIMicroService : Send + 'static {
 
         let make_svc = make_service_fn(move |_| async {
             Ok::<_, HyperError>(service_fn(move |_req| async {
+                let method = _req.method().clone();
                 let path = _req.uri().path().to_string();
                 let bo = _req.into_body();
                 let bts = hyper::body::to_bytes(bo).await.unwrap();
 
                 let req = FHttpRequest {
-                    method: Default::default(),
+                    method: method,
                     path: path,
                     body: bts,
                 };

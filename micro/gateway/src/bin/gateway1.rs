@@ -1,16 +1,12 @@
 use async_trait::async_trait;
 
+use bytes::Bytes;
+use once_cell::sync::OnceCell;
 use shared;
-use shared::{pb, rpc2};
 use shared::errors::GenErr;
 use shared::new_rpc::{FHttpRequest, FHttpResponse, FIMicroService};
-use shared::pb::{
-    ConfirmCodeParam, ConfirmCodeResponse, EchoParam, EchoResponse, SendConfirmCodeParam,
-    SendConfirmCodeResponse,
-};
+use shared::{pb, rpc2};
 use std::sync::Arc;
-use once_cell::sync::OnceCell;
-use bytes::Bytes;
 
 static GATEWAY_INSTANCE: OnceCell<Gateway> = OnceCell::new();
 
@@ -45,7 +41,6 @@ impl Gateway {
         let res_bytes = res_bytes.to_vec();
         Ok(res_bytes)
     }
-
 }
 
 #[derive(Debug)]
@@ -60,31 +55,33 @@ impl FIMicroService for GatewayMicro {
     }
 
     async fn serve_request(req: FHttpRequest) -> Result<FHttpResponse, GenErr> {
+        if req.method == http::Method::GET && req.path == "/" {
+            return Ok((200, b"This is gateway.".to_vec()));
+        }
         let invoke: pb::Invoke = prost::Message::decode(req.body.clone())?;
         let gate = GATEWAY_INSTANCE.get().unwrap();
 
         match invoke.method {
             rpc2::method_ids::GetProfiles => {
                 println!("rpc2::method_ids::Echo ");
-            },
+            }
             _ => {
-                // println!("method {} ", invoke.method);
+                println!("method {} ", invoke.method);
                 let res = gate.send_http_request(req.body.to_vec()).await?;
-                return Ok((200, res))
+                return Ok((200, res));
             }
         };
-        Ok((200,b" manula".to_vec()))
+        Ok((200, b" manula".to_vec()))
     }
 }
-
 
 #[tokio::main]
 async fn main() {
     println!("Hi gatwway1");
 
-    let gateway = Gateway{
+    let gateway = Gateway {
         endpoint: "http://127.0.0.1:4020/rpc",
-        reqwest_client: Default::default()
+        reqwest_client: Default::default(),
     };
 
     GATEWAY_INSTANCE.set(gateway).unwrap();
