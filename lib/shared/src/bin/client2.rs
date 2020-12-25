@@ -16,7 +16,7 @@ async fn main() {
 async fn next_id() {
     let crpc = shared::common::RpcClient::new("http://127.0.0.1:4001/rpc");
 
-    for i in 0..1000 {
+    for i in 0..1000000 {
         let out = crpc
             .GetNextId(pb::GetNextIdParam {
                 key: "shop_next".to_string(),

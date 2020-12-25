@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package pb;
+
+import "global.proto";
+
+service IPC_CMaster {
+    //  rpc (Param) returns (Response);
+    rpc GetNextId (GetNextIdParam) returns (GetNextIdResponse);
+
+}
+
+message GetNextIdParam {
+    string key = 1;
+    int32 start_from = 2;
+}
+
+message GetNextIdResponse {
+    uint64 next_id = 1;
+    bool error = 2;
+}
+
+
+
+/*
+message Param {
+
+}
+message Response {
+
+}
+*/
