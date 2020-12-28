@@ -63,7 +63,7 @@ struct CMaster {
 #[async_trait]
 impl FIMicroService for CMaster {
     fn port(&self) -> u16 {
-        4001
+        4004
     }
 
     async fn serve_request(req: FHttpRequest) -> Result<FHttpResponse, GenErr> {

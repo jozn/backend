@@ -14,7 +14,7 @@ async fn main() {
     next_id().await;
 }
 async fn next_id() {
-    let crpc = shared::common::RpcClient::new("http://127.0.0.1:4001/rpc");
+    let crpc = shared::common::RpcClient::new("http://127.0.0.1:4000/rpc");
 
     for i in 0..1000000 {
         let out = crpc

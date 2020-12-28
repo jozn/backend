@@ -14,6 +14,7 @@ static GATEWAY_INSTANCE: OnceCell<Gateway> = OnceCell::new();
 struct Gateway {
     pub endpoint: &'static str,
     pub reqwest_client: reqwest::Client,
+    pub reqwest_client_blocking: reqwest::blocking::Client,
 }
 
 impl Gateway {
@@ -21,6 +22,7 @@ impl Gateway {
         Gateway {
             endpoint: endpoint,
             reqwest_client: reqwest::Client::new(),
+            reqwest_client_blocking: reqwest::blocking::Client::new(),
         }
     }
 
@@ -41,6 +43,18 @@ impl Gateway {
         let res_bytes = res_bytes.to_vec();
         Ok(res_bytes)
     }
+
+    pub async fn send_http_request_blocking(&self, body_data: Vec<u8>) -> Result<Vec<u8>, GenErr> {
+        let req = self
+            .reqwest_client_blocking
+            .post(self.endpoint)
+            .body(body_data)
+            .send()?;
+
+        let res_bytes = req.bytes()?;
+        let res_bytes = res_bytes.to_vec();
+        Ok(res_bytes)
+    }
 }
 
 #[derive(Debug)]
@@ -51,7 +65,7 @@ struct GatewayMicro {
 #[async_trait]
 impl FIMicroService for GatewayMicro {
     fn port(&self) -> u16 {
-        4010
+        4000
     }
 
     async fn serve_request(req: FHttpRequest) -> Result<FHttpResponse, GenErr> {
@@ -67,7 +81,11 @@ impl FIMicroService for GatewayMicro {
             }
             _ => {
                 println!("method {} ", invoke.method);
-                let res = gate.send_http_request(req.body.to_vec()).await?;
+
+                // todo remve blokign cod once reqwest support tokio1
+                // let res = gate.send_http_request(req.body.to_vec()).await?;
+                let res = gate.send_http_request_blocking(req.body.to_vec()).await?;
+
                 return Ok((200, res));
             }
         };
@@ -80,8 +98,9 @@ async fn main() {
     println!("Hi gatwway1");
 
     let gateway = Gateway {
-        endpoint: "http://127.0.0.1:4020/rpc",
+        endpoint: "http://127.0.0.1:4001/rpc",
         reqwest_client: Default::default(),
+        reqwest_client_blocking: Default::default(),
     };
 
     GATEWAY_INSTANCE.set(gateway).unwrap();

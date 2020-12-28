@@ -2,7 +2,8 @@
 members = [
     "lib/shared",
     "lib/shared2",
-    "micro/cmaster",
     "micro/gateway",
+    "micro/cmaster",
+    "micro/logic",
     "micro/play",
 ]
