@@ -13,6 +13,8 @@ use std::sync::{atomic, Arc};
 use once_cell::sync::OnceCell;
 use std::sync::atomic::Ordering;
 use rocksdb;
+use byteorder::ReadBytesExt;
+use byteorder::WriteBytesExt;
 
 static HANDLER_INSTANCE: OnceCell<Arc<DB>> = OnceCell::new();
 
@@ -33,11 +35,19 @@ impl rpc2::IPC_CMaster_Handler2 for CMasterHandler {
         let db = HANDLER_INSTANCE.get().unwrap();
         let id = db.next.fetch_add(1,Ordering::SeqCst);
 
-        let m = db.rocks.get(param.key.clone());
-        println!("{:#?}", m);
+        let mut wtr = vec![];
+        wtr.write_u64::<byteorder::BigEndian>(id);
+        // let m = db.rocks.put(param.key.clone(), wtr);
 
-        let m = db.rocks.put(param.key.clone(), id.to_string());
-        println!("called GetNextId {}", id);
+        if id % 1000 == 0  {
+            println!("called GetNextId {}", id);
+        }
+
+        let m = db.rocks.get(param.key.clone());
+        // println!("{:#?}", m);
+        let b = bytes::Bytes::from(m.unwrap().unwrap());
+        let mut cur = std::io::Cursor::new(b.to_vec());
+        cur.read_u64::<byteorder::BigEndian>();
 
         Ok(pb::GetNextIdResponse{
             next_id: id,// shared::common::get_random_u64(),
@@ -74,7 +84,7 @@ async fn main() {
     println!("Hi cmaster1 !");
 
     let handler = DB {
-        next: atomic::AtomicU64::new(1),
+        next: atomic::AtomicU64::new(5000000),
         rocks: rocksdb::DB::open_default("./rocks1.db").unwrap()
     };
 

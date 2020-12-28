@@ -22,7 +22,7 @@ async fn next_id() {
                 key: "shop_next".to_string(),
             })
             .await;
-        if i % 1 == 0 {
+        if i % 1000 == 0 {
             println!("{} {:#?}", i, out);
         }
     }
