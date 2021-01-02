@@ -20,14 +20,12 @@ use tokio::sync::mpsc::{channel, Receiver};
 use std::iter::Map;
 use std::ops::{Deref, DerefMut};
 
-
-use logic::UserSpace;
-
-
+use logic::UserSpaceOld;
 
 struct LogicMicro {
 
 }
+
 #[async_trait]
 impl FIMicroService for LogicMicro {
     fn port(&self) -> u16 {
