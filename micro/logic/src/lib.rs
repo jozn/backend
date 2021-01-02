@@ -56,12 +56,12 @@ pub struct UserSpaceReq {
 }
 
 #[derive(Default,Debug)]
-pub struct UserSpaceInner{
+pub struct UserSpacMapper {
     mapper: Arc<Mutex<HashMap<u32, Sender<UserSpaceReq>>>>,
 }
-impl UserSpaceInner {
-    pub fn new() -> UserSpaceInner {
-        UserSpaceInner::default()
+impl UserSpacMapper {
+    pub fn new() -> UserSpacMapper {
+        UserSpacMapper::default()
     }
 
     pub async fn server_rpc_rec_vec8(&mut self, rpc_http: Vec<u8>) -> Result<Vec<u8>,GenErr>{
@@ -134,73 +134,6 @@ impl UserSpaceInner {
         req_stream_sender
     }
 
-    pub fn dispatch_new_user_space5(&mut self, user_id: u32){
-        let (req_stream_sender,mut req_stream_receiver) = channel(32);
-        let mut lock = self.mapper.lock().unwrap();
-        let us = lock.deref_mut().insert(user_id, req_stream_sender.clone());
-
-        let mut user_space = UserSpace {
-            contacts: Default::default(),
-            liked_posts: Default::default(),
-            // commands: receiver,
-            sender: req_stream_sender.clone(),
-            last_rpc: 0,
-            user_id: 0,
-            user_info: Commands::RpcDead,
-            contact3: Default::default(),
-            contacts2: vec![]
-        };
-
-        let _sender2 = req_stream_sender.clone();
-        tokio::spawn(async move {
-            let mut cnt = 0;
-            loop {
-                let (req_sender,mut req_receiver) = oneshot::channel();
-                let req_cmd = UserSpaceReq {
-                    cmd: Commands::RpcDead,
-                    sender: req_sender,
-                };
-                req_stream_sender.send(req_cmd).await;
-                println!("senidng req {:?}", cnt);
-                tokio::time::sleep(std::time::Duration::from_millis(1)).await;
-                // let future = req_receiver.map(|i| {
-                //     println!("got: {:?}", i);
-                // });
-                let res =  req_receiver.try_recv();
-                println!("req recived  {:?}", res);
-                cnt +=1;
-            };
-        });
-
-        // reciver
-        tokio::spawn(async move {
-            println!("geting  start ");
-            loop {
-                let res =  req_stream_receiver.recv().await;
-                println!("geting  {:?}", res);
-                let req = res.unwrap();
-                let res =  req.sender.send(b"sucess".to_vec());
-
-            }
-        });
-
-    }
-}
-
-#[derive(Default,Debug)]
-pub struct UserSpaceMapper{
-    inner: Arc<Mutex<UserSpaceInner>>,
-}
-
-impl UserSpaceMapper {
-    pub fn new() -> UserSpaceMapper {
-        UserSpaceMapper::default()
-    }
-
-    pub fn dispatch_new_user_space(&mut self, user_id: u32){
-        let mut lock = self.inner.lock().unwrap();
-
-    }
 }
 
 #[cfg(test)]
@@ -221,7 +154,7 @@ mod tests {
         let mut vec = vec![];
         prost::Message::encode(&invoke,&mut vec).unwrap();
 
-        let mut us = UserSpaceInner::new();
+        let mut us = UserSpacMapper::new();
         let out = us.server_rpc_rec_vec8(vec).await;
 
 
