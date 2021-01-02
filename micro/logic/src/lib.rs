@@ -55,23 +55,6 @@ pub struct UserSpaceReq {
     sender: oneshot::Sender<Vec<u8>>
 }
 
-/*pub async fn rpc_handle_registry(
-    reg: &RPC_Registry,
-    req: FHttpRequest,
-) -> Result<FHttpResponse, GenErr> {
-    // println!("req{:?}", req);
-    let invoke: pb::Invoke = prost::Message::decode(req.body)?;
-
-    // println!("hi3 reg > method_id: {} ", invoke.method);
-
-    let act = rpc2::invoke_to_parsed(&invoke)?;
-
-    let res = rpc2::server_rpc(act, &reg).await?;
-    let res = to_invoke_response(res, &invoke)?;
-
-    Ok((200, res))
-}*/
-
 #[derive(Default,Debug)]
 pub struct UserSpaceInner{
     mapper: Arc<Mutex<HashMap<u32, Sender<UserSpaceReq>>>>,
@@ -112,7 +95,7 @@ impl UserSpaceInner {
 
         let req_sender_stream = match us_opt {
             None => {
-                let sender = self.dispatch_new_user_space8(user_id);
+                let sender = self.dispatch_new_user_space(user_id);
                 lock.insert(user_id,sender.clone());
                 sender
             }
@@ -121,7 +104,7 @@ impl UserSpaceInner {
        req_sender_stream
     }
 
-    pub fn dispatch_new_user_space8(&self, user_id: u32) -> Sender<UserSpaceReq> {
+    pub fn dispatch_new_user_space(&self, user_id: u32) -> Sender<UserSpaceReq> {
         let (req_stream_sender,mut req_stream_receiver) = channel(32);
 
         let mut user_space = UserSpace {
@@ -244,31 +227,6 @@ mod tests {
 
         println!("test user space");
         tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-    }
-    #[tokio::test]
-    async fn run_user_space_new() {
-        let mut us = UserSpaceInner::new();
-        us.dispatch_new_user_space5(32);
-        println!("test user space");
-        tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-    }
-
-    #[tokio::test]
-    async fn play_tokio1() {
-        let (tx, mut rx) = mpsc::channel(32);
-        let tx2 = tx.clone();
-
-        tokio::spawn(async move {
-            tx.send("sending from first handle").await;
-        });
-
-        tokio::spawn(async move {
-            tx2.send("sending from second handle").await;
-        });
-
-        while let Some(message) = rx.recv().await {
-            println!("GOT = {}", message);
-        }
     }
 
     #[test]
