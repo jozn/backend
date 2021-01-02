@@ -34,8 +34,7 @@ impl FIMicroService for LogicMicro {
 
     async fn serve_request(req: FHttpRequest) -> Result<FHttpResponse, GenErr> {
         println!("thread {:#?}", std::thread::current().id());
-        tokio::spawn(async
-            {
+        tokio::spawn(async {
             tokio::time::sleep(std::time::Duration::from_secs(5)).await;
             println!(">>>>>thread {:#?}", std::thread::current());
         });
