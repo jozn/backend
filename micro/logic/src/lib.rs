@@ -27,14 +27,6 @@ use tokio::sync::mpsc::{channel, Receiver, Sender};
 use tokio::sync::oneshot;
 use shared::pb::{ConfirmCodeParam, ConfirmCodeResponse};
 
-macro_rules! add_one {
-    ($input:expr) => {
-        $input + 1
-    }
-}
-
-
-
 #[derive(Debug, Default)]
 pub struct UserSpaceCache {
     contacts: HashSet<String>,
@@ -141,9 +133,8 @@ impl UserSpacMapper {
 
         // reciver
         tokio::spawn(async move {
-            println!("geting  start {} ", add_one!(4));
+            println!("geting  start ");
             let arc_us = Arc::new(user_space);
-            // let handler = |v| {Some(Box::new(arc_us.clone()))};
 
             macro_rules! add{
                 () => {
@@ -152,16 +143,12 @@ impl UserSpacMapper {
             }
 
             let reg = shared::rpc2::RPC_Registry {
-                // RPC_Auth: handler(arc_us.clone()),
                 RPC_Auth: add!(),
                 RPC_Channel: Some(Box::new(arc_us.clone())),
                 ..Default::default()
             };
 
             while let Some(us_cmd) = req_stream_receiver.recv().await {
-                // if res.cmd == Commands::Exit {
-                //     break
-                // }
                 println!(">>>> Registry ");
                 match us_cmd.cmd {
                     Commands::RpcDead => {}
