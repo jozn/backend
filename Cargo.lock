@@ -566,7 +566,7 @@ dependencies = [
  "hyper 0.13.9",
  "image",
  "once_cell",
- "prost 0.6.1",
+ "prost 0.7.0",
  "reqwest",
  "rocksdb",
  "shared",

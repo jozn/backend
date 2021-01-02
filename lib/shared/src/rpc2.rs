@@ -10,6 +10,7 @@ use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Error as HyperError, Request, Response, Server};
 use std::convert::Infallible;
 use std::net::SocketAddr;
+use std::sync::Arc;
 
 #[derive(Debug)]
 pub struct RpcInvoke {
@@ -4054,16 +4055,16 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
 
 #[derive(Default)]
 pub struct RPC_Registry {
-    pub IPC_CMaster: Option<Box<IPC_CMaster_Handler2>>,
-    pub RPC_Auth: Option<Box<RPC_Auth_Handler2>>,
-    pub RPC_Channel: Option<Box<RPC_Channel_Handler2>>,
-    pub RPC_Chat: Option<Box<RPC_Chat_Handler2>>,
-    pub RPC_Direct: Option<Box<RPC_Direct_Handler2>>,
-    pub RPC_Group: Option<Box<RPC_Group_Handler2>>,
-    pub RPC_Sample: Option<Box<RPC_Sample_Handler2>>,
-    pub RPC_Shared: Option<Box<RPC_Shared_Handler2>>,
-    pub RPC_Upload: Option<Box<RPC_Upload_Handler2>>,
-    pub RPC_User: Option<Box<RPC_User_Handler2>>,
+    pub IPC_CMaster: Option<Box<Arc<dyn IPC_CMaster_Handler2>>>,
+    pub RPC_Auth: Option<Box<Arc<dyn RPC_Auth_Handler2>>>,
+    pub RPC_Channel: Option<Box<Arc<dyn RPC_Channel_Handler2>>>,
+    pub RPC_Chat: Option<Box<Arc<dyn RPC_Chat_Handler2>>>,
+    pub RPC_Direct: Option<Box<Arc<dyn RPC_Direct_Handler2>>>,
+    pub RPC_Group: Option<Box<Arc<dyn RPC_Group_Handler2>>>,
+    pub RPC_Sample: Option<Box<Arc<dyn RPC_Sample_Handler2>>>,
+    pub RPC_Shared: Option<Box<Arc<dyn RPC_Shared_Handler2>>>,
+    pub RPC_Upload: Option<Box<Arc<dyn RPC_Upload_Handler2>>>,
+    pub RPC_User: Option<Box<Arc<dyn RPC_User_Handler2>>>,
 }
 
 impl IPC_CMaster_Handler for RPC_Registry {}

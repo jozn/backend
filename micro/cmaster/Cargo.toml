@@ -9,7 +9,7 @@ edition = "2018"
 [dependencies]
 shared = {path = "../../lib/shared"}
 tokio = { version = "0.2.21", features = ["full"] }
-prost = "0.6.1"
+prost = "0.7.0"
 async-trait = "0.1.42"
 
 hyper = "0.13.9"

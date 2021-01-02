@@ -1,6 +1,10 @@
 // extern crate shared2;
 
 use async_trait::async_trait;
+use byteorder::ReadBytesExt;
+use byteorder::WriteBytesExt;
+use once_cell::sync::OnceCell;
+use rocksdb;
 use shared;
 use shared::errors::GenErr;
 use shared::new_rpc::{FHttpRequest, FHttpResponse, FIMicroService};
@@ -9,15 +13,10 @@ use shared::pb::{
     SendConfirmCodeResponse,
 };
 use shared::{pb, rpc2};
-use std::sync::{atomic, Arc};
-use once_cell::sync::OnceCell;
 use std::sync::atomic::Ordering;
-use rocksdb;
-use byteorder::ReadBytesExt;
-use byteorder::WriteBytesExt;
+use std::sync::{atomic, Arc};
 
 static HANDLER_INSTANCE: OnceCell<Arc<DB>> = OnceCell::new();
-
 
 #[derive(Debug)]
 struct DB {
@@ -26,20 +25,19 @@ struct DB {
 }
 
 #[derive(Debug)]
-struct CMasterHandler {
-}
+struct CMasterHandler {}
 
 #[async_trait]
 impl rpc2::IPC_CMaster_Handler2 for CMasterHandler {
     async fn GetNextId(&self, param: pb::GetNextIdParam) -> Result<pb::GetNextIdResponse, GenErr> {
         let db = HANDLER_INSTANCE.get().unwrap();
-        let id = db.next.fetch_add(1,Ordering::SeqCst);
+        let id = db.next.fetch_add(1, Ordering::SeqCst);
 
         let mut wtr = vec![];
         wtr.write_u64::<byteorder::BigEndian>(id);
         // let m = db.rocks.put(param.key.clone(), wtr);
 
-        if id % 1000 == 0  {
+        if id % 1000 == 0 {
             println!("called GetNextId {}", id);
         }
 
@@ -49,9 +47,9 @@ impl rpc2::IPC_CMaster_Handler2 for CMasterHandler {
         let mut cur = std::io::Cursor::new(b.to_vec());
         cur.read_u64::<byteorder::BigEndian>();
 
-        Ok(pb::GetNextIdResponse{
-            next_id: id,// shared::common::get_random_u64(),
-            error: false
+        Ok(pb::GetNextIdResponse {
+            next_id: id, // shared::common::get_random_u64(),
+            error: false,
         })
     }
 }
@@ -68,8 +66,7 @@ impl FIMicroService for CMaster {
 
     async fn serve_request(req: FHttpRequest) -> Result<FHttpResponse, GenErr> {
         let h = HANDLER_INSTANCE.get().unwrap().clone();
-        let handler = CMasterHandler {
-        };
+        let handler = CMasterHandler {};
         let reg = shared::rpc2::RPC_Registry {
             IPC_CMaster: Some(Box::new(handler)),
             ..Default::default()
@@ -85,7 +82,7 @@ async fn main() {
 
     let handler = DB {
         next: atomic::AtomicU64::new(5000000),
-        rocks: rocksdb::DB::open_default("./rocks1.db").unwrap()
+        rocks: rocksdb::DB::open_default("./rocks1.db").unwrap(),
     };
 
     HANDLER_INSTANCE.set(Arc::new(handler));

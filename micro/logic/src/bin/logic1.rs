@@ -1,6 +1,10 @@
 extern crate logic;
 
 use async_trait::async_trait;
+use byteorder::ReadBytesExt;
+use byteorder::WriteBytesExt;
+use once_cell::sync::OnceCell;
+use rocksdb;
 use shared;
 use shared::errors::GenErr;
 use shared::new_rpc::{FHttpRequest, FHttpResponse, FIMicroService};
@@ -9,22 +13,16 @@ use shared::pb::{
     SendConfirmCodeResponse,
 };
 use shared::{pb, rpc2};
-use std::sync::{atomic, Arc, Mutex};
-use once_cell::sync::OnceCell;
-use std::sync::atomic::Ordering;
-use rocksdb;
-use byteorder::ReadBytesExt;
-use byteorder::WriteBytesExt;
 use std::collections::{HashMap, HashSet};
-use tokio::sync::mpsc::{channel, Receiver};
 use std::iter::Map;
 use std::ops::{Deref, DerefMut};
+use std::sync::atomic::Ordering;
+use std::sync::{atomic, Arc, Mutex};
+use tokio::sync::mpsc::{channel, Receiver};
 
 use logic::UserSpaceOld;
 
-struct LogicMicro {
-
-}
+struct LogicMicro {}
 
 #[async_trait]
 impl FIMicroService for LogicMicro {
@@ -38,14 +36,13 @@ impl FIMicroService for LogicMicro {
             tokio::time::sleep(std::time::Duration::from_secs(5)).await;
             println!(">>>>>thread {:#?}", std::thread::current());
         });
-        Ok((200,b"sdfsd".to_vec()))
+        Ok((200, b"sdfsd".to_vec()))
     }
 }
 
 #[tokio::main]
 async fn main() {
     println!("Hi cmaster1 !");
-
 
     let c = LogicMicro {
         //handler: Arc::new(handler),

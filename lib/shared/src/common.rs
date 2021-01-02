@@ -2,9 +2,8 @@ use crate::errors::GenErr;
 use crate::new_rpc::{FHttpRequest, FHttpResponse};
 use crate::rpc2::RPC_Registry;
 use crate::{pb, rpc2};
-use std::panic::RefUnwindSafe;
 use rand::RngCore;
-
+use std::panic::RefUnwindSafe;
 
 //////////// Ranodm ////////////
 pub fn get_random_u64() -> u64 {
@@ -30,7 +29,7 @@ pub async fn rpc_handle_registry(
     Ok((200, res))
 }
 
-fn to_invoke_response(data: Vec<u8>, req_invoke: &pb::Invoke) -> Result<Vec<u8>, GenErr> {
+pub fn to_invoke_response(data: Vec<u8>, req_invoke: &pb::Invoke) -> Result<Vec<u8>, GenErr> {
     let invoke = pb::InvokeResponse {
         namespace: req_invoke.namespace,
         method: req_invoke.method,
