@@ -20,5 +20,11 @@ reqwest = "0.10.8"
 image = "0.23.11"
 once_cell = "1.5.2"
 
-rocksdb = "0.15.0"
+#rocksdb = "0.15.0"
 byteorder = "1"
+
+foundationdb = "0.4"
+futures = "0.3"
+
+tikv-client = { git = "https://github.com/tikv/client-rust.git" }
+#bindgen = "0.55.0"

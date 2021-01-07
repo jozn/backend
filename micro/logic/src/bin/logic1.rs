@@ -4,7 +4,6 @@ use async_trait::async_trait;
 use byteorder::ReadBytesExt;
 use byteorder::WriteBytesExt;
 use once_cell::sync::OnceCell;
-use rocksdb;
 use shared;
 use shared::errors::GenErr;
 use shared::new_rpc::{FHttpRequest, FHttpResponse, FIMicroService};
@@ -20,7 +19,7 @@ use std::sync::atomic::Ordering;
 use std::sync::{atomic, Arc, Mutex};
 use tokio::sync::mpsc::{channel, Receiver};
 
-use logic::UserSpaceOld;
+// use logic::UserSpaceOld;
 
 struct LogicMicro {}
 
@@ -42,7 +41,7 @@ impl FIMicroService for LogicMicro {
 
 #[tokio::main]
 async fn main() {
-    println!("Hi cmaster1 !");
+    println!("Hi logic1 !");
 
     let c = LogicMicro {
         //handler: Arc::new(handler),

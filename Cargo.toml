@@ -3,7 +3,11 @@ members = [
     "lib/shared",
     "lib/shared2",
     "micro/gateway",
-    "micro/cmaster",
+#    "micro/cmaster",
     "micro/logic",
     "micro/play",
+]
+exclude =[
+#    "micro/logic"
+    "micro/cmaster"
 ]

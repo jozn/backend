@@ -4,12 +4,14 @@
 #![allow(unused_features)]
 #![allow(warnings)]
 #![allow(soft_unstable)]
+
+// mod db;
+
 use async_trait::async_trait;
 use byteorder::ReadBytesExt;
 use byteorder::WriteBytesExt;
 use bytes::Bytes;
 use once_cell::sync::OnceCell;
-use rocksdb;
 use shared;
 use shared::errors::GenErr;
 use shared::new_rpc::{FHttpRequest, FHttpResponse, FIMicroService};
@@ -53,6 +55,7 @@ impl UserSpace {
 impl RPC_Auth_Handler2 for UserSpace {
     async fn ConfirmCode(&self, param: ConfirmCodeParam) -> Result<ConfirmCodeResponse, GenErr> {
         println!("here is the way to go");
+        let cr = self.cache.contact3.get("sdf");
         Ok(pb::ConfirmCodeResponse{ done: true, error_message: "ssdf sdfsdfsd fsd flsa".to_string() })
     }
 }
