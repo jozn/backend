@@ -1,3 +1,43 @@
+/////////////////////////// Docs ///////////////////////////
+
+//
+//Some notes:
+//+ Reduced: No bloated types > just those we need to now.
+//+ Seperate things that are diffrent: channles, store, directs,
+//
+//
+//No Rpc_Account > Rpc_User + Rpc_Profile ,...
+//
+//next: user relations, shop, product, message log, store, file
+//next2: message integrations: product, payment, contacts,...
+//next3: follwing and subcripation in: channels or profiles
+//gid = unique nano second time;
+//sid = scoped id; for future - bot platforms
+//cid = common id - seqentaily increase id for user, channels, groups, shops,..
+//
+//imut = immutable fields
+//mut  = mutable fields
+
+// Words: reshared/username/
+
+////////////////////////// Enums //////////////////////////
+
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SampleMessage {
+    #[prost(oneof = "sample_message::TestOneof", tags = "4, 9, 10")]
+    pub test_oneof: ::std::option::Option<sample_message::TestOneof>,
+}
+pub mod sample_message {
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum TestOneof {
+        #[prost(string, tag = "4")]
+        Name(std::string::String),
+        #[prost(message, tag = "9")]
+        SubMessage(super::Invoke),
+        #[prost(message, tag = "10")]
+        AddContact(super::Contact),
+    }
+}
 //////////////////////////// Common Types ////////////////////
 ///
 /// imut all
@@ -692,30 +732,6 @@ pub struct Sms {
     #[prost(string, tag = "102")]
     pub result: std::string::String,
 }
-/////////////////////////// Docs ///////////////////////////
-
-//
-//Some notes:
-//+ Reduced: No bloated types > just those we need to now.
-//+ Seperate things that are diffrent: channles, store, directs,
-//
-//
-//No Rpc_Account > Rpc_User + Rpc_Profile ,...
-//
-//next: user relations, shop, product, message log, store, file
-//next2: message integrations: product, payment, contacts,...
-//next3: follwing and subcripation in: channels or profiles
-//gid = unique nano second time;
-//sid = scoped id; for future - bot platforms
-//cid = common id - seqentaily increase id for user, channels, groups, shops,..
-//
-//imut = immutable fields
-//mut  = mutable fields
-
-// Words: reshared/username/
-
-////////////////////////// Enums //////////////////////////
-
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum ProfileLevelEnum {
@@ -811,6 +827,8 @@ pub enum DevicePlatform {
 pub struct GetNextIdParam {
     #[prost(string, tag = "1")]
     pub key: std::string::String,
+    #[prost(int32, tag = "2")]
+    pub start_from: i32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetNextIdResponse {

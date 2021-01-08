@@ -25,6 +25,14 @@ mut  = mutable fields
 
 ////////////////////////// Enums //////////////////////////
 
+message SampleMessage {
+  oneof test_oneof {
+    string name = 4;
+    Invoke sub_message = 9;
+    Contact AddContact = 10;
+  }
+}
+
 enum ProfileLevelEnum {
   LEVEL_NORMAL = 0;
   APP_ADMIN = 1;
