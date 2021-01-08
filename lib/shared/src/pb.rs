@@ -824,6 +824,201 @@ pub enum DevicePlatform {
     Web = 7,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EventCommand {
+    #[prost(fixed64, tag = "1")]
+    pub event_id: u64,
+    #[prost(uint32, tag = "2")]
+    pub user_id: u32,
+    #[prost(oneof = "event_command::Command", tags = "5")]
+    pub command: ::std::option::Option<event_command::Command>,
+}
+pub mod event_command {
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Command {
+        #[prost(message, tag = "5")]
+        Channel(super::ChannelCommand),
+    }
+}
+///////////// Channels ///////////
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelCommand {
+    #[prost(uint32, tag = "1")]
+    pub channel_id: u32,
+    #[prost(
+        oneof = "channel_command::SubCommand",
+        tags = "20, 21, 22, 10, 11, 12, 13, 23, 5, 6, 7, 8, 9, 24, 30, 31"
+    )]
+    pub sub_command: ::std::option::Option<channel_command::SubCommand>,
+}
+pub mod channel_command {
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcCreateChannel {
+        #[prost(uint64, tag = "1")]
+        pub channel_id: u64,
+        #[prost(string, tag = "2")]
+        pub title: std::string::String,
+        #[prost(string, tag = "3")]
+        pub about: std::string::String,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcEditChannel {
+        #[prost(bool, tag = "1")]
+        pub set_new_title: bool,
+        #[prost(string, tag = "2")]
+        pub new_title: std::string::String,
+        #[prost(bool, tag = "3")]
+        pub set_new_about: bool,
+        #[prost(string, tag = "4")]
+        pub new_about: std::string::String,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcDeleteChannel {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcFollowChannel {
+        #[prost(uint64, tag = "1")]
+        pub channel_id: u64,
+        #[prost(uint32, tag = "2")]
+        pub user_id: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcUnFollowChannel {
+        #[prost(uint64, tag = "1")]
+        pub channel_id: u64,
+        #[prost(uint32, tag = "2")]
+        pub user_id: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcSubscribe {
+        #[prost(uint64, tag = "1")]
+        pub channel_id: u64,
+        #[prost(uint32, tag = "2")]
+        pub user_id: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcUnSubscribe {
+        #[prost(uint64, tag = "1")]
+        pub channel_id: u64,
+        #[prost(uint32, tag = "2")]
+        pub user_id: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcRevokeLink {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcSendMessage {
+        #[prost(message, optional, tag = "1")]
+        pub input_message: ::std::option::Option<super::CNewMessageInput>,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcEditMessage {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcPinMessage {
+        #[prost(uint64, tag = "1")]
+        pub message_id: u64,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcUnPinMessage {
+        #[prost(uint64, tag = "1")]
+        pub message_id: u64,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcDeleteMessages {
+        #[prost(uint64, repeated, tag = "1")]
+        pub message_ids: ::std::vec::Vec<u64>,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcClearHistory {
+        /// better to include
+        #[prost(uint64, tag = "1")]
+        pub from_message_id: u64,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcAvatarAdd {
+        #[prost(uint64, tag = "1")]
+        pub file_id: u64,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcAvatarDelete {
+        #[prost(uint64, tag = "1")]
+        pub file_id: u64,
+    }
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum SubCommand {
+        #[prost(message, tag = "20")]
+        CreateChannel(EcCreateChannel),
+        #[prost(message, tag = "21")]
+        EditChannel(EcEditChannel),
+        #[prost(message, tag = "22")]
+        DeleteChannel(EcDeleteChannel),
+        #[prost(message, tag = "10")]
+        FollowChannel(EcFollowChannel),
+        #[prost(message, tag = "11")]
+        UnFollowChannel(EcUnFollowChannel),
+        #[prost(message, tag = "12")]
+        Subscribe(EcSubscribe),
+        #[prost(message, tag = "13")]
+        UnSubscribe(EcUnSubscribe),
+        #[prost(message, tag = "23")]
+        RevokeLink(EcRevokeLink),
+        #[prost(message, tag = "5")]
+        SendMessage(EcSendMessage),
+        #[prost(message, tag = "6")]
+        EditMessage(EcEditMessage),
+        #[prost(message, tag = "7")]
+        PinMessage(EcPinMessage),
+        #[prost(message, tag = "8")]
+        UnPinMessage(EcUnPinMessage),
+        #[prost(message, tag = "9")]
+        DeleteMessages(EcDeleteMessages),
+        #[prost(message, tag = "24")]
+        ClearHistory(EcClearHistory),
+        #[prost(message, tag = "30")]
+        AvatarAdd(EcAvatarAdd),
+        #[prost(message, tag = "31")]
+        AvatarDelete(EcAvatarDelete),
+    }
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Ec {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Ec2 {}
+/// C: Common
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CNewMessageInput {
+    /// imut
+    #[prost(fixed64, tag = "1")]
+    pub gid: u64,
+    /// imut
+    #[prost(uint32, tag = "2")]
+    pub by_profile_cid: u32,
+    /// imut - mostly
+    #[prost(enumeration = "MessageType", tag = "107")]
+    pub message_type: i32,
+    #[prost(string, tag = "7")]
+    pub text: std::string::String,
+    /// imut
+    #[prost(uint32, tag = "12")]
+    pub via_app_id: u32,
+    /// imut
+    #[prost(uint32, tag = "13")]
+    pub seq: u32,
+    ///  uint32 edited_time = 17;
+    ///
+    /// imut
+    #[prost(uint32, tag = "18")]
+    pub created_time: u32,
+    /// imut - verified system messages - 2 bytes tag
+    #[prost(bool, tag = "111")]
+    pub verified: bool,
+    //  MessageDeliveryStatues delivery_status = 105;
+    //  uint32 delivery_time = 106; // mut-once
+
+    //  bool deleted = 150; // maybe temp with a purge period - 2 bytes
+    ///  Message forward = 16; // forward is always live object from other channels, but not from other chats, groups
+    ///  Message reply_to = 50;
+    #[prost(uint32, tag = "112")]
+    pub flags: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetNextIdParam {
     #[prost(string, tag = "1")]
     pub key: std::string::String,

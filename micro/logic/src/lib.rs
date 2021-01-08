@@ -29,7 +29,7 @@ use tokio::sync::mpsc::{channel, Receiver, Sender};
 use tokio::sync::oneshot;
 use shared::pb::{ConfirmCodeParam, ConfirmCodeResponse};
 
-pub mod xc;
+/*pub mod xc;
 
 fn play1(){
     let u = xc::user::User{
@@ -39,10 +39,8 @@ fn play1(){
         user_name: "".to_string(),
         ..Default::default()
     };
-    let ss = cdrs::
-    u.save()
 }
-
+*/
 #[derive(Debug, Default)]
 pub struct UserSpaceCache {
     contacts: HashSet<String>,
