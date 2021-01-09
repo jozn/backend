@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package pb;
 
+option (unmarshaler_all) = true;
+
 import "global.proto";
 
 message GroupAvatarAddParam {
@@ -17,7 +19,8 @@ message GroupAvatarDeleteParam {
 message GroupAvatarDeleteResponse {}
 
 message GroupAvatarGetListParam {
-    uint32 group_id = 1;
+    uint32 group_id = 1 [deprecated=true];
+    uint32 group_id2 = 4 [deprecated2=true];
 }
 
 message GroupAvatarGetListResponse {}
@@ -91,7 +94,7 @@ service RPC_Group {
     rpc GroupEditGroup (GroupEditGroupParam) returns (GroupEditGroupResponse);
     rpc GroupDeleteGroup (GroupDeleteGroupParam) returns (GroupDeleteGroupResponse);
 
-    // Members
+    // Members xxxxx
     rpc GroupAddAdmin (GroupAddAdminParam) returns (GroupAddAdminResponse); // ??
     rpc GroupAddMember (GroupAddMemberParam) returns (GroupAddMemberResponse);
     rpc GroupRemoveMember (GroupRemoveMemberParam) returns (GroupRemoveMemberResponse);
@@ -99,7 +102,7 @@ service RPC_Group {
     rpc GroupChangeMemberPermission (GroupChangeMemberPermissionParam) returns (GroupChangeMemberPermissionResponse);
     rpc GroupJoinGroup (JoinGroupParam) returns (JoinGroupResponse);
     rpc GroupLeaveGroup (GroupLeaveGroupParam) returns (GroupLeaveGroupResponse);
-    rpc GroupBanMember (GroupBanMemberParam) returns (GroupBanMemberResponse); // ban or block?
+    rpc GroupBanMember (GroupBanMemberParam) returns (GroupBanMemberResponse) {option flip_qevent = 0;} // ban or block?
 
     // Privacy
     rpc GroupChangePrivacy (GroupChangePrivacyParam) returns (GroupChangePrivacyResponse);
@@ -139,7 +142,12 @@ service RPC_Group {
 
 // CrDU
 message GroupCreateGroupParam {
-    uint32 group_id = 1;
+    string group_title = 3; // or _name
+    string user_name = 4; // with "group" suffix > not now > all is private now
+    bool history_viewable = 8; // if older message is is viewable for new members > now true for all new groups
+    bool force_join = 9; // view history without joining
+    bool global_search = 17; // global searchable in bar > force_join must be false + history_viewable = ture
+    string about = 15;
 }
 
 message GroupCreateGroupResponse {

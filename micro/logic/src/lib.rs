@@ -15,6 +15,7 @@ use once_cell::sync::OnceCell;
 use shared;
 use shared::errors::GenErr;
 use shared::new_rpc::{FHttpRequest, FHttpResponse, FIMicroService};
+use shared::pb::{ConfirmCodeParam, ConfirmCodeResponse};
 use shared::rpc2::{IPC_CMaster_Handler2, RPC_Auth_Handler2, RPC_Registry};
 use shared::{pb, rpc2};
 use std::borrow::Borrow;
@@ -27,7 +28,6 @@ use std::sync::{atomic, Arc, Mutex};
 use std::thread;
 use tokio::sync::mpsc::{channel, Receiver, Sender};
 use tokio::sync::oneshot;
-use shared::pb::{ConfirmCodeParam, ConfirmCodeResponse};
 
 /*pub mod xc;
 
@@ -59,16 +59,17 @@ pub struct UserSpace {
     user_info: Commands, // pb
     cache: UserSpaceCache,
 }
-impl UserSpace {
-
-}
+impl UserSpace {}
 
 #[async_trait]
 impl RPC_Auth_Handler2 for UserSpace {
     async fn ConfirmCode(&self, param: ConfirmCodeParam) -> Result<ConfirmCodeResponse, GenErr> {
         println!("here is the way to go");
         let cr = self.cache.contact3.get("sdf");
-        Ok(pb::ConfirmCodeResponse{ done: true, error_message: "ssdf sdfsdfsd fsd flsa".to_string() })
+        Ok(pb::ConfirmCodeResponse {
+            done: true,
+            error_message: "ssdf sdfsdfsd fsd flsa".to_string(),
+        })
     }
 }
 
@@ -151,10 +152,10 @@ impl UserSpacMapper {
             println!("geting  start ");
             let arc_us = Arc::new(user_space);
 
-            macro_rules! add{
+            macro_rules! add {
                 () => {
                     Some(Box::new(arc_us.clone()))
-                }
+                };
             }
 
             let reg = shared::rpc2::RPC_Registry {

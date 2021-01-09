@@ -1,0 +1,225 @@
+syntax = "proto3";
+
+package pb;
+
+import "global.proto";
+
+message EventCommand {
+  fixed64 event_id = 1;
+  uint32 user_id = 2;
+  oneof command {
+    ChannelCommand channel = 5;
+    GroupCommand group = 6;
+  }
+}
+
+//////////// Channels ///////////
+message ChannelCommand {
+  uint32 channel_id = 1;
+
+  oneof sub_command {
+    ECCreateChannel CreateChannel = 20;
+    ECEditChannel EditChannel = 21;
+    ECDeleteChannel DeleteChannel = 22;
+    ECFollowChannel FollowChannel = 10;
+    ECUnFollowChannel UnFollowChannel = 11;
+    ECSubscribe Subscribe = 12;
+    ECUnSubscribe UnSubscribe = 13;
+
+    ECRevokeLink RevokeLink  = 23;
+
+    ECSendMessage SendMessage = 5;
+    ECEditMessage EditMessage = 6;
+    ECPinMessage PinMessage  = 7;
+    ECUnPinMessage UnPinMessage = 8;
+    ECDeleteMessages DeleteMessages  = 9;
+
+    ECClearHistory ClearHistory = 24;
+
+    ECAvatarAdd AvatarAdd = 30;
+    ECAvatarDelete AvatarDelete = 31;
+  }
+
+  message ECCreateChannel {
+    uint64 channel_id = 1;
+    string title = 2;
+    string about = 3;
+  }
+  message ECEditChannel {
+    bool set_new_title = 1;
+    string new_title = 2;
+    bool set_new_about = 3;
+    string new_about = 4;
+  }
+  message ECDeleteChannel {/* No Fields */}
+  message ECFollowChannel {
+    uint64 channel_id = 1;
+    uint32 user_id = 2;
+  }
+  message ECUnFollowChannel {
+    uint64 channel_id = 1;
+    uint32 user_id = 2;
+  }
+  message ECSubscribe {
+    uint64 channel_id = 1;
+    uint32 user_id = 2;
+  }
+  message ECUnSubscribe {
+    uint64 channel_id = 1;
+    uint32 user_id = 2;
+  }
+
+  message ECRevokeLink {} // Not yet
+
+  message ECSendMessage {
+    CNewMessageInput input_message = 1;
+  }
+  message ECEditMessage {}
+  message ECPinMessage {
+    uint64 message_id = 1;
+  }
+  message ECUnPinMessage {
+    uint64 message_id = 1;
+  }
+  message ECDeleteMessages {
+    repeated uint64 message_ids = 1;
+  }
+  message ECClearHistory {
+    uint64 from_message_id = 1; // better to include
+  }
+
+  message ECAvatarAdd {
+    uint64 file_id = 1;
+  }
+  message ECAvatarDelete {
+    uint64 file_id = 1;
+  }
+}
+
+message GroupCommand {
+  uint32 group_id = 1;
+
+  oneof sub_command {
+    ECCreateGroup CreateGroup = 20;
+    ECEditGroup EditGroup = 21;
+    ECDeleteGroup DeleteGroup = 22;
+    ECFollowGroup FollowGroup = 10;
+    ECUnFollowGroup UnFollowGroup = 11;
+    ECSubscribe Subscribe = 12;
+    ECUnSubscribe UnSubscribe = 13;
+
+    ECRevokeLink RevokeLink  = 23;
+
+    ECSendMessage SendMessage = 5;
+    ECEditMessage EditMessage = 6;
+    ECPinMessage PinMessage  = 7;
+    ECUnPinMessage UnPinMessage = 8;
+    ECDeleteMessages DeleteMessages  = 9;
+
+    ECClearHistory ClearHistory = 24;
+
+    ECAvatarAdd AvatarAdd = 30;
+    ECAvatarDelete AvatarDelete = 31;
+  }
+
+  message ECCreateGroup {
+    uint32 cid = 1;
+    string group_title = 3; // or _name
+    string user_name = 4; // with "group" suffix > not now > all is private now
+    uint32 creator_profile_cid = 7;
+    bool history_viewable = 8; // if older message is is viewable for new members > now true for all new groups
+    bool force_join = 9; // view history without joining
+    bool global_search = 17; // global searchable in bar > force_join must be false + history_viewable = ture
+    uint32 seq = 10;
+    string about = 15;
+    string invite_link_hash = 16;
+    uint32 created_time = 21;
+  }
+  message ECEditGroup {
+    bool set_new_title = 1;
+    string new_title = 2;
+    bool set_new_about = 3;
+    string new_about = 4;
+  }
+  message ECDeleteGroup {/* No Fields */}
+  message ECFollowGroup {
+    uint64 channel_id = 1;
+    uint32 user_id = 2;
+  }
+  message ECUnFollowGroup {
+    uint64 channel_id = 1;
+    uint32 user_id = 2;
+  }
+  message ECSubscribe {
+    uint64 channel_id = 1;
+    uint32 user_id = 2;
+  }
+  message ECUnSubscribe {
+    uint64 channel_id = 1;
+    uint32 user_id = 2;
+  }
+
+  message ECRevokeLink {} // Not yet
+
+  message ECSendMessage {
+    CNewMessageInput input_message = 1;
+  }
+  message ECEditMessage {}
+  message ECPinMessage {
+    uint64 message_id = 1;
+  }
+  message ECUnPinMessage {
+    uint64 message_id = 1;
+  }
+  message ECDeleteMessages {
+    repeated uint64 message_ids = 1;
+  }
+  message ECClearHistory {
+    uint64 from_message_id = 1; // better to include
+  }
+
+  message ECAvatarAdd {
+    uint64 file_id = 1;
+  }
+  message ECAvatarDelete {
+    uint64 file_id = 1;
+  }
+}
+
+message EC {}
+message EC2 {}
+
+message CNewMessageInput { // C: Common
+  fixed64 gid = 1; // imut
+  uint32 by_profile_cid = 2; // imut
+  MessageType message_type =107; // imut - mostly
+  string text = 7;
+  uint32 via_app_id = 12; // imut
+  uint32 seq = 13; // imut
+//  uint32 edited_time = 17;
+  uint32 created_time = 18; // imut
+  bool verified = 111; // imut - verified system messages - 2 bytes tag
+
+//  MessageDeliveryStatues delivery_status = 105;
+//  uint32 delivery_time = 106; // mut-once
+
+//  bool deleted = 150; // maybe temp with a purge period - 2 bytes
+
+  uint32 flags = 112;
+//  Message forward = 16; // forward is always live object from other channels, but not from other chats, groups
+//  Message reply_to = 50;
+
+  // For channels, stores
+//  string title = 109; // For videos
+//  MessageCount counts = 101;
+//  MessageSetting setting = 102;
+//  Product Product = 110;
+//
+//  repeated FileMsg files = 103;
+
+  // add location, log, payment, proudcut, forward,
+  // reply, pre msg, rich media
+
+  // Views: channel, group, user,
+}
+

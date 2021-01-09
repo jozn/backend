@@ -8,7 +8,11 @@ lessons:
      generator things tend to break or we should have many mouldes > it's not about our code generator, it's all about 3rd party defaluts > use prefix > verbose but simple and effective in all langs
 
 // For dart
+/old
 ~/life/bin/protoc /hamid/life/_active/backbone/src/protos/proto/* -I=/hamid/life/_active/backbone/src/protos/proto --dart_out=/hamid/life/flip/flip_app/flip_app/lib/pb /hamid/life/_active/backbone/src/protos/proto/*
+//new
+~/life/bin/protoc /hamid/life/_active/backbone/lib/shared/src/protos/proto/* -I=/hamid/life/_active/backbone/lib/shared/src/protos/proto --dart_out=/hamid/life/flip/flip_app/flip_app/lib/pb /hamid/life/_active/backbone/lib/shared/src/protos/proto/*
+
 
 TODO:
 + Invoke must be just for request > add InvokeResponse too for more modulerazation

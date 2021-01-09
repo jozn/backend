@@ -829,7 +829,7 @@ pub struct EventCommand {
     pub event_id: u64,
     #[prost(uint32, tag = "2")]
     pub user_id: u32,
-    #[prost(oneof = "event_command::Command", tags = "5")]
+    #[prost(oneof = "event_command::Command", tags = "5, 6")]
     pub command: ::std::option::Option<event_command::Command>,
 }
 pub mod event_command {
@@ -837,6 +837,8 @@ pub mod event_command {
     pub enum Command {
         #[prost(message, tag = "5")]
         Channel(super::ChannelCommand),
+        #[prost(message, tag = "6")]
+        Group(super::GroupCommand),
     }
 }
 ///////////// Channels ///////////
@@ -953,6 +955,164 @@ pub mod channel_command {
         FollowChannel(EcFollowChannel),
         #[prost(message, tag = "11")]
         UnFollowChannel(EcUnFollowChannel),
+        #[prost(message, tag = "12")]
+        Subscribe(EcSubscribe),
+        #[prost(message, tag = "13")]
+        UnSubscribe(EcUnSubscribe),
+        #[prost(message, tag = "23")]
+        RevokeLink(EcRevokeLink),
+        #[prost(message, tag = "5")]
+        SendMessage(EcSendMessage),
+        #[prost(message, tag = "6")]
+        EditMessage(EcEditMessage),
+        #[prost(message, tag = "7")]
+        PinMessage(EcPinMessage),
+        #[prost(message, tag = "8")]
+        UnPinMessage(EcUnPinMessage),
+        #[prost(message, tag = "9")]
+        DeleteMessages(EcDeleteMessages),
+        #[prost(message, tag = "24")]
+        ClearHistory(EcClearHistory),
+        #[prost(message, tag = "30")]
+        AvatarAdd(EcAvatarAdd),
+        #[prost(message, tag = "31")]
+        AvatarDelete(EcAvatarDelete),
+    }
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupCommand {
+    #[prost(uint32, tag = "1")]
+    pub group_id: u32,
+    #[prost(
+        oneof = "group_command::SubCommand",
+        tags = "20, 21, 22, 10, 11, 12, 13, 23, 5, 6, 7, 8, 9, 24, 30, 31"
+    )]
+    pub sub_command: ::std::option::Option<group_command::SubCommand>,
+}
+pub mod group_command {
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcCreateGroup {
+        #[prost(uint32, tag = "1")]
+        pub cid: u32,
+        /// or _name
+        #[prost(string, tag = "3")]
+        pub group_title: std::string::String,
+        /// with "group" suffix > not now > all is private now
+        #[prost(string, tag = "4")]
+        pub user_name: std::string::String,
+        #[prost(uint32, tag = "7")]
+        pub creator_profile_cid: u32,
+        /// if older message is is viewable for new members > now true for all new groups
+        #[prost(bool, tag = "8")]
+        pub history_viewable: bool,
+        /// view history without joining
+        #[prost(bool, tag = "9")]
+        pub force_join: bool,
+        /// global searchable in bar > force_join must be false + history_viewable = ture
+        #[prost(bool, tag = "17")]
+        pub global_search: bool,
+        #[prost(uint32, tag = "10")]
+        pub seq: u32,
+        #[prost(string, tag = "15")]
+        pub about: std::string::String,
+        #[prost(string, tag = "16")]
+        pub invite_link_hash: std::string::String,
+        #[prost(uint32, tag = "21")]
+        pub created_time: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcEditGroup {
+        #[prost(bool, tag = "1")]
+        pub set_new_title: bool,
+        #[prost(string, tag = "2")]
+        pub new_title: std::string::String,
+        #[prost(bool, tag = "3")]
+        pub set_new_about: bool,
+        #[prost(string, tag = "4")]
+        pub new_about: std::string::String,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcDeleteGroup {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcFollowGroup {
+        #[prost(uint64, tag = "1")]
+        pub channel_id: u64,
+        #[prost(uint32, tag = "2")]
+        pub user_id: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcUnFollowGroup {
+        #[prost(uint64, tag = "1")]
+        pub channel_id: u64,
+        #[prost(uint32, tag = "2")]
+        pub user_id: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcSubscribe {
+        #[prost(uint64, tag = "1")]
+        pub channel_id: u64,
+        #[prost(uint32, tag = "2")]
+        pub user_id: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcUnSubscribe {
+        #[prost(uint64, tag = "1")]
+        pub channel_id: u64,
+        #[prost(uint32, tag = "2")]
+        pub user_id: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcRevokeLink {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcSendMessage {
+        #[prost(message, optional, tag = "1")]
+        pub input_message: ::std::option::Option<super::CNewMessageInput>,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcEditMessage {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcPinMessage {
+        #[prost(uint64, tag = "1")]
+        pub message_id: u64,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcUnPinMessage {
+        #[prost(uint64, tag = "1")]
+        pub message_id: u64,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcDeleteMessages {
+        #[prost(uint64, repeated, tag = "1")]
+        pub message_ids: ::std::vec::Vec<u64>,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcClearHistory {
+        /// better to include
+        #[prost(uint64, tag = "1")]
+        pub from_message_id: u64,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcAvatarAdd {
+        #[prost(uint64, tag = "1")]
+        pub file_id: u64,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EcAvatarDelete {
+        #[prost(uint64, tag = "1")]
+        pub file_id: u64,
+    }
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum SubCommand {
+        #[prost(message, tag = "20")]
+        CreateGroup(EcCreateGroup),
+        #[prost(message, tag = "21")]
+        EditGroup(EcEditGroup),
+        #[prost(message, tag = "22")]
+        DeleteGroup(EcDeleteGroup),
+        #[prost(message, tag = "10")]
+        FollowGroup(EcFollowGroup),
+        #[prost(message, tag = "11")]
+        UnFollowGroup(EcUnFollowGroup),
         #[prost(message, tag = "12")]
         Subscribe(EcSubscribe),
         #[prost(message, tag = "13")]
@@ -1613,8 +1773,23 @@ pub struct GroupGetFullMessageResponse {}
 /// CrDU
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupCreateGroupParam {
-    #[prost(uint32, tag = "1")]
-    pub group_id: u32,
+    /// or _name
+    #[prost(string, tag = "3")]
+    pub group_title: std::string::String,
+    /// with "group" suffix > not now > all is private now
+    #[prost(string, tag = "4")]
+    pub user_name: std::string::String,
+    /// if older message is is viewable for new members > now true for all new groups
+    #[prost(bool, tag = "8")]
+    pub history_viewable: bool,
+    /// view history without joining
+    #[prost(bool, tag = "9")]
+    pub force_join: bool,
+    /// global searchable in bar > force_join must be false + history_viewable = ture
+    #[prost(bool, tag = "17")]
+    pub global_search: bool,
+    #[prost(string, tag = "15")]
+    pub about: std::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupCreateGroupResponse {}

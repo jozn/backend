@@ -53,13 +53,11 @@ async fn main() {
     println!("res {:?}", res);
     for i in 1..=10 {
         let i = i;
-        tokio::spawn(async move {
-            fdb_heavi_wiret(i).await
-        });
+        tokio::spawn(async move { fdb_heavi_wiret(i).await });
     }
 
     tokio::time::sleep(Duration::from_secs(1000)).await;
-/*    for i in 0..100_000_000 {
+    /*    for i in 0..100_000_000 {
     // for i in 0..1{
         let key = format!("key-{}", i);
 
@@ -70,23 +68,21 @@ async fn main() {
             println!(" > {}", i);
         }
     }*/
-
 }
 
 async fn fdb_heavi_wiret(cnt: i32) {
     let db = foundationdb::Database::default().unwrap();
 
     for i in 0..100_000_000 {
-
         let tx = db.create_trx().unwrap();
         for j in 0..10 {
-            let key = format!("key5-{}-{}-{}", cnt, i,j);
+            let key = format!("key5-{}-{}-{}", cnt, i, j);
             tx.set(key.as_bytes(), b"for some other reason than that");
         }
         let res = tx.commit().await.unwrap();
 
-        if i%1000 == 0 {
-            println!("- {} > {} - {}",cnt, i, i*100);
+        if i % 1000 == 0 {
+            println!("- {} > {} - {}", cnt, i, i * 100);
         }
     }
 }
@@ -101,8 +97,8 @@ async fn fdb1(cnt: i32) {
         let tx = db.create_trx().unwrap();
         tx.set(key.as_bytes(), b"for some other reason than that");
         let res = tx.commit().await.unwrap();
-        if i%1000 == 0 {
-            println!("- {} > {} - {}",cnt, i, i*cnt);
+        if i % 1000 == 0 {
+            println!("- {} > {} - {}", cnt, i, i * cnt);
         }
     }
 }
