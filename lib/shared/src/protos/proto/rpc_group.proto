@@ -6,14 +6,6 @@ option (unmarshaler_all) = true;
 
 import "global.proto";
 
-message GroupSetDraftParam {
-    uint32 group_id = 1;
-}
-
-message GroupSetDraftResponse {
-
-}
-
 // imple seq:
 // add rpc
 // organize parma/response  for the last part
@@ -24,43 +16,43 @@ service RPC_Group {
     //rpc Group (Param) returns (Response);
 
     // CrDU
-    rpc GroupCreateGroup (GroupCreateGroupParam) returns (GroupCreateGroupResponse); // rules: qevent_id_20
-    rpc GroupEditGroup (GroupEditGroupParam) returns (GroupEditGroupResponse);// rules: qevent
-    rpc GroupDeleteGroup (GroupDeleteGroupParam) returns (GroupDeleteGroupResponse);// rules: qevent_id_40
+    rpc GroupCreateGroup (GroupCreateGroupParam) returns (GroupCreateGroupResponse); // qevent_id_40
+    rpc GroupEditGroup (GroupEditGroupParam) returns (GroupEditGroupResponse);// qevent
+    rpc GroupDeleteGroup (GroupDeleteGroupParam) returns (GroupDeleteGroupResponse);// qevent
 
     // Members
     rpc GroupAddAdmin (GroupAddAdminParam) returns (GroupAddAdminResponse); // ??
-    rpc GroupAddMember (GroupAddMemberParam) returns (GroupAddMemberResponse); // rules: qevent
-    rpc GroupRemoveMember (GroupRemoveMemberParam) returns (GroupRemoveMemberResponse); // rules: qevent
-    rpc GroupChangeMemberLevel (GroupChangeMemberLevelParam) returns (GroupChangeMemberLevelResponse); // rules: qevent
-    rpc GroupChangeMemberPermission (GroupChangeMemberPermissionParam) returns (GroupChangeMemberPermissionResponse); // rules: qevent
-    rpc GroupJoinGroup (JoinGroupParam) returns (JoinGroupResponse); // rules: qevent
-    rpc GroupLeaveGroup (GroupLeaveGroupParam) returns (GroupLeaveGroupResponse); // rules: qevent
-    rpc GroupBanMember (GroupBanMemberParam) returns (GroupBanMemberResponse); // rules: qevent // ban or block?
+    rpc GroupAddMember (GroupAddMemberParam) returns (GroupAddMemberResponse); // qevent_id_50
+    rpc GroupRemoveMember (GroupRemoveMemberParam) returns (GroupRemoveMemberResponse); // qevent
+    rpc GroupChangeMemberLevel (GroupChangeMemberLevelParam) returns (GroupChangeMemberLevelResponse); // qevent
+    rpc GroupChangeMemberPermission (GroupChangeMemberPermissionParam) returns (GroupChangeMemberPermissionResponse); // qevent
+    rpc GroupJoinGroup (JoinGroupParam) returns (JoinGroupResponse); // qevent
+    rpc GroupLeaveGroup (GroupLeaveGroupParam) returns (GroupLeaveGroupResponse); // qevent
+    rpc GroupBanMember (GroupBanMemberParam) returns (GroupBanMemberResponse); // qevent // ban or block?
 
     // Privacy
-    rpc GroupChangePrivacy (GroupChangePrivacyParam) returns (GroupChangePrivacyResponse); // rules: qevent
+    rpc GroupChangePrivacy (GroupChangePrivacyParam) returns (GroupChangePrivacyResponse); // qevent_id_70
     rpc GroupChangeDefaultPermission (GroupChangeDefaultPermissionParam) returns (GroupChangeDefaultPermissionResponse);
-    rpc GroupRevokeLink (GroupRevokeLinkParam) returns (GroupRevokeLinkResponse); // rules: qevent
-    rpc GroupChangeUsername (GroupChangeUsernameParam) returns (GroupChangeUsernameResponse); // rules: qevent
+    rpc GroupRevokeLink (GroupRevokeLinkParam) returns (GroupRevokeLinkResponse); // qevent
+    rpc GroupChangeUsername (GroupChangeUsernameParam) returns (GroupChangeUsernameResponse); // qevent
 
     // Messages
-    rpc GroupSendMessage (GroupSendMessageParam) returns (GroupSendMessageResponse); // rules: qevent
-    rpc GroupEditMessage (GroupEditMessageParam) returns (GroupEditMessageResponse); // rules: qevent
-    rpc GroupPinMessage (GroupPinMessageParam) returns (GroupPinMessageResponse); // rules: qevent
-    rpc GroupUnPinMessage (GroupUnPinMessageParam) returns (GroupUnPinMessageResponse); // rules: qevent
+    rpc GroupSendMessage (GroupSendMessageParam) returns (GroupSendMessageResponse); // qevent_id_10
+    rpc GroupEditMessage (GroupEditMessageParam) returns (GroupEditMessageResponse); // qevent
+    rpc GroupPinMessage (GroupPinMessageParam) returns (GroupPinMessageResponse); // qevent
+    rpc GroupUnPinMessage (GroupUnPinMessageParam) returns (GroupUnPinMessageResponse); // qevent
     rpc GroupDeleteMessage (GroupDeleteMessageParam) returns (GroupDeleteMessageResponse); // remove?
-    rpc GroupDeleteMessages (GroupDeleteMessagesParam) returns (GroupDeleteMessagesResponse); // rules: qevent
-    rpc GroupDeleteHistory (GroupDeleteHistoryParam) returns (GroupDeleteHistoryResponse); // rules: qevent
-    rpc GroupClearHistory (GroupClearHistoryParam) returns (GroupClearHistoryResponse); // rules: qevent
+    rpc GroupDeleteMessages (GroupDeleteMessagesParam) returns (GroupDeleteMessagesResponse); // qevent
+    rpc GroupDeleteHistory (GroupDeleteHistoryParam) returns (GroupDeleteHistoryResponse); // qevent
+    rpc GroupClearHistory (GroupClearHistoryParam) returns (GroupClearHistoryResponse); // qevent
 
     // Others
-    rpc GroupAvatarAdd (GroupAvatarAddParam) returns (GroupAvatarAddResponse); // rules: qevent
+    rpc GroupAvatarAdd (GroupAvatarAddParam) returns (GroupAvatarAddResponse); // qevent_id_80
     rpc GroupAvatarChange (GroupAvatarChangeParam) returns (GroupAvatarChangeResponse); // remove?
-    rpc GroupAvatarDelete (GroupAvatarDeleteParam) returns (GroupAvatarDeleteResponse); // rules: qevent
+    rpc GroupAvatarDelete (GroupAvatarDeleteParam) returns (GroupAvatarDeleteResponse); // qevent
     rpc GroupAvatarGetList (GroupAvatarGetListParam) returns (GroupAvatarGetListResponse); // view?
     rpc GroupSendDoingAction (GroupSendDoingActionParam) returns (GroupSendDoingActionResponse);
-    rpc GroupReportGroup (GroupReportGroupParam) returns (GroupReportGroupResponse); // rules: qevent -- should be here
+    rpc GroupReportGroup (GroupReportGroupParam) returns (GroupReportGroupResponse); // qevent -- should be here
 
     // Views
     rpc GroupGetFull (GroupGetFullParam) returns (GroupGetFullResponse);
@@ -73,6 +65,7 @@ service RPC_Group {
     rpc GroupSetDraft (GroupSetDraftParam) returns (GroupSetDraftResponse); // draft via direct
 
 }
+
 
 // CrDU
 message GroupCreateGroupParam {
@@ -115,13 +108,8 @@ message GroupDeleteGroupResponse {
 
 }
 
+
 // Members
-/*message Param {
-}
-
-message Response {
-}*/
-
 message GroupAddAdminParam {
     // NOT NOW
 }
@@ -193,8 +181,8 @@ message GroupBanMemberParam {
 message GroupBanMemberResponse {
 }
 
-// Privacy
 
+// Privacy
 message GroupChangePrivacyParam {
     // NOT NOW
 }
@@ -226,6 +214,7 @@ message GroupChangeUsernameParam {
 
 message GroupChangeUsernameResponse {
 }
+
 
 // Messages
 message GroupSendMessageParam {
@@ -299,6 +288,7 @@ message GroupClearHistoryParam {
 message GroupClearHistoryResponse {
 }
 
+
 // Others
 message GroupAvatarAddParam {
     uint32 group_id = 1;
@@ -323,8 +313,7 @@ message GroupAvatarDeleteResponse {}
 
 
 message GroupAvatarGetListParam {
-    uint32 group_id = 1 [deprecated=true];
-    uint32 group_id2 = 4 [deprecated2=true];
+    uint32 group_cid = 1;
 }
 
 message GroupAvatarGetListResponse {}
@@ -345,8 +334,8 @@ message GroupReportGroupParam {
 message GroupReportGroupResponse {
 }
 
-// Views
 
+// Views
 message GroupGetFullParam {
     uint32 group_cid = 1;
 }
@@ -386,7 +375,16 @@ message GroupGetAdminsListParam {
 message GroupGetAdminsListResponse {
 }
 
+
 // Dep
+message GroupSetDraftParam {
+    uint32 group_id = 1;
+}
+
+message GroupSetDraftResponse {
+
+}
+
 
 /*
 
