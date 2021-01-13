@@ -3,6 +3,7 @@ syntax = "proto3";
 package pb;
 
 import "global.proto";
+import "event.proto";
 
 message EventCommand {
   fixed64 event_id = 1;
@@ -13,8 +14,18 @@ message EventCommand {
   }
 }
 
+/////////  Play Codes/////////
+message XEventCommand_Dep {
+  fixed64 event_id = 1;
+  uint32 user_id = 2;
+  oneof command {
+    XChannelCommand_Dep channel = 5;
+    XGroupCommand_Dep group = 6;
+  }
+}
+
 //////////// Channels ///////////
-message ChannelCommand {
+message XChannelCommand_Dep {
   uint32 channel_id = 1;
 
   oneof sub_command {
@@ -96,7 +107,7 @@ message ChannelCommand {
   }
 }
 
-message GroupCommand {
+message XGroupCommand_Dep {
   uint32 group_id = 1;
 
   oneof sub_command {

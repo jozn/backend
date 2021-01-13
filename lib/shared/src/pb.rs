@@ -824,6 +824,420 @@ pub enum DevicePlatform {
     Web = 7,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelCommand {
+    #[prost(
+        oneof = "channel_command::SubCommand",
+        tags = "50, 51, 52, 60, 61, 62, 30, 31, 32, 40, 41, 42, 70, 71, 72, 73, 74, 10, 11, 12, 13, 14, 15, 16, 80, 81, 82, 83, 84, 85"
+    )]
+    pub sub_command: ::std::option::Option<channel_command::SubCommand>,
+}
+pub mod channel_command {
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QCreateChannel {
+        #[prost(uint32, tag = "1")]
+        pub channel_cid: u32,
+        #[prost(uint32, tag = "2")]
+        pub creator_profile_cid: u32,
+        #[prost(string, tag = "3")]
+        pub channel_title: std::string::String,
+        #[prost(string, tag = "4")]
+        pub user_name: std::string::String,
+        #[prost(bool, tag = "8")]
+        pub history_viewable: bool,
+        #[prost(bool, tag = "9")]
+        pub force_join: bool,
+        #[prost(bool, tag = "17")]
+        pub global_search: bool,
+        #[prost(string, tag = "15")]
+        pub about: std::string::String,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QEditChannel {
+        #[prost(uint32, tag = "1")]
+        pub channel_cid: u32,
+        #[prost(uint32, tag = "2")]
+        pub by_profile_cid: u32,
+        #[prost(bool, tag = "3")]
+        pub set_new_title: bool,
+        #[prost(string, tag = "4")]
+        pub new_title: std::string::String,
+        #[prost(bool, tag = "5")]
+        pub set_new_about: bool,
+        #[prost(string, tag = "6")]
+        pub new_about: std::string::String,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QDeleteChannel {
+        #[prost(uint32, tag = "1")]
+        pub channel_cid: u32,
+        #[prost(uint32, tag = "2")]
+        pub by_profile_cid: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QAddAuthor {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QChangeAuthorPermission {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QRemoveAuthor {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QFollowChannel {
+        #[prost(uint32, tag = "1")]
+        pub channel_cid: u32,
+        #[prost(uint32, tag = "2")]
+        pub by_profile_cid: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QUnFollowChannel {
+        #[prost(uint32, tag = "1")]
+        pub channel_cid: u32,
+        #[prost(uint32, tag = "2")]
+        pub by_profile_cid: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QRemoveFollowers {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QSubscribe {
+        #[prost(uint32, tag = "1")]
+        pub channel_cid: u32,
+        #[prost(uint32, tag = "2")]
+        pub by_profile_cid: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QUnSubscribe {
+        #[prost(uint32, tag = "1")]
+        pub channel_cid: u32,
+        #[prost(uint32, tag = "2")]
+        pub by_profile_cid: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QRemoveSubscribers {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QChangePrivacy {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QChangeDefaultPermission {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QRevokeLink {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QChangeUsername {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QBlockChannel {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QSendMessage {
+        #[prost(uint32, tag = "1")]
+        pub channel_id: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QEditMessage {
+        #[prost(uint32, tag = "1")]
+        pub channel_id: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QPinMessage {
+        #[prost(uint32, tag = "1")]
+        pub channel_id: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QUnPinMessage {
+        #[prost(uint32, tag = "1")]
+        pub channel_id: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QDeleteMessage {
+        #[prost(uint32, tag = "1")]
+        pub channel_id: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QDeleteMessages {
+        #[prost(uint32, tag = "1")]
+        pub channel_cid: u32,
+        #[prost(uint32, tag = "2")]
+        pub by_profile_cid: u32,
+        #[prost(uint64, tag = "3")]
+        pub message_cid: u64,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QClearHistory {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QAvatarAdd {
+        #[prost(uint32, tag = "1")]
+        pub channel_id: u32,
+        #[prost(uint64, tag = "2")]
+        pub file_id: u64,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QAvatarChange {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QAvatarDelete {
+        #[prost(uint32, tag = "1")]
+        pub channel_id: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QSendDoingAction {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QReportChannel {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QReportMessage {}
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum SubCommand {
+        #[prost(message, tag = "50")]
+        CreateChannel(QCreateChannel),
+        #[prost(message, tag = "51")]
+        EditChannel(QEditChannel),
+        #[prost(message, tag = "52")]
+        DeleteChannel(QDeleteChannel),
+        #[prost(message, tag = "60")]
+        AddAuthor(QAddAuthor),
+        #[prost(message, tag = "61")]
+        ChangeAuthorPermission(QChangeAuthorPermission),
+        #[prost(message, tag = "62")]
+        RemoveAuthor(QRemoveAuthor),
+        #[prost(message, tag = "30")]
+        FollowChannel(QFollowChannel),
+        #[prost(message, tag = "31")]
+        UnFollowChannel(QUnFollowChannel),
+        #[prost(message, tag = "32")]
+        RemoveFollowers(QRemoveFollowers),
+        #[prost(message, tag = "40")]
+        Subscribe(QSubscribe),
+        #[prost(message, tag = "41")]
+        UnSubscribe(QUnSubscribe),
+        #[prost(message, tag = "42")]
+        RemoveSubscribers(QRemoveSubscribers),
+        #[prost(message, tag = "70")]
+        ChangePrivacy(QChangePrivacy),
+        #[prost(message, tag = "71")]
+        ChangeDefaultPermission(QChangeDefaultPermission),
+        #[prost(message, tag = "72")]
+        RevokeLink(QRevokeLink),
+        #[prost(message, tag = "73")]
+        ChangeUsername(QChangeUsername),
+        #[prost(message, tag = "74")]
+        BlockChannel(QBlockChannel),
+        #[prost(message, tag = "10")]
+        SendMessage(QSendMessage),
+        #[prost(message, tag = "11")]
+        EditMessage(QEditMessage),
+        #[prost(message, tag = "12")]
+        PinMessage(QPinMessage),
+        #[prost(message, tag = "13")]
+        UnPinMessage(QUnPinMessage),
+        #[prost(message, tag = "14")]
+        DeleteMessage(QDeleteMessage),
+        #[prost(message, tag = "15")]
+        DeleteMessages(QDeleteMessages),
+        #[prost(message, tag = "16")]
+        ClearHistory(QClearHistory),
+        #[prost(message, tag = "80")]
+        AvatarAdd(QAvatarAdd),
+        #[prost(message, tag = "81")]
+        AvatarChange(QAvatarChange),
+        #[prost(message, tag = "82")]
+        AvatarDelete(QAvatarDelete),
+        #[prost(message, tag = "83")]
+        SendDoingAction(QSendDoingAction),
+        #[prost(message, tag = "84")]
+        ReportChannel(QReportChannel),
+        #[prost(message, tag = "85")]
+        ReportMessage(QReportMessage),
+    }
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupCommand {
+    #[prost(
+        oneof = "group_command::SubCommand",
+        tags = "40, 41, 42, 50, 51, 52, 53, 54, 55, 56, 70, 71, 72, 10, 11, 12, 13, 14, 15, 16, 80, 81, 82"
+    )]
+    pub sub_command: ::std::option::Option<group_command::SubCommand>,
+}
+pub mod group_command {
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QCreateGroup {
+        #[prost(uint32, tag = "1")]
+        pub group_cid: u32,
+        #[prost(uint32, tag = "2")]
+        pub creator_profile_cid: u32,
+        #[prost(string, tag = "3")]
+        pub group_title: std::string::String,
+        #[prost(string, tag = "4")]
+        pub user_name: std::string::String,
+        #[prost(bool, tag = "8")]
+        pub history_viewable: bool,
+        #[prost(bool, tag = "9")]
+        pub force_join: bool,
+        #[prost(bool, tag = "17")]
+        pub global_search: bool,
+        #[prost(string, tag = "15")]
+        pub about: std::string::String,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QEditGroup {
+        #[prost(uint32, tag = "1")]
+        pub group_cid: u32,
+        #[prost(uint32, tag = "2")]
+        pub by_profile_cid: u32,
+        #[prost(bool, tag = "3")]
+        pub set_new_title: bool,
+        #[prost(string, tag = "4")]
+        pub new_title: std::string::String,
+        #[prost(bool, tag = "5")]
+        pub set_new_about: bool,
+        #[prost(string, tag = "6")]
+        pub new_about: std::string::String,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QDeleteGroup {
+        #[prost(uint32, tag = "1")]
+        pub group_cid: u32,
+        #[prost(uint32, tag = "2")]
+        pub by_profile_cid: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QAddMember {
+        #[prost(uint32, tag = "1")]
+        pub group_cid: u32,
+        #[prost(uint32, tag = "2")]
+        pub by_profile_cid: u32,
+        #[prost(uint32, tag = "3")]
+        pub new_member_profile_cid: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QRemoveMember {
+        #[prost(uint32, tag = "1")]
+        pub group_cid: u32,
+        #[prost(uint32, tag = "2")]
+        pub by_profile_cid: u32,
+        #[prost(uint32, tag = "3")]
+        pub member_profile_cid: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QChangeMemberLevel {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QChangeMemberPermission {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QJoinGroup {
+        #[prost(uint32, tag = "1")]
+        pub group_cid: u32,
+        #[prost(uint32, tag = "3")]
+        pub new_member_profile_cid: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QLeaveGroup {
+        #[prost(uint32, tag = "1")]
+        pub group_cid: u32,
+        #[prost(uint32, tag = "3")]
+        pub member_profile_cid: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QBanMember {
+        #[prost(uint32, tag = "1")]
+        pub group_cid: u32,
+        #[prost(uint32, tag = "2")]
+        pub by_profile_cid: u32,
+        #[prost(uint32, tag = "3")]
+        pub banned_profile_cid: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QChangePrivacy {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QRevokeLink {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QChangeUsername {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QSendMessage {
+        #[prost(uint32, tag = "1")]
+        pub group_id: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QEditMessage {
+        #[prost(uint32, tag = "1")]
+        pub group_id: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QPinMessage {
+        #[prost(uint32, tag = "1")]
+        pub group_id: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QUnPinMessage {
+        #[prost(uint32, tag = "1")]
+        pub group_id: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QDeleteMessages {
+        #[prost(uint32, tag = "1")]
+        pub group_cid: u32,
+        #[prost(uint32, tag = "2")]
+        pub by_profile_cid: u32,
+        #[prost(uint64, repeated, tag = "3")]
+        pub message_ids: ::std::vec::Vec<u64>,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QDeleteHistory {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QClearHistory {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QAvatarAdd {
+        #[prost(uint32, tag = "1")]
+        pub group_id: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QAvatarDelete {
+        #[prost(uint32, tag = "1")]
+        pub group_id: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QReportGroup {}
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum SubCommand {
+        #[prost(message, tag = "40")]
+        CreateGroup(QCreateGroup),
+        #[prost(message, tag = "41")]
+        EditGroup(QEditGroup),
+        #[prost(message, tag = "42")]
+        DeleteGroup(QDeleteGroup),
+        #[prost(message, tag = "50")]
+        AddMember(QAddMember),
+        #[prost(message, tag = "51")]
+        RemoveMember(QRemoveMember),
+        #[prost(message, tag = "52")]
+        ChangeMemberLevel(QChangeMemberLevel),
+        #[prost(message, tag = "53")]
+        ChangeMemberPermission(QChangeMemberPermission),
+        #[prost(message, tag = "54")]
+        JoinGroup(QJoinGroup),
+        #[prost(message, tag = "55")]
+        LeaveGroup(QLeaveGroup),
+        #[prost(message, tag = "56")]
+        BanMember(QBanMember),
+        #[prost(message, tag = "70")]
+        ChangePrivacy(QChangePrivacy),
+        #[prost(message, tag = "71")]
+        RevokeLink(QRevokeLink),
+        #[prost(message, tag = "72")]
+        ChangeUsername(QChangeUsername),
+        #[prost(message, tag = "10")]
+        SendMessage(QSendMessage),
+        #[prost(message, tag = "11")]
+        EditMessage(QEditMessage),
+        #[prost(message, tag = "12")]
+        PinMessage(QPinMessage),
+        #[prost(message, tag = "13")]
+        UnPinMessage(QUnPinMessage),
+        #[prost(message, tag = "14")]
+        DeleteMessages(QDeleteMessages),
+        #[prost(message, tag = "15")]
+        DeleteHistory(QDeleteHistory),
+        #[prost(message, tag = "16")]
+        ClearHistory(QClearHistory),
+        #[prost(message, tag = "80")]
+        AvatarAdd(QAvatarAdd),
+        #[prost(message, tag = "81")]
+        AvatarDelete(QAvatarDelete),
+        #[prost(message, tag = "82")]
+        ReportGroup(QReportGroup),
+    }
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EventCommand {
     #[prost(fixed64, tag = "1")]
     pub event_id: u64,
@@ -841,18 +1255,37 @@ pub mod event_command {
         Group(super::GroupCommand),
     }
 }
+//////////  Play Codes/////////
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct XEventCommandDep {
+    #[prost(fixed64, tag = "1")]
+    pub event_id: u64,
+    #[prost(uint32, tag = "2")]
+    pub user_id: u32,
+    #[prost(oneof = "x_event_command_dep::Command", tags = "5, 6")]
+    pub command: ::std::option::Option<x_event_command_dep::Command>,
+}
+pub mod x_event_command_dep {
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Command {
+        #[prost(message, tag = "5")]
+        Channel(super::XChannelCommandDep),
+        #[prost(message, tag = "6")]
+        Group(super::XGroupCommandDep),
+    }
+}
 ///////////// Channels ///////////
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelCommand {
+pub struct XChannelCommandDep {
     #[prost(uint32, tag = "1")]
     pub channel_id: u32,
     #[prost(
-        oneof = "channel_command::SubCommand",
+        oneof = "x_channel_command_dep::SubCommand",
         tags = "20, 21, 22, 10, 11, 12, 13, 23, 5, 6, 7, 8, 9, 24, 30, 31"
     )]
-    pub sub_command: ::std::option::Option<channel_command::SubCommand>,
+    pub sub_command: ::std::option::Option<x_channel_command_dep::SubCommand>,
 }
-pub mod channel_command {
+pub mod x_channel_command_dep {
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct EcCreateChannel {
         #[prost(uint64, tag = "1")]
@@ -980,16 +1413,16 @@ pub mod channel_command {
     }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupCommand {
+pub struct XGroupCommandDep {
     #[prost(uint32, tag = "1")]
     pub group_id: u32,
     #[prost(
-        oneof = "group_command::SubCommand",
+        oneof = "x_group_command_dep::SubCommand",
         tags = "20, 21, 22, 10, 11, 12, 13, 23, 5, 6, 7, 8, 9, 24, 30, 31"
     )]
-    pub sub_command: ::std::option::Option<group_command::SubCommand>,
+    pub sub_command: ::std::option::Option<x_group_command_dep::SubCommand>,
 }
-pub mod group_command {
+pub mod x_group_command_dep {
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct EcCreateGroup {
         #[prost(uint32, tag = "1")]
@@ -1290,27 +1723,152 @@ pub enum SendConfirmCodeTypeEnum {
     SendCodeOk = 0,
     SendCodeEmail = 1,
 }
+/// CrDU
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelAvatarAddParam {
+pub struct ChannelCreateChannelParam {
     #[prost(uint32, tag = "1")]
-    pub channel_id: u32,
+    pub channel_cid: u32,
+    #[prost(uint32, tag = "2")]
+    pub creator_profile_cid: u32,
+    /// or _name
+    #[prost(string, tag = "3")]
+    pub channel_title: std::string::String,
+    /// with "group" suffix > not now > all is private now
+    #[prost(string, tag = "4")]
+    pub user_name: std::string::String,
+    /// if older message is is viewable for new members > now true for all new groups
+    #[prost(bool, tag = "8")]
+    pub history_viewable: bool,
+    /// view history without joining
+    #[prost(bool, tag = "9")]
+    pub force_join: bool,
+    /// global searchable in bar > force_join must be false + history_viewable = ture
+    #[prost(bool, tag = "17")]
+    pub global_search: bool,
+    #[prost(string, tag = "15")]
+    pub about: std::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelAvatarAddResponse {}
+pub struct ChannelCreateChannelResponse {}
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelAvatarDeleteParam {
+pub struct ChannelEditChannelParam {
     #[prost(uint32, tag = "1")]
-    pub channel_id: u32,
+    pub channel_cid: u32,
+    #[prost(uint32, tag = "2")]
+    pub by_profile_cid: u32,
+    #[prost(bool, tag = "3")]
+    pub set_new_title: bool,
+    #[prost(string, tag = "4")]
+    pub new_title: std::string::String,
+    #[prost(bool, tag = "5")]
+    pub set_new_about: bool,
+    #[prost(string, tag = "6")]
+    pub new_about: std::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelAvatarDeleteResponse {}
+pub struct ChannelEditChannelResponse {}
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelAvatarGetListParam {
+pub struct ChannelDeleteChannelParam {
     #[prost(uint32, tag = "1")]
-    pub channel_id: u32,
+    pub channel_cid: u32,
+    #[prost(uint32, tag = "2")]
+    pub by_profile_cid: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelAvatarGetListResponse {}
+pub struct ChannelDeleteChannelResponse {}
+/// Author
+///
+/// NOT NOW
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelAddAuthorParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelAddAuthorResponse {}
+/// NOT NOW
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelChangeAuthorPermissionParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelChangeAuthorPermissionResponse {}
+/// NOT NOW
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelRemoveAuthorParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelRemoveAuthorResponse {}
+/// Follow
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelFollowChannelParam {
+    #[prost(uint32, tag = "1")]
+    pub channel_cid: u32,
+    #[prost(uint32, tag = "2")]
+    pub by_profile_cid: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelFollowChannelResponse {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelUnFollowChannelParam {
+    #[prost(uint32, tag = "1")]
+    pub channel_cid: u32,
+    #[prost(uint32, tag = "2")]
+    pub by_profile_cid: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelUnFollowChannelResponse {}
+/// NOT NOW
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelRemoveFollowersParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelRemoveFollowersResponse {}
+/// Subscribe
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelSubscribeParam {
+    #[prost(uint32, tag = "1")]
+    pub channel_cid: u32,
+    #[prost(uint32, tag = "2")]
+    pub by_profile_cid: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelSubscribeResponse {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelUnSubscribeParam {
+    #[prost(uint32, tag = "1")]
+    pub channel_cid: u32,
+    #[prost(uint32, tag = "2")]
+    pub by_profile_cid: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelUnSubscribeResponse {}
+/// NTO NOW
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelRemoveSubscribersParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelRemoveSubscribersResponse {}
+/// Privacy
+///
+/// NOT NOW
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelChangePrivacyParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelChangePrivacyResponse {}
+/// NOT NOW
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelChangeDefaultPermissionParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelChangeDefaultPermissionResponse {}
+/// NOT NOW
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelRevokeLinkParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelRevokeLinkResponse {}
+/// NOT NOW
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelChangeUsernameParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelChangeUsernameResponse {}
+/// NOT NOW
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelBlockChannelParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelBlockChannelResponse {}
+/// Messages
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelSendMessageParam {
     #[prost(uint32, tag = "1")]
@@ -1347,132 +1905,66 @@ pub struct ChannelDeleteMessageParam {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelDeleteMessageResponse {}
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelSetDraftParam {
-    #[prost(uint32, tag = "1")]
-    pub channel_id: u32,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelSetDraftResponse {}
-/// CrDU
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelCreateChannelParam {
-    #[prost(uint32, tag = "1")]
-    pub group_id: u32,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelCreateChannelResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelEditChannelParam {
-    #[prost(uint32, tag = "1")]
-    pub group_id: u32,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelEditChannelResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelDeleteChannelParam {
-    #[prost(uint32, tag = "1")]
-    pub group_id: u32,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelDeleteChannelResponse {}
-/// Author
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelAddAuthorParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelAddAuthorResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelChangeAuthorPermissionParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelChangeAuthorPermissionResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelRemoveAuthorParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelRemoveAuthorResponse {}
-/// Follow
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelFollowChannelParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelFollowChannelResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelUnFollowChannelParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelUnFollowChannelResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelRemoveFollowersParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelRemoveFollowersResponse {}
-// Subscribe
-
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelSubscribeParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelSubscribeResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelUnSubscribeParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelUnSubscribeResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelRemoveSubscribersParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelRemoveSubscribersResponse {}
-// Privacy
-
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelChangePrivacyParam {
-    #[prost(uint32, tag = "1")]
-    pub group_id: u32,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelChangePrivacyResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelChangeDefaultPermissionParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelChangeDefaultPermissionResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelRevokeLinkParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelRevokeLinkResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelChangeUsernameParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelChangeUsernameResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelBlockChannelParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelBlockChannelResponse {}
-// Messages
-
-#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelDeleteMessagesParam {
     #[prost(uint32, tag = "1")]
-    pub group_id: u32,
+    pub channel_cid: u32,
+    #[prost(uint32, tag = "2")]
+    pub by_profile_cid: u32,
+    #[prost(uint64, tag = "3")]
+    pub message_cid: u64,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelDeleteMessagesResponse {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelClearHistoryParam {}
+/// NOT NOW
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelClearHistoryResponse {}
-// Others
-
+/// Others
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelAvatarAddParam {
+    #[prost(uint32, tag = "1")]
+    pub channel_id: u32,
+    #[prost(uint64, tag = "2")]
+    pub file_id: u64,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelAvatarAddResponse {}
+/// NOT NOW
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelAvatarChangeParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelAvatarChangeResponse {}
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelAvatarDeleteParam {
+    #[prost(uint32, tag = "1")]
+    pub channel_id: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelAvatarDeleteResponse {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelAvatarGetListParam {
+    #[prost(uint32, tag = "1")]
+    pub channel_id: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelAvatarGetListResponse {}
+/// NOT NOW
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelSendDoingActionParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelSendDoingActionResponse {}
+/// NOT NOW
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelReportChannelParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelReportChannelResponse {}
+/// NOT NOW
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelReportMessageParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelReportMessageResponse {}
-// Views
-
+/// Views
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelGetFullParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1505,6 +1997,14 @@ pub struct ChannelGetSubscribersResponse {}
 pub struct ChannelBlockedParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelBlockedResponse {}
+/// Dep
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelSetDraftParam {
+    #[prost(uint32, tag = "1")]
+    pub channel_id: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelSetDraftResponse {}
 // crud
 
 // Members
@@ -1700,27 +2200,151 @@ pub struct DirectGetFoldersListResponse {}
 pub struct DirectGetFoldersFullListParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DirectGetFoldersFullListResponse {}
+/// CrDU
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupAvatarAddParam {
+pub struct GroupCreateGroupParam {
     #[prost(uint32, tag = "1")]
-    pub group_id: u32,
+    pub group_cid: u32,
+    #[prost(uint32, tag = "2")]
+    pub creator_profile_cid: u32,
+    /// or _name
+    #[prost(string, tag = "3")]
+    pub group_title: std::string::String,
+    /// with "group" suffix > not now > all is private now
+    #[prost(string, tag = "4")]
+    pub user_name: std::string::String,
+    /// if older message is is viewable for new members > now true for all new groups
+    #[prost(bool, tag = "8")]
+    pub history_viewable: bool,
+    /// view history without joining
+    #[prost(bool, tag = "9")]
+    pub force_join: bool,
+    /// global searchable in bar > force_join must be false + history_viewable = ture
+    #[prost(bool, tag = "17")]
+    pub global_search: bool,
+    #[prost(string, tag = "15")]
+    pub about: std::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupAvatarAddResponse {}
+pub struct GroupCreateGroupResponse {}
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupAvatarDeleteParam {
+pub struct GroupEditGroupParam {
     #[prost(uint32, tag = "1")]
-    pub group_id: u32,
+    pub group_cid: u32,
+    #[prost(uint32, tag = "2")]
+    pub by_profile_cid: u32,
+    #[prost(bool, tag = "3")]
+    pub set_new_title: bool,
+    #[prost(string, tag = "4")]
+    pub new_title: std::string::String,
+    #[prost(bool, tag = "5")]
+    pub set_new_about: bool,
+    /// Add others editable options
+    #[prost(string, tag = "6")]
+    pub new_about: std::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupAvatarDeleteResponse {}
+pub struct GroupEditGroupResponse {}
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupAvatarGetListParam {
+pub struct GroupDeleteGroupParam {
     #[prost(uint32, tag = "1")]
-    pub group_id: u32,
+    pub group_cid: u32,
+    #[prost(uint32, tag = "2")]
+    pub by_profile_cid: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupAvatarGetListResponse {}
+pub struct GroupDeleteGroupResponse {}
+/// Members
+///
+/// NOT NOW
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupAddAdminParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupAddAdminResponse {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupAddMemberParam {
+    #[prost(uint32, tag = "1")]
+    pub group_cid: u32,
+    #[prost(uint32, tag = "2")]
+    pub by_profile_cid: u32,
+    #[prost(uint32, tag = "3")]
+    pub new_member_profile_cid: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupAddMemberResponse {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupRemoveMemberParam {
+    #[prost(uint32, tag = "1")]
+    pub group_cid: u32,
+    #[prost(uint32, tag = "2")]
+    pub by_profile_cid: u32,
+    #[prost(uint32, tag = "3")]
+    pub member_profile_cid: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupRemoveMemberResponse {}
+/// NOT NOW
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupChangeMemberLevelParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupChangeMemberLevelResponse {}
+/// NOT NOW
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupChangeMemberPermissionParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupChangeMemberPermissionResponse {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct JoinGroupParam {
+    #[prost(uint32, tag = "1")]
+    pub group_cid: u32,
+    #[prost(uint32, tag = "3")]
+    pub new_member_profile_cid: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct JoinGroupResponse {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupLeaveGroupParam {
+    #[prost(uint32, tag = "1")]
+    pub group_cid: u32,
+    #[prost(uint32, tag = "3")]
+    pub member_profile_cid: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupLeaveGroupResponse {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupBanMemberParam {
+    #[prost(uint32, tag = "1")]
+    pub group_cid: u32,
+    #[prost(uint32, tag = "2")]
+    pub by_profile_cid: u32,
+    #[prost(uint32, tag = "3")]
+    pub banned_profile_cid: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupBanMemberResponse {}
+/// Privacy
+///
+/// NOT NOW
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupChangePrivacyParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupChangePrivacyResponse {}
+/// NOT NOW
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupChangeDefaultPermissionParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupChangeDefaultPermissionResponse {}
+/// NOT NOW
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupRevokeLinkParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupRevokeLinkResponse {}
+/// NOT NOW
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupChangeUsernameParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupChangeUsernameResponse {}
+/// Messages
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupSendMessageParam {
     #[prost(uint32, tag = "1")]
@@ -1757,166 +2381,105 @@ pub struct GroupDeleteMessageParam {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupDeleteMessageResponse {}
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupDeleteMessagesParam {
+    #[prost(uint32, tag = "1")]
+    pub group_cid: u32,
+    #[prost(uint32, tag = "2")]
+    pub by_profile_cid: u32,
+    #[prost(uint64, repeated, tag = "3")]
+    pub message_ids: ::std::vec::Vec<u64>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupDeleteMessagesResponse {}
+/// NOT NOW
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupDeleteHistoryParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupDeleteHistoryResponse {}
+/// NOT NOW
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupClearHistoryParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupClearHistoryResponse {}
+/// Others
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupAvatarAddParam {
+    #[prost(uint32, tag = "1")]
+    pub group_id: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupAvatarAddResponse {}
+/// NOT NOW
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupAvatarChangeParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupAvatarChangeResponse {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupAvatarDeleteParam {
+    #[prost(uint32, tag = "1")]
+    pub group_id: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupAvatarDeleteResponse {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupAvatarGetListParam {
+    #[prost(uint32, tag = "1")]
+    pub group_cid: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupAvatarGetListResponse {}
+/// NOT NOW
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupSendDoingActionParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupSendDoingActionResponse {}
+/// NOT NOW
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupReportGroupParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupReportGroupResponse {}
+/// Views
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupGetFullParam {
+    #[prost(uint32, tag = "1")]
+    pub group_cid: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupGetFullResponse {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupGetMessagesListParam {
+    #[prost(uint32, tag = "1")]
+    pub group_cid: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupGetMessagesListResponse {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupGetMediaListParam {
+    #[prost(uint32, tag = "1")]
+    pub group_cid: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupGetMediaListResponse {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupGetMembersListParam {
+    #[prost(uint32, tag = "1")]
+    pub group_cid: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupGetMembersListResponse {}
+/// NOT NOW
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupGetAdminsListParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupGetAdminsListResponse {}
+/// Dep
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupSetDraftParam {
     #[prost(uint32, tag = "1")]
     pub group_id: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupSetDraftResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupGetFullMessageParam {
-    #[prost(uint32, tag = "1")]
-    pub group_id: u32,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupGetFullMessageResponse {}
-/// CrDU
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupCreateGroupParam {
-    /// or _name
-    #[prost(string, tag = "3")]
-    pub group_title: std::string::String,
-    /// with "group" suffix > not now > all is private now
-    #[prost(string, tag = "4")]
-    pub user_name: std::string::String,
-    /// if older message is is viewable for new members > now true for all new groups
-    #[prost(bool, tag = "8")]
-    pub history_viewable: bool,
-    /// view history without joining
-    #[prost(bool, tag = "9")]
-    pub force_join: bool,
-    /// global searchable in bar > force_join must be false + history_viewable = ture
-    #[prost(bool, tag = "17")]
-    pub global_search: bool,
-    #[prost(string, tag = "15")]
-    pub about: std::string::String,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupCreateGroupResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupEditGroupParam {
-    #[prost(uint32, tag = "1")]
-    pub group_id: u32,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupEditGroupResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupDeleteGroupParam {
-    #[prost(uint32, tag = "1")]
-    pub group_id: u32,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupDeleteGroupResponse {}
-// Members
-
-//message Param {
-//}
-//
-//message Response {
-//}
-
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupAddAdminParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupAddAdminResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupAddMemberParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupAddMemberResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupRemoveMemberParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupRemoveMemberResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupChangeMemberLevelParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupChangeMemberLevelResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupChangeMemberPermissionParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupChangeMemberPermissionResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct JoinGroupParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct JoinGroupResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupLeaveGroupParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupLeaveGroupResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupBanMemberParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupBanMemberResponse {}
-// Privacy
-
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupChangePrivacyParam {
-    #[prost(uint32, tag = "1")]
-    pub group_id: u32,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupChangePrivacyResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupChangeDefaultPermissionParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupChangeDefaultPermissionResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupRevokeLinkParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupRevokeLinkResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupChangeUsernameParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupChangeUsernameResponse {}
-// Messages
-
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupDeleteMessagesParam {
-    #[prost(uint32, tag = "1")]
-    pub group_id: u32,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupDeleteMessagesResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupDeleteHistoryParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupDeleteHistoryResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupClearHistoryParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupClearHistoryResponse {}
-// Others
-
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupAvatarChangeParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupAvatarChangeResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupSendDoingActionParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupSendDoingActionResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupReportGroupParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupReportGroupResponse {}
-// Views
-
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupGetMessagesListParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupGetMessagesListResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupGetMediaListParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupGetMediaListResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupGetMembersListParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupGetMembersListResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupGetAdminsListParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GroupGetAdminsListResponse {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetUsers1Param {}
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1978,6 +2541,10 @@ pub struct CheckUserNameResponse {
     #[prost(string, tag = "3")]
     pub show_message: std::string::String,
 }
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Param {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Response {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UploadFileParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]

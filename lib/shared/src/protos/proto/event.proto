@@ -1,0 +1,247 @@
+syntax = "proto3";
+
+package pb;
+
+
+message ChannelCommand {
+  oneof sub_command {
+    QCreateChannel CreateChannel = 50;
+    QEditChannel EditChannel = 51;
+    QDeleteChannel DeleteChannel = 52;
+    QAddAuthor AddAuthor = 60;
+    QChangeAuthorPermission ChangeAuthorPermission = 61;
+    QRemoveAuthor RemoveAuthor = 62;
+    QFollowChannel FollowChannel = 30;
+    QUnFollowChannel UnFollowChannel = 31;
+    QRemoveFollowers RemoveFollowers = 32;
+    QSubscribe Subscribe = 40;
+    QUnSubscribe UnSubscribe = 41;
+    QRemoveSubscribers RemoveSubscribers = 42;
+    QChangePrivacy ChangePrivacy = 70;
+    QChangeDefaultPermission ChangeDefaultPermission = 71;
+    QRevokeLink RevokeLink = 72;
+    QChangeUsername ChangeUsername = 73;
+    QBlockChannel BlockChannel = 74;
+    QSendMessage SendMessage = 10;
+    QEditMessage EditMessage = 11;
+    QPinMessage PinMessage = 12;
+    QUnPinMessage UnPinMessage = 13;
+    QDeleteMessage DeleteMessage = 14;
+    QDeleteMessages DeleteMessages = 15;
+    QClearHistory ClearHistory = 16;
+    QAvatarAdd AvatarAdd = 80;
+    QAvatarChange AvatarChange = 81;
+    QAvatarDelete AvatarDelete = 82;
+    QSendDoingAction SendDoingAction = 83;
+    QReportChannel ReportChannel = 84;
+    QReportMessage ReportMessage = 85;
+  }
+  message QCreateChannel {
+      uint32 channel_cid = 1;
+      uint32 creator_profile_cid = 2;
+      string channel_title = 3;
+      string user_name = 4;
+      bool history_viewable = 8;
+      bool force_join = 9;
+      bool global_search = 17;
+      string about = 15;
+  }
+  message QEditChannel {
+      uint32 channel_cid = 1;
+      uint32 by_profile_cid = 2;
+      bool set_new_title = 3;
+      string new_title = 4;
+      bool set_new_about = 5;
+      string new_about = 6;
+  }
+  message QDeleteChannel {
+      uint32 channel_cid = 1;
+      uint32 by_profile_cid = 2;
+  }
+  message QAddAuthor {
+  }
+  message QChangeAuthorPermission {
+  }
+  message QRemoveAuthor {
+  }
+  message QFollowChannel {
+      uint32 channel_cid = 1;
+      uint32 by_profile_cid = 2;
+  }
+  message QUnFollowChannel {
+      uint32 channel_cid = 1;
+      uint32 by_profile_cid = 2;
+  }
+  message QRemoveFollowers {
+  }
+  message QSubscribe {
+      uint32 channel_cid = 1;
+      uint32 by_profile_cid = 2;
+  }
+  message QUnSubscribe {
+      uint32 channel_cid = 1;
+      uint32 by_profile_cid = 2;
+  }
+  message QRemoveSubscribers {
+  }
+  message QChangePrivacy {
+  }
+  message QChangeDefaultPermission {
+  }
+  message QRevokeLink {
+  }
+  message QChangeUsername {
+  }
+  message QBlockChannel {
+  }
+  message QSendMessage {
+      uint32 channel_id = 1;
+  }
+  message QEditMessage {
+      uint32 channel_id = 1;
+  }
+  message QPinMessage {
+      uint32 channel_id = 1;
+  }
+  message QUnPinMessage {
+      uint32 channel_id = 1;
+  }
+  message QDeleteMessage {
+      uint32 channel_id = 1;
+  }
+  message QDeleteMessages {
+      uint32 channel_cid = 1;
+      uint32 by_profile_cid = 2;
+      uint64 message_cid = 3;
+  }
+  message QClearHistory {
+  }
+  message QAvatarAdd {
+      uint32 channel_id = 1;
+      uint64 file_id = 2;
+  }
+  message QAvatarChange {
+  }
+  message QAvatarDelete {
+      uint32 channel_id = 1;
+  }
+  message QSendDoingAction {
+  }
+  message QReportChannel {
+  }
+  message QReportMessage {
+  }
+}
+
+message GroupCommand {
+  oneof sub_command {
+    QCreateGroup CreateGroup = 40;
+    QEditGroup EditGroup = 41;
+    QDeleteGroup DeleteGroup = 42;
+    QAddMember AddMember = 50;
+    QRemoveMember RemoveMember = 51;
+    QChangeMemberLevel ChangeMemberLevel = 52;
+    QChangeMemberPermission ChangeMemberPermission = 53;
+    QJoinGroup JoinGroup = 54;
+    QLeaveGroup LeaveGroup = 55;
+    QBanMember BanMember = 56;
+    QChangePrivacy ChangePrivacy = 70;
+    QRevokeLink RevokeLink = 71;
+    QChangeUsername ChangeUsername = 72;
+    QSendMessage SendMessage = 10;
+    QEditMessage EditMessage = 11;
+    QPinMessage PinMessage = 12;
+    QUnPinMessage UnPinMessage = 13;
+    QDeleteMessages DeleteMessages = 14;
+    QDeleteHistory DeleteHistory = 15;
+    QClearHistory ClearHistory = 16;
+    QAvatarAdd AvatarAdd = 80;
+    QAvatarDelete AvatarDelete = 81;
+    QReportGroup ReportGroup = 82;
+  }
+  message QCreateGroup {
+      uint32 group_cid = 1;
+      uint32 creator_profile_cid = 2;
+      string group_title = 3;
+      string user_name = 4;
+      bool history_viewable = 8;
+      bool force_join = 9;
+      bool global_search = 17;
+      string about = 15;
+  }
+  message QEditGroup {
+      uint32 group_cid = 1;
+      uint32 by_profile_cid = 2;
+      bool set_new_title = 3;
+      string new_title = 4;
+      bool set_new_about = 5;
+      string new_about = 6;
+  }
+  message QDeleteGroup {
+      uint32 group_cid = 1;
+      uint32 by_profile_cid = 2;
+  }
+  message QAddMember {
+      uint32 group_cid = 1;
+      uint32 by_profile_cid = 2;
+      uint32 new_member_profile_cid = 3;
+  }
+  message QRemoveMember {
+      uint32 group_cid = 1;
+      uint32 by_profile_cid = 2;
+      uint32 member_profile_cid = 3;
+  }
+  message QChangeMemberLevel {
+  }
+  message QChangeMemberPermission {
+  }
+  message QJoinGroup {
+      uint32 group_cid = 1;
+      uint32 new_member_profile_cid = 3;
+  }
+  message QLeaveGroup {
+      uint32 group_cid = 1;
+      uint32 member_profile_cid = 3;
+  }
+  message QBanMember {
+      uint32 group_cid = 1;
+      uint32 by_profile_cid = 2;
+      uint32 banned_profile_cid = 3;
+  }
+  message QChangePrivacy {
+  }
+  message QRevokeLink {
+  }
+  message QChangeUsername {
+  }
+  message QSendMessage {
+      uint32 group_id = 1;
+  }
+  message QEditMessage {
+      uint32 group_id = 1;
+  }
+  message QPinMessage {
+      uint32 group_id = 1;
+  }
+  message QUnPinMessage {
+      uint32 group_id = 1;
+  }
+  message QDeleteMessages {
+      uint32 group_cid = 1;
+      uint32 by_profile_cid = 2;
+      repeated uint64 message_ids = 3;
+  }
+  message QDeleteHistory {
+  }
+  message QClearHistory {
+  }
+  message QAvatarAdd {
+      uint32 group_id = 1;
+  }
+  message QAvatarDelete {
+      uint32 group_id = 1;
+  }
+  message QReportGroup {
+  }
+}
+

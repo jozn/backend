@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package pb;
 
-option (unmarshaler_all) = true;
-
 import "global.proto";
 
 // imple seq:

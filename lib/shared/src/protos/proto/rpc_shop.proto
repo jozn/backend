@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package pb;
+
+import "global.proto";
+
+// Note: While the word store is preferable it's overloaded > use Shop in codes and api but could use Store name
+// in public places.
+
+// rules: qevent_rpc
+service RPC_Shop {
+    //rpc Shop (Param) returns (Response);
+    rpc ShopEEE (Param) returns (Response);
+
+    // CrDU
+    rpc ShopCreateShop (Param) returns (Response);
+    rpc ShopEditShop (Param) returns (Response);
+    rpc ShopPauseShop (Param) returns (Response);
+    rpc ShopTerminateShop (Param) returns (Response);
+
+    // Products
+    rpc ShopAddProduct (Param) returns (Response);
+    rpc ShopEditProduct (Param) returns (Response);
+    rpc ShopDeleteProduct (Param) returns (Response);
+
+    // Customer Interaction - Basket
+    rpc ShopAddProductToBasket(Param) returns (Response);
+    rpc ShopRemoveProductFromBasket(Param) returns (Response);
+    rpc ShopCheckoutBasket(Param) returns (Response);
+
+    // Customer Interaction - Likes
+    rpc ShopLikeProduct(Param) returns (Response);
+    rpc ShopUnLikeProduct(Param) returns (Response);
+    rpc ShopLikeShop(Param) returns (Response);
+    rpc ShopUnLikeShop(Param) returns (Response);
+
+    // Views
+    rpc ShopGetFull(Param) returns (Response);
+    rpc ShopProductList(Param) returns (Response);
+
+    // Views - Customer ?? > in here?
+    rpc ShopGetBasketList(Param) returns (Response);
+    rpc ShopGetLikedProductsList(Param) returns (Response);
+    rpc ShopGetLikedShopsList(Param) returns (Response);
+
+    // Views - Seller
+    rpc ShopGetOrderList(Param) returns (Response);
+    rpc ShopGetRefundList(Param) returns (Response);
+
+    // Seller Order Managment
+    rpc ShopCancelOrder(Param) returns (Response);
+
+
+    // Dep
+    rpc ShopEditProductInfo (Param) returns (Response);
+    rpc ShopEditProductPrice (Param) returns (Response);
+    rpc ShopEditProductInventory (Param) returns (Response);
+
+}
+
+message Param {
+}
+
+message Response {
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -4,7 +4,7 @@ package pb;
 
 import "global.proto";
 
-// todo: change cid to u64
+// todo: change cid to u64 > not yet
 // todo: add comment, like, repost
 
 // rules: qevent_rpc

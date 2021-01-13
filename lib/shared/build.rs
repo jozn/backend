@@ -23,6 +23,7 @@ fn build_pb() {
     // config.type_attribute(".", "#[derive(Debug)]");
     // config.retain_enum_prefix();
     let v = config.compile_protos(&vec_protos, &["src/protos/proto".to_string()]);
+    println!("{:?}", v);
     v.unwrap();
 
     run_format_codes();
