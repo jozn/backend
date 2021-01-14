@@ -1,82 +1,25 @@
-extern crate play;
 use prost::Message;
 use std::io::Write;
 use byteorder::{BE, ByteOrder};
 
-use play::aof;
-
-fn main(){
-
-    let af = aof::AofFile::new();
-    let hand = af.get_file_handler();
-
-    let msg = shared::pb::Message{
-        gid: 234,
-        by_profile_cid: 23,
-        message_type: 54,
-        text: "aaaaaaaaaaaaaaaaaaa \n dfjlaskdf slskfj lsdk fasdlfjsd fsd aaaaabbbbbbbbbbbbbbbbbbbb".to_string(),
-        via_app_id: 3,
-        seq: 2,
-        edited_time: 2345345234,
-        created_time: 34543534,
-        verified: true,
-        delivery_status: 22,
-        delivery_time: 423,
-        deleted: true,
-        flags: 234,
-        forward: None,
-        reply_to: None,
-        title: "ioioudf fjsd".to_string(),
-        counts: None,
-        setting: None,
-        product: None,
-        files: vec![]
-    };
-
-    // for print
-    let mut buf = vec![];
-    msg.encode(&mut buf);
-    println!("{:?}", buf);
-
-
-    for i in 1..=100000 {
-        let mut buf = vec![];
-        msg.encode(&mut buf);
-
-        let fe = aof::AofRow {
-            id: i as u64,
-            data: buf,
-        };
-
-        hand.append_row(fe);
-
-        if i%10000 == 0 {
-            println!("{}",i);
-        }
-    }
-
-    // If we do not call this, program will shutdown and will not give background thread the chance to wirte it's data
-    hand.join.join();
-
-}
-
 const DEFAULT_DATA_DIR:&str = "/opt/flip/";
 const DEFAULT_DATA_NAMESPACE:&str = "def";
 
+pub struct AAAAA {}
 #[derive(Clone)]
-struct AofFile {
-    namespace: String,
-    shared: u32,
-    file_name: String,
-    directory: String,
+pub struct AofFile {
+    pub namespace: String,
+    pub shared: u32,
+    pub file_name: String,
+    pub directory: String,
 }
 
 impl AofFile {
-    fn new() -> Self {
+    pub fn new() -> Self {
         Self::new_with(DEFAULT_DATA_NAMESPACE,1)
     }
 
-    fn new_with(namespace: &str, shared: u32) -> Self {
+    pub fn new_with(namespace: &str, shared: u32) -> Self {
         let time = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs();
         let filename = format!("{}_{}_{}.aof",namespace, shared,time );
 
@@ -91,7 +34,7 @@ impl AofFile {
         }
     }
 
-    fn get_file_handler(&self) -> AofFileHandler {
+    pub fn get_file_handler(&self) -> AofFileHandler {
         // todo add a box to set flag if we already had run
         AofFileHandler::new_with(self)
     }
@@ -101,19 +44,19 @@ impl AofFile {
     }
 }
 
-struct AofFileHandler {
-    aof_file: AofFile,
-    sender: std::sync::mpsc::SyncSender<HandlerCommand>,
-    join: std::thread::JoinHandle<()>,
+pub struct AofFileHandler {
+    pub aof_file: AofFile,
+    pub sender: std::sync::mpsc::SyncSender<HandlerCommand>,
+    pub join: std::thread::JoinHandle<()>,
 }
 
-enum HandlerCommand {
+pub enum HandlerCommand {
     Append(AofRow)
 }
 
 impl AofFileHandler {
 
-    fn new_with(aof_file: &AofFile) -> Self {
+    pub fn new_with(aof_file: &AofFile) -> Self {
 
         let mut file_handler = std::fs::OpenOptions::new()
             .create_new(true)// New file in each run (for now)
@@ -142,19 +85,19 @@ impl AofFileHandler {
         }
     }
 
-    fn append_row(&self, row: AofRow) {
+    pub fn append_row(&self, row: AofRow) {
         let cmd = HandlerCommand::Append(row);
         self.sender.send(cmd);
     }
 }
 
-struct AofRow {
-    id: u64,
-    data: Vec<u8>,
+pub struct AofRow {
+    pub id: u64,
+    pub data: Vec<u8>,
 }
 
 impl AofRow {
-    fn get_file_output(&self) -> Vec<u8> {
+    pub fn get_file_output(&self) -> Vec<u8> {
         let buff_size = 3 + 8 + self.data.len() + 3;
 
         let mut out = [0u8;11].to_vec();
