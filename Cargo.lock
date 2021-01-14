@@ -2416,7 +2416,9 @@ checksum = "d36492546b6af1463394d46f0c834346f31548646f6ba10849802c9c9a27ac33"
 name = "play"
 version = "0.1.0"
 dependencies = [
+ "byteorder 1.3.4",
  "grammers-tl-types",
+ "prost 0.7.0",
  "shared",
  "tokio 0.2.22",
 ]

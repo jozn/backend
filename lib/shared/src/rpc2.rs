@@ -28,6 +28,7 @@ pub enum RpcServiceData {
     RPC_Group(RPC_Group_MethodData),
     RPC_Sample(RPC_Sample_MethodData),
     RPC_Shared(RPC_Shared_MethodData),
+    RPC_Shop(RPC_Shop_MethodData),
     RPC_Upload(RPC_Upload_MethodData),
     RPC_User(RPC_User_MethodData),
 }
@@ -158,7 +159,7 @@ pub enum RPC_Group_MethodData {
     GroupAvatarGetList(pb::GroupAvatarGetListParam),
     GroupSendDoingAction(pb::GroupSendDoingActionParam),
     GroupReportGroup(pb::GroupReportGroupParam),
-    GroupGetFull(pb::GroupGetFullMessageParam),
+    GroupGetFull(pb::GroupGetFullParam),
     GroupGetMessagesList(pb::GroupGetMessagesListParam),
     GroupGetMediaList(pb::GroupGetMediaListParam),
     GroupGetMembersList(pb::GroupGetMembersListParam),
@@ -177,6 +178,35 @@ pub enum RPC_Sample_MethodData {
 pub enum RPC_Shared_MethodData {
     Echo(pb::EchoParam),
     CheckUserName(pb::CheckUserNameParam),
+}
+#[derive(Debug)]
+pub enum RPC_Shop_MethodData {
+    ShopEEE(pb::Param),
+    ShopCreateShop(pb::Param),
+    ShopEditShop(pb::Param),
+    ShopPauseShop(pb::Param),
+    ShopTerminateShop(pb::Param),
+    ShopAddProduct(pb::Param),
+    ShopEditProduct(pb::Param),
+    ShopDeleteProduct(pb::Param),
+    ShopAddProductToBasket(pb::Param),
+    ShopRemoveProductFromBasket(pb::Param),
+    ShopCheckoutBasket(pb::Param),
+    ShopLikeProduct(pb::Param),
+    ShopUnLikeProduct(pb::Param),
+    ShopLikeShop(pb::Param),
+    ShopUnLikeShop(pb::Param),
+    ShopGetFull(pb::Param),
+    ShopProductList(pb::Param),
+    ShopGetBasketList(pb::Param),
+    ShopGetLikedProductsList(pb::Param),
+    ShopGetLikedShopsList(pb::Param),
+    ShopGetOrderList(pb::Param),
+    ShopGetRefundList(pb::Param),
+    ShopCancelOrder(pb::Param),
+    ShopEditProductInfo(pb::Param),
+    ShopEditProductPrice(pb::Param),
+    ShopEditProductInventory(pb::Param),
 }
 #[derive(Debug)]
 pub enum RPC_Upload_MethodData {
@@ -851,9 +881,9 @@ pub trait RPC_Group_Handler {
     }
     async fn GroupGetFull(
         up: &UserParam,
-        param: pb::GroupGetFullMessageParam,
-    ) -> Result<pb::GroupGetFullMessageResponse, GenErr> {
-        Ok(pb::GroupGetFullMessageResponse::default())
+        param: pb::GroupGetFullParam,
+    ) -> Result<pb::GroupGetFullResponse, GenErr> {
+        Ok(pb::GroupGetFullResponse::default())
     }
     async fn GroupGetMessagesList(
         up: &UserParam,
@@ -929,6 +959,105 @@ pub trait RPC_Shared_Handler {
         param: pb::CheckUserNameParam,
     ) -> Result<pb::CheckUserNameResponse, GenErr> {
         Ok(pb::CheckUserNameResponse::default())
+    }
+}
+#[async_trait]
+pub trait RPC_Shop_Handler {
+    async fn ShopEEE(up: &UserParam, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopCreateShop(up: &UserParam, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopEditShop(up: &UserParam, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopPauseShop(up: &UserParam, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopTerminateShop(up: &UserParam, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopAddProduct(up: &UserParam, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopEditProduct(up: &UserParam, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopDeleteProduct(up: &UserParam, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopAddProductToBasket(
+        up: &UserParam,
+        param: pb::Param,
+    ) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopRemoveProductFromBasket(
+        up: &UserParam,
+        param: pb::Param,
+    ) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopCheckoutBasket(up: &UserParam, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopLikeProduct(up: &UserParam, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopUnLikeProduct(up: &UserParam, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopLikeShop(up: &UserParam, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopUnLikeShop(up: &UserParam, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopGetFull(up: &UserParam, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopProductList(up: &UserParam, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopGetBasketList(up: &UserParam, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopGetLikedProductsList(
+        up: &UserParam,
+        param: pb::Param,
+    ) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopGetLikedShopsList(
+        up: &UserParam,
+        param: pb::Param,
+    ) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopGetOrderList(up: &UserParam, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopGetRefundList(up: &UserParam, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopCancelOrder(up: &UserParam, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopEditProductInfo(up: &UserParam, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopEditProductPrice(
+        up: &UserParam,
+        param: pb::Param,
+    ) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopEditProductInventory(
+        up: &UserParam,
+        param: pb::Param,
+    ) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
     }
 }
 #[async_trait]
@@ -1611,9 +1740,9 @@ pub trait RPC_Group_Handler2: Send + Sync {
     }
     async fn GroupGetFull(
         &self,
-        param: pb::GroupGetFullMessageParam,
-    ) -> Result<pb::GroupGetFullMessageResponse, GenErr> {
-        Ok(pb::GroupGetFullMessageResponse::default())
+        param: pb::GroupGetFullParam,
+    ) -> Result<pb::GroupGetFullResponse, GenErr> {
+        Ok(pb::GroupGetFullResponse::default())
     }
     async fn GroupGetMessagesList(
         &self,
@@ -1689,6 +1818,87 @@ pub trait RPC_Shared_Handler2: Send + Sync {
     }
 }
 #[async_trait]
+pub trait RPC_Shop_Handler2: Send + Sync {
+    async fn ShopEEE(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopCreateShop(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopEditShop(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopPauseShop(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopTerminateShop(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopAddProduct(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopEditProduct(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopDeleteProduct(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopAddProductToBasket(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopRemoveProductFromBasket(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopCheckoutBasket(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopLikeProduct(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopUnLikeProduct(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopLikeShop(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopUnLikeShop(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopGetFull(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopProductList(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopGetBasketList(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopGetLikedProductsList(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopGetLikedShopsList(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopGetOrderList(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopGetRefundList(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopCancelOrder(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopEditProductInfo(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopEditProductPrice(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+    async fn ShopEditProductInventory(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        Ok(pb::Response::default())
+    }
+}
+#[async_trait]
 pub trait RPC_Upload_Handler2: Send + Sync {
     async fn UploadFile(
         &self,
@@ -1717,6 +1927,7 @@ pub trait All_Rpc_Handler:
     + RPC_Group_Handler2
     + RPC_Sample_Handler2
     + RPC_Shared_Handler2
+    + RPC_Shop_Handler2
     + RPC_Upload_Handler2
     + RPC_User_Handler2
     + Clone
@@ -1863,6 +2074,34 @@ pub mod method_ids {
     // Service: RPC_Shared
     pub const Echo: u32 = 101973561;
     pub const CheckUserName: u32 = 1897027349;
+
+    // Service: RPC_Shop
+    pub const ShopEEE: u32 = 912385050;
+    pub const ShopCreateShop: u32 = 1986531780;
+    pub const ShopEditShop: u32 = 455084262;
+    pub const ShopPauseShop: u32 = 1673552241;
+    pub const ShopTerminateShop: u32 = 1507072614;
+    pub const ShopAddProduct: u32 = 1965565139;
+    pub const ShopEditProduct: u32 = 1399457308;
+    pub const ShopDeleteProduct: u32 = 847818259;
+    pub const ShopAddProductToBasket: u32 = 968515528;
+    pub const ShopRemoveProductFromBasket: u32 = 1393049106;
+    pub const ShopCheckoutBasket: u32 = 1428199101;
+    pub const ShopLikeProduct: u32 = 1327382465;
+    pub const ShopUnLikeProduct: u32 = 280445800;
+    pub const ShopLikeShop: u32 = 159832049;
+    pub const ShopUnLikeShop: u32 = 2039870177;
+    pub const ShopGetFull: u32 = 1805685529;
+    pub const ShopProductList: u32 = 92142795;
+    pub const ShopGetBasketList: u32 = 1792928614;
+    pub const ShopGetLikedProductsList: u32 = 46651378;
+    pub const ShopGetLikedShopsList: u32 = 1765558200;
+    pub const ShopGetOrderList: u32 = 615052791;
+    pub const ShopGetRefundList: u32 = 1024605829;
+    pub const ShopCancelOrder: u32 = 1984969964;
+    pub const ShopEditProductInfo: u32 = 1420581989;
+    pub const ShopEditProductPrice: u32 = 735302162;
+    pub const ShopEditProductInventory: u32 = 395598602;
 
     // Service: RPC_Upload
     pub const UploadFile: u32 = 1702285478;
@@ -2012,6 +2251,34 @@ pub enum MethodIds {
     // Service: RPC_Shared
     Echo = 101973561,
     CheckUserName = 1897027349,
+
+    // Service: RPC_Shop
+    ShopEEE = 912385050,
+    ShopCreateShop = 1986531780,
+    ShopEditShop = 455084262,
+    ShopPauseShop = 1673552241,
+    ShopTerminateShop = 1507072614,
+    ShopAddProduct = 1965565139,
+    ShopEditProduct = 1399457308,
+    ShopDeleteProduct = 847818259,
+    ShopAddProductToBasket = 968515528,
+    ShopRemoveProductFromBasket = 1393049106,
+    ShopCheckoutBasket = 1428199101,
+    ShopLikeProduct = 1327382465,
+    ShopUnLikeProduct = 280445800,
+    ShopLikeShop = 159832049,
+    ShopUnLikeShop = 2039870177,
+    ShopGetFull = 1805685529,
+    ShopProductList = 92142795,
+    ShopGetBasketList = 1792928614,
+    ShopGetLikedProductsList = 46651378,
+    ShopGetLikedShopsList = 1765558200,
+    ShopGetOrderList = 615052791,
+    ShopGetRefundList = 1024605829,
+    ShopCancelOrder = 1984969964,
+    ShopEditProductInfo = 1420581989,
+    ShopEditProductPrice = 735302162,
+    ShopEditProductInventory = 395598602,
 
     // Service: RPC_Upload
     UploadFile = 1702285478,
@@ -3018,7 +3285,7 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
         }
 
         method_ids::GroupGetFull => {
-            let rpc_param: pb::GroupGetFullMessageParam =
+            let rpc_param: pb::GroupGetFullParam =
                 prost::Message::decode(invoke.rpc_data.as_slice())?;
             RpcInvoke {
                 method_id: 200351324 as i64,
@@ -3131,6 +3398,215 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
             RpcInvoke {
                 method_id: 1897027349 as i64,
                 rpc_service: RPC_Shared(RPC_Shared_MethodData::CheckUserName(rpc_param)),
+            }
+        }
+
+        // RPC_Shop
+        method_ids::ShopEEE => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 912385050 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopEEE(rpc_param)),
+            }
+        }
+
+        method_ids::ShopCreateShop => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1986531780 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopCreateShop(rpc_param)),
+            }
+        }
+
+        method_ids::ShopEditShop => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 455084262 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopEditShop(rpc_param)),
+            }
+        }
+
+        method_ids::ShopPauseShop => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1673552241 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopPauseShop(rpc_param)),
+            }
+        }
+
+        method_ids::ShopTerminateShop => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1507072614 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopTerminateShop(rpc_param)),
+            }
+        }
+
+        method_ids::ShopAddProduct => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1965565139 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopAddProduct(rpc_param)),
+            }
+        }
+
+        method_ids::ShopEditProduct => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1399457308 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopEditProduct(rpc_param)),
+            }
+        }
+
+        method_ids::ShopDeleteProduct => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 847818259 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopDeleteProduct(rpc_param)),
+            }
+        }
+
+        method_ids::ShopAddProductToBasket => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 968515528 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopAddProductToBasket(rpc_param)),
+            }
+        }
+
+        method_ids::ShopRemoveProductFromBasket => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1393049106 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopRemoveProductFromBasket(rpc_param)),
+            }
+        }
+
+        method_ids::ShopCheckoutBasket => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1428199101 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopCheckoutBasket(rpc_param)),
+            }
+        }
+
+        method_ids::ShopLikeProduct => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1327382465 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopLikeProduct(rpc_param)),
+            }
+        }
+
+        method_ids::ShopUnLikeProduct => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 280445800 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopUnLikeProduct(rpc_param)),
+            }
+        }
+
+        method_ids::ShopLikeShop => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 159832049 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopLikeShop(rpc_param)),
+            }
+        }
+
+        method_ids::ShopUnLikeShop => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 2039870177 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopUnLikeShop(rpc_param)),
+            }
+        }
+
+        method_ids::ShopGetFull => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1805685529 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopGetFull(rpc_param)),
+            }
+        }
+
+        method_ids::ShopProductList => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 92142795 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopProductList(rpc_param)),
+            }
+        }
+
+        method_ids::ShopGetBasketList => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1792928614 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopGetBasketList(rpc_param)),
+            }
+        }
+
+        method_ids::ShopGetLikedProductsList => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 46651378 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopGetLikedProductsList(rpc_param)),
+            }
+        }
+
+        method_ids::ShopGetLikedShopsList => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1765558200 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopGetLikedShopsList(rpc_param)),
+            }
+        }
+
+        method_ids::ShopGetOrderList => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 615052791 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopGetOrderList(rpc_param)),
+            }
+        }
+
+        method_ids::ShopGetRefundList => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1024605829 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopGetRefundList(rpc_param)),
+            }
+        }
+
+        method_ids::ShopCancelOrder => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1984969964 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopCancelOrder(rpc_param)),
+            }
+        }
+
+        method_ids::ShopEditProductInfo => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1420581989 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopEditProductInfo(rpc_param)),
+            }
+        }
+
+        method_ids::ShopEditProductPrice => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 735302162 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopEditProductPrice(rpc_param)),
+            }
+        }
+
+        method_ids::ShopEditProductInventory => {
+            let rpc_param: pb::Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 395598602 as i64,
+                rpc_service: RPC_Shop(RPC_Shop_MethodData::ShopEditProductInventory(rpc_param)),
             }
         }
 
@@ -4031,6 +4507,190 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
             }
         },
 
+        RpcServiceData::RPC_Shop(method) => match method {
+            RPC_Shop_MethodData::ShopEEE(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopEEE(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Shop_MethodData::ShopCreateShop(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopCreateShop(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Shop_MethodData::ShopEditShop(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopEditShop(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Shop_MethodData::ShopPauseShop(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopPauseShop(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Shop_MethodData::ShopTerminateShop(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopTerminateShop(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Shop_MethodData::ShopAddProduct(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopAddProduct(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Shop_MethodData::ShopEditProduct(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopEditProduct(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Shop_MethodData::ShopDeleteProduct(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopDeleteProduct(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Shop_MethodData::ShopAddProductToBasket(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopAddProductToBasket(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Shop_MethodData::ShopRemoveProductFromBasket(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopRemoveProductFromBasket(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Shop_MethodData::ShopCheckoutBasket(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopCheckoutBasket(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Shop_MethodData::ShopLikeProduct(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopLikeProduct(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Shop_MethodData::ShopUnLikeProduct(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopUnLikeProduct(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Shop_MethodData::ShopLikeShop(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopLikeShop(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Shop_MethodData::ShopUnLikeShop(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopUnLikeShop(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Shop_MethodData::ShopGetFull(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopGetFull(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Shop_MethodData::ShopProductList(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopProductList(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Shop_MethodData::ShopGetBasketList(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopGetBasketList(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Shop_MethodData::ShopGetLikedProductsList(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopGetLikedProductsList(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Shop_MethodData::ShopGetLikedShopsList(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopGetLikedShopsList(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Shop_MethodData::ShopGetOrderList(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopGetOrderList(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Shop_MethodData::ShopGetRefundList(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopGetRefundList(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Shop_MethodData::ShopCancelOrder(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopCancelOrder(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Shop_MethodData::ShopEditProductInfo(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopEditProductInfo(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Shop_MethodData::ShopEditProductPrice(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopEditProductPrice(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Shop_MethodData::ShopEditProductInventory(param) => {
+                let handler = eror(&reg.RPC_Shop)?;
+                let response = handler.ShopEditProductInventory(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+        },
+
         RpcServiceData::RPC_Upload(method) => match method {
             RPC_Upload_MethodData::UploadFile(param) => {
                 let handler = eror(&reg.RPC_Upload)?;
@@ -4063,6 +4723,7 @@ pub struct RPC_Registry {
     pub RPC_Group: Option<Box<Arc<dyn RPC_Group_Handler2>>>,
     pub RPC_Sample: Option<Box<Arc<dyn RPC_Sample_Handler2>>>,
     pub RPC_Shared: Option<Box<Arc<dyn RPC_Shared_Handler2>>>,
+    pub RPC_Shop: Option<Box<Arc<dyn RPC_Shop_Handler2>>>,
     pub RPC_Upload: Option<Box<Arc<dyn RPC_Upload_Handler2>>>,
     pub RPC_User: Option<Box<Arc<dyn RPC_User_Handler2>>>,
 }
@@ -4083,6 +4744,8 @@ impl RPC_Sample_Handler for RPC_Registry {}
 impl RPC_Sample_Handler2 for RPC_Registry {}
 impl RPC_Shared_Handler for RPC_Registry {}
 impl RPC_Shared_Handler2 for RPC_Registry {}
+impl RPC_Shop_Handler for RPC_Registry {}
+impl RPC_Shop_Handler2 for RPC_Registry {}
 impl RPC_Upload_Handler for RPC_Registry {}
 impl RPC_Upload_Handler2 for RPC_Registry {}
 impl RPC_User_Handler for RPC_Registry {}
@@ -5145,8 +5808,8 @@ impl common::RpcClient {
 
     pub async fn GroupGetFull(
         &self,
-        param: pb::GroupGetFullMessageParam,
-    ) -> Result<pb::GroupGetFullMessageResponse, GenErr> {
+        param: pb::GroupGetFullParam,
+    ) -> Result<pb::GroupGetFullResponse, GenErr> {
         let pb_res = self.rpc_invoke(&param, method_ids::GroupGetFull).await?;
         Ok(pb_res)
     }
@@ -5251,6 +5914,168 @@ impl common::RpcClient {
         param: pb::CheckUserNameParam,
     ) -> Result<pb::CheckUserNameResponse, GenErr> {
         let pb_res = self.rpc_invoke(&param, method_ids::CheckUserName).await?;
+        Ok(pb_res)
+    }
+
+    // service: RPC_Shop
+    pub async fn ShopEEE(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::ShopEEE).await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ShopCreateShop(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::ShopCreateShop).await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ShopEditShop(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::ShopEditShop).await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ShopPauseShop(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::ShopPauseShop).await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ShopTerminateShop(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::ShopTerminateShop)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ShopAddProduct(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::ShopAddProduct).await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ShopEditProduct(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::ShopEditProduct).await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ShopDeleteProduct(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::ShopDeleteProduct)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ShopAddProductToBasket(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::ShopAddProductToBasket)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ShopRemoveProductFromBasket(
+        &self,
+        param: pb::Param,
+    ) -> Result<pb::Response, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::ShopRemoveProductFromBasket)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ShopCheckoutBasket(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::ShopCheckoutBasket)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ShopLikeProduct(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::ShopLikeProduct).await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ShopUnLikeProduct(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::ShopUnLikeProduct)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ShopLikeShop(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::ShopLikeShop).await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ShopUnLikeShop(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::ShopUnLikeShop).await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ShopGetFull(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::ShopGetFull).await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ShopProductList(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::ShopProductList).await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ShopGetBasketList(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::ShopGetBasketList)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ShopGetLikedProductsList(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::ShopGetLikedProductsList)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ShopGetLikedShopsList(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::ShopGetLikedShopsList)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ShopGetOrderList(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::ShopGetOrderList)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ShopGetRefundList(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::ShopGetRefundList)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ShopCancelOrder(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::ShopCancelOrder).await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ShopEditProductInfo(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::ShopEditProductInfo)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ShopEditProductPrice(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::ShopEditProductPrice)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ShopEditProductInventory(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::ShopEditProductInventory)
+            .await?;
         Ok(pb_res)
     }
 
@@ -6048,10 +6873,10 @@ impl RPC_Group_Handler2 for _RRR_ {
     }
     async fn GroupGetFull(
         &self,
-        param: pb::GroupGetFullMessageParam,
-    ) -> Result<pb::GroupGetFullMessageResponse, GenErr> {
+        param: pb::GroupGetFullParam,
+    ) -> Result<pb::GroupGetFullResponse, GenErr> {
         println!("called GroupGetFull in the impl code.");
-        Ok(pb::GroupGetFullMessageResponse::default())
+        Ok(pb::GroupGetFullResponse::default())
     }
     async fn GroupGetMessagesList(
         &self,
@@ -6136,6 +6961,113 @@ impl RPC_Shared_Handler2 for _RRR_ {
     ) -> Result<pb::CheckUserNameResponse, GenErr> {
         println!("called CheckUserName in the impl code.");
         Ok(pb::CheckUserNameResponse::default())
+    }
+}
+#[async_trait]
+impl RPC_Shop_Handler2 for _RRR_ {
+    async fn ShopEEE(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopEEE in the impl code.");
+        Ok(pb::Response::default())
+    }
+    async fn ShopCreateShop(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopCreateShop in the impl code.");
+        Ok(pb::Response::default())
+    }
+    async fn ShopEditShop(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopEditShop in the impl code.");
+        Ok(pb::Response::default())
+    }
+    async fn ShopPauseShop(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopPauseShop in the impl code.");
+        Ok(pb::Response::default())
+    }
+    async fn ShopTerminateShop(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopTerminateShop in the impl code.");
+        Ok(pb::Response::default())
+    }
+    async fn ShopAddProduct(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopAddProduct in the impl code.");
+        Ok(pb::Response::default())
+    }
+    async fn ShopEditProduct(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopEditProduct in the impl code.");
+        Ok(pb::Response::default())
+    }
+    async fn ShopDeleteProduct(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopDeleteProduct in the impl code.");
+        Ok(pb::Response::default())
+    }
+    async fn ShopAddProductToBasket(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopAddProductToBasket in the impl code.");
+        Ok(pb::Response::default())
+    }
+    async fn ShopRemoveProductFromBasket(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopRemoveProductFromBasket in the impl code.");
+        Ok(pb::Response::default())
+    }
+    async fn ShopCheckoutBasket(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopCheckoutBasket in the impl code.");
+        Ok(pb::Response::default())
+    }
+    async fn ShopLikeProduct(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopLikeProduct in the impl code.");
+        Ok(pb::Response::default())
+    }
+    async fn ShopUnLikeProduct(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopUnLikeProduct in the impl code.");
+        Ok(pb::Response::default())
+    }
+    async fn ShopLikeShop(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopLikeShop in the impl code.");
+        Ok(pb::Response::default())
+    }
+    async fn ShopUnLikeShop(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopUnLikeShop in the impl code.");
+        Ok(pb::Response::default())
+    }
+    async fn ShopGetFull(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopGetFull in the impl code.");
+        Ok(pb::Response::default())
+    }
+    async fn ShopProductList(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopProductList in the impl code.");
+        Ok(pb::Response::default())
+    }
+    async fn ShopGetBasketList(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopGetBasketList in the impl code.");
+        Ok(pb::Response::default())
+    }
+    async fn ShopGetLikedProductsList(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopGetLikedProductsList in the impl code.");
+        Ok(pb::Response::default())
+    }
+    async fn ShopGetLikedShopsList(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopGetLikedShopsList in the impl code.");
+        Ok(pb::Response::default())
+    }
+    async fn ShopGetOrderList(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopGetOrderList in the impl code.");
+        Ok(pb::Response::default())
+    }
+    async fn ShopGetRefundList(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopGetRefundList in the impl code.");
+        Ok(pb::Response::default())
+    }
+    async fn ShopCancelOrder(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopCancelOrder in the impl code.");
+        Ok(pb::Response::default())
+    }
+    async fn ShopEditProductInfo(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopEditProductInfo in the impl code.");
+        Ok(pb::Response::default())
+    }
+    async fn ShopEditProductPrice(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopEditProductPrice in the impl code.");
+        Ok(pb::Response::default())
+    }
+    async fn ShopEditProductInventory(&self, param: pb::Param) -> Result<pb::Response, GenErr> {
+        println!("called ShopEditProductInventory in the impl code.");
+        Ok(pb::Response::default())
     }
 }
 #[async_trait]
