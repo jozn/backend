@@ -16,6 +16,8 @@ pub mod common;
 pub mod sms_sender;
 pub mod utils;
 
+pub mod xc;
+
 pub struct UserParam {}
 
 #[cfg(test)]

@@ -4,8 +4,10 @@ members = [
     "lib/shared2",
     "micro/gateway",
 #    "micro/cmaster",
+    "micro/db_view",
     "micro/logic",
     "micro/play",
+
 ]
 exclude =[
 #    "micro/logic"

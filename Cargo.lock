@@ -805,6 +805,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "db_view"
+version = "0.1.0"
+dependencies = [
+ "byteorder 1.3.4",
+ "cdrs 2.3.3",
+ "grammers-tl-types",
+ "prost 0.7.0",
+ "shared",
+ "tokio 0.2.22",
+]
+
+[[package]]
 name = "deflate"
 version = "0.8.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
