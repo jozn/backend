@@ -1,20 +1,21 @@
 extern crate play;
+use byteorder::{ByteOrder, BE};
 use prost::Message;
 use std::io::Write;
-use byteorder::{BE, ByteOrder};
 
 use shared::aof;
 
-fn main(){
-
+fn main() {
     let af = aof::AofFile::new();
     let hand = af.get_file_handler();
 
-    let msg = shared::pb::Message{
+    let msg = shared::pb::Message {
         gid: 234,
         by_profile_cid: 23,
         message_type: 54,
-        text: "aaaaaaaaaaaaaaaaaaa \n dfjlaskdf slskfj lsdk fasdlfjsd fsd aaaaabbbbbbbbbbbbbbbbbbbb".to_string(),
+        text:
+            "aaaaaaaaaaaaaaaaaaa \n dfjlaskdf slskfj lsdk fasdlfjsd fsd aaaaabbbbbbbbbbbbbbbbbbbb"
+                .to_string(),
         via_app_id: 3,
         seq: 2,
         edited_time: 2345345234,
@@ -30,14 +31,13 @@ fn main(){
         counts: None,
         setting: None,
         product: None,
-        files: vec![]
+        files: vec![],
     };
 
     // for print
     let mut buf = vec![];
     msg.encode(&mut buf);
     println!("{:?}", buf);
-
 
     for i in 1..=100000 {
         let mut buf = vec![];
@@ -50,13 +50,11 @@ fn main(){
 
         hand.append_row(fe);
 
-        if i%10000 == 0 {
-            println!("{}",i);
+        if i % 10000 == 0 {
+            println!("{}", i);
         }
     }
 
     // If we do not call this, program will shutdown and will not give background thread the chance to wirte it's data
     hand.join.join();
-
 }
-

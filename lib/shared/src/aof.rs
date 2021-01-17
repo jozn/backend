@@ -1,11 +1,11 @@
+use byteorder::{ByteOrder, BE};
 use prost::Message;
 use std::io::Write;
-use byteorder::{BE, ByteOrder};
 
 // AOF = Append Only File
 
-const DEFAULT_DATA_DIR:&str = "/opt/flip/";
-const DEFAULT_DATA_NAMESPACE:&str = "def";
+const DEFAULT_DATA_DIR: &str = "/opt/flip/";
+const DEFAULT_DATA_NAMESPACE: &str = "def";
 
 #[derive(Clone)]
 pub struct AofFile {
@@ -17,17 +17,20 @@ pub struct AofFile {
 
 impl AofFile {
     pub fn new() -> Self {
-        Self::new_with(DEFAULT_DATA_NAMESPACE,1)
+        Self::new_with(DEFAULT_DATA_NAMESPACE, 1)
     }
 
     pub fn new_with(namespace: &str, shared: u32) -> Self {
-        let time = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs();
-        let filename = format!("{}_{}_{}.aof",namespace, shared,time );
+        let time = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_secs();
+        let filename = format!("{}_{}_{}.aof", namespace, shared, time);
 
         // std::fs::create_dir(DEFAULT_DATA_DIR).unwrap();
         std::fs::create_dir(DEFAULT_DATA_DIR); //todo fix this
 
-        AofFile{
+        AofFile {
             namespace: namespace.to_string(),
             shared: shared,
             file_name: filename,
@@ -40,8 +43,8 @@ impl AofFile {
         AofFileHandler::new_with(self)
     }
 
-    fn full_path(&self) -> String{
-        format!("{}{}",self.directory,self.file_name)
+    fn full_path(&self) -> String {
+        format!("{}{}", self.directory, self.file_name)
     }
 }
 
@@ -52,17 +55,17 @@ pub struct AofFileHandler {
 }
 
 pub enum HandlerCommand {
-    Append(AofRow)
+    Append(AofRow),
 }
 
 impl AofFileHandler {
-
     pub fn new_with(aof_file: &AofFile) -> Self {
-
         let mut file_handler = std::fs::OpenOptions::new()
-            .create_new(true)// New file in each run (for now)
+            .create_new(true) // New file in each run (for now)
             .write(true)
-            .read(true).open(aof_file.full_path()).unwrap();
+            .read(true)
+            .open(aof_file.full_path())
+            .unwrap();
 
         // unbufferd channel is considerably faster as it just pushes data to buffer and thread
         // continues to work: this technique could be a good things for future behaviours when
@@ -79,7 +82,7 @@ impl AofFileHandler {
             }
         });
 
-        AofFileHandler{
+        AofFileHandler {
             aof_file: aof_file.clone(),
             sender: sender,
             join: s,
@@ -101,7 +104,7 @@ impl AofRow {
     pub fn get_file_output(&self) -> Vec<u8> {
         let buff_size = 3 + 8 + self.data.len() + 3;
 
-        let mut out = [0u8;11].to_vec();
+        let mut out = [0u8; 11].to_vec();
         byteorder::BE::write_u24(&mut out, self.data.len() as u32);
         byteorder::BE::write_u64(&mut out, self.id);
         out.write(&self.data);

@@ -32,6 +32,7 @@ image = "0.23.11"
 
 #rocksdb = "0.15.0"
 byteorder = "1"
+cdrs = "2.3.3"
 
 [build-dependencies]
 prost-build = { version ="0.6.1" }

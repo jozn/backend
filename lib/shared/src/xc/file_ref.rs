@@ -3,8 +3,8 @@ use cdrs::cluster::session::{new as new_session, Session};
 use cdrs::cluster::{ClusterTcpConfig, NodeTcpConfigBuilder, TcpConnectionPool};
 use cdrs::load_balancing::RoundRobin;
 // use cdrs::query::*;
-use cdrs::query::{QueryValues,QueryExecutor};
 use cdrs::frame::Frame;
+use cdrs::query::{QueryExecutor, QueryValues};
 
 use cdrs::frame::IntoBytes;
 use cdrs::types::from_cdrs::FromCDRSByName;
@@ -14,53 +14,43 @@ use std::collections::HashMap;
 use std::result::Result; // override prelude Result
 
 //use cdrs::error::{Error as CWError};
+use crate::xc::common::*;
 use cdrs::frame::frame_error::CDRSError;
 use cdrs::Error as DriverError;
-use crate::xc::common::*;
 
 #[derive(Default, Clone, Debug, PartialEq)]
 pub struct FileRef {
-    pub file_gid: i64,   // file_gid    partition_key  0
+    pub file_gid: i64, // file_gid    partition_key  0
     pub ref_id: i64,   // ref_id    clustering  0
-    
-    //_exists: bool,
-    //_deleted: bool,
 }
 
 impl FileRef {
-    /*pub fn deleted(&self) -> bool {
-        self._deleted
-    }
-
-    pub fn exists(&self) -> bool {
-        self._exists
-    }*/
-
-    pub fn save(&mut self, session: impl FCQueryExecutor) -> Result<(),CWError> {
+    pub fn save(&self, session: impl FCQueryExecutor) -> Result<(), CWError> {
         let mut columns = vec![];
-        let mut values :Vec<Value> = vec![];
+        let mut values: Vec<Value> = vec![];
 
-        
-		if self.file_gid != 0i64 {
+        if self.file_gid != 0i64 {
             columns.push("file_gid");
             values.push(self.file_gid.clone().into());
-       	}
+        }
 
-		if self.ref_id != 0i64 {
+        if self.ref_id != 0i64 {
             columns.push("ref_id");
             values.push(self.ref_id.clone().into());
-       	}
-
+        }
 
         if columns.len() == 0 {
-            return Err(CWError::InvalidCQL)
+            return Err(CWError::InvalidCQL);
         }
 
         let cql_columns = columns.join(", ");
         let mut cql_question = "?,".repeat(columns.len());
-        cql_question.remove(cql_question.len()-1);
+        cql_question.remove(cql_question.len() - 1);
 
-        let cql_query = format!("INSERT INTO msgs.file_ref ({}) VALUES ({})", cql_columns, cql_question);
+        let cql_query = format!(
+            "INSERT INTO msgs.file_ref ({}) VALUES ({})",
+            cql_columns, cql_question
+        );
 
         println!("{} - {}", &cql_query, &cql_question);
 
@@ -69,23 +59,22 @@ impl FileRef {
         Ok(())
     }
 
-    pub fn delete(&mut self, session: impl FCQueryExecutor) -> Result<(), CWError> {
+    pub fn delete(&self, session: impl FCQueryExecutor) -> Result<(), CWError> {
         let mut deleter = FileRef_Deleter::new();
-      
+
         deleter.file_gid_eq(self.file_gid);
-    
+
         deleter.and_ref_id_eq(self.ref_id);
 
         let res = deleter.delete(session)?;
 
         Ok(())
     }
-
 }
 
-fn _get_where(wheres: Vec<WhereClause>) ->  (String, Vec<Value>) {
+fn _get_where(wheres: Vec<WhereClause>) -> (String, Vec<Value>) {
     let mut values = vec![];
-    let  mut where_str = vec![];
+    let mut where_str = vec![];
 
     for w in wheres {
         where_str.push(w.condition);
@@ -130,14 +119,13 @@ impl FileRef_Selector {
         self.select_cols.push("file_gid");
         self
     }
-    
+
     pub fn select_ref_id(&mut self) -> &mut Self {
         self.select_cols.push("ref_id");
         self
     }
-    
 
-    pub fn _to_cql(&self) ->  (String, Vec<Value>)  {
+    pub fn _to_cql(&self) -> (String, Vec<Value>) {
         let cql_select = if self.select_cols.is_empty() {
             "*".to_string()
         } else {
@@ -149,33 +137,36 @@ impl FileRef_Selector {
         let (cql_where, where_values) = _get_where(self.wheres.clone());
 
         if where_values.len() > 0 {
-            cql_query.push_str(&format!(" WHERE {}",&cql_where));
+            cql_query.push_str(&format!(" WHERE {}", &cql_where));
         }
 
         if self.order_by.len() > 0 {
             let cql_orders = self.order_by.join(", ");
-            cql_query.push_str( &format!(" ORDER BY {}", &cql_orders));
+            cql_query.push_str(&format!(" ORDER BY {}", &cql_orders));
         };
 
-        if self.limit != 0  {
+        if self.limit != 0 {
             cql_query.push_str(&format!(" LIMIT {} ", self.limit));
         };
 
-        if self.allow_filter  {
+        if self.allow_filter {
             cql_query.push_str(" ALLOW FILTERING");
         };
 
         (cql_query, where_values)
     }
 
-    pub fn _get_rows_with_size(&mut self,session: impl FCQueryExecutor, size: i64) -> Result<Vec<FileRef>, CWError>   {
-
-        let(cql_query, query_values) = self._to_cql();
+    pub fn _get_rows_with_size(
+        &mut self,
+        session: impl FCQueryExecutor,
+        size: i64,
+    ) -> Result<Vec<FileRef>, CWError> {
+        let (cql_query, query_values) = self._to_cql();
 
         println!("{} - {:?}", &cql_query, &query_values);
 
         let query_result = session
-            .query_with_values(cql_query,query_values)?
+            .query_with_values(cql_query, query_values)?
             .get_body()?
             .into_rows();
 
@@ -191,18 +182,17 @@ impl FileRef_Selector {
                 } else {
                     rs
                 }
-            },
-            None => return Err(CWError::NotFound)
+            }
+            None => return Err(CWError::NotFound),
         };
 
         let mut rows = vec![];
 
         for db_row in db_raws {
             let mut row = FileRef::default();
-            
-                
+
             row.file_gid = db_row.by_name("file_gid")?.unwrap_or_default();
-                
+
             row.ref_id = db_row.by_name("ref_id")?.unwrap_or_default();
 
             rows.push(row);
@@ -211,35 +201,32 @@ impl FileRef_Selector {
         Ok(rows)
     }
 
-    pub fn get_rows(&mut self, session: impl FCQueryExecutor) -> Result<Vec<FileRef>, CWError>{
-        self._get_rows_with_size(session,-1)
+    pub fn get_rows(&mut self, session: impl FCQueryExecutor) -> Result<Vec<FileRef>, CWError> {
+        self._get_rows_with_size(session, -1)
     }
 
-    pub fn get_row(&mut self, session: impl FCQueryExecutor) -> Result<FileRef, CWError>{
-        let rows = self._get_rows_with_size(session,1)?;
+    pub fn get_row(&mut self, session: impl FCQueryExecutor) -> Result<FileRef, CWError> {
+        let rows = self._get_rows_with_size(session, 1)?;
 
         let opt = rows.get(0);
         match opt {
             Some(row) => Ok(row.to_owned()),
-            None => Err(CWError::NotFound)
+            None => Err(CWError::NotFound),
         }
     }
 
-    
     pub fn order_by_ref_id_asc(&mut self) -> &mut Self {
-		self.order_by.push("ref_id ASC");
+        self.order_by.push("ref_id ASC");
         self
     }
 
-	pub fn order_by_ref_id_desc(&mut self) -> &mut Self {
-		self.order_by.push("ref_id DESC");
+    pub fn order_by_ref_id_desc(&mut self) -> &mut Self {
+        self.order_by.push("ref_id DESC");
         self
     }
 
-
-    
-    pub fn file_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn file_gid_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " file_gid = ?".to_string(),
             args: val.into(),
         };
@@ -247,8 +234,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn file_gid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn file_gid_lt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " file_gid < ?".to_string(),
             args: val.into(),
         };
@@ -256,8 +243,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn file_gid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn file_gid_le_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " file_gid <= ?".to_string(),
             args: val.into(),
         };
@@ -265,8 +252,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn file_gid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn file_gid_gt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " file_gid > ?".to_string(),
             args: val.into(),
         };
@@ -274,8 +261,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn file_gid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn file_gid_ge_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " file_gid >= ?".to_string(),
             args: val.into(),
         };
@@ -283,8 +270,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn and_file_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_file_gid_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND file_gid = ?".to_string(),
             args: val.into(),
         };
@@ -292,8 +279,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn and_file_gid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_file_gid_lt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND file_gid < ?".to_string(),
             args: val.into(),
         };
@@ -301,8 +288,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn and_file_gid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_file_gid_le_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND file_gid <= ?".to_string(),
             args: val.into(),
         };
@@ -310,8 +297,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn and_file_gid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_file_gid_gt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND file_gid > ?".to_string(),
             args: val.into(),
         };
@@ -319,8 +306,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn and_file_gid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_file_gid_ge_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND file_gid >= ?".to_string(),
             args: val.into(),
         };
@@ -328,8 +315,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn or_file_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_file_gid_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR file_gid = ?".to_string(),
             args: val.into(),
         };
@@ -337,8 +324,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn or_file_gid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_file_gid_lt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR file_gid < ?".to_string(),
             args: val.into(),
         };
@@ -346,8 +333,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn or_file_gid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_file_gid_le_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR file_gid <= ?".to_string(),
             args: val.into(),
         };
@@ -355,8 +342,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn or_file_gid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_file_gid_gt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR file_gid > ?".to_string(),
             args: val.into(),
         };
@@ -364,8 +351,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn or_file_gid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_file_gid_ge_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR file_gid >= ?".to_string(),
             args: val.into(),
         };
@@ -373,8 +360,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn ref_id_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn ref_id_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " ref_id = ?".to_string(),
             args: val.into(),
         };
@@ -382,8 +369,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn ref_id_lt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn ref_id_lt(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " ref_id < ?".to_string(),
             args: val.into(),
         };
@@ -391,8 +378,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn ref_id_le (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn ref_id_le(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " ref_id <= ?".to_string(),
             args: val.into(),
         };
@@ -400,8 +387,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn ref_id_gt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn ref_id_gt(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " ref_id > ?".to_string(),
             args: val.into(),
         };
@@ -409,8 +396,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn ref_id_ge (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn ref_id_ge(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " ref_id >= ?".to_string(),
             args: val.into(),
         };
@@ -418,8 +405,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn and_ref_id_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_ref_id_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND ref_id = ?".to_string(),
             args: val.into(),
         };
@@ -427,8 +414,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn and_ref_id_lt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_ref_id_lt(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND ref_id < ?".to_string(),
             args: val.into(),
         };
@@ -436,8 +423,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn and_ref_id_le (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_ref_id_le(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND ref_id <= ?".to_string(),
             args: val.into(),
         };
@@ -445,8 +432,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn and_ref_id_gt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_ref_id_gt(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND ref_id > ?".to_string(),
             args: val.into(),
         };
@@ -454,8 +441,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn and_ref_id_ge (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_ref_id_ge(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND ref_id >= ?".to_string(),
             args: val.into(),
         };
@@ -463,8 +450,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn or_ref_id_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_ref_id_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR ref_id = ?".to_string(),
             args: val.into(),
         };
@@ -472,8 +459,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn or_ref_id_lt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_ref_id_lt(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR ref_id < ?".to_string(),
             args: val.into(),
         };
@@ -481,8 +468,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn or_ref_id_le (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_ref_id_le(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR ref_id <= ?".to_string(),
             args: val.into(),
         };
@@ -490,8 +477,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn or_ref_id_gt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_ref_id_gt(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR ref_id > ?".to_string(),
             args: val.into(),
         };
@@ -499,8 +486,8 @@ impl FileRef_Selector {
         self
     }
 
-    pub fn or_ref_id_ge (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_ref_id_ge(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR ref_id >= ?".to_string(),
             args: val.into(),
         };
@@ -508,107 +495,102 @@ impl FileRef_Selector {
         self
     }
 
-
-    
-    pub fn file_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
+    pub fn file_gid_in(&mut self, val: Vec<i64>) -> &mut Self {
+        let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!(" file_gid IN ({})", marks),
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
+            condition: format!(" file_gid IN ({})", marks),
             args: val.into(),
         };
         self.wheres.push(w);
         self
     }
 
-    pub fn and_file_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
+    pub fn and_file_gid_in(&mut self, val: Vec<i64>) -> &mut Self {
+        let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!("AND file_gid IN ({})", marks),
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
+            condition: format!("AND file_gid IN ({})", marks),
             args: val.into(),
         };
         self.wheres.push(w);
         self
     }
 
-    pub fn or_file_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
+    pub fn or_file_gid_in(&mut self, val: Vec<i64>) -> &mut Self {
+        let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!("OR file_gid IN ({})", marks),
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
+            condition: format!("OR file_gid IN ({})", marks),
             args: val.into(),
         };
         self.wheres.push(w);
         self
     }
 
-    pub fn ref_id_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
+    pub fn ref_id_in(&mut self, val: Vec<i64>) -> &mut Self {
+        let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!(" ref_id IN ({})", marks),
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
+            condition: format!(" ref_id IN ({})", marks),
             args: val.into(),
         };
         self.wheres.push(w);
         self
     }
 
-    pub fn and_ref_id_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
+    pub fn and_ref_id_in(&mut self, val: Vec<i64>) -> &mut Self {
+        let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!("AND ref_id IN ({})", marks),
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
+            condition: format!("AND ref_id IN ({})", marks),
             args: val.into(),
         };
         self.wheres.push(w);
         self
     }
 
-    pub fn or_ref_id_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
+    pub fn or_ref_id_in(&mut self, val: Vec<i64>) -> &mut Self {
+        let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!("OR ref_id IN ({})", marks),
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
+            condition: format!("OR ref_id IN ({})", marks),
             args: val.into(),
         };
         self.wheres.push(w);
         self
     }
-
-
 }
-
 
 #[derive(Default, Debug)]
 pub struct FileRef_Deleter {
@@ -627,7 +609,7 @@ impl FileRef_Updater {
         FileRef_Updater::default()
     }
 
-    pub fn update(&mut self,session: impl FCQueryExecutor) -> cdrs::error::Result<Frame>  {
+    pub fn update(&mut self, session: impl FCQueryExecutor) -> cdrs::error::Result<Frame> {
         if self.updates.is_empty() {
             return Err(cdrs::error::Error::General("empty".to_string()));
         }
@@ -636,14 +618,14 @@ impl FileRef_Updater {
         let mut all_vals = vec![];
         let mut col_updates = vec![];
 
-        for (col,val) in self.updates.clone() {
+        for (col, val) in self.updates.clone() {
             all_vals.push(val);
             col_updates.push(col);
         }
         let cql_update = col_updates.join(",");
 
         // Where columns building
-        let  mut where_str = vec![];
+        let mut where_str = vec![];
 
         for w in self.wheres.clone() {
             where_str.push(w.condition);
@@ -655,7 +637,10 @@ impl FileRef_Updater {
         let mut cql_query = if self.wheres.is_empty() {
             format!("UPDATE msgs.file_ref SET {}", cql_update)
         } else {
-            format!("UPDATE msgs.file_ref SET {} WHERE {}", cql_update, cql_where)
+            format!(
+                "UPDATE msgs.file_ref SET {} WHERE {}",
+                cql_update, cql_where
+            )
         };
 
         let query_values = QueryValues::SimpleValues(all_vals);
@@ -664,7 +649,6 @@ impl FileRef_Updater {
         session.query_with_values(cql_query, query_values)
     }
 
-    
     pub fn update_file_gid(&mut self, val: i64) -> &mut Self {
         self.updates.insert("file_gid = ?", val.into());
         self
@@ -675,10 +659,8 @@ impl FileRef_Updater {
         self
     }
 
-
-    
-    pub fn file_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn file_gid_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " file_gid = ?".to_string(),
             args: val.into(),
         };
@@ -686,8 +668,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn file_gid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn file_gid_lt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " file_gid < ?".to_string(),
             args: val.into(),
         };
@@ -695,8 +677,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn file_gid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn file_gid_le_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " file_gid <= ?".to_string(),
             args: val.into(),
         };
@@ -704,8 +686,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn file_gid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn file_gid_gt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " file_gid > ?".to_string(),
             args: val.into(),
         };
@@ -713,8 +695,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn file_gid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn file_gid_ge_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " file_gid >= ?".to_string(),
             args: val.into(),
         };
@@ -722,8 +704,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn and_file_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_file_gid_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND file_gid = ?".to_string(),
             args: val.into(),
         };
@@ -731,8 +713,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn and_file_gid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_file_gid_lt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND file_gid < ?".to_string(),
             args: val.into(),
         };
@@ -740,8 +722,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn and_file_gid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_file_gid_le_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND file_gid <= ?".to_string(),
             args: val.into(),
         };
@@ -749,8 +731,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn and_file_gid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_file_gid_gt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND file_gid > ?".to_string(),
             args: val.into(),
         };
@@ -758,8 +740,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn and_file_gid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_file_gid_ge_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND file_gid >= ?".to_string(),
             args: val.into(),
         };
@@ -767,8 +749,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn or_file_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_file_gid_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR file_gid = ?".to_string(),
             args: val.into(),
         };
@@ -776,8 +758,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn or_file_gid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_file_gid_lt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR file_gid < ?".to_string(),
             args: val.into(),
         };
@@ -785,8 +767,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn or_file_gid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_file_gid_le_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR file_gid <= ?".to_string(),
             args: val.into(),
         };
@@ -794,8 +776,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn or_file_gid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_file_gid_gt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR file_gid > ?".to_string(),
             args: val.into(),
         };
@@ -803,8 +785,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn or_file_gid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_file_gid_ge_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR file_gid >= ?".to_string(),
             args: val.into(),
         };
@@ -812,8 +794,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn ref_id_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn ref_id_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " ref_id = ?".to_string(),
             args: val.into(),
         };
@@ -821,8 +803,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn ref_id_lt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn ref_id_lt(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " ref_id < ?".to_string(),
             args: val.into(),
         };
@@ -830,8 +812,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn ref_id_le (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn ref_id_le(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " ref_id <= ?".to_string(),
             args: val.into(),
         };
@@ -839,8 +821,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn ref_id_gt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn ref_id_gt(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " ref_id > ?".to_string(),
             args: val.into(),
         };
@@ -848,8 +830,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn ref_id_ge (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn ref_id_ge(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " ref_id >= ?".to_string(),
             args: val.into(),
         };
@@ -857,8 +839,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn and_ref_id_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_ref_id_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND ref_id = ?".to_string(),
             args: val.into(),
         };
@@ -866,8 +848,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn and_ref_id_lt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_ref_id_lt(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND ref_id < ?".to_string(),
             args: val.into(),
         };
@@ -875,8 +857,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn and_ref_id_le (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_ref_id_le(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND ref_id <= ?".to_string(),
             args: val.into(),
         };
@@ -884,8 +866,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn and_ref_id_gt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_ref_id_gt(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND ref_id > ?".to_string(),
             args: val.into(),
         };
@@ -893,8 +875,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn and_ref_id_ge (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_ref_id_ge(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND ref_id >= ?".to_string(),
             args: val.into(),
         };
@@ -902,8 +884,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn or_ref_id_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_ref_id_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR ref_id = ?".to_string(),
             args: val.into(),
         };
@@ -911,8 +893,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn or_ref_id_lt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_ref_id_lt(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR ref_id < ?".to_string(),
             args: val.into(),
         };
@@ -920,8 +902,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn or_ref_id_le (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_ref_id_le(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR ref_id <= ?".to_string(),
             args: val.into(),
         };
@@ -929,8 +911,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn or_ref_id_gt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_ref_id_gt(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR ref_id > ?".to_string(),
             args: val.into(),
         };
@@ -938,8 +920,8 @@ impl FileRef_Updater {
         self
     }
 
-    pub fn or_ref_id_ge (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_ref_id_ge(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR ref_id >= ?".to_string(),
             args: val.into(),
         };
@@ -947,104 +929,101 @@ impl FileRef_Updater {
         self
     }
 
-
-    
-    pub fn file_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
+    pub fn file_gid_in(&mut self, val: Vec<i64>) -> &mut Self {
+        let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!(" file_gid IN ({})", marks),
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
+            condition: format!(" file_gid IN ({})", marks),
             args: val.into(),
         };
         self.wheres.push(w);
         self
     }
 
-    pub fn and_file_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
+    pub fn and_file_gid_in(&mut self, val: Vec<i64>) -> &mut Self {
+        let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!("AND file_gid IN ({})", marks),
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
+            condition: format!("AND file_gid IN ({})", marks),
             args: val.into(),
         };
         self.wheres.push(w);
         self
     }
 
-    pub fn or_file_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
+    pub fn or_file_gid_in(&mut self, val: Vec<i64>) -> &mut Self {
+        let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!("OR file_gid IN ({})", marks),
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
+            condition: format!("OR file_gid IN ({})", marks),
             args: val.into(),
         };
         self.wheres.push(w);
         self
     }
 
-    pub fn ref_id_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
+    pub fn ref_id_in(&mut self, val: Vec<i64>) -> &mut Self {
+        let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!(" ref_id IN ({})", marks),
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
+            condition: format!(" ref_id IN ({})", marks),
             args: val.into(),
         };
         self.wheres.push(w);
         self
     }
 
-    pub fn and_ref_id_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
+    pub fn and_ref_id_in(&mut self, val: Vec<i64>) -> &mut Self {
+        let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!("AND ref_id IN ({})", marks),
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
+            condition: format!("AND ref_id IN ({})", marks),
             args: val.into(),
         };
         self.wheres.push(w);
         self
     }
 
-    pub fn or_ref_id_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
+    pub fn or_ref_id_in(&mut self, val: Vec<i64>) -> &mut Self {
+        let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!("OR ref_id IN ({})", marks),
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
+            condition: format!("OR ref_id IN ({})", marks),
             args: val.into(),
         };
         self.wheres.push(w);
         self
     }
-
 }
 
 impl FileRef_Deleter {
@@ -1057,17 +1036,16 @@ impl FileRef_Deleter {
         self.delete_cols.push("file_gid");
         self
     }
-    
+
     pub fn delete_ref_id(&mut self) -> &mut Self {
         self.delete_cols.push("ref_id");
         self
     }
-    
 
-    pub fn delete(&mut self, session: impl FCQueryExecutor) -> Result<(),CWError> {
+    pub fn delete(&mut self, session: impl FCQueryExecutor) -> Result<(), CWError> {
         let del_col = self.delete_cols.join(", ");
 
-        let  mut where_str = vec![];
+        let mut where_str = vec![];
         let mut where_arr = vec![];
 
         for w in self.wheres.clone() {
@@ -1088,9 +1066,8 @@ impl FileRef_Deleter {
         Ok(())
     }
 
-    
-    pub fn file_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn file_gid_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " file_gid = ?".to_string(),
             args: val.into(),
         };
@@ -1098,8 +1075,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn file_gid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn file_gid_lt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " file_gid < ?".to_string(),
             args: val.into(),
         };
@@ -1107,8 +1084,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn file_gid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn file_gid_le_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " file_gid <= ?".to_string(),
             args: val.into(),
         };
@@ -1116,8 +1093,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn file_gid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn file_gid_gt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " file_gid > ?".to_string(),
             args: val.into(),
         };
@@ -1125,8 +1102,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn file_gid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn file_gid_ge_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " file_gid >= ?".to_string(),
             args: val.into(),
         };
@@ -1134,8 +1111,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn and_file_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_file_gid_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND file_gid = ?".to_string(),
             args: val.into(),
         };
@@ -1143,8 +1120,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn and_file_gid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_file_gid_lt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND file_gid < ?".to_string(),
             args: val.into(),
         };
@@ -1152,8 +1129,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn and_file_gid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_file_gid_le_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND file_gid <= ?".to_string(),
             args: val.into(),
         };
@@ -1161,8 +1138,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn and_file_gid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_file_gid_gt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND file_gid > ?".to_string(),
             args: val.into(),
         };
@@ -1170,8 +1147,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn and_file_gid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_file_gid_ge_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND file_gid >= ?".to_string(),
             args: val.into(),
         };
@@ -1179,8 +1156,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn or_file_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_file_gid_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR file_gid = ?".to_string(),
             args: val.into(),
         };
@@ -1188,8 +1165,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn or_file_gid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_file_gid_lt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR file_gid < ?".to_string(),
             args: val.into(),
         };
@@ -1197,8 +1174,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn or_file_gid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_file_gid_le_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR file_gid <= ?".to_string(),
             args: val.into(),
         };
@@ -1206,8 +1183,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn or_file_gid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_file_gid_gt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR file_gid > ?".to_string(),
             args: val.into(),
         };
@@ -1215,8 +1192,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn or_file_gid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_file_gid_ge_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR file_gid >= ?".to_string(),
             args: val.into(),
         };
@@ -1224,8 +1201,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn ref_id_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn ref_id_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " ref_id = ?".to_string(),
             args: val.into(),
         };
@@ -1233,8 +1210,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn ref_id_lt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn ref_id_lt(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " ref_id < ?".to_string(),
             args: val.into(),
         };
@@ -1242,8 +1219,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn ref_id_le (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn ref_id_le(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " ref_id <= ?".to_string(),
             args: val.into(),
         };
@@ -1251,8 +1228,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn ref_id_gt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn ref_id_gt(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " ref_id > ?".to_string(),
             args: val.into(),
         };
@@ -1260,8 +1237,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn ref_id_ge (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn ref_id_ge(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " ref_id >= ?".to_string(),
             args: val.into(),
         };
@@ -1269,8 +1246,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn and_ref_id_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_ref_id_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND ref_id = ?".to_string(),
             args: val.into(),
         };
@@ -1278,8 +1255,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn and_ref_id_lt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_ref_id_lt(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND ref_id < ?".to_string(),
             args: val.into(),
         };
@@ -1287,8 +1264,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn and_ref_id_le (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_ref_id_le(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND ref_id <= ?".to_string(),
             args: val.into(),
         };
@@ -1296,8 +1273,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn and_ref_id_gt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_ref_id_gt(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND ref_id > ?".to_string(),
             args: val.into(),
         };
@@ -1305,8 +1282,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn and_ref_id_ge (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_ref_id_ge(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND ref_id >= ?".to_string(),
             args: val.into(),
         };
@@ -1314,8 +1291,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn or_ref_id_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_ref_id_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR ref_id = ?".to_string(),
             args: val.into(),
         };
@@ -1323,8 +1300,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn or_ref_id_lt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_ref_id_lt(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR ref_id < ?".to_string(),
             args: val.into(),
         };
@@ -1332,8 +1309,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn or_ref_id_le (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_ref_id_le(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR ref_id <= ?".to_string(),
             args: val.into(),
         };
@@ -1341,8 +1318,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn or_ref_id_gt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_ref_id_gt(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR ref_id > ?".to_string(),
             args: val.into(),
         };
@@ -1350,8 +1327,8 @@ impl FileRef_Deleter {
         self
     }
 
-    pub fn or_ref_id_ge (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_ref_id_ge(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR ref_id >= ?".to_string(),
             args: val.into(),
         };
@@ -1359,106 +1336,99 @@ impl FileRef_Deleter {
         self
     }
 
-
-    
-    pub fn file_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
+    pub fn file_gid_in(&mut self, val: Vec<i64>) -> &mut Self {
+        let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!(" file_gid IN ({})", marks),
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
+            condition: format!(" file_gid IN ({})", marks),
             args: val.into(),
         };
         self.wheres.push(w);
         self
     }
 
-    pub fn and_file_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
+    pub fn and_file_gid_in(&mut self, val: Vec<i64>) -> &mut Self {
+        let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!("AND file_gid IN ({})", marks),
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
+            condition: format!("AND file_gid IN ({})", marks),
             args: val.into(),
         };
         self.wheres.push(w);
         self
     }
 
-    pub fn or_file_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
+    pub fn or_file_gid_in(&mut self, val: Vec<i64>) -> &mut Self {
+        let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!("OR file_gid IN ({})", marks),
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
+            condition: format!("OR file_gid IN ({})", marks),
             args: val.into(),
         };
         self.wheres.push(w);
         self
     }
 
-    pub fn ref_id_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
+    pub fn ref_id_in(&mut self, val: Vec<i64>) -> &mut Self {
+        let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!(" ref_id IN ({})", marks),
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
+            condition: format!(" ref_id IN ({})", marks),
             args: val.into(),
         };
         self.wheres.push(w);
         self
     }
 
-    pub fn and_ref_id_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
+    pub fn and_ref_id_in(&mut self, val: Vec<i64>) -> &mut Self {
+        let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!("AND ref_id IN ({})", marks),
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
+            condition: format!("AND ref_id IN ({})", marks),
             args: val.into(),
         };
         self.wheres.push(w);
         self
     }
 
-    pub fn or_ref_id_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
+    pub fn or_ref_id_in(&mut self, val: Vec<i64>) -> &mut Self {
+        let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!("OR ref_id IN ({})", marks),
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
+            condition: format!("OR ref_id IN ({})", marks),
             args: val.into(),
         };
         self.wheres.push(w);
         self
     }
-
 }
-
-
-
-

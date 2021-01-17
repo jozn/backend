@@ -1,7 +1,5 @@
 extern crate db_view;
 
-use shared::{xc};
+use shared::xc;
 
-fn main() {
-    
-}
+fn main() {}

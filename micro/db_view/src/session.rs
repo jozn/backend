@@ -1,21 +1,26 @@
-use shared::{xc,pb};
-use cdrs::cluster::session::Session;
-use cdrs::load_balancing::RoundRobin;
-use cdrs::cluster::{TcpConnectionPool, NodeTcpConfigBuilder, ClusterTcpConfig};
 use cdrs::authenticators::NoneAuthenticator;
-use cdrs::query::{QueryValues, QueryExecutor};
+use cdrs::cluster::session::{new as new_session, Session};
+use cdrs::cluster::{ClusterTcpConfig, NodeTcpConfigBuilder, TcpConnectionPool};
 use cdrs::frame::Frame;
+use cdrs::load_balancing::RoundRobin;
+use cdrs::query::{QueryExecutor, QueryValues};
 use shared::xc::FCQueryExecutor;
-
+use shared::{pb, xc};
 
 pub struct FlipCassandraSession {
     session: Session<RoundRobin<TcpConnectionPool<NoneAuthenticator>>>,
 }
 
 impl FCQueryExecutor for &FlipCassandraSession {
-    fn query_with_values<Q: ToString, V: Into<QueryValues>>(&self, query: Q, values: V) -> cdrs::error::Result<Frame> where
-        Self: Sized {
-        self.session.query_with_values(query,values)
+    fn query_with_values<Q: ToString, V: Into<QueryValues>>(
+        &self,
+        query: Q,
+        values: V,
+    ) -> cdrs::error::Result<Frame>
+    where
+        Self: Sized,
+    {
+        self.session.query_with_values(query, values)
     }
 }
 
@@ -31,4 +36,3 @@ pub fn get_session() -> FlipCassandraSession {
 
     my_session
 }
-

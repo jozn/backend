@@ -3,8 +3,8 @@ use cdrs::cluster::session::{new as new_session, Session};
 use cdrs::cluster::{ClusterTcpConfig, NodeTcpConfigBuilder, TcpConnectionPool};
 use cdrs::load_balancing::RoundRobin;
 // use cdrs::query::*;
-use cdrs::query::{QueryValues,QueryExecutor};
 use cdrs::frame::Frame;
+use cdrs::query::{QueryExecutor, QueryValues};
 
 use cdrs::frame::IntoBytes;
 use cdrs::types::from_cdrs::FromCDRSByName;
@@ -21,10 +21,8 @@ use cdrs::query::PrepareExecutor;
 
 type CSession<LB> = Session<LB>;
 
-
 use cdrs::frame::frame_error::CDRSError;
 use cdrs::Error as DriverError;
-
 
 #[derive(Debug, Clone)]
 pub struct WhereClause {
@@ -46,7 +44,7 @@ impl From<DriverError> for CWError {
     fn from(err: Error) -> Self {
         match err {
             DriverError::Server(serr) => CWError::Server(serr),
-            _ => CWError::Driver(err)
+            _ => CWError::Driver(err),
         }
     }
 }
@@ -60,18 +58,15 @@ type FBlob = Blob;
 //     }
 // }
 
-fn main(){
-
-}
-
+fn main() {}
 
 #[derive(Default, Clone, Debug, PartialEq)]
 pub struct User {
-    pub user_cid: i64,   // user_cid    partition_key  0
-    pub pb_data: Vec<u8>,   // pb_data    regular  -1
+    pub user_cid: i64, // user_cid    partition_key  0
+    pub pb_data: Vec<u8>, // pb_data    regular  -1
 
-    //_exists: bool,
-    //_deleted: bool,
+                       //_exists: bool,
+                       //_deleted: bool,
 }
 
 trait FCQueryExecutor {
@@ -81,8 +76,8 @@ trait FCQueryExecutor {
         query: Q,
         values: V,
     ) -> cdrs::error::Result<Frame>
-        where
-            Self: Sized;
+    where
+        Self: Sized;
 }
 
 impl User {
@@ -96,10 +91,9 @@ impl User {
 
     // pub fn save<LB>(&mut self, session: &Session<LB>) -> Result<(),CWError> {
     // pub fn save<T,U>(&mut self, session: impl QueryExecutor<T,U>) -> Result<(),CWError> {
-    pub fn save(&mut self, session: impl FCQueryExecutor) -> Result<(),CWError> {
+    pub fn save(&mut self, session: impl FCQueryExecutor) -> Result<(), CWError> {
         let mut columns = vec![];
-        let mut values :Vec<Value> = vec![];
-
+        let mut values: Vec<Value> = vec![];
 
         if self.user_cid != 0i64 {
             columns.push("user_cid");
@@ -111,16 +105,18 @@ impl User {
             values.push(self.pb_data.clone().into());
         }
 
-
         if columns.len() == 0 {
-            return Err(CWError::InvalidCQL)
+            return Err(CWError::InvalidCQL);
         }
 
         let cql_columns = columns.join(", ");
         let mut cql_question = "?,".repeat(columns.len());
-        cql_question.remove(cql_question.len()-1);
+        cql_question.remove(cql_question.len() - 1);
 
-        let cql_query = format!("INSERT INTO msgs.user ({}) VALUES ({})", cql_columns, cql_question);
+        let cql_query = format!(
+            "INSERT INTO msgs.user ({}) VALUES ({})",
+            cql_columns, cql_question
+        );
 
         println!("{} - {}", &cql_query, &cql_question);
 
@@ -134,17 +130,15 @@ impl User {
 
         deleter.user_cid_eq(self.user_cid);
 
-
         let res = deleter.delete(session)?;
 
         Ok(())
     }
-
 }
 
-fn _get_where(wheres: Vec<WhereClause>) ->  (String, Vec<Value>) {
+fn _get_where(wheres: Vec<WhereClause>) -> (String, Vec<Value>) {
     let mut values = vec![];
-    let  mut where_str = vec![];
+    let mut where_str = vec![];
 
     for w in wheres {
         where_str.push(w.condition);
@@ -195,8 +189,7 @@ impl User_Selector {
         self
     }
 
-
-    pub fn _to_cql(&self) ->  (String, Vec<Value>)  {
+    pub fn _to_cql(&self) -> (String, Vec<Value>) {
         let cql_select = if self.select_cols.is_empty() {
             "*".to_string()
         } else {
@@ -208,33 +201,36 @@ impl User_Selector {
         let (cql_where, where_values) = _get_where(self.wheres.clone());
 
         if where_values.len() > 0 {
-            cql_query.push_str(&format!(" WHERE {}",&cql_where));
+            cql_query.push_str(&format!(" WHERE {}", &cql_where));
         }
 
         if self.order_by.len() > 0 {
             let cql_orders = self.order_by.join(", ");
-            cql_query.push_str( &format!(" ORDER BY {}", &cql_orders));
+            cql_query.push_str(&format!(" ORDER BY {}", &cql_orders));
         };
 
-        if self.limit != 0  {
+        if self.limit != 0 {
             cql_query.push_str(&format!(" LIMIT {} ", self.limit));
         };
 
-        if self.allow_filter  {
+        if self.allow_filter {
             cql_query.push_str(" ALLOW FILTERING");
         };
 
         (cql_query, where_values)
     }
 
-    pub fn _get_rows_with_size(&mut self,session: impl FCQueryExecutor, size: i64) -> Result<Vec<User>, CWError>   {
-
-        let(cql_query, query_values) = self._to_cql();
+    pub fn _get_rows_with_size(
+        &mut self,
+        session: impl FCQueryExecutor,
+        size: i64,
+    ) -> Result<Vec<User>, CWError> {
+        let (cql_query, query_values) = self._to_cql();
 
         println!("{} - {:?}", &cql_query, &query_values);
 
         let query_result = session
-            .query_with_values(cql_query,query_values)?
+            .query_with_values(cql_query, query_values)?
             .get_body()?
             .into_rows();
 
@@ -250,8 +246,8 @@ impl User_Selector {
                 } else {
                     rs
                 }
-            },
-            None => return Err(CWError::NotFound)
+            }
+            None => return Err(CWError::NotFound),
         };
 
         let mut rows = vec![];
@@ -259,10 +255,12 @@ impl User_Selector {
         for db_row in db_raws {
             let mut row = User::default();
 
-
             row.user_cid = db_row.by_name("user_cid")?.unwrap_or_default();
 
-            row.pb_data = db_row.by_name::<Blob>("pb_data")?.unwrap_or(Blob::new(vec![])).into_vec();
+            row.pb_data = db_row
+                .by_name::<Blob>("pb_data")?
+                .unwrap_or(Blob::new(vec![]))
+                .into_vec();
 
             rows.push(row);
         }
@@ -270,25 +268,22 @@ impl User_Selector {
         Ok(rows)
     }
 
-    pub fn get_rows(&mut self, session: impl FCQueryExecutor) -> Result<Vec<User>, CWError>{
-        self._get_rows_with_size(session,-1)
+    pub fn get_rows(&mut self, session: impl FCQueryExecutor) -> Result<Vec<User>, CWError> {
+        self._get_rows_with_size(session, -1)
     }
 
-    pub fn get_row(&mut self, session: impl FCQueryExecutor) -> Result<User, CWError>{
-        let rows = self._get_rows_with_size(session,1)?;
+    pub fn get_row(&mut self, session: impl FCQueryExecutor) -> Result<User, CWError> {
+        let rows = self._get_rows_with_size(session, 1)?;
 
         let opt = rows.get(0);
         match opt {
             Some(row) => Ok(row.to_owned()),
-            None => Err(CWError::NotFound)
+            None => Err(CWError::NotFound),
         }
     }
 
-
-
-
-    pub fn user_cid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn user_cid_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " user_cid = ?".to_string(),
             args: val.into(),
         };
@@ -296,8 +291,8 @@ impl User_Selector {
         self
     }
 
-    pub fn user_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn user_cid_lt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " user_cid < ?".to_string(),
             args: val.into(),
         };
@@ -305,8 +300,8 @@ impl User_Selector {
         self
     }
 
-    pub fn user_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn user_cid_le_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " user_cid <= ?".to_string(),
             args: val.into(),
         };
@@ -314,8 +309,8 @@ impl User_Selector {
         self
     }
 
-    pub fn user_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn user_cid_gt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " user_cid > ?".to_string(),
             args: val.into(),
         };
@@ -323,8 +318,8 @@ impl User_Selector {
         self
     }
 
-    pub fn user_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn user_cid_ge_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " user_cid >= ?".to_string(),
             args: val.into(),
         };
@@ -332,8 +327,8 @@ impl User_Selector {
         self
     }
 
-    pub fn and_user_cid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_user_cid_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND user_cid = ?".to_string(),
             args: val.into(),
         };
@@ -341,8 +336,8 @@ impl User_Selector {
         self
     }
 
-    pub fn and_user_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_user_cid_lt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND user_cid < ?".to_string(),
             args: val.into(),
         };
@@ -350,8 +345,8 @@ impl User_Selector {
         self
     }
 
-    pub fn and_user_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_user_cid_le_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND user_cid <= ?".to_string(),
             args: val.into(),
         };
@@ -359,8 +354,8 @@ impl User_Selector {
         self
     }
 
-    pub fn and_user_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_user_cid_gt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND user_cid > ?".to_string(),
             args: val.into(),
         };
@@ -368,8 +363,8 @@ impl User_Selector {
         self
     }
 
-    pub fn and_user_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_user_cid_ge_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND user_cid >= ?".to_string(),
             args: val.into(),
         };
@@ -377,8 +372,8 @@ impl User_Selector {
         self
     }
 
-    pub fn or_user_cid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_user_cid_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR user_cid = ?".to_string(),
             args: val.into(),
         };
@@ -386,8 +381,8 @@ impl User_Selector {
         self
     }
 
-    pub fn or_user_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_user_cid_lt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR user_cid < ?".to_string(),
             args: val.into(),
         };
@@ -395,8 +390,8 @@ impl User_Selector {
         self
     }
 
-    pub fn or_user_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_user_cid_le_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR user_cid <= ?".to_string(),
             args: val.into(),
         };
@@ -404,8 +399,8 @@ impl User_Selector {
         self
     }
 
-    pub fn or_user_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_user_cid_gt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR user_cid > ?".to_string(),
             args: val.into(),
         };
@@ -413,8 +408,8 @@ impl User_Selector {
         self
     }
 
-    pub fn or_user_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_user_cid_ge_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR user_cid >= ?".to_string(),
             args: val.into(),
         };
@@ -422,17 +417,15 @@ impl User_Selector {
         self
     }
 
-
-
-    pub fn user_cid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+    pub fn user_cid_in(&mut self, val: Vec<i64>) -> &mut Self {
         let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
             condition: format!(" user_cid IN ({})", marks),
             args: val.into(),
         };
@@ -440,15 +433,15 @@ impl User_Selector {
         self
     }
 
-    pub fn and_user_cid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+    pub fn and_user_cid_in(&mut self, val: Vec<i64>) -> &mut Self {
         let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
             condition: format!("AND user_cid IN ({})", marks),
             args: val.into(),
         };
@@ -456,25 +449,22 @@ impl User_Selector {
         self
     }
 
-    pub fn or_user_cid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+    pub fn or_user_cid_in(&mut self, val: Vec<i64>) -> &mut Self {
         let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
             condition: format!("OR user_cid IN ({})", marks),
             args: val.into(),
         };
         self.wheres.push(w);
         self
     }
-
-
 }
-
 
 #[derive(Default, Debug)]
 pub struct User_Deleter {
@@ -493,7 +483,7 @@ impl User_Updater {
         User_Updater::default()
     }
 
-    pub fn update<LB>(&mut self,session: &Session<LB>) -> cdrs::error::Result<Frame>  {
+    pub fn update<LB>(&mut self, session: &Session<LB>) -> cdrs::error::Result<Frame> {
         if self.updates.is_empty() {
             return Err(cdrs::error::Error::General("empty".to_string()));
         }
@@ -502,14 +492,14 @@ impl User_Updater {
         let mut all_vals = vec![];
         let mut col_updates = vec![];
 
-        for (col,val) in self.updates.clone() {
+        for (col, val) in self.updates.clone() {
             all_vals.push(val);
             col_updates.push(col);
         }
         let cql_update = col_updates.join(",");
 
         // Where columns building
-        let  mut where_str = vec![];
+        let mut where_str = vec![];
 
         for w in self.wheres.clone() {
             where_str.push(w.condition);
@@ -530,21 +520,19 @@ impl User_Updater {
         session.query_with_values(cql_query, query_values)
     }
 
-
     pub fn update_user_cid(&mut self, val: i64) -> &mut Self {
         self.updates.insert("user_cid = ?", val.into());
         self
     }
 
     pub fn update_pb_data(&mut self, val: &Vec<u8>) -> &mut Self {
-        self.updates.insert("pb_data = ?", Blob::new(val.clone()).into());
+        self.updates
+            .insert("pb_data = ?", Blob::new(val.clone()).into());
         self
     }
 
-
-
-    pub fn user_cid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn user_cid_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " user_cid = ?".to_string(),
             args: val.into(),
         };
@@ -552,8 +540,8 @@ impl User_Updater {
         self
     }
 
-    pub fn user_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn user_cid_lt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " user_cid < ?".to_string(),
             args: val.into(),
         };
@@ -561,8 +549,8 @@ impl User_Updater {
         self
     }
 
-    pub fn user_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn user_cid_le_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " user_cid <= ?".to_string(),
             args: val.into(),
         };
@@ -570,8 +558,8 @@ impl User_Updater {
         self
     }
 
-    pub fn user_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn user_cid_gt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " user_cid > ?".to_string(),
             args: val.into(),
         };
@@ -579,8 +567,8 @@ impl User_Updater {
         self
     }
 
-    pub fn user_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn user_cid_ge_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " user_cid >= ?".to_string(),
             args: val.into(),
         };
@@ -588,8 +576,8 @@ impl User_Updater {
         self
     }
 
-    pub fn and_user_cid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_user_cid_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND user_cid = ?".to_string(),
             args: val.into(),
         };
@@ -597,8 +585,8 @@ impl User_Updater {
         self
     }
 
-    pub fn and_user_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_user_cid_lt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND user_cid < ?".to_string(),
             args: val.into(),
         };
@@ -606,8 +594,8 @@ impl User_Updater {
         self
     }
 
-    pub fn and_user_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_user_cid_le_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND user_cid <= ?".to_string(),
             args: val.into(),
         };
@@ -615,8 +603,8 @@ impl User_Updater {
         self
     }
 
-    pub fn and_user_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_user_cid_gt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND user_cid > ?".to_string(),
             args: val.into(),
         };
@@ -624,8 +612,8 @@ impl User_Updater {
         self
     }
 
-    pub fn and_user_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_user_cid_ge_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND user_cid >= ?".to_string(),
             args: val.into(),
         };
@@ -633,8 +621,8 @@ impl User_Updater {
         self
     }
 
-    pub fn or_user_cid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_user_cid_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR user_cid = ?".to_string(),
             args: val.into(),
         };
@@ -642,8 +630,8 @@ impl User_Updater {
         self
     }
 
-    pub fn or_user_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_user_cid_lt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR user_cid < ?".to_string(),
             args: val.into(),
         };
@@ -651,8 +639,8 @@ impl User_Updater {
         self
     }
 
-    pub fn or_user_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_user_cid_le_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR user_cid <= ?".to_string(),
             args: val.into(),
         };
@@ -660,8 +648,8 @@ impl User_Updater {
         self
     }
 
-    pub fn or_user_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_user_cid_gt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR user_cid > ?".to_string(),
             args: val.into(),
         };
@@ -669,8 +657,8 @@ impl User_Updater {
         self
     }
 
-    pub fn or_user_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_user_cid_ge_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR user_cid >= ?".to_string(),
             args: val.into(),
         };
@@ -678,17 +666,15 @@ impl User_Updater {
         self
     }
 
-
-
-    pub fn user_cid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+    pub fn user_cid_in(&mut self, val: Vec<i64>) -> &mut Self {
         let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
             condition: format!(" user_cid IN ({})", marks),
             args: val.into(),
         };
@@ -696,15 +682,15 @@ impl User_Updater {
         self
     }
 
-    pub fn and_user_cid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+    pub fn and_user_cid_in(&mut self, val: Vec<i64>) -> &mut Self {
         let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
             condition: format!("AND user_cid IN ({})", marks),
             args: val.into(),
         };
@@ -712,22 +698,21 @@ impl User_Updater {
         self
     }
 
-    pub fn or_user_cid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+    pub fn or_user_cid_in(&mut self, val: Vec<i64>) -> &mut Self {
         let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
             condition: format!("OR user_cid IN ({})", marks),
             args: val.into(),
         };
         self.wheres.push(w);
         self
     }
-
 }
 
 impl User_Deleter {
@@ -746,11 +731,10 @@ impl User_Deleter {
         self
     }
 
-
-    pub fn delete<LB>(&mut self, session: &Session<LB>) -> Result<(),CWError> {
+    pub fn delete<LB>(&mut self, session: &Session<LB>) -> Result<(), CWError> {
         let del_col = self.delete_cols.join(", ");
 
-        let  mut where_str = vec![];
+        let mut where_str = vec![];
         let mut where_arr = vec![];
 
         for w in self.wheres.clone() {
@@ -771,9 +755,8 @@ impl User_Deleter {
         Ok(())
     }
 
-
-    pub fn user_cid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn user_cid_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " user_cid = ?".to_string(),
             args: val.into(),
         };
@@ -781,8 +764,8 @@ impl User_Deleter {
         self
     }
 
-    pub fn user_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn user_cid_lt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " user_cid < ?".to_string(),
             args: val.into(),
         };
@@ -790,8 +773,8 @@ impl User_Deleter {
         self
     }
 
-    pub fn user_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn user_cid_le_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " user_cid <= ?".to_string(),
             args: val.into(),
         };
@@ -799,8 +782,8 @@ impl User_Deleter {
         self
     }
 
-    pub fn user_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn user_cid_gt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " user_cid > ?".to_string(),
             args: val.into(),
         };
@@ -808,8 +791,8 @@ impl User_Deleter {
         self
     }
 
-    pub fn user_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn user_cid_ge_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: " user_cid >= ?".to_string(),
             args: val.into(),
         };
@@ -817,8 +800,8 @@ impl User_Deleter {
         self
     }
 
-    pub fn and_user_cid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_user_cid_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND user_cid = ?".to_string(),
             args: val.into(),
         };
@@ -826,8 +809,8 @@ impl User_Deleter {
         self
     }
 
-    pub fn and_user_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_user_cid_lt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND user_cid < ?".to_string(),
             args: val.into(),
         };
@@ -835,8 +818,8 @@ impl User_Deleter {
         self
     }
 
-    pub fn and_user_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_user_cid_le_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND user_cid <= ?".to_string(),
             args: val.into(),
         };
@@ -844,8 +827,8 @@ impl User_Deleter {
         self
     }
 
-    pub fn and_user_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_user_cid_gt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND user_cid > ?".to_string(),
             args: val.into(),
         };
@@ -853,8 +836,8 @@ impl User_Deleter {
         self
     }
 
-    pub fn and_user_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn and_user_cid_ge_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "AND user_cid >= ?".to_string(),
             args: val.into(),
         };
@@ -862,8 +845,8 @@ impl User_Deleter {
         self
     }
 
-    pub fn or_user_cid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_user_cid_eq(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR user_cid = ?".to_string(),
             args: val.into(),
         };
@@ -871,8 +854,8 @@ impl User_Deleter {
         self
     }
 
-    pub fn or_user_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_user_cid_lt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR user_cid < ?".to_string(),
             args: val.into(),
         };
@@ -880,8 +863,8 @@ impl User_Deleter {
         self
     }
 
-    pub fn or_user_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_user_cid_le_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR user_cid <= ?".to_string(),
             args: val.into(),
         };
@@ -889,8 +872,8 @@ impl User_Deleter {
         self
     }
 
-    pub fn or_user_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_user_cid_gt_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR user_cid > ?".to_string(),
             args: val.into(),
         };
@@ -898,8 +881,8 @@ impl User_Deleter {
         self
     }
 
-    pub fn or_user_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
+    pub fn or_user_cid_ge_filtering(&mut self, val: i64) -> &mut Self {
+        let w = WhereClause {
             condition: "OR user_cid >= ?".to_string(),
             args: val.into(),
         };
@@ -907,17 +890,15 @@ impl User_Deleter {
         self
     }
 
-
-
-    pub fn user_cid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+    pub fn user_cid_in(&mut self, val: Vec<i64>) -> &mut Self {
         let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
             condition: format!(" user_cid IN ({})", marks),
             args: val.into(),
         };
@@ -925,15 +906,15 @@ impl User_Deleter {
         self
     }
 
-    pub fn and_user_cid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+    pub fn and_user_cid_in(&mut self, val: Vec<i64>) -> &mut Self {
         let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
             condition: format!("AND user_cid IN ({})", marks),
             args: val.into(),
         };
@@ -941,30 +922,19 @@ impl User_Deleter {
         self
     }
 
-    pub fn or_user_cid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+    pub fn or_user_cid_in(&mut self, val: Vec<i64>) -> &mut Self {
         let len = val.len();
         if len == 0 {
-            return self
+            return self;
         }
 
         let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
+        marks.remove(marks.len() - 1);
+        let w = WhereClause {
             condition: format!("OR user_cid IN ({})", marks),
             args: val.into(),
         };
         self.wheres.push(w);
         self
     }
-
 }
-
-
-
-
-
-
-
-
-
-

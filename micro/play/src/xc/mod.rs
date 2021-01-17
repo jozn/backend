@@ -1,7 +1,6 @@
 pub mod common;
 pub use common::*;
 
-
 pub mod channel;
 pub mod channel_msg;
 pub mod chat;
@@ -12,7 +11,6 @@ pub mod messages;
 pub mod messages12;
 pub mod profile;
 pub mod user;
-
 
 pub use channel::*;
 pub use channel_msg::*;

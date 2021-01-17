@@ -3,6 +3,11 @@ extern crate prost_build;
 
 fn main() {
     // build_pb();
+    std::process::Command::new("cargo")
+        .arg("fmt")
+        .arg("-all")
+        .spawn()
+        .expect("cargo fmt error");
 }
 
 fn build_pb() {
