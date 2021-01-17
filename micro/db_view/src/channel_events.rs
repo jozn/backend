@@ -1,8 +1,8 @@
 use shared::{pb, xc};
 
-use crate::session;
+use crate::{db, session};
 
-fn handle_channel_events(command: pb::channel_command::SubCommand) {
+pub fn handle_channel_events(command: pb::channel_command::SubCommand) {
     let my_session = session::get_session();
 
     let m = xc::ChannelMsg {
@@ -15,6 +15,8 @@ fn handle_channel_events(command: pb::channel_command::SubCommand) {
 
     match command {
         CreateChannel(p) => {
+            let ch = db::get_channel(p.channel_cid as u64);
+            println!("{}", ch.unwrap().about);
             let ch = pb::Channel {
                 cid: 0,
                 user_name: "".to_string(),

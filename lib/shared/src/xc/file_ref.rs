@@ -5,6 +5,7 @@ use cdrs::load_balancing::RoundRobin;
 // use cdrs::query::*;
 use cdrs::frame::Frame;
 use cdrs::query::{QueryExecutor, QueryValues};
+use cdrs::types::value::ValueType;
 
 use cdrs::frame::IntoBytes;
 use cdrs::types::from_cdrs::FromCDRSByName;
@@ -29,15 +30,13 @@ impl FileRef {
         let mut columns = vec![];
         let mut values: Vec<Value> = vec![];
 
-        if self.file_gid != 0i64 {
-            columns.push("file_gid");
-            values.push(self.file_gid.clone().into());
-        }
+        // partition key and clustering key always must be present
+        columns.push("file_gid");
+        values.push(self.file_gid.clone().into());
 
-        if self.ref_id != 0i64 {
-            columns.push("ref_id");
-            values.push(self.ref_id.clone().into());
-        }
+        // partition key and clustering key always must be present
+        columns.push("ref_id");
+        values.push(self.ref_id.clone().into());
 
         if columns.len() == 0 {
             return Err(CWError::InvalidCQL);

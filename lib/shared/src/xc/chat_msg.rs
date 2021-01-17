@@ -5,6 +5,7 @@ use cdrs::load_balancing::RoundRobin;
 // use cdrs::query::*;
 use cdrs::frame::Frame;
 use cdrs::query::{QueryExecutor, QueryValues};
+use cdrs::types::value::ValueType;
 
 use cdrs::frame::IntoBytes;
 use cdrs::types::from_cdrs::FromCDRSByName;
@@ -30,19 +31,22 @@ impl ChatMsg {
         let mut columns = vec![];
         let mut values: Vec<Value> = vec![];
 
-        if self.chat_id != 0i64 {
-            columns.push("chat_id");
-            values.push(self.chat_id.clone().into());
-        }
+        // partition key and clustering key always must be present
+        columns.push("chat_id");
+        values.push(self.chat_id.clone().into());
 
-        if self.msg_id != 0i64 {
-            columns.push("msg_id");
-            values.push(self.msg_id.clone().into());
-        }
+        // partition key and clustering key always must be present
+        columns.push("msg_id");
+        values.push(self.msg_id.clone().into());
 
         if !self.pb_data.is_empty() {
+            let val = Value {
+                body: self.pb_data.clone(),
+                value_type: ValueType::Normal(self.pb_data.len() as i32),
+            };
+
             columns.push("pb_data");
-            values.push(self.pb_data.clone().into());
+            values.push(val);
         }
 
         if columns.len() == 0 {
