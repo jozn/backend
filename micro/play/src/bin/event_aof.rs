@@ -7,8 +7,46 @@ use play::aof;
 use shared::pb;
 use shared::pb::channel_command::SubCommand;
 
+
+use play::xc;
+use cdrs::cluster::session::Session;
+use cdrs::load_balancing::RoundRobin;
+use cdrs::cluster::{TcpConnectionPool, NodeTcpConfigBuilder, ClusterTcpConfig};
+use cdrs::authenticators::NoneAuthenticator;
+use play::xc::FCQueryExecutor;
+use cdrs::query::{QueryValues, QueryExecutor};
+use cdrs::frame::Frame;
+
+
+struct MyCassandraSession {
+    session: Session<RoundRobin<TcpConnectionPool<NoneAuthenticator>>>,
+}
+
+impl FCQueryExecutor for &MyCassandraSession {
+    fn query_with_values<Q: ToString, V: Into<QueryValues>>(&self, query: Q, values: V) -> cdrs::error::Result<Frame> where
+        Self: Sized {
+        self.session.query_with_values(query,values)
+    }
+}
+
 fn handle_channel_events(command: pb::channel_command::SubCommand){
+    let node = NodeTcpConfigBuilder::new("185.239.107.163:9042", NoneAuthenticator {}).build();
+    let cluster_config = ClusterTcpConfig(vec![node]);
+    let no_compression =
+        new_session(&cluster_config, RoundRobin::new()).expect("session should be created");
+
+    let my_session = MyCassandraSession{
+        session: no_compression,
+    };
+
+    let m = play::xc::ChannelMsg{
+        channel_id: 1,
+        msg_id: 1,
+        pb_data: b"msg 1".into(),
+    };
+
     use pb::channel_command::SubCommand::*;
+
     match command {
         CreateChannel(p) => {
             let ch = pb::Channel{
@@ -35,7 +73,14 @@ fn handle_channel_events(command: pb::channel_command::SubCommand){
             };
             true
         }
-        EditChannel(_) => {false}
+        EditChannel(p) => {
+            let mut  c = xc::Channel_Selector::new().channel_id_eq(p.channel_cid.into()).get_row(&my_session).unwrap();
+            c.pb_data;
+
+            c.save(&my_session);
+            false
+
+        }
         DeleteChannel(_) => {false}
         AddAuthor(_) => {false}
         ChangeAuthorPermission(_) => {false}
