@@ -2,10 +2,11 @@ use prost::Message;
 use std::io::Write;
 use byteorder::{BE, ByteOrder};
 
+// AOF = Append Only File
+
 const DEFAULT_DATA_DIR:&str = "/opt/flip/";
 const DEFAULT_DATA_NAMESPACE:&str = "def";
 
-pub struct AAAAA {}
 #[derive(Clone)]
 pub struct AofFile {
     pub namespace: String,
@@ -106,7 +107,7 @@ impl AofRow {
         out.write(&self.data);
 
         // Magic bytes for: 1) easier debugging 2)can look at the end of file to verify end of file
-        // is not corrupted
+        // is not corrupted so we can append again instead of oppening a new file
         out.write(b"\n>\n");
 
         assert!(out.len() == buff_size);
