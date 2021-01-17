@@ -1,7 +1,6 @@
-pub mod aof;
-pub mod xc;
+pub use shared::aof::AAAAA;
 
-pub use aof::AAAAA;
+pub mod xc;
 
 fn play1() {
 

@@ -3,7 +3,7 @@ use prost::Message;
 use std::io::Write;
 use byteorder::{BE, ByteOrder};
 
-use play::aof;
+use shared::aof;
 
 fn main(){
 

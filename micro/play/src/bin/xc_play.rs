@@ -1,23 +1,24 @@
 extern crate play;
-use prost::Message;
+
+use std::convert::TryInto;
 use std::io::Write;
+
 use byteorder::{BE, ByteOrder};
-
-use play::{aof, xc};
-
-extern crate cdrs;
-
 use cdrs::authenticators::NoneAuthenticator;
-use cdrs::cluster::session::{new as new_session, Session};
 use cdrs::cluster::{ClusterTcpConfig, NodeTcpConfigBuilder, TcpConnectionPool};
+use cdrs::cluster::session::{new as new_session, Session};
+use cdrs::error::Error as CWError;
+use cdrs::frame::Frame;
 use cdrs::load_balancing::RoundRobin;
 use cdrs::query::*;
-
-use cdrs::error::{Error as CWError};
-use play::xc::FCQueryExecutor;
-use cdrs::frame::Frame;
-use std::convert::TryInto;
 use grammers_tl_types::Serializable;
+use prost::Message;
+
+use play::xc;
+use play::xc::FCQueryExecutor;
+use shared::aof;
+
+extern crate cdrs;
 
 struct MyCassandraSession {
     session: Session<RoundRobin<TcpConnectionPool<NoneAuthenticator>>>,

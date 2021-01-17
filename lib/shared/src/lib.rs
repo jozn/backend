@@ -17,6 +17,7 @@ pub mod sms_sender;
 pub mod utils;
 
 pub mod xc;
+pub mod aof;
 
 pub struct UserParam {}
 
