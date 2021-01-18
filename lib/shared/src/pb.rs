@@ -732,6 +732,11 @@ pub struct Sms {
     #[prost(string, tag = "102")]
     pub result: std::string::String,
 }
+//==================== Views ==================
+
+///==================== Views ==================
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Chat {}
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum ProfileLevelEnum {

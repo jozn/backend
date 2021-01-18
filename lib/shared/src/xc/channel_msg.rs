@@ -1467,14 +1467,14 @@ impl ChannelMsg_Deleter {
     }
 }
 
-pub fn get_channel_msg_by_channel_id_and_channel_id(
+pub fn get_channel_msg_by_channel_id_and_msg_id(
     session: impl FCQueryExecutor,
     p1: i64,
     p2: i64,
 ) -> Result<ChannelMsg, CWError> {
     let m = ChannelMsg_Selector::new()
         .channel_id_eq(p1)
-        .and_channel_id_eq(p2)
+        .and_msg_id_eq(p2)
         .get_row(session)?;
     Ok(m)
 }

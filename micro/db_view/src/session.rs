@@ -6,6 +6,7 @@ use cdrs::load_balancing::RoundRobin;
 use cdrs::query::{QueryExecutor, QueryValues};
 use shared::xc::FCQueryExecutor;
 use shared::{pb, xc};
+use std::ops::Deref;
 
 pub struct FlipCassandraSession {
     session: Session<RoundRobin<TcpConnectionPool<NoneAuthenticator>>>,

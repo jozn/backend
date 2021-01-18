@@ -1461,13 +1461,13 @@ impl Chat_Deleter {
     }
 }
 
-pub fn get_chat_by_chat_id_and_chat_id(
+pub fn get_chat_by_profile_cid_and_chat_id(
     session: impl FCQueryExecutor,
     p1: i64,
     p2: i64,
 ) -> Result<Chat, CWError> {
     let m = Chat_Selector::new()
-        .chat_id_eq(p1)
+        .profile_cid_eq(p1)
         .and_chat_id_eq(p2)
         .get_row(session)?;
     Ok(m)

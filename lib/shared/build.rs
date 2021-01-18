@@ -2,7 +2,8 @@ extern crate prost_build;
 // If it must fail > it must panics > no output to concole without panic
 
 fn main() {
-    // build_pb();
+    build_pb();
+
     std::process::Command::new("cargo")
         .arg("fmt")
         .arg("-all")
