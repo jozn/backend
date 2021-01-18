@@ -1,0 +1,2 @@
+policy:
++ all cassandra int be of bigint

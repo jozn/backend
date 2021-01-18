@@ -15,11 +15,11 @@ pub fn handle_channel_events(command: pb::channel_command::SubCommand) {
 
     match command {
         CreateChannel(p) => {
-            let ch = db::get_channel(p.channel_cid as u64);
-            println!("{}", ch.unwrap().about);
+            // let ch = db::get_channel(p.channel_cid as u64);
+            // println!("{}", ch.unwrap().about);
             let ch = pb::Channel {
-                cid: 0,
-                user_name: "".to_string(),
+                cid: p.channel_cid,
+                user_name: p.user_name,
                 channel_name: p.channel_title,
                 creator_profile_cid: p.creator_profile_cid,
                 is_verified: false,
@@ -39,15 +39,22 @@ pub fn handle_channel_events(command: pb::channel_command::SubCommand) {
                 pinned_message: None,
                 avatar: None,
             };
+            db::save_channel(&ch);
             true
         }
         EditChannel(p) => {
-            let mut c = xc::Channel_Selector::new()
+            let mut ch = db::get_channel(p.channel_cid as u64).unwrap();
+            if p.set_new_about {
+                ch.about = p.new_about;
+            }
+
+            db::save_channel(&ch);
+            /* let mut c = xc::Channel_Selector::new()
                 .channel_id_eq(p.channel_cid.into())
                 .get_row(&my_session)
                 .unwrap();
 
-            c.save(&my_session);
+            c.save(&my_session);*/
             false
         }
         DeleteChannel(_) => false,
