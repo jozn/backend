@@ -877,3 +877,13 @@ impl Profile_Deleter {
         self
     }
 }
+
+pub fn get_profile_by_profile_cid(
+    session: impl FCQueryExecutor,
+    p1: i64,
+) -> Result<Profile, CWError> {
+    let m = Profile_Selector::new()
+        .profile_cid_eq(p1)
+        .get_row(session)?;
+    Ok(m)
+}

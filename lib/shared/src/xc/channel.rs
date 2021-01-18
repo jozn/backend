@@ -877,3 +877,11 @@ impl Channel_Deleter {
         self
     }
 }
+
+pub fn get_channel_by_channel_id(
+    session: impl FCQueryExecutor,
+    p1: i64,
+) -> Result<Channel, CWError> {
+    let m = Channel_Selector::new().channel_id_eq(p1).get_row(session)?;
+    Ok(m)
+}

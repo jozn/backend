@@ -877,3 +877,8 @@ impl User_Deleter {
         self
     }
 }
+
+pub fn get_user_by_user_cid(session: impl FCQueryExecutor, p1: i64) -> Result<User, CWError> {
+    let m = User_Selector::new().user_cid_eq(p1).get_row(session)?;
+    Ok(m)
+}

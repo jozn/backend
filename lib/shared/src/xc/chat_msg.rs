@@ -1463,3 +1463,15 @@ impl ChatMsg_Deleter {
         self
     }
 }
+
+pub fn get_chat_msg_by_chat_id_and_chat_id(
+    session: impl FCQueryExecutor,
+    p1: i64,
+    p2: i64,
+) -> Result<ChatMsg, CWError> {
+    let m = ChatMsg_Selector::new()
+        .chat_id_eq(p1)
+        .and_chat_id_eq(p2)
+        .get_row(session)?;
+    Ok(m)
+}

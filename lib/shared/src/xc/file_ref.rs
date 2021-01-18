@@ -1431,3 +1431,15 @@ impl FileRef_Deleter {
         self
     }
 }
+
+pub fn get_file_ref_by_file_gid_and_file_gid(
+    session: impl FCQueryExecutor,
+    p1: i64,
+    p2: i64,
+) -> Result<FileRef, CWError> {
+    let m = FileRef_Selector::new()
+        .file_gid_eq(p1)
+        .and_file_gid_eq(p2)
+        .get_row(session)?;
+    Ok(m)
+}

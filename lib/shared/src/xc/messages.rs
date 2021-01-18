@@ -880,3 +880,11 @@ impl Messages_Deleter {
         self
     }
 }
+
+pub fn get_messages_by_chat_id(
+    session: impl FCQueryExecutor,
+    p1: i64,
+) -> Result<Messages, CWError> {
+    let m = Messages_Selector::new().chat_id_eq(p1).get_row(session)?;
+    Ok(m)
+}

@@ -28,9 +28,9 @@ fn cmd_save_channels() {
 
 fn cmd_edit_channels() {
     for i in 1..=10 {
+        use pb::channel_command::SubCommand as cc;
         use pb::channel_command::SubCommand::*;
         use pb::channel_command::*;
-        use pb::channel_command::SubCommand as cc;
 
         let cmd = EditChannel(QEditChannel {
             channel_cid: i,
@@ -43,12 +43,8 @@ fn cmd_edit_channels() {
 
         send_channel_cmd(i as u64, cmd);
 
-
         // play
-        let x =  cc::DeleteMessage(QDeleteMessage{
-            channel_id: 0
-        });
-
+        let x = cc::DeleteMessage(QDeleteMessage { channel_id: 0 });
     }
 }
 

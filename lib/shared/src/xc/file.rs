@@ -877,3 +877,8 @@ impl File_Deleter {
         self
     }
 }
+
+pub fn get_file_by_file_gid(session: impl FCQueryExecutor, p1: i64) -> Result<File, CWError> {
+    let m = File_Selector::new().file_gid_eq(p1).get_row(session)?;
+    Ok(m)
+}
