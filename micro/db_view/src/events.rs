@@ -1,7 +1,7 @@
 use shared::{pb, xc};
 
 use crate::session;
-use crate::{channel_events, channel_events_old, groups_events};
+use crate::{channel_events, group_events, channel_events_old, groups_events_old};
 use shared::pb::event_command::Command;
 
 use std::collections::{HashMap, HashSet};
@@ -46,8 +46,8 @@ impl EventHandler {
             }
             Command::Group(gr_cmd) => {
                 let sub_cmd = gr_cmd.sub_command.unwrap();
-
-                groups_events::handle_group_events(sub_cmd);
+                let gr = group_events::GroupEvents::default();
+                self.get_thread_chan(5, event_req, gr);
             }
         }
     }
