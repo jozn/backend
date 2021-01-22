@@ -1,7 +1,7 @@
 use shared::{pb, xc};
 
 use crate::session;
-use crate::{channel_events, group_events, channel_events_old, groups_events_old};
+use crate::{channel_events, group_events};
 use shared::pb::event_command::Command;
 
 use std::collections::{HashMap, HashSet};
@@ -88,7 +88,7 @@ mod tests {
     use tokio::sync::mpsc;
 
     #[tokio::test]
-    async fn rpc_user_space_test1() {
+    async fn play_sample_channel_event() {
         let mut h = EventHandler::new();
 
         for i in 1..=10 {
@@ -132,7 +132,6 @@ mod tests {
 
     #[test]
     fn it_works() {
-        println!("hwerwe");
-        assert_eq!(2 + 2, 4);
+        println!("it works!");
     }
 }
