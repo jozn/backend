@@ -10,7 +10,7 @@ fn main() {
 
 ////////////// thread handling /////////////
 fn cmd_save_channels_handler() {
-    let mut h = db_view::events::EventHandler::new();
+    let mut h = db_view::events::EventHandler_Dep::new();
 
     for i in 1..=10 {
         let q = pb::channel_command::QCreateChannel {

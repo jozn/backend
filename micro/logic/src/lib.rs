@@ -67,7 +67,7 @@ pub enum Commands {
 #[derive(Debug)]
 pub struct UserSpaceCmd {
     cmd: Commands,
-    invoke_req: pb::Invoke,  // needed?
+    invoke_req: pb::Invoke, // needed?
     result: oneshot::Sender<Vec<u8>>,
 }
 
