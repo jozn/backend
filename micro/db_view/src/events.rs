@@ -14,8 +14,8 @@ use tokio::sync::oneshot;
 
 #[derive(Debug)]
 pub struct FEventReq {
-    event: pb::EventCommand,
-    result: tokio::sync::oneshot::Sender<u8>,
+    pub event: pb::EventCommand,
+    pub result: tokio::sync::oneshot::Sender<u8>,
 }
 
 #[derive(Debug)]
@@ -40,37 +40,9 @@ impl EventHandler {
 
         match cmd.clone() {
             Command::Channel(ch_cmd) => {
-                let sub_cmd = ch_cmd.sub_command.unwrap();
-
+                let sub_cmd = ch_cmd.sub_command.unwrap();//del
                 let ch = channel_events::ChannelEvents::default();
                 self.get_thread_chan(5, event_req, ch);
-                /*                match self.threads.get(&4) {
-                    None => {
-                        let (ch_send, ch_rec) = mpsc::sync_channel::<FEventReq>(5);
-
-                        let handle = thread::spawn(|| {
-                            for e in ch_rec {
-                                println!("+++ ++++{:?}", 88888);
-                                println!(">>>>>>>>{:?}", e.event.event_id);
-                                e.result.send(13);
-
-                                // e.result.send(5);
-                                // channel_events::handle_channel_events(e);
-                            }
-                        });
-
-                        // This could block if Shared thread is slow
-                        ch_send.send(event_req);
-
-                        self.threads.insert(4, ch_send);
-                    }
-
-                    Some(th_handler) => {
-                        th_handler.send(event_req);
-                    }
-                }*/
-
-                // channel_events::handle_channel_events(sub_cmd);
             }
             Command::Group(gr_cmd) => {
                 let sub_cmd = gr_cmd.sub_command.unwrap();
@@ -87,21 +59,15 @@ impl EventHandler {
 
                 let handle = thread::spawn(move || {
                     for e in ch_rec {
-                        println!("+++ ++++{:?}", 88888);
-                        // println!(">>>>>>>>{:?}", &(e.event).event_id);
-
+                        // println!("+++ ++++{:?}", 88888);
                         let out_res = proc.process_event(e.event);
 
                         e.result.send(out_res);
-
-                        // e.result.send(5);
-                        // channel_events::handle_channel_events(e);
                     }
                 });
 
                 // This could block if Shared thread is slow
                 ch_send.send(event_req);
-
                 self.threads.insert(4, ch_send);
             }
 
@@ -168,65 +134,5 @@ mod tests {
     fn it_works() {
         println!("hwerwe");
         assert_eq!(2 + 2, 4);
-    }
-}
-
-////////////////// Old > del
-type SMap<T> = HashMap<u32, mpsc::SyncSender<T>>;
-
-#[derive(Debug)]
-pub struct EventHandler_Dep {
-    threads_channel: SMap<pb::channel_command::SubCommand>,
-}
-
-impl EventHandler_Dep {
-    pub fn new() -> Self {
-        EventHandler_Dep {
-            threads_channel: HashMap::new(),
-        }
-    }
-
-    pub fn process_event_shared(&mut self, event: pb::EventCommand) {
-        let cmd = event.command.unwrap();
-
-        println!(
-            ">>>>>> proccessing threading event id: {:?}",
-            &event.event_id
-        );
-
-        match cmd.clone() {
-            Command::Channel(ch_cmd) => {
-                let sub_cmd = ch_cmd.sub_command.unwrap();
-
-                match self.threads_channel.get(&4) {
-                    None => {
-                        let (ch_send, ch_rec) = mpsc::sync_channel(5);
-
-                        let handle = thread::spawn(|| {
-                            for e in ch_rec {
-                                println!("+++ ++++{:?}", 1);
-                                channel_events_old::handle_channel_events_dep(e);
-                            }
-                        });
-
-                        // This could block if Shared thread is slow
-                        ch_send.send(sub_cmd);
-
-                        self.threads_channel.insert(4, ch_send);
-                    }
-
-                    Some(th_handler) => {
-                        th_handler.send(sub_cmd);
-                    }
-                }
-
-                // channel_events::handle_channel_events(sub_cmd);
-            }
-            Command::Group(gr_cmd) => {
-                let sub_cmd = gr_cmd.sub_command.unwrap();
-
-                groups_events::handle_group_events(sub_cmd);
-            }
-        }
     }
 }

@@ -1,16 +1,19 @@
 extern crate db_view;
 
 use shared::{pb, xc};
+use db_view::events::FEventReq;
+use tokio::sync::oneshot;
 
-fn main() {
-    cmd_save_channels_handler();
+#[tokio::main]
+async fn main() {
+    cmd_save_channels_handler().await;
     // cmd_save_channels();
     // cmd_edit_channels();
 }
 
 ////////////// thread handling /////////////
-fn cmd_save_channels_handler() {
-    let mut h = db_view::events::EventHandler_Dep::new();
+async fn cmd_save_channels_handler() {
+    let mut h = db_view::events::EventHandler::new();
 
     for i in 1..=10 {
         let q = pb::channel_command::QCreateChannel {
@@ -38,7 +41,15 @@ fn cmd_save_channels_handler() {
             // command: pb::event_command::Command::Channel(pb::ChannelCommand)
         };
 
-        h.process_event_shared(qevent)
+        let (send, rec) = oneshot::channel();
+        let event_req = FEventReq {
+            event: qevent,
+            result: send,
+        };
+
+        h.process_event_shared(event_req);
+        let r = rec.await;
+        println!("{:?}", r);
         // send_channel_cmd(i as u64, cmd);
     }
 
