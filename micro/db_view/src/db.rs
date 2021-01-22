@@ -126,6 +126,7 @@ impl DBCassandra {
     }
 }
 
+// Deprecated > remove
 pub fn get_channel(channel_id: u64) -> Result<pb::Channel, GenErr> {
     let sess = session::get_session();
 
