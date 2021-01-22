@@ -10,7 +10,7 @@ fn main() {
 
 ////////////// thread handling /////////////
 fn cmd_save_channels_handler() {
-    let mut h = db_view::events::EventHandler::new();
+    let mut h = db_view::events_old::EventHandler::new();
 
     for i in 1..=10 {
         let q = pb::channel_command::QCreateChannel {
@@ -98,7 +98,7 @@ fn send_channel_cmd(event_id: u64, ch_cmd: pb::channel_command::SubCommand) {
         // command: pb::event_command::Command::Channel(pb::ChannelCommand)
     };
 
-    db_view::events::process_event(qevent);
+    db_view::events_old::process_event(qevent);
 }
 
 /////////// other codes
@@ -151,6 +151,6 @@ fn main_bk() {
         // command: pb::event_command::Command::Channel(pb::ChannelCommand)
     };
 
-    db_view::events::process_event(qevent);
+    db_view::events_old::process_event(qevent);
     // save_channels();
 }

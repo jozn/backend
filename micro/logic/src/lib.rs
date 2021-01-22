@@ -5,8 +5,6 @@
 #![allow(warnings)]
 #![allow(soft_unstable)]
 
-// mod db;
-
 use async_trait::async_trait;
 use byteorder::ReadBytesExt;
 use byteorder::WriteBytesExt;
@@ -29,25 +27,10 @@ use std::thread;
 use tokio::sync::mpsc::{channel, Receiver, Sender};
 use tokio::sync::oneshot;
 
-/*pub mod xc;
-
-fn play1(){
-    let u = xc::user::User{
-        user_id: 0,
-        created_time: 0,
-        full_name: "".to_string(),
-        user_name: "".to_string(),
-        ..Default::default()
-    };
-}
-*/
 #[derive(Debug, Default)]
 pub struct UserSpaceCache {
     contacts: HashSet<String>,
     liked_posts: HashSet<String>,
-    //del?
-    contact3: HashMap<String, bool>,
-    contacts2: Vec<u64>,
 }
 
 // no locking
@@ -56,7 +39,6 @@ pub struct UserSpace {
     sender: Sender<UserSpaceCmd>,
     last_rpc: u64,
     user_id: u64,
-    user_info: Commands, // pb
     cache: UserSpaceCache,
 }
 impl UserSpace {}
@@ -64,8 +46,7 @@ impl UserSpace {}
 #[async_trait]
 impl RPC_Auth_Handler2 for UserSpace {
     async fn ConfirmCode(&self, param: ConfirmCodeParam) -> Result<ConfirmCodeResponse, GenErr> {
-        println!("here is the way to go");
-        let cr = self.cache.contact3.get("sdf");
+        println!("inside of ConfrimCode impl for userSpace");
         Ok(pb::ConfirmCodeResponse {
             done: true,
             error_message: "ssdf sdfsdfsd fsd flsa".to_string(),
@@ -78,7 +59,6 @@ impl rpc2::RPC_Channel_Handler2 for UserSpace {}
 
 #[derive(Debug)]
 pub enum Commands {
-    RpcDead,
     InternalRpc,
     Exit,
     Invoke(shared::rpc2::RpcInvoke),
@@ -87,7 +67,7 @@ pub enum Commands {
 #[derive(Debug)]
 pub struct UserSpaceCmd {
     cmd: Commands,
-    invoke_req: pb::Invoke,
+    invoke_req: pb::Invoke,  // needed?
     result: oneshot::Sender<Vec<u8>>,
 }
 
@@ -100,27 +80,27 @@ impl UserSpacMapper {
         UserSpacMapper::default()
     }
 
-    pub async fn server_rpc_rec_vec8(&mut self, rpc_http: Vec<u8>) -> Result<Vec<u8>, GenErr> {
+    pub async fn serve_rpc_request_vec8(&mut self, rpc_http: Vec<u8>) -> Result<Vec<u8>, GenErr> {
         let invoke: pb::Invoke = prost::Message::decode(rpc_http.as_slice())?;
-        let act = rpc2::invoke_to_parsed(&invoke)?;
+        let rpc_invoke_enumed = rpc2::invoke_to_parsed(&invoke)?;
         let user_id = invoke.user_id;
 
-        let req_sender_stream = self.get_user_stream(user_id);
+        let req_sender_stream = self.get_or_init_userspcace_cmd(user_id);
 
         let (req_sender, mut req_receiver) = oneshot::channel();
-        let req_cmd = UserSpaceCmd {
-            cmd: Commands::Invoke(act),
+        let us_cmd = UserSpaceCmd {
+            cmd: Commands::Invoke(rpc_invoke_enumed),
             invoke_req: invoke,
             result: req_sender,
         };
-        req_sender_stream.send(req_cmd).await;
+        req_sender_stream.send(us_cmd).await;
         let res = req_receiver.try_recv();
         println!("req recived  {:?}", res);
 
         Ok(b"".to_vec())
     }
 
-    pub fn get_user_stream(&mut self, user_id: u32) -> Sender<UserSpaceCmd> {
+    fn get_or_init_userspcace_cmd(&mut self, user_id: u32) -> Sender<UserSpaceCmd> {
         let mut lock = self.mapper.lock().unwrap();
         let us_opt = lock.deref_mut().get(&user_id);
 
@@ -135,21 +115,22 @@ impl UserSpacMapper {
         req_sender_stream
     }
 
-    pub fn dispatch_new_user_space(&self, user_id: u32) -> Sender<UserSpaceCmd> {
+    fn dispatch_new_user_space(&self, user_id: u32) -> Sender<UserSpaceCmd> {
         let (req_stream_sender, mut req_stream_receiver) = channel(32);
-
-        let mut user_space = UserSpace {
-            // commands: receiver,
-            sender: req_stream_sender.clone(),
-            last_rpc: 0,
-            user_id: 0,
-            user_info: Commands::RpcDead,
-            cache: Default::default(),
-        };
+        let req_stream_sender_cp = req_stream_sender.clone();
 
         // reciver
         tokio::spawn(async move {
-            println!("geting  start ");
+            println!("user space start");
+
+            let mut user_space = UserSpace {
+                // commands: receiver,
+                sender: req_stream_sender_cp,
+                last_rpc: 0,
+                user_id: 0,
+                cache: Default::default(),
+            };
+
             let arc_us = Arc::new(user_space);
 
             macro_rules! add {
@@ -165,9 +146,8 @@ impl UserSpacMapper {
             };
 
             while let Some(us_cmd) = req_stream_receiver.recv().await {
-                println!(">>>> Registry ");
+                println!(">>>> insided of UserSpaceCmd matching ");
                 match us_cmd.cmd {
-                    Commands::RpcDead => {}
                     Commands::InternalRpc => {}
                     Commands::Exit => break,
                     Commands::Invoke(invoke) => {
@@ -203,8 +183,8 @@ mod tests {
         prost::Message::encode(&invoke, &mut vec).unwrap();
 
         let mut us = UserSpacMapper::new();
-        let out = us.server_rpc_rec_vec8(vec.clone()).await;
-        let out = us.server_rpc_rec_vec8(vec).await;
+        let out = us.serve_rpc_request_vec8(vec.clone()).await;
+        // let out = us.server_rpc_rec_vec8(vec).await;
 
         println!("test user space");
         tokio::time::sleep(std::time::Duration::from_secs(5)).await;

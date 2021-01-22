@@ -37,6 +37,14 @@ struct EventSharedSelect {
 }
 
 #[derive(Debug)]
+pub struct EventHandler2<T> {
+    threads: std::collections::HashMap<u32, T>,
+    threads_channel: Vec<T>,
+    threads_channel2: Vec<mpsc::Sender<T>>,
+    threads_channel3: HashMap<u32, mpsc::Sender<T>>,
+}
+
+#[derive(Debug)]
 pub struct EventHandler {
     threads: std::collections::HashMap<u32, ThreadHandler>,
 }
@@ -45,6 +53,11 @@ pub struct EventHandler {
 struct ThreadHandler {
     thread: thread::JoinHandle<()>,
     shared_id: u32,
+    ch: std::sync::mpsc::Sender<EventSharedSelect>,
+}
+
+#[derive(Debug)]
+struct ThreadHandler2<T> {
     ch: std::sync::mpsc::Sender<EventSharedSelect>,
 }
 

@@ -1,8 +1,10 @@
 pub mod channel_events;
 pub mod db;
-pub mod events;
+// pub mod events_old;
 pub mod groups_events;
 pub mod session;
+
+pub mod events;
 
 fn main() {
     println!("Hello, world!");

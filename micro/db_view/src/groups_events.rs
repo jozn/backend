@@ -3,6 +3,7 @@ use shared::{pb, xc};
 use crate::{db, session};
 use shared::pb::group_command::SubCommand;
 
+// Single threaded
 pub fn handle_group_events(command: pb::group_command::SubCommand) {
     use pb::group_command::SubCommand::*;
 
