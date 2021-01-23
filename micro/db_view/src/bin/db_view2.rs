@@ -1,7 +1,7 @@
 extern crate db_view;
 
-use shared::{pb, xc};
 use db_view::events::FEventReq;
+use shared::{pb, xc};
 use tokio::sync::oneshot;
 
 #[tokio::main]

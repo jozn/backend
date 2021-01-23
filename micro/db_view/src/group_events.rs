@@ -1,8 +1,8 @@
 use shared::{pb, xc};
 
 use crate::{db, events, session};
-use shared::pb::group_command::SubCommand;
 use shared::pb::event_command::Command;
+use shared::pb::group_command::SubCommand;
 use shared::pb::EventCommand;
 
 #[derive(Default, Debug)]

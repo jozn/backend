@@ -40,19 +40,25 @@ impl EventHandler {
 
         match cmd.clone() {
             Command::Channel(ch_cmd) => {
-                let sub_cmd = ch_cmd.sub_command.unwrap();//del
-                let ch = channel_events::ChannelEvents::default();
-                self.get_thread_chan(5, event_req, ch);
+                self.send_event_to_shared_thread(1, event_req, || {
+                    Box::new(channel_events::ChannelEvents::default())
+                });
             }
             Command::Group(gr_cmd) => {
-                let sub_cmd = gr_cmd.sub_command.unwrap();
-                let gr = group_events::GroupEvents::default();
-                self.get_thread_chan(5, event_req, gr);
+                self.send_event_to_shared_thread(2, event_req, || {
+                    Box::new(group_events::GroupEvents::default())
+                });
             }
         }
     }
 
-    fn get_thread_chan(&mut self, shared_id: u32, event_req: FEventReq, proc: impl EventProcess) {
+    // fn get_thread_chan(&mut self, shared_id: u32, event_req: FEventReq, proc: impl EventProcess) {
+    fn send_event_to_shared_thread(
+        &mut self,
+        shared_id: u32,
+        event_req: FEventReq,
+        handler_builder: impl Fn() -> Box<dyn EventProcess> + Send + 'static,
+    ) {
         match self.threads.get(&shared_id) {
             None => {
                 let (ch_send, ch_rec) = mpsc::sync_channel::<FEventReq>(5);
@@ -60,7 +66,7 @@ impl EventHandler {
                 let handle = thread::spawn(move || {
                     for e in ch_rec {
                         // println!("+++ ++++{:?}", 88888);
-                        let out_res = proc.process_event(e.event);
+                        let out_res = handler_builder().process_event(e.event);
 
                         e.result.send(out_res);
                     }
@@ -68,7 +74,7 @@ impl EventHandler {
 
                 // This could block if Shared thread is slow
                 ch_send.send(event_req);
-                self.threads.insert(4, ch_send);
+                self.threads.insert(shared_id, ch_send);
             }
 
             Some(th_handler) => {
