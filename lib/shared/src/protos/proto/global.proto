@@ -4,6 +4,10 @@ package pb;
 
 /////////////////////////// Docs ///////////////////////////
 /*
++Categorize fields > favour maintablaity over tags 1 byte saving
++Only when all things implemented go for correct tag ids
++If need to use Box > just after full imple of everythings > or just test if Box works and do not change the wire binary > after launch optimize this
+==
 Some notes:
   + Reduced: No bloated types > just those we need to now.
   + Seperate things that are diffrent: channles, store, directs,
@@ -48,7 +52,6 @@ message Invoke { // imut all
   uint32 method = 1; // imut
   uint32 user_id = 7; // imut
   uint64 action_id = 2; // imut
-//  bool is_response = 3; // imut // dep
   bytes session = 8; // imut
   bytes rpc_data = 4; // imut
 }
@@ -58,16 +61,14 @@ message InvokeResponse { // imut all
   uint32 method = 1; // imut
   uint32 user_id = 7; // imut
   uint64 action_id = 2; // imut
-//  bool is_response = 3; // imut
   bytes rpc_data = 4; // imut
 }
 
 //==================== User ==================
 message Contact {
-  fixed64 gid = 1;
+  fixed64 contact_gid = 1;
   uint32 profile_cid = 2;
-  uint64 device_id = 3; // From session
-  string phone = 4;
+  string phone = 4; // +98*
   string first_name = 5; // In device
   string last_name = 6; // In device
   uint32 peer_profile_cid = 12;
@@ -75,53 +76,65 @@ message Contact {
 }
 
 message User {
-  uint32 cid = 1;
-  string phone = 14;
-  string email = 15;
-  string password_hash = 17;
-  string password_salt = 18;
+  // Info 0-10
+  uint32 user_cid = 1;
+  string phone = 14; // for default profile
+  string email = 15; //
+
   uint32 created_time = 36;
   uint32 version_time = 37;
+
+  // Access 20
   bool is_deleted = 38;
   bool is_banned = 39;
 
+  // Passwords 30
+  string password_hash = 17;
+  string password_salt = 18;
+
+  // Profile 40
   Profile def_profile = 1114;
-  repeated Profile profiles = 110;
-  repeated Store stores = 113;
+
+  // Session 50
   repeated Session sessions = 102;
+
+  // Collections
+
+  // Shopping 60
   ShoppingProfile shopping_profile = 111;
+  repeated Store stores = 113;
 
-  string first_name = 4;
-  string last_name = 5;
-  // olds
-  Channel UserCounts = 80; //???
-}
-
-message UserCounts {
-  uint32 created_channels = 1; // Number of created channels
+  // Not now 800
+  repeated Profile profiles = 110;
 }
 
 //==================== Profile ==================
 message Profile {
-  uint32 cid = 1; // imut - profile_cid
+  // Info 0-10
+  uint32 profile_cid = 1; // imut - profile_cid
   uint32 user_cid = 2;// imut
-  Channel primary_channel = 100; // imut
-  SavedChannel saved_channel = 109; // imut
   uint32 created_time = 103; // imut
 
+  // Channel
+  Channel primary_channel = 100; // imut
+
+  // Save Channel
+  SavedChannel saved_channel = 109; // imut
+
+  // Settings
   ProfileSettings setting = 107; // imut
-  // Demonstration: collections > not really present > big > fetch with api
+
+  // Views 100
+  Contact contact_info = 111; // When sending profile to others set this if they have this profile in their contacts
+
+  // Demonstration: 800 - collections > not really present > big > fetch with api
   repeated Channel channels = 104; // mut
   repeated Direct directs = 105;// mut
   repeated Group groups = 106; // mut
   repeated Contact contacts = 108; // mut
-
-  // Views
-  Contact contact_info = 111; // When sending profile to others set this if they have this profile in their contacts
 }
 
 message ProfileSettings {
-  uint32 profile_cid = 1; // imut - ???
 
 }
 
@@ -134,53 +147,59 @@ enum DirectTypeEnum {
 }
 
 message Direct {
-  fixed64 gid = 1;
-  uint32 profile_cid = 5;
-  DirectTypeEnum direct_type = 102;
-  string custom_title = 9;
-  fixed64 pin_time_ms = 10;
-  uint32 unseen_count = 12;
-  uint32 seq = 13;
-  bool is_active = 22;
-  uint32 mute_until = 29;
-  uint32 created_time = 33;
-  fixed64 sort_time_ms = 45;
-  fixed64 sync_time_ms = 104;
+  // Info 1-10
+  fixed64 direct_gid = 1; // imut
+  uint32 profile_cid = 5; // imut
+  DirectTypeEnum direct_type = 102; // imut
+  string custom_title = 9; // mut
+  uint32 created_time = 33; // imut
 
-  fixed64 my_last_seen_seq = 16;
-  fixed64 my_last_seen_msg_id = 17;
+  // Meta info (sync) - mut
+  uint32 unseen_count = 12; // mut
+  fixed64 sort_time_ms = 45; // mut
+  fixed64 sync_time_ms = 104; // mut
+  fixed64 my_last_seen_seq = 16; // mut
+  fixed64 my_last_seen_msg_id = 17; // mut
 
-  uint32 pined_msgs_count = 108;
-  fixed64 visible_from_msg_gid = 11;
+  // Access
+  bool is_active = 22;  // mut
 
-  Channel channel = 48;
+  // Pin
+  fixed64 pin_time_ms = 10; // mut
+  uint32 pined_msgs_count = 108; // mut
+
+  // Peer Chat
+  PeerChat peer_chat = 433; // s_imut
+
+  // Channel
+  Channel channel = 48; // s_imut
+
+  // Group
+  Group group = 50; // s_imut
+  GroupMember group_member = 43; // s_imut
+  fixed64 visible_from_msg_gid = 11; // imut
+
+  // Chat
   Contact contact = 49; // ? must use profile
-//  Profile profile = 149;
-  Group group = 50;
-  Message last_message = 25;
-  Message pinned_message = 26;
-  GroupMember group_member = 43;
-  DirectDraft draft = 46;
-  DirectCustomNotification custom_notification = 47;
 
-  // dep - del all below
-  // For chat
-  uint32 peer_profile_cid = 6; // ??
-  fixed64 peer_last_seen_msg_id = 18; // ??
-  fixed64 my_last_delivered_seq = 19; // ??
-  fixed64 my_last_delivered_msg_id = 20; // ??
-  fixed64 peer_last_delivered_msg_id = 21; // ??
-  // For channel
-  uint32 peer_channel_cid = 41; // ??
+  // Profile > or Peer Chat ?
+  Profile profile = 149;
 
-  // For group
-  uint32 group_cid = 7; // ??
-  FileMsg avatar = 44; // ??
+  // Messages
+  Message last_message = 25; // mut
+  Message pinned_message = 26; // mut
+
+  // Notification/Setting -> this is only for consumer, corresponding settings for owener are it object themself (ex: channels,...)
+  DirectCustomNotification custom_notification = 47;  // mut
+  uint32 mute_until = 29; // mut
+
+  // Draft
+  DirectDraft draft = 46;  // mut
 }
 
 message DirectDraft {
-  string draft_text = 34;
-  int64 drat_reply_to_msg_id = 35;
+  string draft_text = 34; // mut
+  int64 drat_reply_to_msg_id = 35; // mut
 }
 
 message DirectCustomNotification {
@@ -194,39 +213,63 @@ message DirectCustomNotification {
   bool priority = 20;
 }
 
+//==================== Peer Chat ==================
+message PeerChat {
+  // todo
+  //  uint32 peer_profile_cid = 6; // ??
+  //  fixed64 peer_last_seen_msg_id = 18; // ??
+  //  fixed64 my_last_delivered_seq = 19; // ??
+  //  fixed64 my_last_delivered_msg_id = 20; // ??
+  //  fixed64 peer_last_delivered_msg_id = 21; // ??
+}
+
 //==================== Messages ==================
 message Message {
-  fixed64 gid = 1; // imut
+  // 1-10 Info
+  fixed64 message_gid = 1; // imut
   uint32 by_profile_cid = 2; // imut
   MessageType message_type =107; // imut - mostly
   string text = 7;
-  uint32 via_app_id = 12; // imut
+  uint32 via_app_id = 12; // imut > Including bots 1: Android app, 2... to 1000 reserved - bots >1000
   uint32 seq = 13; // imut
-  uint32 edited_time = 17;
   uint32 created_time = 18; // imut
-  bool verified = 111; // imut - verified system messages - 2 bytes tag
 
+  // Edit
+  uint32 edited_time = 17; // mut
+
+  // Sync info
   MessageDeliveryStatues delivery_status = 105;
   uint32 delivery_time = 106; // mut-once
 
+  // Visibility
+  bool verified = 111; // imut - verified system messages - 2 bytes tag
   bool deleted = 150; // maybe temp with a purge period - 2 bytes
 
-  uint32 flags = 112;
+  // Header: Forward/Reply
   Message forward = 16; // forward is always live object from other channels, but not from other chats, groups
   Message reply_to = 50;
 
-  // For channels, stores
-  string title = 109; // For videos
-  MessageCount counts = 101;
+  // Channels Settings
   MessageSetting setting = 102;
-  Product Product = 110;
 
+  // Channels Extra
+  MessageCount counts = 101;
+
+  // Media
   repeated FileMsg files = 103;
+
+  // Stores
+  Product Product = 110;
 
   // add location, log, payment, proudcut, forward,
   // reply, pre msg, rich media
 
   // Views: channel, group, user,
+
+  // Remove
+  uint32 flags = 112;
+  string title = 109; // For videos > use embeded types
+
 }
 
 enum MessageType {
@@ -249,7 +292,7 @@ enum MessageType {
 }
 
 message MessageCount {
-  fixed64 message_gid = 1; //??
+  fixed64 message_gid = 1; //???
   uint32 comments_count = 2;
   uint32 likes_count = 3;
   int64 views_count = 4;
@@ -294,29 +337,43 @@ enum MessageLogType {
 
 //==================== Channel ==================
 message Channel {
-  uint32 cid = 1;
-  string user_name = 2;
-  string channel_name = 3; // For default channels take if from User first and lastname.
-  uint32 creator_profile_cid = 7;
-  bool is_verified = 6;
-  bool is_profile_channel = 101;
-  int64 avatar_count = 40;
-  string about = 16;
-  string invite_link_hash = 17;
-  uint32 message_seq = 19;
-  fixed64 sync_time_ms = 21; // version
-  uint32 created_time = 36;
+  // Info
+  uint32 channel_cid = 1; // imut
+  uint32 creator_profile_cid = 7; // imut
+  bool is_profile_channel = 101; // imut
+  uint32 created_time = 36; // imut
 
-  // conslidate in visivlity
-  uint32 is_deleted = 38;
-  uint32 is_banned = 39;
+  // Sync
+  fixed64 sync_time_ms = 21; // mut - version
 
+  // Visibility
+  string user_name = 2; // mut
+  string channel_name = 3; // mut - For default channels take if from User first and lastname.
+  string about = 16; // mut
+  bool is_verified = 6; // mut
+
+  // Access
+  uint32 is_deleted = 38; // mut
+  uint32 is_banned = 39; // mut
+
+  // Settings
+  string invite_link_hash = 17; // mut
   ChannelOwnerNotification notification_setting = 90; // for owner
-  ChannelPrivacy privacy = 9;
-  ChannelCounts counts = 41;
-  Message last_message = 25;
-  Message pinned_message = 26;
-  FileMsg avatar = 100;
+  ChannelPrivacy privacy = 9; // mut
+
+  // Messages
+  Message last_message = 25; // mut
+  uint32 message_seq = 19; // mut
+
+  // Pin
+  Message pinned_message = 26; // mut
+
+  // Avatar
+  FileMsg avatar = 100; // mut
+  int64 avatar_count = 40; // mut
+
+  // Counts
+  ChannelCounts counts = 41; // mut
 }
 
 enum ChannelPrivacy {
@@ -354,7 +411,7 @@ message ShoppingProfile { //todo
 
 }
 
-message Store {
+message Store {//todo
   uint32 cid = 1;
   string user_name = 2;
   string store_name = 3; // For default channels take if from User.
@@ -389,15 +446,15 @@ message Product { //todo
   uint32 created_time = 18;*/
 }
 
-message ProductPriceInfo {
+message ProductPriceInfo {//todo
   uint32 price = 1;
   uint32 discount_price = 6;
-  uint32 rate = 3; // from 1000
+  uint32 commission_rate = 3; // from 1000
 }
 
 //==================== Saved ==================
-message SavedChannel {
-  uint32 cid = 1;
+message SavedChannel {//todo
+  uint32 channel_cid = 1;
   uint32 creator_profile_cid = 7;
   uint32 message_seq = 19;
   fixed64 sync_time_ms = 21; // version
@@ -408,7 +465,7 @@ message SavedChannel {
 }
 
 //==================== Group ==================
-message Group {
+message Group {//todo
   uint32 cid = 1;
   string group_title = 3; // or _name
   string user_name = 4; // with "group" suffix > not now > all is private now
@@ -435,7 +492,7 @@ message Group {
   FileMsg avatar = 27;
 }
 
-message GroupCounts {
+message GroupCounts {//todo
   uint32 media_count = 23;
   uint32 photo_count = 24;
   uint32 video_count = 25;
@@ -447,7 +504,7 @@ message GroupCounts {
   uint32 pined_count = 32;
 }
 
-message GroupMember {
+message GroupMember {//todo
   int64 gid = 1;
   int64 group_cid = 2;
   uint32 profile_cid = 3;
@@ -483,7 +540,7 @@ enum DevicePlatform {
   Web = 7;
 }
 
-message Session {
+message Session {//todo
   fixed64 gid = 1;
   string session_uuid = 2;
   uint64 device_id = 100;
@@ -496,7 +553,7 @@ message Session {
   uint32 created_time = 7;
 }
 
-message Sms {
+message Sms {//todo
   fixed64 gid = 1;
   string install_uuid = 3;
   string to_phone = 4;
