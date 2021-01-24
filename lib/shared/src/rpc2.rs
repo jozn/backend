@@ -63,18 +63,20 @@ pub enum RPC_Channel_MethodData {
     ChannelChangeDefaultPermission(pb::ChannelChangeDefaultPermissionParam),
     ChannelRevokeLink(pb::ChannelRevokeLinkParam),
     ChannelChangeUsername(pb::ChannelChangeUsernameParam),
-    ChannelBlockChannel(pb::ChannelBlockChannelParam),
+    ChannelBlockProfile(pb::ChannelBlockProfileParam),
     ChannelSendMessage(pb::ChannelSendMessageParam),
     ChannelEditMessage(pb::ChannelEditMessageParam),
+    ChannelDeleteMessages(pb::ChannelDeleteMessagesParam),
+    ChannelLikeMessage(pb::ChannelLikeMessageParam),
+    ChannelUnLikeMessage(pb::ChannelUnLikeMessageParam),
+    ChannelReShareMessage(pb::ChannelReShareMessageParam),
+    ChannelUnReShareMessage(pb::ChannelUnReShareMessageParam),
+    ChannelAddComment(pb::ChannelAddCommentParam),
+    ChannelDeleteComment(pb::ChannelDeleteCommentParam),
     ChannelPinMessage(pb::ChannelPinMessageParam),
     ChannelUnPinMessage(pb::ChannelUnPinMessageParam),
-    ChannelDeleteMessage(pb::ChannelDeleteMessageParam),
-    ChannelDeleteMessages(pb::ChannelDeleteMessagesParam),
-    ChannelClearHistory(pb::ChannelClearHistoryParam),
     ChannelAvatarAdd(pb::ChannelAvatarAddParam),
-    ChannelAvatarChange(pb::ChannelAvatarChangeParam),
     ChannelAvatarDelete(pb::ChannelAvatarDeleteParam),
-    ChannelAvatarGetList(pb::ChannelAvatarGetListParam),
     ChannelSendDoingAction(pb::ChannelSendDoingActionParam),
     ChannelReportChannel(pb::ChannelReportChannelParam),
     ChannelReportMessage(pb::ChannelReportMessageParam),
@@ -83,10 +85,10 @@ pub enum RPC_Channel_MethodData {
     ChannelGetMediaList(pb::ChannelGetMediaListParam),
     ChannelGetAuthors(pb::ChannelGetAuthorsParam),
     ChannelGetFollowers(pb::ChannelGetFollowersParam),
-    ChannelGetFollowings(pb::ChannelGetFollowingsParam),
     ChannelGetSubscribers(pb::ChannelGetSubscribersParam),
     ChannelBlocked(pb::ChannelBlockedParam),
-    ChannelSetDraft(pb::ChannelSetDraftParam),
+    ChannelAvatarGetList(pb::ChannelAvatarGetListParam),
+    ChannelGetFollowings(pb::ChannelGetFollowingsParam),
 }
 #[derive(Debug)]
 pub enum RPC_Chat_MethodData {
@@ -134,29 +136,25 @@ pub enum RPC_Group_MethodData {
     GroupEditGroup(pb::GroupEditGroupParam),
     GroupDeleteGroup(pb::GroupDeleteGroupParam),
     GroupAddAdmin(pb::GroupAddAdminParam),
-    GroupAddMember(pb::GroupAddMemberParam),
     GroupRemoveMember(pb::GroupRemoveMemberParam),
     GroupChangeMemberLevel(pb::GroupChangeMemberLevelParam),
     GroupChangeMemberPermission(pb::GroupChangeMemberPermissionParam),
+    GroupBanMember(pb::GroupBanMemberParam),
     GroupJoinGroup(pb::JoinGroupParam),
     GroupLeaveGroup(pb::GroupLeaveGroupParam),
-    GroupBanMember(pb::GroupBanMemberParam),
+    GroupAddMember(pb::GroupAddMemberParam),
     GroupChangePrivacy(pb::GroupChangePrivacyParam),
     GroupChangeDefaultPermission(pb::GroupChangeDefaultPermissionParam),
     GroupRevokeLink(pb::GroupRevokeLinkParam),
     GroupChangeUsername(pb::GroupChangeUsernameParam),
     GroupSendMessage(pb::GroupSendMessageParam),
     GroupEditMessage(pb::GroupEditMessageParam),
-    GroupPinMessage(pb::GroupPinMessageParam),
-    GroupUnPinMessage(pb::GroupUnPinMessageParam),
-    GroupDeleteMessage(pb::GroupDeleteMessageParam),
     GroupDeleteMessages(pb::GroupDeleteMessagesParam),
     GroupDeleteHistory(pb::GroupDeleteHistoryParam),
-    GroupClearHistory(pb::GroupClearHistoryParam),
+    GroupPinMessage(pb::GroupPinMessageParam),
+    GroupUnPinMessage(pb::GroupUnPinMessageParam),
     GroupAvatarAdd(pb::GroupAvatarAddParam),
-    GroupAvatarChange(pb::GroupAvatarChangeParam),
     GroupAvatarDelete(pb::GroupAvatarDeleteParam),
-    GroupAvatarGetList(pb::GroupAvatarGetListParam),
     GroupSendDoingAction(pb::GroupSendDoingActionParam),
     GroupReportGroup(pb::GroupReportGroupParam),
     GroupGetFull(pb::GroupGetFullParam),
@@ -164,7 +162,7 @@ pub enum RPC_Group_MethodData {
     GroupGetMediaList(pb::GroupGetMediaListParam),
     GroupGetMembersList(pb::GroupGetMembersListParam),
     GroupGetAdminsList(pb::GroupGetAdminsListParam),
-    GroupSetDraft(pb::GroupSetDraftParam),
+    GroupAvatarGetList(pb::GroupAvatarGetListParam),
 }
 #[derive(Debug)]
 pub enum RPC_Sample_MethodData {
@@ -348,11 +346,11 @@ pub trait RPC_Channel_Handler {
     ) -> Result<pb::ChannelChangeUsernameResponse, GenErr> {
         Ok(pb::ChannelChangeUsernameResponse::default())
     }
-    async fn ChannelBlockChannel(
+    async fn ChannelBlockProfile(
         up: &UserParam,
-        param: pb::ChannelBlockChannelParam,
-    ) -> Result<pb::ChannelBlockChannelResponse, GenErr> {
-        Ok(pb::ChannelBlockChannelResponse::default())
+        param: pb::ChannelBlockProfileParam,
+    ) -> Result<pb::ChannelBlockProfileResponse, GenErr> {
+        Ok(pb::ChannelBlockProfileResponse::default())
     }
     async fn ChannelSendMessage(
         up: &UserParam,
@@ -366,6 +364,48 @@ pub trait RPC_Channel_Handler {
     ) -> Result<pb::ChannelEditMessageResponse, GenErr> {
         Ok(pb::ChannelEditMessageResponse::default())
     }
+    async fn ChannelDeleteMessages(
+        up: &UserParam,
+        param: pb::ChannelDeleteMessagesParam,
+    ) -> Result<pb::ChannelDeleteMessagesResponse, GenErr> {
+        Ok(pb::ChannelDeleteMessagesResponse::default())
+    }
+    async fn ChannelLikeMessage(
+        up: &UserParam,
+        param: pb::ChannelLikeMessageParam,
+    ) -> Result<pb::ChannelLikeMessageResponse, GenErr> {
+        Ok(pb::ChannelLikeMessageResponse::default())
+    }
+    async fn ChannelUnLikeMessage(
+        up: &UserParam,
+        param: pb::ChannelUnLikeMessageParam,
+    ) -> Result<pb::ChannelUnLikeMessageResponse, GenErr> {
+        Ok(pb::ChannelUnLikeMessageResponse::default())
+    }
+    async fn ChannelReShareMessage(
+        up: &UserParam,
+        param: pb::ChannelReShareMessageParam,
+    ) -> Result<pb::ChannelReShareMessageResponse, GenErr> {
+        Ok(pb::ChannelReShareMessageResponse::default())
+    }
+    async fn ChannelUnReShareMessage(
+        up: &UserParam,
+        param: pb::ChannelUnReShareMessageParam,
+    ) -> Result<pb::ChannelUnReShareMessageResponse, GenErr> {
+        Ok(pb::ChannelUnReShareMessageResponse::default())
+    }
+    async fn ChannelAddComment(
+        up: &UserParam,
+        param: pb::ChannelAddCommentParam,
+    ) -> Result<pb::ChannelAddCommentResponse, GenErr> {
+        Ok(pb::ChannelAddCommentResponse::default())
+    }
+    async fn ChannelDeleteComment(
+        up: &UserParam,
+        param: pb::ChannelDeleteCommentParam,
+    ) -> Result<pb::ChannelDeleteCommentResponse, GenErr> {
+        Ok(pb::ChannelDeleteCommentResponse::default())
+    }
     async fn ChannelPinMessage(
         up: &UserParam,
         param: pb::ChannelPinMessageParam,
@@ -378,47 +418,17 @@ pub trait RPC_Channel_Handler {
     ) -> Result<pb::ChannelUnPinMessageResponse, GenErr> {
         Ok(pb::ChannelUnPinMessageResponse::default())
     }
-    async fn ChannelDeleteMessage(
-        up: &UserParam,
-        param: pb::ChannelDeleteMessageParam,
-    ) -> Result<pb::ChannelDeleteMessageResponse, GenErr> {
-        Ok(pb::ChannelDeleteMessageResponse::default())
-    }
-    async fn ChannelDeleteMessages(
-        up: &UserParam,
-        param: pb::ChannelDeleteMessagesParam,
-    ) -> Result<pb::ChannelDeleteMessagesResponse, GenErr> {
-        Ok(pb::ChannelDeleteMessagesResponse::default())
-    }
-    async fn ChannelClearHistory(
-        up: &UserParam,
-        param: pb::ChannelClearHistoryParam,
-    ) -> Result<pb::ChannelClearHistoryResponse, GenErr> {
-        Ok(pb::ChannelClearHistoryResponse::default())
-    }
     async fn ChannelAvatarAdd(
         up: &UserParam,
         param: pb::ChannelAvatarAddParam,
     ) -> Result<pb::ChannelAvatarAddResponse, GenErr> {
         Ok(pb::ChannelAvatarAddResponse::default())
     }
-    async fn ChannelAvatarChange(
-        up: &UserParam,
-        param: pb::ChannelAvatarChangeParam,
-    ) -> Result<pb::ChannelAvatarChangeResponse, GenErr> {
-        Ok(pb::ChannelAvatarChangeResponse::default())
-    }
     async fn ChannelAvatarDelete(
         up: &UserParam,
         param: pb::ChannelAvatarDeleteParam,
     ) -> Result<pb::ChannelAvatarDeleteResponse, GenErr> {
         Ok(pb::ChannelAvatarDeleteResponse::default())
-    }
-    async fn ChannelAvatarGetList(
-        up: &UserParam,
-        param: pb::ChannelAvatarGetListParam,
-    ) -> Result<pb::ChannelAvatarGetListResponse, GenErr> {
-        Ok(pb::ChannelAvatarGetListResponse::default())
     }
     async fn ChannelSendDoingAction(
         up: &UserParam,
@@ -468,12 +478,6 @@ pub trait RPC_Channel_Handler {
     ) -> Result<pb::ChannelGetFollowersResponse, GenErr> {
         Ok(pb::ChannelGetFollowersResponse::default())
     }
-    async fn ChannelGetFollowings(
-        up: &UserParam,
-        param: pb::ChannelGetFollowingsParam,
-    ) -> Result<pb::ChannelGetFollowingsResponse, GenErr> {
-        Ok(pb::ChannelGetFollowingsResponse::default())
-    }
     async fn ChannelGetSubscribers(
         up: &UserParam,
         param: pb::ChannelGetSubscribersParam,
@@ -486,11 +490,17 @@ pub trait RPC_Channel_Handler {
     ) -> Result<pb::ChannelBlockedResponse, GenErr> {
         Ok(pb::ChannelBlockedResponse::default())
     }
-    async fn ChannelSetDraft(
+    async fn ChannelAvatarGetList(
         up: &UserParam,
-        param: pb::ChannelSetDraftParam,
-    ) -> Result<pb::ChannelSetDraftResponse, GenErr> {
-        Ok(pb::ChannelSetDraftResponse::default())
+        param: pb::ChannelAvatarGetListParam,
+    ) -> Result<pb::ChannelAvatarGetListResponse, GenErr> {
+        Ok(pb::ChannelAvatarGetListResponse::default())
+    }
+    async fn ChannelGetFollowings(
+        up: &UserParam,
+        param: pb::ChannelGetFollowingsParam,
+    ) -> Result<pb::ChannelGetFollowingsResponse, GenErr> {
+        Ok(pb::ChannelGetFollowingsResponse::default())
     }
 }
 #[async_trait]
@@ -729,12 +739,6 @@ pub trait RPC_Group_Handler {
     ) -> Result<pb::GroupAddAdminResponse, GenErr> {
         Ok(pb::GroupAddAdminResponse::default())
     }
-    async fn GroupAddMember(
-        up: &UserParam,
-        param: pb::GroupAddMemberParam,
-    ) -> Result<pb::GroupAddMemberResponse, GenErr> {
-        Ok(pb::GroupAddMemberResponse::default())
-    }
     async fn GroupRemoveMember(
         up: &UserParam,
         param: pb::GroupRemoveMemberParam,
@@ -753,6 +757,12 @@ pub trait RPC_Group_Handler {
     ) -> Result<pb::GroupChangeMemberPermissionResponse, GenErr> {
         Ok(pb::GroupChangeMemberPermissionResponse::default())
     }
+    async fn GroupBanMember(
+        up: &UserParam,
+        param: pb::GroupBanMemberParam,
+    ) -> Result<pb::GroupBanMemberResponse, GenErr> {
+        Ok(pb::GroupBanMemberResponse::default())
+    }
     async fn GroupJoinGroup(
         up: &UserParam,
         param: pb::JoinGroupParam,
@@ -765,11 +775,11 @@ pub trait RPC_Group_Handler {
     ) -> Result<pb::GroupLeaveGroupResponse, GenErr> {
         Ok(pb::GroupLeaveGroupResponse::default())
     }
-    async fn GroupBanMember(
+    async fn GroupAddMember(
         up: &UserParam,
-        param: pb::GroupBanMemberParam,
-    ) -> Result<pb::GroupBanMemberResponse, GenErr> {
-        Ok(pb::GroupBanMemberResponse::default())
+        param: pb::GroupAddMemberParam,
+    ) -> Result<pb::GroupAddMemberResponse, GenErr> {
+        Ok(pb::GroupAddMemberResponse::default())
     }
     async fn GroupChangePrivacy(
         up: &UserParam,
@@ -807,24 +817,6 @@ pub trait RPC_Group_Handler {
     ) -> Result<pb::GroupEditMessageResponse, GenErr> {
         Ok(pb::GroupEditMessageResponse::default())
     }
-    async fn GroupPinMessage(
-        up: &UserParam,
-        param: pb::GroupPinMessageParam,
-    ) -> Result<pb::GroupPinMessageResponse, GenErr> {
-        Ok(pb::GroupPinMessageResponse::default())
-    }
-    async fn GroupUnPinMessage(
-        up: &UserParam,
-        param: pb::GroupUnPinMessageParam,
-    ) -> Result<pb::GroupUnPinMessageResponse, GenErr> {
-        Ok(pb::GroupUnPinMessageResponse::default())
-    }
-    async fn GroupDeleteMessage(
-        up: &UserParam,
-        param: pb::GroupDeleteMessageParam,
-    ) -> Result<pb::GroupDeleteMessageResponse, GenErr> {
-        Ok(pb::GroupDeleteMessageResponse::default())
-    }
     async fn GroupDeleteMessages(
         up: &UserParam,
         param: pb::GroupDeleteMessagesParam,
@@ -837,11 +829,17 @@ pub trait RPC_Group_Handler {
     ) -> Result<pb::GroupDeleteHistoryResponse, GenErr> {
         Ok(pb::GroupDeleteHistoryResponse::default())
     }
-    async fn GroupClearHistory(
+    async fn GroupPinMessage(
         up: &UserParam,
-        param: pb::GroupClearHistoryParam,
-    ) -> Result<pb::GroupClearHistoryResponse, GenErr> {
-        Ok(pb::GroupClearHistoryResponse::default())
+        param: pb::GroupPinMessageParam,
+    ) -> Result<pb::GroupPinMessageResponse, GenErr> {
+        Ok(pb::GroupPinMessageResponse::default())
+    }
+    async fn GroupUnPinMessage(
+        up: &UserParam,
+        param: pb::GroupUnPinMessageParam,
+    ) -> Result<pb::GroupUnPinMessageResponse, GenErr> {
+        Ok(pb::GroupUnPinMessageResponse::default())
     }
     async fn GroupAvatarAdd(
         up: &UserParam,
@@ -849,23 +847,11 @@ pub trait RPC_Group_Handler {
     ) -> Result<pb::GroupAvatarAddResponse, GenErr> {
         Ok(pb::GroupAvatarAddResponse::default())
     }
-    async fn GroupAvatarChange(
-        up: &UserParam,
-        param: pb::GroupAvatarChangeParam,
-    ) -> Result<pb::GroupAvatarChangeResponse, GenErr> {
-        Ok(pb::GroupAvatarChangeResponse::default())
-    }
     async fn GroupAvatarDelete(
         up: &UserParam,
         param: pb::GroupAvatarDeleteParam,
     ) -> Result<pb::GroupAvatarDeleteResponse, GenErr> {
         Ok(pb::GroupAvatarDeleteResponse::default())
-    }
-    async fn GroupAvatarGetList(
-        up: &UserParam,
-        param: pb::GroupAvatarGetListParam,
-    ) -> Result<pb::GroupAvatarGetListResponse, GenErr> {
-        Ok(pb::GroupAvatarGetListResponse::default())
     }
     async fn GroupSendDoingAction(
         up: &UserParam,
@@ -909,11 +895,11 @@ pub trait RPC_Group_Handler {
     ) -> Result<pb::GroupGetAdminsListResponse, GenErr> {
         Ok(pb::GroupGetAdminsListResponse::default())
     }
-    async fn GroupSetDraft(
+    async fn GroupAvatarGetList(
         up: &UserParam,
-        param: pb::GroupSetDraftParam,
-    ) -> Result<pb::GroupSetDraftResponse, GenErr> {
-        Ok(pb::GroupSetDraftResponse::default())
+        param: pb::GroupAvatarGetListParam,
+    ) -> Result<pb::GroupAvatarGetListResponse, GenErr> {
+        Ok(pb::GroupAvatarGetListResponse::default())
     }
 }
 #[async_trait]
@@ -1207,11 +1193,11 @@ pub trait RPC_Channel_Handler2: Send + Sync {
     ) -> Result<pb::ChannelChangeUsernameResponse, GenErr> {
         Ok(pb::ChannelChangeUsernameResponse::default())
     }
-    async fn ChannelBlockChannel(
+    async fn ChannelBlockProfile(
         &self,
-        param: pb::ChannelBlockChannelParam,
-    ) -> Result<pb::ChannelBlockChannelResponse, GenErr> {
-        Ok(pb::ChannelBlockChannelResponse::default())
+        param: pb::ChannelBlockProfileParam,
+    ) -> Result<pb::ChannelBlockProfileResponse, GenErr> {
+        Ok(pb::ChannelBlockProfileResponse::default())
     }
     async fn ChannelSendMessage(
         &self,
@@ -1225,6 +1211,48 @@ pub trait RPC_Channel_Handler2: Send + Sync {
     ) -> Result<pb::ChannelEditMessageResponse, GenErr> {
         Ok(pb::ChannelEditMessageResponse::default())
     }
+    async fn ChannelDeleteMessages(
+        &self,
+        param: pb::ChannelDeleteMessagesParam,
+    ) -> Result<pb::ChannelDeleteMessagesResponse, GenErr> {
+        Ok(pb::ChannelDeleteMessagesResponse::default())
+    }
+    async fn ChannelLikeMessage(
+        &self,
+        param: pb::ChannelLikeMessageParam,
+    ) -> Result<pb::ChannelLikeMessageResponse, GenErr> {
+        Ok(pb::ChannelLikeMessageResponse::default())
+    }
+    async fn ChannelUnLikeMessage(
+        &self,
+        param: pb::ChannelUnLikeMessageParam,
+    ) -> Result<pb::ChannelUnLikeMessageResponse, GenErr> {
+        Ok(pb::ChannelUnLikeMessageResponse::default())
+    }
+    async fn ChannelReShareMessage(
+        &self,
+        param: pb::ChannelReShareMessageParam,
+    ) -> Result<pb::ChannelReShareMessageResponse, GenErr> {
+        Ok(pb::ChannelReShareMessageResponse::default())
+    }
+    async fn ChannelUnReShareMessage(
+        &self,
+        param: pb::ChannelUnReShareMessageParam,
+    ) -> Result<pb::ChannelUnReShareMessageResponse, GenErr> {
+        Ok(pb::ChannelUnReShareMessageResponse::default())
+    }
+    async fn ChannelAddComment(
+        &self,
+        param: pb::ChannelAddCommentParam,
+    ) -> Result<pb::ChannelAddCommentResponse, GenErr> {
+        Ok(pb::ChannelAddCommentResponse::default())
+    }
+    async fn ChannelDeleteComment(
+        &self,
+        param: pb::ChannelDeleteCommentParam,
+    ) -> Result<pb::ChannelDeleteCommentResponse, GenErr> {
+        Ok(pb::ChannelDeleteCommentResponse::default())
+    }
     async fn ChannelPinMessage(
         &self,
         param: pb::ChannelPinMessageParam,
@@ -1237,47 +1265,17 @@ pub trait RPC_Channel_Handler2: Send + Sync {
     ) -> Result<pb::ChannelUnPinMessageResponse, GenErr> {
         Ok(pb::ChannelUnPinMessageResponse::default())
     }
-    async fn ChannelDeleteMessage(
-        &self,
-        param: pb::ChannelDeleteMessageParam,
-    ) -> Result<pb::ChannelDeleteMessageResponse, GenErr> {
-        Ok(pb::ChannelDeleteMessageResponse::default())
-    }
-    async fn ChannelDeleteMessages(
-        &self,
-        param: pb::ChannelDeleteMessagesParam,
-    ) -> Result<pb::ChannelDeleteMessagesResponse, GenErr> {
-        Ok(pb::ChannelDeleteMessagesResponse::default())
-    }
-    async fn ChannelClearHistory(
-        &self,
-        param: pb::ChannelClearHistoryParam,
-    ) -> Result<pb::ChannelClearHistoryResponse, GenErr> {
-        Ok(pb::ChannelClearHistoryResponse::default())
-    }
     async fn ChannelAvatarAdd(
         &self,
         param: pb::ChannelAvatarAddParam,
     ) -> Result<pb::ChannelAvatarAddResponse, GenErr> {
         Ok(pb::ChannelAvatarAddResponse::default())
     }
-    async fn ChannelAvatarChange(
-        &self,
-        param: pb::ChannelAvatarChangeParam,
-    ) -> Result<pb::ChannelAvatarChangeResponse, GenErr> {
-        Ok(pb::ChannelAvatarChangeResponse::default())
-    }
     async fn ChannelAvatarDelete(
         &self,
         param: pb::ChannelAvatarDeleteParam,
     ) -> Result<pb::ChannelAvatarDeleteResponse, GenErr> {
         Ok(pb::ChannelAvatarDeleteResponse::default())
-    }
-    async fn ChannelAvatarGetList(
-        &self,
-        param: pb::ChannelAvatarGetListParam,
-    ) -> Result<pb::ChannelAvatarGetListResponse, GenErr> {
-        Ok(pb::ChannelAvatarGetListResponse::default())
     }
     async fn ChannelSendDoingAction(
         &self,
@@ -1327,12 +1325,6 @@ pub trait RPC_Channel_Handler2: Send + Sync {
     ) -> Result<pb::ChannelGetFollowersResponse, GenErr> {
         Ok(pb::ChannelGetFollowersResponse::default())
     }
-    async fn ChannelGetFollowings(
-        &self,
-        param: pb::ChannelGetFollowingsParam,
-    ) -> Result<pb::ChannelGetFollowingsResponse, GenErr> {
-        Ok(pb::ChannelGetFollowingsResponse::default())
-    }
     async fn ChannelGetSubscribers(
         &self,
         param: pb::ChannelGetSubscribersParam,
@@ -1345,11 +1337,17 @@ pub trait RPC_Channel_Handler2: Send + Sync {
     ) -> Result<pb::ChannelBlockedResponse, GenErr> {
         Ok(pb::ChannelBlockedResponse::default())
     }
-    async fn ChannelSetDraft(
+    async fn ChannelAvatarGetList(
         &self,
-        param: pb::ChannelSetDraftParam,
-    ) -> Result<pb::ChannelSetDraftResponse, GenErr> {
-        Ok(pb::ChannelSetDraftResponse::default())
+        param: pb::ChannelAvatarGetListParam,
+    ) -> Result<pb::ChannelAvatarGetListResponse, GenErr> {
+        Ok(pb::ChannelAvatarGetListResponse::default())
+    }
+    async fn ChannelGetFollowings(
+        &self,
+        param: pb::ChannelGetFollowingsParam,
+    ) -> Result<pb::ChannelGetFollowingsResponse, GenErr> {
+        Ok(pb::ChannelGetFollowingsResponse::default())
     }
 }
 #[async_trait]
@@ -1588,12 +1586,6 @@ pub trait RPC_Group_Handler2: Send + Sync {
     ) -> Result<pb::GroupAddAdminResponse, GenErr> {
         Ok(pb::GroupAddAdminResponse::default())
     }
-    async fn GroupAddMember(
-        &self,
-        param: pb::GroupAddMemberParam,
-    ) -> Result<pb::GroupAddMemberResponse, GenErr> {
-        Ok(pb::GroupAddMemberResponse::default())
-    }
     async fn GroupRemoveMember(
         &self,
         param: pb::GroupRemoveMemberParam,
@@ -1612,6 +1604,12 @@ pub trait RPC_Group_Handler2: Send + Sync {
     ) -> Result<pb::GroupChangeMemberPermissionResponse, GenErr> {
         Ok(pb::GroupChangeMemberPermissionResponse::default())
     }
+    async fn GroupBanMember(
+        &self,
+        param: pb::GroupBanMemberParam,
+    ) -> Result<pb::GroupBanMemberResponse, GenErr> {
+        Ok(pb::GroupBanMemberResponse::default())
+    }
     async fn GroupJoinGroup(
         &self,
         param: pb::JoinGroupParam,
@@ -1624,11 +1622,11 @@ pub trait RPC_Group_Handler2: Send + Sync {
     ) -> Result<pb::GroupLeaveGroupResponse, GenErr> {
         Ok(pb::GroupLeaveGroupResponse::default())
     }
-    async fn GroupBanMember(
+    async fn GroupAddMember(
         &self,
-        param: pb::GroupBanMemberParam,
-    ) -> Result<pb::GroupBanMemberResponse, GenErr> {
-        Ok(pb::GroupBanMemberResponse::default())
+        param: pb::GroupAddMemberParam,
+    ) -> Result<pb::GroupAddMemberResponse, GenErr> {
+        Ok(pb::GroupAddMemberResponse::default())
     }
     async fn GroupChangePrivacy(
         &self,
@@ -1666,24 +1664,6 @@ pub trait RPC_Group_Handler2: Send + Sync {
     ) -> Result<pb::GroupEditMessageResponse, GenErr> {
         Ok(pb::GroupEditMessageResponse::default())
     }
-    async fn GroupPinMessage(
-        &self,
-        param: pb::GroupPinMessageParam,
-    ) -> Result<pb::GroupPinMessageResponse, GenErr> {
-        Ok(pb::GroupPinMessageResponse::default())
-    }
-    async fn GroupUnPinMessage(
-        &self,
-        param: pb::GroupUnPinMessageParam,
-    ) -> Result<pb::GroupUnPinMessageResponse, GenErr> {
-        Ok(pb::GroupUnPinMessageResponse::default())
-    }
-    async fn GroupDeleteMessage(
-        &self,
-        param: pb::GroupDeleteMessageParam,
-    ) -> Result<pb::GroupDeleteMessageResponse, GenErr> {
-        Ok(pb::GroupDeleteMessageResponse::default())
-    }
     async fn GroupDeleteMessages(
         &self,
         param: pb::GroupDeleteMessagesParam,
@@ -1696,11 +1676,17 @@ pub trait RPC_Group_Handler2: Send + Sync {
     ) -> Result<pb::GroupDeleteHistoryResponse, GenErr> {
         Ok(pb::GroupDeleteHistoryResponse::default())
     }
-    async fn GroupClearHistory(
+    async fn GroupPinMessage(
         &self,
-        param: pb::GroupClearHistoryParam,
-    ) -> Result<pb::GroupClearHistoryResponse, GenErr> {
-        Ok(pb::GroupClearHistoryResponse::default())
+        param: pb::GroupPinMessageParam,
+    ) -> Result<pb::GroupPinMessageResponse, GenErr> {
+        Ok(pb::GroupPinMessageResponse::default())
+    }
+    async fn GroupUnPinMessage(
+        &self,
+        param: pb::GroupUnPinMessageParam,
+    ) -> Result<pb::GroupUnPinMessageResponse, GenErr> {
+        Ok(pb::GroupUnPinMessageResponse::default())
     }
     async fn GroupAvatarAdd(
         &self,
@@ -1708,23 +1694,11 @@ pub trait RPC_Group_Handler2: Send + Sync {
     ) -> Result<pb::GroupAvatarAddResponse, GenErr> {
         Ok(pb::GroupAvatarAddResponse::default())
     }
-    async fn GroupAvatarChange(
-        &self,
-        param: pb::GroupAvatarChangeParam,
-    ) -> Result<pb::GroupAvatarChangeResponse, GenErr> {
-        Ok(pb::GroupAvatarChangeResponse::default())
-    }
     async fn GroupAvatarDelete(
         &self,
         param: pb::GroupAvatarDeleteParam,
     ) -> Result<pb::GroupAvatarDeleteResponse, GenErr> {
         Ok(pb::GroupAvatarDeleteResponse::default())
-    }
-    async fn GroupAvatarGetList(
-        &self,
-        param: pb::GroupAvatarGetListParam,
-    ) -> Result<pb::GroupAvatarGetListResponse, GenErr> {
-        Ok(pb::GroupAvatarGetListResponse::default())
     }
     async fn GroupSendDoingAction(
         &self,
@@ -1768,11 +1742,11 @@ pub trait RPC_Group_Handler2: Send + Sync {
     ) -> Result<pb::GroupGetAdminsListResponse, GenErr> {
         Ok(pb::GroupGetAdminsListResponse::default())
     }
-    async fn GroupSetDraft(
+    async fn GroupAvatarGetList(
         &self,
-        param: pb::GroupSetDraftParam,
-    ) -> Result<pb::GroupSetDraftResponse, GenErr> {
-        Ok(pb::GroupSetDraftResponse::default())
+        param: pb::GroupAvatarGetListParam,
+    ) -> Result<pb::GroupAvatarGetListResponse, GenErr> {
+        Ok(pb::GroupAvatarGetListResponse::default())
     }
 }
 #[async_trait]
@@ -1964,18 +1938,20 @@ pub mod method_ids {
     pub const ChannelChangeDefaultPermission: u32 = 1582638498;
     pub const ChannelRevokeLink: u32 = 1912530021;
     pub const ChannelChangeUsername: u32 = 983884462;
-    pub const ChannelBlockChannel: u32 = 2037016989;
+    pub const ChannelBlockProfile: u32 = 782736993;
     pub const ChannelSendMessage: u32 = 1200751231;
     pub const ChannelEditMessage: u32 = 727437726;
+    pub const ChannelDeleteMessages: u32 = 2124822181;
+    pub const ChannelLikeMessage: u32 = 1349412095;
+    pub const ChannelUnLikeMessage: u32 = 1770909427;
+    pub const ChannelReShareMessage: u32 = 517136377;
+    pub const ChannelUnReShareMessage: u32 = 1173971596;
+    pub const ChannelAddComment: u32 = 58338736;
+    pub const ChannelDeleteComment: u32 = 1510744722;
     pub const ChannelPinMessage: u32 = 259263709;
     pub const ChannelUnPinMessage: u32 = 113943649;
-    pub const ChannelDeleteMessage: u32 = 644189206;
-    pub const ChannelDeleteMessages: u32 = 2124822181;
-    pub const ChannelClearHistory: u32 = 1164398815;
     pub const ChannelAvatarAdd: u32 = 1021808696;
-    pub const ChannelAvatarChange: u32 = 1968579501;
     pub const ChannelAvatarDelete: u32 = 1626010891;
-    pub const ChannelAvatarGetList: u32 = 1925044843;
     pub const ChannelSendDoingAction: u32 = 973237257;
     pub const ChannelReportChannel: u32 = 792938145;
     pub const ChannelReportMessage: u32 = 2053528327;
@@ -1984,10 +1960,10 @@ pub mod method_ids {
     pub const ChannelGetMediaList: u32 = 985772653;
     pub const ChannelGetAuthors: u32 = 1373284924;
     pub const ChannelGetFollowers: u32 = 1747172143;
-    pub const ChannelGetFollowings: u32 = 1838438980;
     pub const ChannelGetSubscribers: u32 = 2146806736;
     pub const ChannelBlocked: u32 = 1674411747;
-    pub const ChannelSetDraft: u32 = 1403193015;
+    pub const ChannelAvatarGetList: u32 = 1925044843;
+    pub const ChannelGetFollowings: u32 = 1838438980;
 
     // Service: RPC_Chat
     pub const ChatSendMessage: u32 = 1131621475;
@@ -2032,29 +2008,25 @@ pub mod method_ids {
     pub const GroupEditGroup: u32 = 1665019493;
     pub const GroupDeleteGroup: u32 = 365183375;
     pub const GroupAddAdmin: u32 = 958971956;
-    pub const GroupAddMember: u32 = 676599227;
     pub const GroupRemoveMember: u32 = 2012702964;
     pub const GroupChangeMemberLevel: u32 = 589574238;
     pub const GroupChangeMemberPermission: u32 = 2132464067;
+    pub const GroupBanMember: u32 = 548504852;
     pub const GroupJoinGroup: u32 = 591743429;
     pub const GroupLeaveGroup: u32 = 361834630;
-    pub const GroupBanMember: u32 = 548504852;
+    pub const GroupAddMember: u32 = 676599227;
     pub const GroupChangePrivacy: u32 = 1497988410;
     pub const GroupChangeDefaultPermission: u32 = 605792138;
     pub const GroupRevokeLink: u32 = 406592509;
     pub const GroupChangeUsername: u32 = 832997038;
     pub const GroupSendMessage: u32 = 599852950;
     pub const GroupEditMessage: u32 = 742937895;
-    pub const GroupPinMessage: u32 = 184560027;
-    pub const GroupUnPinMessage: u32 = 1290613173;
-    pub const GroupDeleteMessage: u32 = 393991035;
     pub const GroupDeleteMessages: u32 = 276700675;
     pub const GroupDeleteHistory: u32 = 1270953793;
-    pub const GroupClearHistory: u32 = 1352552449;
+    pub const GroupPinMessage: u32 = 184560027;
+    pub const GroupUnPinMessage: u32 = 1290613173;
     pub const GroupAvatarAdd: u32 = 1202058216;
-    pub const GroupAvatarChange: u32 = 108612523;
     pub const GroupAvatarDelete: u32 = 775862697;
-    pub const GroupAvatarGetList: u32 = 939443722;
     pub const GroupSendDoingAction: u32 = 2022474356;
     pub const GroupReportGroup: u32 = 1759704420;
     pub const GroupGetFull: u32 = 200351324;
@@ -2062,7 +2034,7 @@ pub mod method_ids {
     pub const GroupGetMediaList: u32 = 2143016912;
     pub const GroupGetMembersList: u32 = 429215412;
     pub const GroupGetAdminsList: u32 = 332260610;
-    pub const GroupSetDraft: u32 = 77668156;
+    pub const GroupAvatarGetList: u32 = 939443722;
 
     // Service: RPC_Sample
     pub const GetUsers1: u32 = 486248681;
@@ -2141,18 +2113,20 @@ pub enum MethodIds {
     ChannelChangeDefaultPermission = 1582638498,
     ChannelRevokeLink = 1912530021,
     ChannelChangeUsername = 983884462,
-    ChannelBlockChannel = 2037016989,
+    ChannelBlockProfile = 782736993,
     ChannelSendMessage = 1200751231,
     ChannelEditMessage = 727437726,
+    ChannelDeleteMessages = 2124822181,
+    ChannelLikeMessage = 1349412095,
+    ChannelUnLikeMessage = 1770909427,
+    ChannelReShareMessage = 517136377,
+    ChannelUnReShareMessage = 1173971596,
+    ChannelAddComment = 58338736,
+    ChannelDeleteComment = 1510744722,
     ChannelPinMessage = 259263709,
     ChannelUnPinMessage = 113943649,
-    ChannelDeleteMessage = 644189206,
-    ChannelDeleteMessages = 2124822181,
-    ChannelClearHistory = 1164398815,
     ChannelAvatarAdd = 1021808696,
-    ChannelAvatarChange = 1968579501,
     ChannelAvatarDelete = 1626010891,
-    ChannelAvatarGetList = 1925044843,
     ChannelSendDoingAction = 973237257,
     ChannelReportChannel = 792938145,
     ChannelReportMessage = 2053528327,
@@ -2161,10 +2135,10 @@ pub enum MethodIds {
     ChannelGetMediaList = 985772653,
     ChannelGetAuthors = 1373284924,
     ChannelGetFollowers = 1747172143,
-    ChannelGetFollowings = 1838438980,
     ChannelGetSubscribers = 2146806736,
     ChannelBlocked = 1674411747,
-    ChannelSetDraft = 1403193015,
+    ChannelAvatarGetList = 1925044843,
+    ChannelGetFollowings = 1838438980,
 
     // Service: RPC_Chat
     ChatSendMessage = 1131621475,
@@ -2209,29 +2183,25 @@ pub enum MethodIds {
     GroupEditGroup = 1665019493,
     GroupDeleteGroup = 365183375,
     GroupAddAdmin = 958971956,
-    GroupAddMember = 676599227,
     GroupRemoveMember = 2012702964,
     GroupChangeMemberLevel = 589574238,
     GroupChangeMemberPermission = 2132464067,
+    GroupBanMember = 548504852,
     GroupJoinGroup = 591743429,
     GroupLeaveGroup = 361834630,
-    GroupBanMember = 548504852,
+    GroupAddMember = 676599227,
     GroupChangePrivacy = 1497988410,
     GroupChangeDefaultPermission = 605792138,
     GroupRevokeLink = 406592509,
     GroupChangeUsername = 832997038,
     GroupSendMessage = 599852950,
     GroupEditMessage = 742937895,
-    GroupPinMessage = 184560027,
-    GroupUnPinMessage = 1290613173,
-    GroupDeleteMessage = 393991035,
     GroupDeleteMessages = 276700675,
     GroupDeleteHistory = 1270953793,
-    GroupClearHistory = 1352552449,
+    GroupPinMessage = 184560027,
+    GroupUnPinMessage = 1290613173,
     GroupAvatarAdd = 1202058216,
-    GroupAvatarChange = 108612523,
     GroupAvatarDelete = 775862697,
-    GroupAvatarGetList = 939443722,
     GroupSendDoingAction = 2022474356,
     GroupReportGroup = 1759704420,
     GroupGetFull = 200351324,
@@ -2239,7 +2209,7 @@ pub enum MethodIds {
     GroupGetMediaList = 2143016912,
     GroupGetMembersList = 429215412,
     GroupGetAdminsList = 332260610,
-    GroupSetDraft = 77668156,
+    GroupAvatarGetList = 939443722,
 
     // Service: RPC_Sample
     GetUsers1 = 486248681,
@@ -2493,12 +2463,12 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
             }
         }
 
-        method_ids::ChannelBlockChannel => {
-            let rpc_param: pb::ChannelBlockChannelParam =
+        method_ids::ChannelBlockProfile => {
+            let rpc_param: pb::ChannelBlockProfileParam =
                 prost::Message::decode(invoke.rpc_data.as_slice())?;
             RpcInvoke {
-                method_id: 2037016989 as i64,
-                rpc_service: RPC_Channel(RPC_Channel_MethodData::ChannelBlockChannel(rpc_param)),
+                method_id: 782736993 as i64,
+                rpc_service: RPC_Channel(RPC_Channel_MethodData::ChannelBlockProfile(rpc_param)),
             }
         }
 
@@ -2520,6 +2490,71 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
             }
         }
 
+        method_ids::ChannelDeleteMessages => {
+            let rpc_param: pb::ChannelDeleteMessagesParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 2124822181 as i64,
+                rpc_service: RPC_Channel(RPC_Channel_MethodData::ChannelDeleteMessages(rpc_param)),
+            }
+        }
+
+        method_ids::ChannelLikeMessage => {
+            let rpc_param: pb::ChannelLikeMessageParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1349412095 as i64,
+                rpc_service: RPC_Channel(RPC_Channel_MethodData::ChannelLikeMessage(rpc_param)),
+            }
+        }
+
+        method_ids::ChannelUnLikeMessage => {
+            let rpc_param: pb::ChannelUnLikeMessageParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1770909427 as i64,
+                rpc_service: RPC_Channel(RPC_Channel_MethodData::ChannelUnLikeMessage(rpc_param)),
+            }
+        }
+
+        method_ids::ChannelReShareMessage => {
+            let rpc_param: pb::ChannelReShareMessageParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 517136377 as i64,
+                rpc_service: RPC_Channel(RPC_Channel_MethodData::ChannelReShareMessage(rpc_param)),
+            }
+        }
+
+        method_ids::ChannelUnReShareMessage => {
+            let rpc_param: pb::ChannelUnReShareMessageParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1173971596 as i64,
+                rpc_service: RPC_Channel(RPC_Channel_MethodData::ChannelUnReShareMessage(
+                    rpc_param,
+                )),
+            }
+        }
+
+        method_ids::ChannelAddComment => {
+            let rpc_param: pb::ChannelAddCommentParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 58338736 as i64,
+                rpc_service: RPC_Channel(RPC_Channel_MethodData::ChannelAddComment(rpc_param)),
+            }
+        }
+
+        method_ids::ChannelDeleteComment => {
+            let rpc_param: pb::ChannelDeleteCommentParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1510744722 as i64,
+                rpc_service: RPC_Channel(RPC_Channel_MethodData::ChannelDeleteComment(rpc_param)),
+            }
+        }
+
         method_ids::ChannelPinMessage => {
             let rpc_param: pb::ChannelPinMessageParam =
                 prost::Message::decode(invoke.rpc_data.as_slice())?;
@@ -2538,33 +2573,6 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
             }
         }
 
-        method_ids::ChannelDeleteMessage => {
-            let rpc_param: pb::ChannelDeleteMessageParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 644189206 as i64,
-                rpc_service: RPC_Channel(RPC_Channel_MethodData::ChannelDeleteMessage(rpc_param)),
-            }
-        }
-
-        method_ids::ChannelDeleteMessages => {
-            let rpc_param: pb::ChannelDeleteMessagesParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 2124822181 as i64,
-                rpc_service: RPC_Channel(RPC_Channel_MethodData::ChannelDeleteMessages(rpc_param)),
-            }
-        }
-
-        method_ids::ChannelClearHistory => {
-            let rpc_param: pb::ChannelClearHistoryParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1164398815 as i64,
-                rpc_service: RPC_Channel(RPC_Channel_MethodData::ChannelClearHistory(rpc_param)),
-            }
-        }
-
         method_ids::ChannelAvatarAdd => {
             let rpc_param: pb::ChannelAvatarAddParam =
                 prost::Message::decode(invoke.rpc_data.as_slice())?;
@@ -2574,30 +2582,12 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
             }
         }
 
-        method_ids::ChannelAvatarChange => {
-            let rpc_param: pb::ChannelAvatarChangeParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1968579501 as i64,
-                rpc_service: RPC_Channel(RPC_Channel_MethodData::ChannelAvatarChange(rpc_param)),
-            }
-        }
-
         method_ids::ChannelAvatarDelete => {
             let rpc_param: pb::ChannelAvatarDeleteParam =
                 prost::Message::decode(invoke.rpc_data.as_slice())?;
             RpcInvoke {
                 method_id: 1626010891 as i64,
                 rpc_service: RPC_Channel(RPC_Channel_MethodData::ChannelAvatarDelete(rpc_param)),
-            }
-        }
-
-        method_ids::ChannelAvatarGetList => {
-            let rpc_param: pb::ChannelAvatarGetListParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1925044843 as i64,
-                rpc_service: RPC_Channel(RPC_Channel_MethodData::ChannelAvatarGetList(rpc_param)),
             }
         }
 
@@ -2673,15 +2663,6 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
             }
         }
 
-        method_ids::ChannelGetFollowings => {
-            let rpc_param: pb::ChannelGetFollowingsParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1838438980 as i64,
-                rpc_service: RPC_Channel(RPC_Channel_MethodData::ChannelGetFollowings(rpc_param)),
-            }
-        }
-
         method_ids::ChannelGetSubscribers => {
             let rpc_param: pb::ChannelGetSubscribersParam =
                 prost::Message::decode(invoke.rpc_data.as_slice())?;
@@ -2700,12 +2681,21 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
             }
         }
 
-        method_ids::ChannelSetDraft => {
-            let rpc_param: pb::ChannelSetDraftParam =
+        method_ids::ChannelAvatarGetList => {
+            let rpc_param: pb::ChannelAvatarGetListParam =
                 prost::Message::decode(invoke.rpc_data.as_slice())?;
             RpcInvoke {
-                method_id: 1403193015 as i64,
-                rpc_service: RPC_Channel(RPC_Channel_MethodData::ChannelSetDraft(rpc_param)),
+                method_id: 1925044843 as i64,
+                rpc_service: RPC_Channel(RPC_Channel_MethodData::ChannelAvatarGetList(rpc_param)),
+            }
+        }
+
+        method_ids::ChannelGetFollowings => {
+            let rpc_param: pb::ChannelGetFollowingsParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1838438980 as i64,
+                rpc_service: RPC_Channel(RPC_Channel_MethodData::ChannelGetFollowings(rpc_param)),
             }
         }
 
@@ -3056,15 +3046,6 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
             }
         }
 
-        method_ids::GroupAddMember => {
-            let rpc_param: pb::GroupAddMemberParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 676599227 as i64,
-                rpc_service: RPC_Group(RPC_Group_MethodData::GroupAddMember(rpc_param)),
-            }
-        }
-
         method_ids::GroupRemoveMember => {
             let rpc_param: pb::GroupRemoveMemberParam =
                 prost::Message::decode(invoke.rpc_data.as_slice())?;
@@ -3094,6 +3075,15 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
             }
         }
 
+        method_ids::GroupBanMember => {
+            let rpc_param: pb::GroupBanMemberParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 548504852 as i64,
+                rpc_service: RPC_Group(RPC_Group_MethodData::GroupBanMember(rpc_param)),
+            }
+        }
+
         method_ids::GroupJoinGroup => {
             let rpc_param: pb::JoinGroupParam = prost::Message::decode(invoke.rpc_data.as_slice())?;
             RpcInvoke {
@@ -3111,12 +3101,12 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
             }
         }
 
-        method_ids::GroupBanMember => {
-            let rpc_param: pb::GroupBanMemberParam =
+        method_ids::GroupAddMember => {
+            let rpc_param: pb::GroupAddMemberParam =
                 prost::Message::decode(invoke.rpc_data.as_slice())?;
             RpcInvoke {
-                method_id: 548504852 as i64,
-                rpc_service: RPC_Group(RPC_Group_MethodData::GroupBanMember(rpc_param)),
+                method_id: 676599227 as i64,
+                rpc_service: RPC_Group(RPC_Group_MethodData::GroupAddMember(rpc_param)),
             }
         }
 
@@ -3176,33 +3166,6 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
             }
         }
 
-        method_ids::GroupPinMessage => {
-            let rpc_param: pb::GroupPinMessageParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 184560027 as i64,
-                rpc_service: RPC_Group(RPC_Group_MethodData::GroupPinMessage(rpc_param)),
-            }
-        }
-
-        method_ids::GroupUnPinMessage => {
-            let rpc_param: pb::GroupUnPinMessageParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1290613173 as i64,
-                rpc_service: RPC_Group(RPC_Group_MethodData::GroupUnPinMessage(rpc_param)),
-            }
-        }
-
-        method_ids::GroupDeleteMessage => {
-            let rpc_param: pb::GroupDeleteMessageParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 393991035 as i64,
-                rpc_service: RPC_Group(RPC_Group_MethodData::GroupDeleteMessage(rpc_param)),
-            }
-        }
-
         method_ids::GroupDeleteMessages => {
             let rpc_param: pb::GroupDeleteMessagesParam =
                 prost::Message::decode(invoke.rpc_data.as_slice())?;
@@ -3221,12 +3184,21 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
             }
         }
 
-        method_ids::GroupClearHistory => {
-            let rpc_param: pb::GroupClearHistoryParam =
+        method_ids::GroupPinMessage => {
+            let rpc_param: pb::GroupPinMessageParam =
                 prost::Message::decode(invoke.rpc_data.as_slice())?;
             RpcInvoke {
-                method_id: 1352552449 as i64,
-                rpc_service: RPC_Group(RPC_Group_MethodData::GroupClearHistory(rpc_param)),
+                method_id: 184560027 as i64,
+                rpc_service: RPC_Group(RPC_Group_MethodData::GroupPinMessage(rpc_param)),
+            }
+        }
+
+        method_ids::GroupUnPinMessage => {
+            let rpc_param: pb::GroupUnPinMessageParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1290613173 as i64,
+                rpc_service: RPC_Group(RPC_Group_MethodData::GroupUnPinMessage(rpc_param)),
             }
         }
 
@@ -3239,30 +3211,12 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
             }
         }
 
-        method_ids::GroupAvatarChange => {
-            let rpc_param: pb::GroupAvatarChangeParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 108612523 as i64,
-                rpc_service: RPC_Group(RPC_Group_MethodData::GroupAvatarChange(rpc_param)),
-            }
-        }
-
         method_ids::GroupAvatarDelete => {
             let rpc_param: pb::GroupAvatarDeleteParam =
                 prost::Message::decode(invoke.rpc_data.as_slice())?;
             RpcInvoke {
                 method_id: 775862697 as i64,
                 rpc_service: RPC_Group(RPC_Group_MethodData::GroupAvatarDelete(rpc_param)),
-            }
-        }
-
-        method_ids::GroupAvatarGetList => {
-            let rpc_param: pb::GroupAvatarGetListParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 939443722 as i64,
-                rpc_service: RPC_Group(RPC_Group_MethodData::GroupAvatarGetList(rpc_param)),
             }
         }
 
@@ -3329,12 +3283,12 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
             }
         }
 
-        method_ids::GroupSetDraft => {
-            let rpc_param: pb::GroupSetDraftParam =
+        method_ids::GroupAvatarGetList => {
+            let rpc_param: pb::GroupAvatarGetListParam =
                 prost::Message::decode(invoke.rpc_data.as_slice())?;
             RpcInvoke {
-                method_id: 77668156 as i64,
-                rpc_service: RPC_Group(RPC_Group_MethodData::GroupSetDraft(rpc_param)),
+                method_id: 939443722 as i64,
+                rpc_service: RPC_Group(RPC_Group_MethodData::GroupAvatarGetList(rpc_param)),
             }
         }
 
@@ -3796,9 +3750,9 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
                 v8
             }
 
-            RPC_Channel_MethodData::ChannelBlockChannel(param) => {
+            RPC_Channel_MethodData::ChannelBlockProfile(param) => {
                 let handler = eror(&reg.RPC_Channel)?;
-                let response = handler.ChannelBlockChannel(param).await?;
+                let response = handler.ChannelBlockProfile(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -3817,6 +3771,55 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
                 v8
             }
 
+            RPC_Channel_MethodData::ChannelDeleteMessages(param) => {
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelDeleteMessages(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Channel_MethodData::ChannelLikeMessage(param) => {
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelLikeMessage(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Channel_MethodData::ChannelUnLikeMessage(param) => {
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelUnLikeMessage(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Channel_MethodData::ChannelReShareMessage(param) => {
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelReShareMessage(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Channel_MethodData::ChannelUnReShareMessage(param) => {
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelUnReShareMessage(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Channel_MethodData::ChannelAddComment(param) => {
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelAddComment(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Channel_MethodData::ChannelDeleteComment(param) => {
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelDeleteComment(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
             RPC_Channel_MethodData::ChannelPinMessage(param) => {
                 let handler = eror(&reg.RPC_Channel)?;
                 let response = handler.ChannelPinMessage(param).await?;
@@ -3831,27 +3834,6 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
                 v8
             }
 
-            RPC_Channel_MethodData::ChannelDeleteMessage(param) => {
-                let handler = eror(&reg.RPC_Channel)?;
-                let response = handler.ChannelDeleteMessage(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Channel_MethodData::ChannelDeleteMessages(param) => {
-                let handler = eror(&reg.RPC_Channel)?;
-                let response = handler.ChannelDeleteMessages(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Channel_MethodData::ChannelClearHistory(param) => {
-                let handler = eror(&reg.RPC_Channel)?;
-                let response = handler.ChannelClearHistory(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
             RPC_Channel_MethodData::ChannelAvatarAdd(param) => {
                 let handler = eror(&reg.RPC_Channel)?;
                 let response = handler.ChannelAvatarAdd(param).await?;
@@ -3859,23 +3841,9 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
                 v8
             }
 
-            RPC_Channel_MethodData::ChannelAvatarChange(param) => {
-                let handler = eror(&reg.RPC_Channel)?;
-                let response = handler.ChannelAvatarChange(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
             RPC_Channel_MethodData::ChannelAvatarDelete(param) => {
                 let handler = eror(&reg.RPC_Channel)?;
                 let response = handler.ChannelAvatarDelete(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Channel_MethodData::ChannelAvatarGetList(param) => {
-                let handler = eror(&reg.RPC_Channel)?;
-                let response = handler.ChannelAvatarGetList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -3936,13 +3904,6 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
                 v8
             }
 
-            RPC_Channel_MethodData::ChannelGetFollowings(param) => {
-                let handler = eror(&reg.RPC_Channel)?;
-                let response = handler.ChannelGetFollowings(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
             RPC_Channel_MethodData::ChannelGetSubscribers(param) => {
                 let handler = eror(&reg.RPC_Channel)?;
                 let response = handler.ChannelGetSubscribers(param).await?;
@@ -3957,9 +3918,16 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
                 v8
             }
 
-            RPC_Channel_MethodData::ChannelSetDraft(param) => {
+            RPC_Channel_MethodData::ChannelAvatarGetList(param) => {
                 let handler = eror(&reg.RPC_Channel)?;
-                let response = handler.ChannelSetDraft(param).await?;
+                let response = handler.ChannelAvatarGetList(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Channel_MethodData::ChannelGetFollowings(param) => {
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelGetFollowings(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -4236,13 +4204,6 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
                 v8
             }
 
-            RPC_Group_MethodData::GroupAddMember(param) => {
-                let handler = eror(&reg.RPC_Group)?;
-                let response = handler.GroupAddMember(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
             RPC_Group_MethodData::GroupRemoveMember(param) => {
                 let handler = eror(&reg.RPC_Group)?;
                 let response = handler.GroupRemoveMember(param).await?;
@@ -4264,6 +4225,13 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
                 v8
             }
 
+            RPC_Group_MethodData::GroupBanMember(param) => {
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupBanMember(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
             RPC_Group_MethodData::GroupJoinGroup(param) => {
                 let handler = eror(&reg.RPC_Group)?;
                 let response = handler.GroupJoinGroup(param).await?;
@@ -4278,9 +4246,9 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
                 v8
             }
 
-            RPC_Group_MethodData::GroupBanMember(param) => {
+            RPC_Group_MethodData::GroupAddMember(param) => {
                 let handler = eror(&reg.RPC_Group)?;
-                let response = handler.GroupBanMember(param).await?;
+                let response = handler.GroupAddMember(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -4327,27 +4295,6 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
                 v8
             }
 
-            RPC_Group_MethodData::GroupPinMessage(param) => {
-                let handler = eror(&reg.RPC_Group)?;
-                let response = handler.GroupPinMessage(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Group_MethodData::GroupUnPinMessage(param) => {
-                let handler = eror(&reg.RPC_Group)?;
-                let response = handler.GroupUnPinMessage(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Group_MethodData::GroupDeleteMessage(param) => {
-                let handler = eror(&reg.RPC_Group)?;
-                let response = handler.GroupDeleteMessage(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
             RPC_Group_MethodData::GroupDeleteMessages(param) => {
                 let handler = eror(&reg.RPC_Group)?;
                 let response = handler.GroupDeleteMessages(param).await?;
@@ -4362,9 +4309,16 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
                 v8
             }
 
-            RPC_Group_MethodData::GroupClearHistory(param) => {
+            RPC_Group_MethodData::GroupPinMessage(param) => {
                 let handler = eror(&reg.RPC_Group)?;
-                let response = handler.GroupClearHistory(param).await?;
+                let response = handler.GroupPinMessage(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Group_MethodData::GroupUnPinMessage(param) => {
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupUnPinMessage(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -4376,23 +4330,9 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
                 v8
             }
 
-            RPC_Group_MethodData::GroupAvatarChange(param) => {
-                let handler = eror(&reg.RPC_Group)?;
-                let response = handler.GroupAvatarChange(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
             RPC_Group_MethodData::GroupAvatarDelete(param) => {
                 let handler = eror(&reg.RPC_Group)?;
                 let response = handler.GroupAvatarDelete(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Group_MethodData::GroupAvatarGetList(param) => {
-                let handler = eror(&reg.RPC_Group)?;
-                let response = handler.GroupAvatarGetList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -4446,9 +4386,9 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
                 v8
             }
 
-            RPC_Group_MethodData::GroupSetDraft(param) => {
+            RPC_Group_MethodData::GroupAvatarGetList(param) => {
                 let handler = eror(&reg.RPC_Group)?;
-                let response = handler.GroupSetDraft(param).await?;
+                let response = handler.GroupAvatarGetList(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -4967,12 +4907,12 @@ impl common::RpcClient {
         Ok(pb_res)
     }
 
-    pub async fn ChannelBlockChannel(
+    pub async fn ChannelBlockProfile(
         &self,
-        param: pb::ChannelBlockChannelParam,
-    ) -> Result<pb::ChannelBlockChannelResponse, GenErr> {
+        param: pb::ChannelBlockProfileParam,
+    ) -> Result<pb::ChannelBlockProfileResponse, GenErr> {
         let pb_res = self
-            .rpc_invoke(&param, method_ids::ChannelBlockChannel)
+            .rpc_invoke(&param, method_ids::ChannelBlockProfile)
             .await?;
         Ok(pb_res)
     }
@@ -4997,6 +4937,76 @@ impl common::RpcClient {
         Ok(pb_res)
     }
 
+    pub async fn ChannelDeleteMessages(
+        &self,
+        param: pb::ChannelDeleteMessagesParam,
+    ) -> Result<pb::ChannelDeleteMessagesResponse, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::ChannelDeleteMessages)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelLikeMessage(
+        &self,
+        param: pb::ChannelLikeMessageParam,
+    ) -> Result<pb::ChannelLikeMessageResponse, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::ChannelLikeMessage)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelUnLikeMessage(
+        &self,
+        param: pb::ChannelUnLikeMessageParam,
+    ) -> Result<pb::ChannelUnLikeMessageResponse, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::ChannelUnLikeMessage)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelReShareMessage(
+        &self,
+        param: pb::ChannelReShareMessageParam,
+    ) -> Result<pb::ChannelReShareMessageResponse, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::ChannelReShareMessage)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelUnReShareMessage(
+        &self,
+        param: pb::ChannelUnReShareMessageParam,
+    ) -> Result<pb::ChannelUnReShareMessageResponse, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::ChannelUnReShareMessage)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelAddComment(
+        &self,
+        param: pb::ChannelAddCommentParam,
+    ) -> Result<pb::ChannelAddCommentResponse, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::ChannelAddComment)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelDeleteComment(
+        &self,
+        param: pb::ChannelDeleteCommentParam,
+    ) -> Result<pb::ChannelDeleteCommentResponse, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::ChannelDeleteComment)
+            .await?;
+        Ok(pb_res)
+    }
+
     pub async fn ChannelPinMessage(
         &self,
         param: pb::ChannelPinMessageParam,
@@ -5017,36 +5027,6 @@ impl common::RpcClient {
         Ok(pb_res)
     }
 
-    pub async fn ChannelDeleteMessage(
-        &self,
-        param: pb::ChannelDeleteMessageParam,
-    ) -> Result<pb::ChannelDeleteMessageResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::ChannelDeleteMessage)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn ChannelDeleteMessages(
-        &self,
-        param: pb::ChannelDeleteMessagesParam,
-    ) -> Result<pb::ChannelDeleteMessagesResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::ChannelDeleteMessages)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn ChannelClearHistory(
-        &self,
-        param: pb::ChannelClearHistoryParam,
-    ) -> Result<pb::ChannelClearHistoryResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::ChannelClearHistory)
-            .await?;
-        Ok(pb_res)
-    }
-
     pub async fn ChannelAvatarAdd(
         &self,
         param: pb::ChannelAvatarAddParam,
@@ -5057,32 +5037,12 @@ impl common::RpcClient {
         Ok(pb_res)
     }
 
-    pub async fn ChannelAvatarChange(
-        &self,
-        param: pb::ChannelAvatarChangeParam,
-    ) -> Result<pb::ChannelAvatarChangeResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::ChannelAvatarChange)
-            .await?;
-        Ok(pb_res)
-    }
-
     pub async fn ChannelAvatarDelete(
         &self,
         param: pb::ChannelAvatarDeleteParam,
     ) -> Result<pb::ChannelAvatarDeleteResponse, GenErr> {
         let pb_res = self
             .rpc_invoke(&param, method_ids::ChannelAvatarDelete)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn ChannelAvatarGetList(
-        &self,
-        param: pb::ChannelAvatarGetListParam,
-    ) -> Result<pb::ChannelAvatarGetListResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::ChannelAvatarGetList)
             .await?;
         Ok(pb_res)
     }
@@ -5165,16 +5125,6 @@ impl common::RpcClient {
         Ok(pb_res)
     }
 
-    pub async fn ChannelGetFollowings(
-        &self,
-        param: pb::ChannelGetFollowingsParam,
-    ) -> Result<pb::ChannelGetFollowingsResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::ChannelGetFollowings)
-            .await?;
-        Ok(pb_res)
-    }
-
     pub async fn ChannelGetSubscribers(
         &self,
         param: pb::ChannelGetSubscribersParam,
@@ -5193,11 +5143,23 @@ impl common::RpcClient {
         Ok(pb_res)
     }
 
-    pub async fn ChannelSetDraft(
+    pub async fn ChannelAvatarGetList(
         &self,
-        param: pb::ChannelSetDraftParam,
-    ) -> Result<pb::ChannelSetDraftResponse, GenErr> {
-        let pb_res = self.rpc_invoke(&param, method_ids::ChannelSetDraft).await?;
+        param: pb::ChannelAvatarGetListParam,
+    ) -> Result<pb::ChannelAvatarGetListResponse, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::ChannelAvatarGetList)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChannelGetFollowings(
+        &self,
+        param: pb::ChannelGetFollowingsParam,
+    ) -> Result<pb::ChannelGetFollowingsResponse, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::ChannelGetFollowings)
+            .await?;
         Ok(pb_res)
     }
 
@@ -5570,14 +5532,6 @@ impl common::RpcClient {
         Ok(pb_res)
     }
 
-    pub async fn GroupAddMember(
-        &self,
-        param: pb::GroupAddMemberParam,
-    ) -> Result<pb::GroupAddMemberResponse, GenErr> {
-        let pb_res = self.rpc_invoke(&param, method_ids::GroupAddMember).await?;
-        Ok(pb_res)
-    }
-
     pub async fn GroupRemoveMember(
         &self,
         param: pb::GroupRemoveMemberParam,
@@ -5608,6 +5562,14 @@ impl common::RpcClient {
         Ok(pb_res)
     }
 
+    pub async fn GroupBanMember(
+        &self,
+        param: pb::GroupBanMemberParam,
+    ) -> Result<pb::GroupBanMemberResponse, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::GroupBanMember).await?;
+        Ok(pb_res)
+    }
+
     pub async fn GroupJoinGroup(
         &self,
         param: pb::JoinGroupParam,
@@ -5624,11 +5586,11 @@ impl common::RpcClient {
         Ok(pb_res)
     }
 
-    pub async fn GroupBanMember(
+    pub async fn GroupAddMember(
         &self,
-        param: pb::GroupBanMemberParam,
-    ) -> Result<pb::GroupBanMemberResponse, GenErr> {
-        let pb_res = self.rpc_invoke(&param, method_ids::GroupBanMember).await?;
+        param: pb::GroupAddMemberParam,
+    ) -> Result<pb::GroupAddMemberResponse, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::GroupAddMember).await?;
         Ok(pb_res)
     }
 
@@ -5690,34 +5652,6 @@ impl common::RpcClient {
         Ok(pb_res)
     }
 
-    pub async fn GroupPinMessage(
-        &self,
-        param: pb::GroupPinMessageParam,
-    ) -> Result<pb::GroupPinMessageResponse, GenErr> {
-        let pb_res = self.rpc_invoke(&param, method_ids::GroupPinMessage).await?;
-        Ok(pb_res)
-    }
-
-    pub async fn GroupUnPinMessage(
-        &self,
-        param: pb::GroupUnPinMessageParam,
-    ) -> Result<pb::GroupUnPinMessageResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::GroupUnPinMessage)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn GroupDeleteMessage(
-        &self,
-        param: pb::GroupDeleteMessageParam,
-    ) -> Result<pb::GroupDeleteMessageResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::GroupDeleteMessage)
-            .await?;
-        Ok(pb_res)
-    }
-
     pub async fn GroupDeleteMessages(
         &self,
         param: pb::GroupDeleteMessagesParam,
@@ -5738,12 +5672,20 @@ impl common::RpcClient {
         Ok(pb_res)
     }
 
-    pub async fn GroupClearHistory(
+    pub async fn GroupPinMessage(
         &self,
-        param: pb::GroupClearHistoryParam,
-    ) -> Result<pb::GroupClearHistoryResponse, GenErr> {
+        param: pb::GroupPinMessageParam,
+    ) -> Result<pb::GroupPinMessageResponse, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::GroupPinMessage).await?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupUnPinMessage(
+        &self,
+        param: pb::GroupUnPinMessageParam,
+    ) -> Result<pb::GroupUnPinMessageResponse, GenErr> {
         let pb_res = self
-            .rpc_invoke(&param, method_ids::GroupClearHistory)
+            .rpc_invoke(&param, method_ids::GroupUnPinMessage)
             .await?;
         Ok(pb_res)
     }
@@ -5756,32 +5698,12 @@ impl common::RpcClient {
         Ok(pb_res)
     }
 
-    pub async fn GroupAvatarChange(
-        &self,
-        param: pb::GroupAvatarChangeParam,
-    ) -> Result<pb::GroupAvatarChangeResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::GroupAvatarChange)
-            .await?;
-        Ok(pb_res)
-    }
-
     pub async fn GroupAvatarDelete(
         &self,
         param: pb::GroupAvatarDeleteParam,
     ) -> Result<pb::GroupAvatarDeleteResponse, GenErr> {
         let pb_res = self
             .rpc_invoke(&param, method_ids::GroupAvatarDelete)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn GroupAvatarGetList(
-        &self,
-        param: pb::GroupAvatarGetListParam,
-    ) -> Result<pb::GroupAvatarGetListResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::GroupAvatarGetList)
             .await?;
         Ok(pb_res)
     }
@@ -5854,11 +5776,13 @@ impl common::RpcClient {
         Ok(pb_res)
     }
 
-    pub async fn GroupSetDraft(
+    pub async fn GroupAvatarGetList(
         &self,
-        param: pb::GroupSetDraftParam,
-    ) -> Result<pb::GroupSetDraftResponse, GenErr> {
-        let pb_res = self.rpc_invoke(&param, method_ids::GroupSetDraft).await?;
+        param: pb::GroupAvatarGetListParam,
+    ) -> Result<pb::GroupAvatarGetListResponse, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::GroupAvatarGetList)
+            .await?;
         Ok(pb_res)
     }
 
@@ -6253,12 +6177,12 @@ impl RPC_Channel_Handler2 for _RRR_ {
         println!("called ChannelChangeUsername in the impl code.");
         Ok(pb::ChannelChangeUsernameResponse::default())
     }
-    async fn ChannelBlockChannel(
+    async fn ChannelBlockProfile(
         &self,
-        param: pb::ChannelBlockChannelParam,
-    ) -> Result<pb::ChannelBlockChannelResponse, GenErr> {
-        println!("called ChannelBlockChannel in the impl code.");
-        Ok(pb::ChannelBlockChannelResponse::default())
+        param: pb::ChannelBlockProfileParam,
+    ) -> Result<pb::ChannelBlockProfileResponse, GenErr> {
+        println!("called ChannelBlockProfile in the impl code.");
+        Ok(pb::ChannelBlockProfileResponse::default())
     }
     async fn ChannelSendMessage(
         &self,
@@ -6274,6 +6198,55 @@ impl RPC_Channel_Handler2 for _RRR_ {
         println!("called ChannelEditMessage in the impl code.");
         Ok(pb::ChannelEditMessageResponse::default())
     }
+    async fn ChannelDeleteMessages(
+        &self,
+        param: pb::ChannelDeleteMessagesParam,
+    ) -> Result<pb::ChannelDeleteMessagesResponse, GenErr> {
+        println!("called ChannelDeleteMessages in the impl code.");
+        Ok(pb::ChannelDeleteMessagesResponse::default())
+    }
+    async fn ChannelLikeMessage(
+        &self,
+        param: pb::ChannelLikeMessageParam,
+    ) -> Result<pb::ChannelLikeMessageResponse, GenErr> {
+        println!("called ChannelLikeMessage in the impl code.");
+        Ok(pb::ChannelLikeMessageResponse::default())
+    }
+    async fn ChannelUnLikeMessage(
+        &self,
+        param: pb::ChannelUnLikeMessageParam,
+    ) -> Result<pb::ChannelUnLikeMessageResponse, GenErr> {
+        println!("called ChannelUnLikeMessage in the impl code.");
+        Ok(pb::ChannelUnLikeMessageResponse::default())
+    }
+    async fn ChannelReShareMessage(
+        &self,
+        param: pb::ChannelReShareMessageParam,
+    ) -> Result<pb::ChannelReShareMessageResponse, GenErr> {
+        println!("called ChannelReShareMessage in the impl code.");
+        Ok(pb::ChannelReShareMessageResponse::default())
+    }
+    async fn ChannelUnReShareMessage(
+        &self,
+        param: pb::ChannelUnReShareMessageParam,
+    ) -> Result<pb::ChannelUnReShareMessageResponse, GenErr> {
+        println!("called ChannelUnReShareMessage in the impl code.");
+        Ok(pb::ChannelUnReShareMessageResponse::default())
+    }
+    async fn ChannelAddComment(
+        &self,
+        param: pb::ChannelAddCommentParam,
+    ) -> Result<pb::ChannelAddCommentResponse, GenErr> {
+        println!("called ChannelAddComment in the impl code.");
+        Ok(pb::ChannelAddCommentResponse::default())
+    }
+    async fn ChannelDeleteComment(
+        &self,
+        param: pb::ChannelDeleteCommentParam,
+    ) -> Result<pb::ChannelDeleteCommentResponse, GenErr> {
+        println!("called ChannelDeleteComment in the impl code.");
+        Ok(pb::ChannelDeleteCommentResponse::default())
+    }
     async fn ChannelPinMessage(
         &self,
         param: pb::ChannelPinMessageParam,
@@ -6288,27 +6261,6 @@ impl RPC_Channel_Handler2 for _RRR_ {
         println!("called ChannelUnPinMessage in the impl code.");
         Ok(pb::ChannelUnPinMessageResponse::default())
     }
-    async fn ChannelDeleteMessage(
-        &self,
-        param: pb::ChannelDeleteMessageParam,
-    ) -> Result<pb::ChannelDeleteMessageResponse, GenErr> {
-        println!("called ChannelDeleteMessage in the impl code.");
-        Ok(pb::ChannelDeleteMessageResponse::default())
-    }
-    async fn ChannelDeleteMessages(
-        &self,
-        param: pb::ChannelDeleteMessagesParam,
-    ) -> Result<pb::ChannelDeleteMessagesResponse, GenErr> {
-        println!("called ChannelDeleteMessages in the impl code.");
-        Ok(pb::ChannelDeleteMessagesResponse::default())
-    }
-    async fn ChannelClearHistory(
-        &self,
-        param: pb::ChannelClearHistoryParam,
-    ) -> Result<pb::ChannelClearHistoryResponse, GenErr> {
-        println!("called ChannelClearHistory in the impl code.");
-        Ok(pb::ChannelClearHistoryResponse::default())
-    }
     async fn ChannelAvatarAdd(
         &self,
         param: pb::ChannelAvatarAddParam,
@@ -6316,26 +6268,12 @@ impl RPC_Channel_Handler2 for _RRR_ {
         println!("called ChannelAvatarAdd in the impl code.");
         Ok(pb::ChannelAvatarAddResponse::default())
     }
-    async fn ChannelAvatarChange(
-        &self,
-        param: pb::ChannelAvatarChangeParam,
-    ) -> Result<pb::ChannelAvatarChangeResponse, GenErr> {
-        println!("called ChannelAvatarChange in the impl code.");
-        Ok(pb::ChannelAvatarChangeResponse::default())
-    }
     async fn ChannelAvatarDelete(
         &self,
         param: pb::ChannelAvatarDeleteParam,
     ) -> Result<pb::ChannelAvatarDeleteResponse, GenErr> {
         println!("called ChannelAvatarDelete in the impl code.");
         Ok(pb::ChannelAvatarDeleteResponse::default())
-    }
-    async fn ChannelAvatarGetList(
-        &self,
-        param: pb::ChannelAvatarGetListParam,
-    ) -> Result<pb::ChannelAvatarGetListResponse, GenErr> {
-        println!("called ChannelAvatarGetList in the impl code.");
-        Ok(pb::ChannelAvatarGetListResponse::default())
     }
     async fn ChannelSendDoingAction(
         &self,
@@ -6393,13 +6331,6 @@ impl RPC_Channel_Handler2 for _RRR_ {
         println!("called ChannelGetFollowers in the impl code.");
         Ok(pb::ChannelGetFollowersResponse::default())
     }
-    async fn ChannelGetFollowings(
-        &self,
-        param: pb::ChannelGetFollowingsParam,
-    ) -> Result<pb::ChannelGetFollowingsResponse, GenErr> {
-        println!("called ChannelGetFollowings in the impl code.");
-        Ok(pb::ChannelGetFollowingsResponse::default())
-    }
     async fn ChannelGetSubscribers(
         &self,
         param: pb::ChannelGetSubscribersParam,
@@ -6414,12 +6345,19 @@ impl RPC_Channel_Handler2 for _RRR_ {
         println!("called ChannelBlocked in the impl code.");
         Ok(pb::ChannelBlockedResponse::default())
     }
-    async fn ChannelSetDraft(
+    async fn ChannelAvatarGetList(
         &self,
-        param: pb::ChannelSetDraftParam,
-    ) -> Result<pb::ChannelSetDraftResponse, GenErr> {
-        println!("called ChannelSetDraft in the impl code.");
-        Ok(pb::ChannelSetDraftResponse::default())
+        param: pb::ChannelAvatarGetListParam,
+    ) -> Result<pb::ChannelAvatarGetListResponse, GenErr> {
+        println!("called ChannelAvatarGetList in the impl code.");
+        Ok(pb::ChannelAvatarGetListResponse::default())
+    }
+    async fn ChannelGetFollowings(
+        &self,
+        param: pb::ChannelGetFollowingsParam,
+    ) -> Result<pb::ChannelGetFollowingsResponse, GenErr> {
+        println!("called ChannelGetFollowings in the impl code.");
+        Ok(pb::ChannelGetFollowingsResponse::default())
     }
 }
 #[async_trait]
@@ -6696,13 +6634,6 @@ impl RPC_Group_Handler2 for _RRR_ {
         println!("called GroupAddAdmin in the impl code.");
         Ok(pb::GroupAddAdminResponse::default())
     }
-    async fn GroupAddMember(
-        &self,
-        param: pb::GroupAddMemberParam,
-    ) -> Result<pb::GroupAddMemberResponse, GenErr> {
-        println!("called GroupAddMember in the impl code.");
-        Ok(pb::GroupAddMemberResponse::default())
-    }
     async fn GroupRemoveMember(
         &self,
         param: pb::GroupRemoveMemberParam,
@@ -6724,6 +6655,13 @@ impl RPC_Group_Handler2 for _RRR_ {
         println!("called GroupChangeMemberPermission in the impl code.");
         Ok(pb::GroupChangeMemberPermissionResponse::default())
     }
+    async fn GroupBanMember(
+        &self,
+        param: pb::GroupBanMemberParam,
+    ) -> Result<pb::GroupBanMemberResponse, GenErr> {
+        println!("called GroupBanMember in the impl code.");
+        Ok(pb::GroupBanMemberResponse::default())
+    }
     async fn GroupJoinGroup(
         &self,
         param: pb::JoinGroupParam,
@@ -6738,12 +6676,12 @@ impl RPC_Group_Handler2 for _RRR_ {
         println!("called GroupLeaveGroup in the impl code.");
         Ok(pb::GroupLeaveGroupResponse::default())
     }
-    async fn GroupBanMember(
+    async fn GroupAddMember(
         &self,
-        param: pb::GroupBanMemberParam,
-    ) -> Result<pb::GroupBanMemberResponse, GenErr> {
-        println!("called GroupBanMember in the impl code.");
-        Ok(pb::GroupBanMemberResponse::default())
+        param: pb::GroupAddMemberParam,
+    ) -> Result<pb::GroupAddMemberResponse, GenErr> {
+        println!("called GroupAddMember in the impl code.");
+        Ok(pb::GroupAddMemberResponse::default())
     }
     async fn GroupChangePrivacy(
         &self,
@@ -6787,27 +6725,6 @@ impl RPC_Group_Handler2 for _RRR_ {
         println!("called GroupEditMessage in the impl code.");
         Ok(pb::GroupEditMessageResponse::default())
     }
-    async fn GroupPinMessage(
-        &self,
-        param: pb::GroupPinMessageParam,
-    ) -> Result<pb::GroupPinMessageResponse, GenErr> {
-        println!("called GroupPinMessage in the impl code.");
-        Ok(pb::GroupPinMessageResponse::default())
-    }
-    async fn GroupUnPinMessage(
-        &self,
-        param: pb::GroupUnPinMessageParam,
-    ) -> Result<pb::GroupUnPinMessageResponse, GenErr> {
-        println!("called GroupUnPinMessage in the impl code.");
-        Ok(pb::GroupUnPinMessageResponse::default())
-    }
-    async fn GroupDeleteMessage(
-        &self,
-        param: pb::GroupDeleteMessageParam,
-    ) -> Result<pb::GroupDeleteMessageResponse, GenErr> {
-        println!("called GroupDeleteMessage in the impl code.");
-        Ok(pb::GroupDeleteMessageResponse::default())
-    }
     async fn GroupDeleteMessages(
         &self,
         param: pb::GroupDeleteMessagesParam,
@@ -6822,12 +6739,19 @@ impl RPC_Group_Handler2 for _RRR_ {
         println!("called GroupDeleteHistory in the impl code.");
         Ok(pb::GroupDeleteHistoryResponse::default())
     }
-    async fn GroupClearHistory(
+    async fn GroupPinMessage(
         &self,
-        param: pb::GroupClearHistoryParam,
-    ) -> Result<pb::GroupClearHistoryResponse, GenErr> {
-        println!("called GroupClearHistory in the impl code.");
-        Ok(pb::GroupClearHistoryResponse::default())
+        param: pb::GroupPinMessageParam,
+    ) -> Result<pb::GroupPinMessageResponse, GenErr> {
+        println!("called GroupPinMessage in the impl code.");
+        Ok(pb::GroupPinMessageResponse::default())
+    }
+    async fn GroupUnPinMessage(
+        &self,
+        param: pb::GroupUnPinMessageParam,
+    ) -> Result<pb::GroupUnPinMessageResponse, GenErr> {
+        println!("called GroupUnPinMessage in the impl code.");
+        Ok(pb::GroupUnPinMessageResponse::default())
     }
     async fn GroupAvatarAdd(
         &self,
@@ -6836,26 +6760,12 @@ impl RPC_Group_Handler2 for _RRR_ {
         println!("called GroupAvatarAdd in the impl code.");
         Ok(pb::GroupAvatarAddResponse::default())
     }
-    async fn GroupAvatarChange(
-        &self,
-        param: pb::GroupAvatarChangeParam,
-    ) -> Result<pb::GroupAvatarChangeResponse, GenErr> {
-        println!("called GroupAvatarChange in the impl code.");
-        Ok(pb::GroupAvatarChangeResponse::default())
-    }
     async fn GroupAvatarDelete(
         &self,
         param: pb::GroupAvatarDeleteParam,
     ) -> Result<pb::GroupAvatarDeleteResponse, GenErr> {
         println!("called GroupAvatarDelete in the impl code.");
         Ok(pb::GroupAvatarDeleteResponse::default())
-    }
-    async fn GroupAvatarGetList(
-        &self,
-        param: pb::GroupAvatarGetListParam,
-    ) -> Result<pb::GroupAvatarGetListResponse, GenErr> {
-        println!("called GroupAvatarGetList in the impl code.");
-        Ok(pb::GroupAvatarGetListResponse::default())
     }
     async fn GroupSendDoingAction(
         &self,
@@ -6906,12 +6816,12 @@ impl RPC_Group_Handler2 for _RRR_ {
         println!("called GroupGetAdminsList in the impl code.");
         Ok(pb::GroupGetAdminsListResponse::default())
     }
-    async fn GroupSetDraft(
+    async fn GroupAvatarGetList(
         &self,
-        param: pb::GroupSetDraftParam,
-    ) -> Result<pb::GroupSetDraftResponse, GenErr> {
-        println!("called GroupSetDraft in the impl code.");
-        Ok(pb::GroupSetDraftResponse::default())
+        param: pb::GroupAvatarGetListParam,
+    ) -> Result<pb::GroupAvatarGetListResponse, GenErr> {
+        println!("called GroupAvatarGetList in the impl code.");
+        Ok(pb::GroupAvatarGetListResponse::default())
     }
 }
 #[async_trait]

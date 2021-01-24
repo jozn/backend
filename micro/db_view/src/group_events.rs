@@ -14,29 +14,7 @@ impl events::EventProcess for GroupEvents {
 
         use SubCommand::*;
         match ch_sub {
-            CreateGroup(_) => {}
-            EditGroup(_) => {}
-            DeleteGroup(_) => {}
-            AddMember(_) => {}
-            RemoveMember(_) => {}
-            ChangeMemberLevel(_) => {}
-            ChangeMemberPermission(_) => {}
-            JoinGroup(_) => {}
-            LeaveGroup(_) => {}
-            BanMember(_) => {}
-            ChangePrivacy(_) => {}
-            RevokeLink(_) => {}
-            ChangeUsername(_) => {}
-            SendMessage(_) => {}
-            EditMessage(_) => {}
-            PinMessage(_) => {}
-            UnPinMessage(_) => {}
-            DeleteMessages(_) => {}
-            DeleteHistory(_) => {}
-            ClearHistory(_) => {}
-            AvatarAdd(_) => {}
-            AvatarDelete(_) => {}
-            ReportGroup(_) => {}
+            _ => (),
         }
 
         let x = 1;

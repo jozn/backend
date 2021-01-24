@@ -32,7 +32,7 @@ impl DBCassandra {
 
         let pb = prost_encode(channel)?;
         let xch = xc::Channel {
-            channel_id: channel.cid as i64,
+            channel_id: channel.channel_cid as i64,
             pb_data: pb,
         };
 
@@ -61,7 +61,7 @@ impl DBCassandra {
         let pb = prost_encode(message)?;
         let r = xc::ChannelMsg {
             channel_id: message.by_profile_cid as i64, //todo fixme bug
-            msg_id: message.gid as i64,
+            msg_id: message.message_gid as i64,
             pb_data: pb,
         };
         r.save(sess)?;
@@ -161,7 +161,7 @@ pub fn save_channel(channel: &pb::Channel) -> Result<(), GenErr> {
 
     let pb = prost_encode(channel)?;
     let xch = xc::Channel {
-        channel_id: channel.cid as i64,
+        channel_id: channel.channel_cid as i64,
         pb_data: pb,
     };
 
@@ -175,13 +175,13 @@ pub fn save_channel_verify(channel: &pb::Channel) -> Result<(), GenErr> {
 
     let pb = prost_encode(channel)?;
     let xch = xc::Channel {
-        channel_id: channel.cid as i64,
+        channel_id: channel.channel_cid as i64,
         pb_data: pb.clone(),
     };
     xch.save(&sess)?;
 
     let x = xc::Channel_Selector::new()
-        .channel_id_eq(channel.cid as i64)
+        .channel_id_eq(channel.channel_cid as i64)
         .get_row(&sess)
         .unwrap();
 

@@ -14,38 +14,7 @@ impl events::EventProcess for ChannelEvents {
 
         use SubCommand::*;
         match ch_sub {
-            CreateChannel(q) => {
-                println!("&&>> channel event {}", q.channel_title);
-            }
-            EditChannel(_) => {}
-            DeleteChannel(_) => {}
-            AddAuthor(_) => {}
-            ChangeAuthorPermission(_) => {}
-            RemoveAuthor(_) => {}
-            FollowChannel(_) => {}
-            UnFollowChannel(_) => {}
-            RemoveFollowers(_) => {}
-            Subscribe(_) => {}
-            UnSubscribe(_) => {}
-            RemoveSubscribers(_) => {}
-            ChangePrivacy(_) => {}
-            ChangeDefaultPermission(_) => {}
-            RevokeLink(_) => {}
-            ChangeUsername(_) => {}
-            BlockChannel(_) => {}
-            SendMessage(_) => {}
-            EditMessage(_) => {}
-            PinMessage(_) => {}
-            UnPinMessage(_) => {}
-            DeleteMessage(_) => {}
-            DeleteMessages(_) => {}
-            ClearHistory(_) => {}
-            AvatarAdd(_) => {}
-            AvatarChange(_) => {}
-            AvatarDelete(_) => {}
-            SendDoingAction(_) => {}
-            ReportChannel(_) => {}
-            ReportMessage(_) => {}
+            _ => {}
         }
 
         let x = 1;

@@ -32,7 +32,7 @@ enum RpcServiceData {
 
 enum RPC_Social_MethodData {
     SendConfirmCode(pb::SendConfirmCodeParam),
-    SingUp(pb::ChannelSetDraftParam),
+    // SingUp(pb::ChannelSetDraftParam),
 }
 
 #[async_trait]
