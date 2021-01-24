@@ -4,11 +4,6 @@ package pb;
 
 import "global.proto";
 
-// imple seq:
-// add rpc
-// organize parma/response  for the last part
-// strive for make api solid
-// imple things not just for ui but full
 // rules: qevent_rpc
 service RPC_Group {
     //rpc Group (Param) returns (Response);
@@ -48,7 +43,6 @@ service RPC_Group {
     rpc GroupAvatarAdd (GroupAvatarAddParam) returns (GroupAvatarAddResponse); // qevent_id_80
     rpc GroupAvatarChange (GroupAvatarChangeParam) returns (GroupAvatarChangeResponse); // remove?
     rpc GroupAvatarDelete (GroupAvatarDeleteParam) returns (GroupAvatarDeleteResponse); // qevent
-    rpc GroupAvatarGetList (GroupAvatarGetListParam) returns (GroupAvatarGetListResponse); // view?
     rpc GroupSendDoingAction (GroupSendDoingActionParam) returns (GroupSendDoingActionResponse);
     rpc GroupReportGroup (GroupReportGroupParam) returns (GroupReportGroupResponse); // qevent -- should be here
 
@@ -58,10 +52,7 @@ service RPC_Group {
     rpc GroupGetMediaList (GroupGetMediaListParam) returns (GroupGetMediaListResponse);
     rpc GroupGetMembersList (GroupGetMembersListParam) returns (GroupGetMembersListResponse);
     rpc GroupGetAdminsList (GroupGetAdminsListParam) returns (GroupGetAdminsListResponse);
-
-    // Deprecated
-    rpc GroupSetDraft (GroupSetDraftParam) returns (GroupSetDraftResponse); // draft via direct
-
+    rpc GroupAvatarGetList (GroupAvatarGetListParam) returns (GroupAvatarGetListResponse);
 }
 
 
@@ -70,11 +61,12 @@ message GroupCreateGroupParam {
     uint32 group_cid = 1;
     uint32 creator_profile_cid = 2;
     string group_title = 3; // or _name
-    string user_name = 4; // with "group" suffix > not now > all is private now
     bool history_viewable = 8; // if older message is is viewable for new members > now true for all new groups
     bool force_join = 9; // view history without joining
     bool global_search = 17; // global searchable in bar > force_join must be false + history_viewable = ture
     string about = 15;
+    // Not Now
+    string user_name = 4; // with "group" suffix > not now > all is private now
 }
 
 message GroupCreateGroupResponse {
@@ -217,6 +209,7 @@ message GroupChangeUsernameResponse {
 // Messages
 message GroupSendMessageParam {
     uint32 group_id = 1;
+    NewMessageInput message_input = 2;
 }
 
 message GroupSendMessageResponse {
@@ -226,6 +219,8 @@ message GroupSendMessageResponse {
 
 message GroupEditMessageParam {
     uint32 group_id = 1;
+    uint32 by_profile_cid = 3;
+    string new_text = 2;
 }
 
 message GroupEditMessageResponse {

@@ -7,7 +7,7 @@ import "global.proto";
 service RPC_Chat {
     //rpc Chat (Param) returns (Response);
 
-    // crud: c: with sending msg, u: none, d: with direct
+    // crud: c: with sending msg, u: none, d: wit h direct
 
     // Privacy: none in here, with settings in channels privacy
 

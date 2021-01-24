@@ -255,10 +255,14 @@ message Message {
   Message reply_to = 50;
 
   // Channels Settings
+  uint32 channel_cid = 1001;
   MessageSetting setting = 102;
 
   // Channels Extra
   MessageCount counts = 101;
+
+  // Group
+  uint32 group_cid = 1002;
 
   // Media
   repeated FileMsg files = 103;
@@ -345,7 +349,7 @@ message Channel {
 
   // Visibility
   string user_name = 2; // mut
-  string channel_name = 3; // mut - For default channels take if from User first and lastname.
+  string channel_title = 3; // mut - For default channels take if from User first and lastname.
   string about = 16; // mut
   bool is_verified = 6; // mut
 
@@ -581,6 +585,21 @@ message Sms {//todo
 
 //==================== Views ==================
 message Chat {}
+
+
+message NewMessageInput { // C: Common
+  fixed64 message_gid = 1; // imut
+  uint32 by_profile_cid = 2; // imut
+  MessageType message_type = 107; // imut - mostly
+  string text = 7;
+  uint32 via_app_id = 12; // imut
+  uint32 seq = 13; // imut
+  uint32 created_time = 18; // imut
+  bool verified = 111; // imut - verified system messages - 2 bytes tag
+
+  // Add: headers, media, settings, product?
+}
+
 
 //==================== Deprecated =============
 message ChannelCounts_Dep {

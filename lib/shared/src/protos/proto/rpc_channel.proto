@@ -43,7 +43,6 @@ service RPC_Channel {
     rpc ChannelEditMessage (ChannelEditMessageParam) returns (ChannelEditMessageResponse); // qevent
     rpc ChannelPinMessage (ChannelPinMessageParam) returns (ChannelPinMessageResponse); // qevent
     rpc ChannelUnPinMessage (ChannelUnPinMessageParam) returns (ChannelUnPinMessageResponse); // qevent
-    rpc ChannelDeleteMessage (ChannelDeleteMessageParam) returns (ChannelDeleteMessageResponse); // remove? // qevent
     rpc ChannelDeleteMessages (ChannelDeleteMessagesParam) returns (ChannelDeleteMessagesResponse); // qevent
     rpc ChannelClearHistory (ChannelClearHistoryParam) returns (ChannelClearHistoryResponse); // qevent
 
@@ -54,24 +53,22 @@ service RPC_Channel {
     rpc ChannelAvatarAdd (ChannelAvatarAddParam) returns (ChannelAvatarAddResponse); // qevent_id_80
     rpc ChannelAvatarChange (ChannelAvatarChangeParam) returns (ChannelAvatarChangeResponse); // remove? // qevent
     rpc ChannelAvatarDelete (ChannelAvatarDeleteParam) returns (ChannelAvatarDeleteResponse); // qevent
-    rpc ChannelAvatarGetList (ChannelAvatarGetListParam) returns (ChannelAvatarGetListResponse); // view?
     rpc ChannelSendDoingAction (ChannelSendDoingActionParam) returns (ChannelSendDoingActionResponse); // qevent
     rpc ChannelReportChannel (ChannelReportChannelParam) returns (ChannelReportChannelResponse); // qevent?
     rpc ChannelReportMessage (ChannelReportMessageParam) returns (ChannelReportMessageResponse); // qevent?
 
     // Views
     rpc ChannelGetFull (ChannelGetFullParam) returns (ChannelGetFullResponse);
-    rpc ChannelGetMessagesList (ChannelGetMessagesListParam) returns (ChannelGetMessagesListResponse); // posts?
+    rpc ChannelGetMessagesList (ChannelGetMessagesListParam) returns (ChannelGetMessagesListResponse);
     rpc ChannelGetMediaList (ChannelGetMediaListParam) returns (ChannelGetMediaListResponse);
     rpc ChannelGetAuthors (ChannelGetAuthorsParam) returns (ChannelGetAuthorsResponse);
     rpc ChannelGetFollowers (ChannelGetFollowersParam) returns (ChannelGetFollowersResponse);
-    rpc ChannelGetFollowings (ChannelGetFollowingsParam) returns (ChannelGetFollowingsResponse);
-    rpc ChannelGetSubscribers (ChannelGetSubscribersParam) returns (ChannelGetSubscribersResponse);
-    rpc ChannelBlocked (ChannelBlockedParam) returns (ChannelBlockedResponse);
+    rpc ChannelGetSubscribers (ChannelGetSubscribersParam) returns (ChannelGetSubscribersResponse); // Policy?: should channel owner see this? or just see the follwers
+    rpc ChannelBlocked (ChannelBlockedParam) returns (ChannelBlockedResponse); // Policy: NOT YET > Difterent form profile blocks
+    rpc ChannelAvatarGetList (ChannelAvatarGetListParam) returns (ChannelAvatarGetListResponse);
 
-    // Deprecated
-    rpc ChannelSetDraft (ChannelSetDraftParam) returns (ChannelSetDraftResponse); // draft via direct
-
+    // Dep
+    rpc ChannelGetFollowings (ChannelGetFollowingsParam) returns (ChannelGetFollowingsResponse); // move to profile
 }
 
 
@@ -80,10 +77,7 @@ message ChannelCreateChannelParam {
     uint32 channel_cid = 1;
     uint32 creator_profile_cid = 2;
     string channel_title = 3; // or _name
-    string user_name = 4; // with "group" suffix > not now > all is private now
-    bool history_viewable = 8; // if older message is is viewable for new members > now true for all new groups
-    bool force_join = 9; // view history without joining
-    bool global_search = 17; // global searchable in bar > force_join must be false + history_viewable = ture
+    string user_name = 4;
     string about = 15;
 }
 
@@ -239,6 +233,7 @@ message ChannelBlockChannelResponse {
 // Messages
 message ChannelSendMessageParam {
     uint32 channel_id = 1;
+    NewMessageInput message_input = 2;
 }
 
 message ChannelSendMessageResponse {
@@ -248,6 +243,8 @@ message ChannelSendMessageResponse {
 
 message ChannelEditMessageParam {
     uint32 channel_id = 1;
+    uint32 by_profile_cid = 3;
+    string new_text = 2;
 }
 
 message ChannelEditMessageResponse {
@@ -273,19 +270,10 @@ message ChannelUnPinMessageResponse {
 }
 
 
-message ChannelDeleteMessageParam {
-    uint32 channel_id = 1;
-}
-
-message ChannelDeleteMessageResponse {
-
-}
-
-
 message ChannelDeleteMessagesParam {
     uint32 channel_cid = 1;
     uint32 by_profile_cid = 2;
-    uint64 message_cid = 3;
+    repeated uint64 message_gids = 3;
 }
 
 message ChannelDeleteMessagesResponse {
@@ -294,10 +282,10 @@ message ChannelDeleteMessagesResponse {
 
 
 message ChannelClearHistoryParam {
+    uint64 from_message_gid = 3;// NOT NOW
 }
 
 message ChannelClearHistoryResponse {
-    // NOT NOW
 }
 
 
@@ -412,15 +400,6 @@ message ChannelBlockedParam {
 message ChannelBlockedResponse {
 }
 
-
-// Dep
-message ChannelSetDraftParam {
-    uint32 channel_id = 1;
-}
-
-message ChannelSetDraftResponse {
-
-}
 
 /*
 
