@@ -4,6 +4,7 @@ package pb;
 
 /////////////////////////// Docs ///////////////////////////
 /*
+add follower, subscriber
 +Categorize fields > favour maintablaity over tags 1 byte saving
 +Only when all things implemented go for correct tag ids
 +If need to use Box > just after full imple of everythings > or just test if Box works and do not change the wire binary > after launch optimize this
@@ -83,6 +84,10 @@ message User {
 
   uint32 created_time = 36;
   uint32 version_time = 37;
+
+  // Names - for Default profile build from this > set def_profile title on change
+  string first_name = 40;
+  string last_name = 41;
 
   // Access 20
   bool is_deleted = 38;
@@ -265,11 +270,6 @@ message Message {
   // reply, pre msg, rich media
 
   // Views: channel, group, user,
-
-  // Remove
-  uint32 flags = 112;
-  string title = 109; // For videos > use embeded types
-
 }
 
 enum MessageType {
@@ -343,14 +343,14 @@ message Channel {
   bool is_profile_channel = 101; // imut
   uint32 created_time = 36; // imut
 
-  // Sync
-  fixed64 sync_time_ms = 21; // mut - version
-
   // Visibility
   string user_name = 2; // mut
   string channel_name = 3; // mut - For default channels take if from User first and lastname.
   string about = 16; // mut
   bool is_verified = 6; // mut
+
+  // Sync
+  fixed64 sync_time_ms = 21; // mut - version
 
   // Access
   uint32 is_deleted = 38; // mut
@@ -372,8 +372,12 @@ message Channel {
   FileMsg avatar = 100; // mut
   int64 avatar_count = 40; // mut
 
-  // Counts
-  ChannelCounts counts = 41; // mut
+  // Counts -> followers_count in profile
+  uint32 followers_count = 20;
+  uint32 posts_count = 22;
+  uint32 likes_count = 33;
+  uint32 reshared_count = 34;
+  MediaCounts counts = 44; // mut
 }
 
 enum ChannelPrivacy {
@@ -386,24 +390,6 @@ enum ChannelPrivacy {
 
 message ChannelOwnerNotification { //todo
 
-}
-
-message ChannelCounts {
-  uint32 followers_count = 20;
-  //uint32 following_count = 21; // ?? just profile
-  uint32 posts_count = 22;
-  uint32 media_count = 23;
-  uint32 photo_count = 24;
-  uint32 video_count = 25;
-  uint32 gif_count = 26;
-  uint32 audio_count = 27;
-  uint32 voice_count = 28;
-  uint32 file_count = 29;
-  uint32 link_count = 30;
-  uint32 board_count = 31;
-  uint32 pined_count = 32;
-  uint32 likes_count = 33;
-  uint32 reshared_count = 34;
 }
 
 //==================== Store ==================
@@ -460,39 +446,69 @@ message SavedChannel {//todo
   fixed64 sync_time_ms = 21; // version
   uint32 created_time = 36;
 
-  ChannelCounts counts = 41;
+  ChannelCounts_Dep counts = 41;
   Message last_message = 25;
 }
 
 //==================== Group ==================
 message Group {//todo
-  uint32 cid = 1;
+  // Info
+  uint32 group_cid = 1;
+  uint32 creator_profile_cid = 7;
+  uint32 created_time = 21;
+
+  // Visibility
   string group_title = 3; // or _name
   string user_name = 4; // with "group" suffix > not now > all is private now
-  uint32 creator_profile_cid = 7;
-//  GroupPrivacy group_privacy = 8;
+  string about = 15;
+
+  // Sync
+  uint32 seq = 10;
+  fixed64 sort_time = 20;
+  fixed64 sync_time = 40;
+
+  // Access
+  bool is_deleted = 23;
+  bool is_banned = 24;
+
+  // Setting
   bool history_viewable = 8;
   bool is_open_group = 9; // global searchable, view history without joining
-  uint32 seq = 10;
-  uint32 avatar_count = 14;
-  string about = 15;
   string invite_link_hash = 16;
-  //Move to counts?
+
+  // Messages
+  Message last_message = 25;
+  Message pinned_message = 26;
+
+  // Pin
+
+  // Avatar
+  uint32 avatar_count = 14;
+  FileMsg avatar = 27;
+
+  // Counts
   uint32 members_count = 17;
   uint32 admins_count = 18;
   uint32 moderator_counts = 19;
-
-  fixed64 sort_time = 20;
-  fixed64 sync_time = 40;
-  uint32 created_time = 21;
-  bool is_deleted = 23;
-  bool is_banned = 24;
-  Message last_message = 25;
-  Message pinned_message = 26;
-  FileMsg avatar = 27;
+  MediaCounts media_counts = 200;
 }
 
-message GroupCounts {//todo
+message GroupMember {
+  // Info
+  int64 member_gid = 1;
+  int64 group_cid = 2;
+  uint32 profile_cid = 3;
+  uint32 by_profile_cid = 4;
+  uint32 created_time = 6;
+
+  // Member Type
+
+  // Permission
+
+}
+
+//==================== Others ==================
+message MediaCounts {// Shared amoung chat, groups, channel
   uint32 media_count = 23;
   uint32 photo_count = 24;
   uint32 video_count = 25;
@@ -504,19 +520,12 @@ message GroupCounts {//todo
   uint32 pined_count = 32;
 }
 
-message GroupMember {//todo
-  int64 gid = 1;
-  int64 group_cid = 2;
-  uint32 profile_cid = 3;
-  uint32 by_profile_cid = 4;
-  bool is_moderator = 5;
-  uint32 created_time = 6;
+message Media {
+//todo file, image, video, audio seperatin
 }
 
-//==================== Others ==================
-
 message FileMsg {//todo
-  fixed64 gid = 1;
+  fixed64 file_gid = 1;
   uint32 access_hash = 2;
   uint32 file_type = 3;
   uint32 width = 4;
@@ -572,3 +581,34 @@ message Sms {//todo
 
 //==================== Views ==================
 message Chat {}
+
+//==================== Deprecated =============
+message ChannelCounts_Dep {
+  uint32 followers_count = 20;
+  //uint32 following_count = 21; // ?? just profile
+  uint32 posts_count = 22;
+  uint32 media_count = 23;
+  uint32 photo_count = 24;
+  uint32 video_count = 25;
+  uint32 gif_count = 26;
+  uint32 audio_count = 27;
+  uint32 voice_count = 28;
+  uint32 file_count = 29;
+  uint32 link_count = 30;
+  uint32 board_count = 31;
+  uint32 pined_count = 32;
+  uint32 likes_count = 33;
+  uint32 reshared_count = 34;
+}
+
+message GroupCounts_Dep {//todo
+  uint32 media_count = 23;
+  uint32 photo_count = 24;
+  uint32 video_count = 25;
+  uint32 gif_count = 26;
+  uint32 audio_count = 27;
+  uint32 voice_count = 28;
+  uint32 file_count = 29;
+  uint32 link_count = 30;
+  uint32 pined_count = 32;
+}
