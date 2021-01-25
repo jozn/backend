@@ -24,6 +24,7 @@ fn build_pb() {
     // println!("{:#?}", &vec_protos);
 
     let mut config = prost_build::Config::default();
+    // config.type_attribute(".", "#[derive(Default)]");
     config.out_dir("src/");
     // config.compile_well_known_types();
     // config.type_attribute(".", "#[derive(Debug)]");

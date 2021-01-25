@@ -6,6 +6,7 @@ package pb;
 
 
 message ChannelCommand {
+  uint32 channel_cid = 1;
   oneof sub_command {
     QCreateChannel CreateChannel = 50;
     QEditChannel EditChannel = 51;
@@ -62,11 +63,12 @@ message ChannelCommand {
       uint32 by_profile_cid = 2;
   }
   message QSendMessage {
-      uint32 channel_id = 1;
+      uint32 channel_cid = 1;
       NewMessageInput message_input = 2;
   }
   message QEditMessage {
-      uint32 channel_id = 1;
+      uint32 channel_cid = 1;
+      fixed64 message_gid = 4;
       uint32 by_profile_cid = 3;
       string new_text = 2;
   }
@@ -110,11 +112,11 @@ message ChannelCommand {
       fixed64 comment_gid = 4;
   }
   message QAvatarAdd {
-      uint32 channel_id = 1;
+      uint32 channel_cid = 1;
       uint64 file_id = 2;
   }
   message QAvatarDelete {
-      uint32 channel_id = 1;
+      uint32 channel_cid = 1;
   }
 }
 

@@ -41,7 +41,7 @@ impl EventHandler {
         match cmd.clone() {
             Command::Channel(ch_cmd) => {
                 self.send_event_to_shared_thread(1, event_req, || {
-                    Box::new(channel_events::ChannelEvents::default())
+                    Box::new(channel_events::ChannelEvents::new())
                 });
             }
             Command::Group(gr_cmd) => {
@@ -103,16 +103,13 @@ mod tests {
                 creator_profile_cid: i % 10 + 1,
                 channel_title: format!("channel #{}", i),
                 user_name: format!("ch_username#{}", i),
-                history_viewable: false,
-                force_join: false,
-                global_search: false,
                 about: "XXXXMy channel".to_string(),
             };
 
             let cmd = pb::channel_command::SubCommand::CreateChannel(q);
 
             let chcmd = pb::ChannelCommand {
-                channel_id: 4,
+                channel_cid: 4,
                 sub_command: Some(cmd),
             };
 

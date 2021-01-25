@@ -245,7 +245,7 @@ message ChannelBlockProfileResponse {
 
 // Messages
 message ChannelSendMessageParam {
-    uint32 channel_id = 1;
+    uint32 channel_cid = 1;
     NewMessageInput message_input = 2;
 }
 
@@ -255,7 +255,8 @@ message ChannelSendMessageResponse {
 
 
 message ChannelEditMessageParam {
-    uint32 channel_id = 1;
+    uint32 channel_cid = 1;
+    fixed64 message_gid = 4;
     uint32 by_profile_cid = 3;
     string new_text = 2;
 }
@@ -353,7 +354,7 @@ message ChannelDeleteCommentResponse {
 
 // Pin
 message ChannelPinMessageParam {
-    uint32 channel_id = 1;
+    uint32 channel_cid = 1;
 }
 
 message ChannelPinMessageResponse {
@@ -362,7 +363,7 @@ message ChannelPinMessageResponse {
 
 
 message ChannelUnPinMessageParam {
-    uint32 channel_id = 1;
+    uint32 channel_cid = 1;
 }
 
 message ChannelUnPinMessageResponse {
@@ -372,7 +373,7 @@ message ChannelUnPinMessageResponse {
 
 // Avatar
 message ChannelAvatarAddParam {
-    uint32 channel_id = 1;
+    uint32 channel_cid = 1;
     uint64 file_id = 2;
 }
 
@@ -388,7 +389,7 @@ message ChannelAvatarChangeResponse {
 
 
 message ChannelAvatarDeleteParam {
-    uint32 channel_id = 1;
+    uint32 channel_cid = 1;
 }
 
 message ChannelAvatarDeleteResponse {}
@@ -477,7 +478,7 @@ message ChannelBlockedResponse {
 
 
 message ChannelAvatarGetListParam {
-    uint32 channel_id = 1;
+    uint32 channel_cid = 1;
 }
 
 message ChannelAvatarGetListResponse {}
