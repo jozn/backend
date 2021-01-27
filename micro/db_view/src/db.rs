@@ -5,13 +5,17 @@ pub struct DBCassandra {
     pub session: session::FlipCassandraSession,
 }
 
+// Common Impl
 impl DBCassandra {
     pub fn new() -> Self {
         DBCassandra {
             session: session::get_session(),
         }
     }
+}
 
+// Channels Impl
+impl DBCassandra {
     // =================== Channel ====================
     pub fn get_channel(&self, channel_id: i64) -> Result<pb::Channel, GenErr> {
         let sess = &self.session;
@@ -147,29 +151,6 @@ impl DBCassandra {
         Ok(())
     }
 
-    // =================== Profile ====================
-    pub fn get_profile(&self, profile_cid: i64, chat_gid: i64) -> Result<pb::Profile, GenErr> {
-        let sess = &self.session;
-
-        let r = xc::get_profile_by_profile_cid(sess, profile_cid)?;
-        let chat = common::prost_decode(&r.pb_data)?;
-
-        Ok(chat)
-    }
-
-    pub fn save_profile(&self, profile: &pb::Profile) -> Result<(), GenErr> {
-        let sess = &self.session;
-
-        let pb = prost_encode(profile)?;
-        let r = xc::Profile {
-            profile_cid: profile.profile_cid as i64,
-            pb_data: pb,
-        };
-        r.save(sess)?;
-
-        Ok(())
-    }
-
     // =================== Channel Following ====================
     pub fn get_profile_followings(&self, profile_cid: i64) -> Result<Vec<i64>, GenErr> {
         let sess = &self.session;
@@ -195,7 +176,10 @@ impl DBCassandra {
 
         Ok(())
     }
+}
 
+// Chat Impl
+impl DBCassandra {
     // =================== Chat ====================
     pub fn get_chat(&self, profile_id: i64, chat_id: i64) -> Result<pb::Chat, GenErr> {
         let sess = &self.session;
@@ -251,6 +235,33 @@ impl DBCassandra {
         Ok(())*/
         unimplemented!("")
     }
+}
+
+// Profile Impl
+impl DBCassandra {
+    // =================== Profile ====================
+    pub fn get_profile(&self, profile_cid: i64, chat_gid: i64) -> Result<pb::Profile, GenErr> {
+        let sess = &self.session;
+
+        let r = xc::get_profile_by_profile_cid(sess, profile_cid)?;
+        let chat = common::prost_decode(&r.pb_data)?;
+
+        Ok(chat)
+    }
+
+    pub fn save_profile(&self, profile: &pb::Profile) -> Result<(), GenErr> {
+        let sess = &self.session;
+
+        let pb = prost_encode(profile)?;
+        let r = xc::Profile {
+            profile_cid: profile.profile_cid as i64,
+            pb_data: pb,
+        };
+        r.save(sess)?;
+
+        Ok(())
+    }
+
 }
 
 // Deprecated > remove
