@@ -1,38 +1,55 @@
-################### Manula #################
-
-CREATE TABLE msgs.channel_follower (
+//################### Manula #################
+//##== Channnels 
+CREATE TABLE IF NOT EXISTS msgs.channel_follower (
     channel_cid bigint,
     profile_cid bigint,
     PRIMARY KEY (channel_cid, profile_cid)
 );
 
-CREATE TABLE msgs.channel_subscriber(
+CREATE TABLE IF NOT EXISTS msgs.channel_subscriber(
     channel_cid bigint,
     profile_cid bigint,
     PRIMARY KEY (channel_cid, profile_cid)
 );
 
 
-CREATE TABLE msgs.msg_like(
+CREATE TABLE IF NOT EXISTS msgs.msg_like(
     message_gid bigint,
     profile_cid bigint,
     PRIMARY KEY (message_gid, profile_cid)
 );
 
-CREATE TABLE msgs.msg_reshare(
+CREATE TABLE IF NOT EXISTS msgs.msg_reshare(
     message_gid bigint,
     profile_cid bigint,
     PRIMARY KEY (message_gid, profile_cid)
 );
 
-CREATE TABLE msgs.msg_comment(
+CREATE TABLE IF NOT EXISTS msgs.msg_comment(
     message_gid bigint,
     comment_gid bigint,
     pb_data blob,
     PRIMARY KEY (message_gid, comment_gid)
 );
 
-################### Output From GUI ################
+
+//##== Profiles 
+CREATE TABLE IF NOT EXISTS msgs.profile_follow (
+    profile_cid bigint,
+    channel_cid bigint,
+    PRIMARY KEY (profile_cid,channel_cid)
+);
+
+CREATE TABLE IF NOT EXISTS msgs.profile_subscribe (
+    profile_cid bigint,
+    channel_cid bigint,
+    PRIMARY KEY (profile_cid,channel_cid)
+);
+
+
+
+
+//################### Output From GUI ################
 
 CREATE KEYSPACE msgs WITH REPLICATION = { 'class' : 'org.apache.cassandra.locator.SimpleStrategy', 'replication_factor': '1' } AND DURABLE_WRITES = true;
 
