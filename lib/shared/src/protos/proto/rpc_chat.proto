@@ -7,9 +7,9 @@ import "global.proto";
 service RPC_Chat {
     //rpc Chat (Param) returns (Response);
 
-    // crud: c: with sending msg, u: none, d: wit h direct
+    // crud: c: with sending msg, u: none, d: with direct
 
-    // Privacy: none in here, with settings in channels privacy
+    // Privacy: none in here, with settings in profile privacy
 
     // Messages
     rpc ChatSendMessage (ChatSendMessageParam) returns (ChatSendMessageResponse);

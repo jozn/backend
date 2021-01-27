@@ -253,11 +253,17 @@ pub struct Direct {
     /// mut
     #[prost(uint32, tag = "108")]
     pub pined_msgs_count: u32,
-    /// Peer Chat
+    /// Chat / Peer Chat
     ///
     /// s_imut
     #[prost(message, optional, tag = "433")]
     pub peer_chat: ::std::option::Option<PeerChat>,
+    /// ? must use profile
+    #[prost(message, optional, tag = "49")]
+    pub contact: ::std::option::Option<Contact>,
+    /// Profile > or Peer Chat ?
+    #[prost(message, optional, tag = "149")]
+    pub profile: ::std::option::Option<Profile>,
     /// Channel
     ///
     /// s_imut
@@ -274,14 +280,6 @@ pub struct Direct {
     /// imut
     #[prost(fixed64, tag = "11")]
     pub visible_from_msg_gid: u64,
-    /// Chat
-    ///
-    /// ? must use profile
-    #[prost(message, optional, tag = "49")]
-    pub contact: ::std::option::Option<Contact>,
-    /// Profile > or Peer Chat ?
-    #[prost(message, optional, tag = "149")]
-    pub profile: ::std::option::Option<Profile>,
     /// Messages
     ///
     /// mut
@@ -334,14 +332,22 @@ pub struct DirectCustomNotification {
 }
 ///==================== Peer Chat ==================
 ///
-/// todo
-///  uint32 peer_profile_cid = 6; // ??
-///  fixed64 peer_last_seen_msg_id = 18; // ??
-///  fixed64 my_last_delivered_seq = 19; // ??
-///  fixed64 my_last_delivered_msg_id = 20; // ??
-///  fixed64 peer_last_delivered_msg_id = 21; // ??
+///?? or embed
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PeerChat {}
+pub struct PeerChat {
+    /// imut
+    #[prost(uint32, tag = "1")]
+    pub profile1_cid: u32,
+    /// imut
+    #[prost(uint32, tag = "2")]
+    pub profile2_cid: u32,
+    /// imut
+    #[prost(fixed64, tag = "3")]
+    pub direct1_gid: u64,
+    /// imut
+    #[prost(fixed64, tag = "4")]
+    pub direct2_gid: u64,
+}
 ///==================== Messages ==================
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Message {
@@ -805,8 +811,61 @@ pub struct Sms {
     #[prost(string, tag = "102")]
     pub result: std::string::String,
 }
-//==================== Views ==================
-
+///==================== New > move ==================
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Comment {
+    /// imut
+    #[prost(uint64, tag = "6")]
+    pub comment_gid: u64,
+    /// imut
+    #[prost(uint64, tag = "1")]
+    pub message_gid: u64,
+    /// imut
+    #[prost(uint32, tag = "2")]
+    pub profile_cid: u32,
+    /// imut
+    #[prost(uint32, tag = "3")]
+    pub created_time: u32,
+    /// mut
+    #[prost(string, tag = "4")]
+    pub text: std::string::String,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Follower {
+    /// imut
+    #[prost(uint32, tag = "1")]
+    pub channel_cid: u32,
+    /// imut
+    #[prost(uint32, tag = "2")]
+    pub profile_cid: u32,
+    /// imut
+    #[prost(uint32, tag = "3")]
+    pub created_time: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Subscribe {
+    /// imut
+    #[prost(uint32, tag = "1")]
+    pub channel_cid: u32,
+    /// imut
+    #[prost(uint32, tag = "2")]
+    pub profile_cid: u32,
+    /// imut
+    #[prost(uint32, tag = "3")]
+    pub created_time: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Like {
+    /// imut
+    #[prost(uint64, tag = "1")]
+    pub message_gid: u64,
+    /// imut
+    #[prost(uint32, tag = "2")]
+    pub profile_cid: u32,
+    /// imut
+    #[prost(uint32, tag = "3")]
+    pub created_time: u32,
+}
 ///==================== Views ==================
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Chat {}

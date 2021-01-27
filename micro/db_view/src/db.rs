@@ -69,6 +69,133 @@ impl DBCassandra {
         Ok(())
     }
 
+    // =================== Channel Follower ====================
+    pub fn get_channel_followers(&self, channel_id: i64) -> Result<Vec<i64>, GenErr> {
+        let sess = &self.session;
+
+        let rows = xc::ChannelFollower_Selector::new().channel_cid_eq(channel_id).get_rows(sess)?;
+        let mut out =vec![];
+        for r in rows {
+            out.push(r.profile_cid);
+        }
+
+        Ok(out)
+    }
+
+    pub fn save_channel_follower(&self, channel_cid: i64, profile_cid: i64) -> Result<(), GenErr> {
+        let sess = &self.session;
+
+        let r = xc::ChannelFollower {
+            channel_cid,
+            profile_cid
+        };
+        r.save(sess)?;
+
+        Ok(())
+    }
+
+    // =================== Channel Message Like ====================
+    pub fn get_message_likes(&self, message_gid: i64) -> Result<Vec<i64>, GenErr> {//todo paging
+        let sess = &self.session;
+
+        let rows = xc::MsgLike_Selector::new().message_gid_eq(message_gid).get_rows(sess)?;
+        let mut out =vec![];
+        for r in rows {
+            out.push(r.profile_cid);
+        }
+
+        Ok(out)
+    }
+
+    pub fn save_message_like(&self, message_gid: i64, profile_cid: i64) -> Result<(), GenErr> {
+        let sess = &self.session;
+
+        let r = xc::MsgLike {
+            message_gid,
+            profile_cid
+        };
+        r.save(sess)?;
+
+        Ok(())
+    }
+
+    // =================== Channel Message Comment ====================
+    pub fn get_message_comments(&self, message_gid: i64) -> Result<Vec<pb::Comment>, GenErr> {//todo paging
+        let sess = &self.session;
+
+        // todo
+        let rows = xc::MsgComment_Selector::new().message_gid_eq(message_gid).get_rows(sess)?;
+        let mut out =vec![];
+        for r in rows {
+            out.push(common::prost_decode(&r.pb_data)?);
+        }
+
+        Ok(out)
+    }
+
+    pub fn save_message_comment(&self, comment: &pb::Comment) -> Result<(), GenErr> {
+        let sess = &self.session;
+        
+        let c = common::prost_encode(comment)?;
+        let r = xc::MsgComment{
+            comment_gid: comment.comment_gid as i64,
+            message_gid: comment.message_gid as i64,
+            pb_data: c,
+        };
+        r.save(sess)?;
+
+        Ok(())
+    }
+
+    // =================== Profile ====================
+    pub fn get_profile(&self, profile_cid: i64, chat_gid: i64) -> Result<pb::Profile, GenErr> {
+        let sess = &self.session;
+
+        let r = xc::get_profile_by_profile_cid(sess, profile_cid)?;
+        let chat = common::prost_decode(&r.pb_data)?;
+
+        Ok(chat)
+    }
+
+    pub fn save_profile(&self, profile: &pb::Profile) -> Result<(), GenErr> {
+        let sess = &self.session;
+
+        let pb = prost_encode(profile)?;
+        let r = xc::Profile {
+            profile_cid: profile.profile_cid as i64,
+            pb_data: pb,
+        };
+        r.save(sess)?;
+
+        Ok(())
+    }
+
+    // =================== Channel Following ====================
+    pub fn get_profile_followings(&self, profile_cid: i64) -> Result<Vec<i64>, GenErr> {
+        let sess = &self.session;
+
+        let rows = xc::ProfileFollow_Selector::new().profile_cid_eq(profile_cid).get_rows(sess)?;
+        let mut out =vec![];
+        for r in rows {
+            out.push(r.profile_cid);
+        }
+
+        Ok(out)
+    }
+
+    // todo this with channel must be in one batch transaction
+    pub fn save_profile_following(&self, channel_cid: i64, profile_cid: i64) -> Result<(), GenErr> {
+        let sess = &self.session;
+
+        let r = xc::ProfileFollow {
+            channel_cid,
+            profile_cid
+        };
+        r.save(sess)?;
+
+        Ok(())
+    }
+
     // =================== Chat ====================
     pub fn get_chat(&self, profile_id: i64, chat_id: i64) -> Result<pb::Chat, GenErr> {
         let sess = &self.session;
