@@ -2,25 +2,80 @@ syntax = "proto3";
 
 package pb;
 
-service RPC_User {
-    //rpc Account (Param) returns (Response);
+import "global.proto";
 
-    // Phone, Email
-    rpc ChangePhoneNumber (ChangePhoneNumberParam) returns (ChangePhoneNumberResponse);
+// rules: qevent_rpc
+service RPC_User {
+    //rpc User (Param) returns (Response);
+
+    // Phone (phone is per User not per Profile)
+    rpc UserChangePhoneNumber (UserChangePhoneNumberParam) returns (UserChangePhoneNumberResponse); // qevent_id_10
+
+    // Email
+
+    // Password
 
     // Session
-    //todo add Param and Response
-//    rpc AccountRemoveSession (Param) returns (Response);
-//    rpc AccountRemoveOtherSessions (Param) returns (Response);
-//    rpc AccountGetActiveSessions (Param) returns (Response); // View
+    rpc UserRemoveSession (UserRemoveSessionParam) returns (UserRemoveSessionResponse); // qevent_id_20
+    rpc UserRemoveOtherSessions (UserRemoveOtherParam) returns (UserRemoveOtherResponse); // qevent
 
-    // Settings
+    // Settings > not in here in Profile
+
+    // Views
+    rpc UserGetMe (UserGetMeParam) returns (UserGetMeResponse);
+    rpc UserGetActiveSessions (UserGetActiveSessionsParam) returns (UserGetActiveSessionsResponse);
+
 }
 
-message ChangePhoneNumberParam {
+// Phone
+message UserChangePhoneNumberParam {
 }
 
-message ChangePhoneNumberResponse {
+message UserChangePhoneNumberResponse {
     bool done =1;
     string text = 2;
 }
+
+// Email
+
+
+// Password
+
+
+// Session
+message UserRemoveSessionParam {
+}
+
+message UserRemoveSessionResponse {
+}
+
+
+message UserRemoveOtherParam {
+}
+
+message UserRemoveOtherResponse {
+}
+
+
+// Views
+message UserGetMeParam {
+}
+
+message UserGetMeResponse {
+}
+
+
+message UserGetActiveSessionsParam {
+}
+
+message UserGetActiveSessionsResponse {
+}
+
+
+/*
+message Param {
+}
+
+message Response {
+}
+*/

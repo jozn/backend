@@ -4,6 +4,7 @@ package pb;
 
 import "global.proto";
 
+// rules: qevent_rpc
 service RPC_Chat {
     //rpc Chat (Param) returns (Response);
 
@@ -12,10 +13,10 @@ service RPC_Chat {
     // Privacy: none in here, with settings in profile privacy
 
     // Messages
-    rpc ChatSendMessage (ChatSendMessageParam) returns (ChatSendMessageResponse);
-    rpc ChatEditMessage (ChatEditMessageParam) returns (ChatEditMessageResponse);
-    rpc ChatDeleteMessages (ChatDeleteMessagesParam) returns (ChatDeleteMessagesResponse);
-    rpc ChatDeleteHistory (ChatDeleteHistoryParam) returns (ChatDeleteHistoryResponse);
+    rpc ChatSendMessage (ChatSendMessageParam) returns (ChatSendMessageResponse); // qevent_id_10
+    rpc ChatEditMessage (ChatEditMessageParam) returns (ChatEditMessageResponse); // qevent
+    rpc ChatDeleteMessages (ChatDeleteMessagesParam) returns (ChatDeleteMessagesResponse); // qevent
+    rpc ChatDeleteHistory (ChatDeleteHistoryParam) returns (ChatDeleteHistoryResponse); // qevent
 
     // Others
     rpc ChatSendDoingAction (ChatSendDoingActionParam) returns (ChatSendDoingActionResponse);

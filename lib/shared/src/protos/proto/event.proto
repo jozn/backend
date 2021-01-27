@@ -120,6 +120,37 @@ message ChannelCommand {
   }
 }
 
+message ChatCommand {
+  oneof sub_command {
+    QSendMessage SendMessage = 10;
+    QEditMessage EditMessage = 11;
+    QDeleteMessages DeleteMessages = 12;
+    QDeleteHistory DeleteHistory = 13;
+  }
+  message QSendMessage {
+      uint32 group_id = 1;
+  }
+  message QEditMessage {
+      uint32 group_id = 1;
+  }
+  message QDeleteMessages {
+      uint32 group_id = 1;
+  }
+  message QDeleteHistory {
+  }
+}
+
+message DirectCommand {
+  oneof sub_command {
+    QChangeTitle ChangeTitle = 10;
+    QDeleteDirects DeleteDirects = 50;
+  }
+  message QChangeTitle {
+  }
+  message QDeleteDirects {
+  }
+}
+
 message GroupCommand {
   oneof sub_command {
     QCreateGroup CreateGroup = 40;
@@ -202,6 +233,28 @@ message GroupCommand {
       uint32 group_id = 1;
   }
   message QReportGroup {
+  }
+}
+
+message ProfileCommand {
+  oneof sub_command {
+    QSetSettings SetSettings = 10;
+  }
+  message QSetSettings {
+  }
+}
+
+message UserCommand {
+  oneof sub_command {
+    QChangePhoneNumber ChangePhoneNumber = 10;
+    QRemoveSession RemoveSession = 20;
+    QRemoveOtherSessions RemoveOtherSessions = 21;
+  }
+  message QChangePhoneNumber {
+  }
+  message QRemoveSession {
+  }
+  message QRemoveOtherSessions {
   }
 }
 

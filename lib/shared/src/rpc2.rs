@@ -26,6 +26,7 @@ pub enum RpcServiceData {
     RPC_Chat(RPC_Chat_MethodData),
     RPC_Direct(RPC_Direct_MethodData),
     RPC_Group(RPC_Group_MethodData),
+    RPC_Profile(RPC_Profile_MethodData),
     RPC_Sample(RPC_Sample_MethodData),
     RPC_Shared(RPC_Shared_MethodData),
     RPC_Shop(RPC_Shop_MethodData),
@@ -39,11 +40,11 @@ pub enum IPC_CMaster_MethodData {
 }
 #[derive(Debug)]
 pub enum RPC_Auth_MethodData {
-    SendConfirmCode(pb::SendConfirmCodeParam),
-    ConfirmCode(pb::ConfirmCodeParam),
-    SingUp(pb::SingUpParam),
-    SingIn(pb::SingInParam),
-    LogOut(pb::LogOutParam),
+    AuthSendConfirmCode(pb::AuthSendConfirmCodeParam),
+    AuthConfirmCode(pb::AuthConfirmCodeParam),
+    AuthSingUp(pb::AuthSingUpParam),
+    AuthSingIn(pb::AuthSingInParam),
+    AuthLogOut(pb::AuthLogOutParam),
 }
 #[derive(Debug)]
 pub enum RPC_Channel_MethodData {
@@ -104,10 +105,8 @@ pub enum RPC_Chat_MethodData {
 }
 #[derive(Debug)]
 pub enum RPC_Direct_MethodData {
-    DirectDeleteDirect(pb::DirectDeleteDirectParam),
     DirectChangeTitle(pb::DirectChangeTitleParam),
     DirectSetCustomNotification(pb::DirectSetCustomNotificationParam),
-    DirectSendActionDoing(pb::DirectSendActionDoingParam),
     DirectSetDraft(pb::DirectSetDraftParam),
     DirectDeleteDirects(pb::DirectDeleteDirectsParam),
     DirectMarkAsRead(pb::DirectMarkAsReadParam),
@@ -116,7 +115,6 @@ pub enum RPC_Direct_MethodData {
     DirectUnPinDirects(pb::DirectUnPinDirectsParam),
     DirectArchiveDirects(pb::DirectArchiveDirectsParam),
     DirectUnArchiveDirects(pb::DirectUnArchiveDirectsParam),
-    DirectClearHistories(pb::DirectClearHistoriesParam),
     DirectMuteDirects(pb::DirectMuteDirectsParam),
     DirectUnMuteDirects(pb::DirectUnMuteDirectsParam),
     DirectCreateFolder(pb::DirectCreateFolderParam),
@@ -129,6 +127,9 @@ pub enum RPC_Direct_MethodData {
     DirectGetChannelsList(pb::DirectGetChannelsListParam),
     DirectGetFoldersList(pb::DirectGetFoldersListParam),
     DirectGetFoldersFullList(pb::DirectGetFoldersFullListParam),
+    DirectSendActionDoing(pb::DirectSendActionDoingParam),
+    DirectClearHistories(pb::DirectClearHistoriesParam),
+    DirectDeleteDirect(pb::DirectDeleteDirectParam),
 }
 #[derive(Debug)]
 pub enum RPC_Group_MethodData {
@@ -165,6 +166,10 @@ pub enum RPC_Group_MethodData {
     GroupAvatarGetList(pb::GroupAvatarGetListParam),
 }
 #[derive(Debug)]
+pub enum RPC_Profile_MethodData {
+    ProfileSetSettings(pb::ProfileSetSettingsParam),
+}
+#[derive(Debug)]
 pub enum RPC_Sample_MethodData {
     GetUsers1(pb::GetUsers1Param),
     GetProfiles(pb::GetProfilesParam),
@@ -174,8 +179,8 @@ pub enum RPC_Sample_MethodData {
 }
 #[derive(Debug)]
 pub enum RPC_Shared_MethodData {
-    Echo(pb::EchoParam),
-    CheckUserName(pb::CheckUserNameParam),
+    SharedEcho(pb::SharedEchoParam),
+    SharedCheckUserName(pb::SharedCheckUserNameParam),
 }
 #[derive(Debug)]
 pub enum RPC_Shop_MethodData {
@@ -212,7 +217,11 @@ pub enum RPC_Upload_MethodData {
 }
 #[derive(Debug)]
 pub enum RPC_User_MethodData {
-    ChangePhoneNumber(pb::ChangePhoneNumberParam),
+    UserChangePhoneNumber(pb::UserChangePhoneNumberParam),
+    UserRemoveSession(pb::UserRemoveSessionParam),
+    UserRemoveOtherSessions(pb::UserRemoveOtherParam),
+    UserGetMe(pb::UserGetMeParam),
+    UserGetActiveSessions(pb::UserGetActiveSessionsParam),
 }
 
 #[async_trait]
@@ -226,26 +235,35 @@ pub trait IPC_CMaster_Handler {
 }
 #[async_trait]
 pub trait RPC_Auth_Handler {
-    async fn SendConfirmCode(
+    async fn AuthSendConfirmCode(
         up: &UserParam,
-        param: pb::SendConfirmCodeParam,
-    ) -> Result<pb::SendConfirmCodeResponse, GenErr> {
-        Ok(pb::SendConfirmCodeResponse::default())
+        param: pb::AuthSendConfirmCodeParam,
+    ) -> Result<pb::AuthSendConfirmCodeResponse, GenErr> {
+        Ok(pb::AuthSendConfirmCodeResponse::default())
     }
-    async fn ConfirmCode(
+    async fn AuthConfirmCode(
         up: &UserParam,
-        param: pb::ConfirmCodeParam,
-    ) -> Result<pb::ConfirmCodeResponse, GenErr> {
-        Ok(pb::ConfirmCodeResponse::default())
+        param: pb::AuthConfirmCodeParam,
+    ) -> Result<pb::AuthConfirmCodeResponse, GenErr> {
+        Ok(pb::AuthConfirmCodeResponse::default())
     }
-    async fn SingUp(up: &UserParam, param: pb::SingUpParam) -> Result<pb::SingUpResponse, GenErr> {
-        Ok(pb::SingUpResponse::default())
+    async fn AuthSingUp(
+        up: &UserParam,
+        param: pb::AuthSingUpParam,
+    ) -> Result<pb::AuthSingUpResponse, GenErr> {
+        Ok(pb::AuthSingUpResponse::default())
     }
-    async fn SingIn(up: &UserParam, param: pb::SingInParam) -> Result<pb::SingInResponse, GenErr> {
-        Ok(pb::SingInResponse::default())
+    async fn AuthSingIn(
+        up: &UserParam,
+        param: pb::AuthSingInParam,
+    ) -> Result<pb::AuthSingInResponse, GenErr> {
+        Ok(pb::AuthSingInResponse::default())
     }
-    async fn LogOut(up: &UserParam, param: pb::LogOutParam) -> Result<pb::LogOutResponse, GenErr> {
-        Ok(pb::LogOutResponse::default())
+    async fn AuthLogOut(
+        up: &UserParam,
+        param: pb::AuthLogOutParam,
+    ) -> Result<pb::AuthLogOutResponse, GenErr> {
+        Ok(pb::AuthLogOutResponse::default())
     }
 }
 #[async_trait]
@@ -562,12 +580,6 @@ pub trait RPC_Chat_Handler {
 }
 #[async_trait]
 pub trait RPC_Direct_Handler {
-    async fn DirectDeleteDirect(
-        up: &UserParam,
-        param: pb::DirectDeleteDirectParam,
-    ) -> Result<pb::DirectDeleteDirectResponse, GenErr> {
-        Ok(pb::DirectDeleteDirectResponse::default())
-    }
     async fn DirectChangeTitle(
         up: &UserParam,
         param: pb::DirectChangeTitleParam,
@@ -579,12 +591,6 @@ pub trait RPC_Direct_Handler {
         param: pb::DirectSetCustomNotificationParam,
     ) -> Result<pb::DirectSetCustomNotificationResponse, GenErr> {
         Ok(pb::DirectSetCustomNotificationResponse::default())
-    }
-    async fn DirectSendActionDoing(
-        up: &UserParam,
-        param: pb::DirectSendActionDoingParam,
-    ) -> Result<pb::DirectSendActionDoingResponse, GenErr> {
-        Ok(pb::DirectSendActionDoingResponse::default())
     }
     async fn DirectSetDraft(
         up: &UserParam,
@@ -633,12 +639,6 @@ pub trait RPC_Direct_Handler {
         param: pb::DirectUnArchiveDirectsParam,
     ) -> Result<pb::DirectUnArchiveDirectsResponse, GenErr> {
         Ok(pb::DirectUnArchiveDirectsResponse::default())
-    }
-    async fn DirectClearHistories(
-        up: &UserParam,
-        param: pb::DirectClearHistoriesParam,
-    ) -> Result<pb::DirectClearHistoriesResponse, GenErr> {
-        Ok(pb::DirectClearHistoriesResponse::default())
     }
     async fn DirectMuteDirects(
         up: &UserParam,
@@ -711,6 +711,24 @@ pub trait RPC_Direct_Handler {
         param: pb::DirectGetFoldersFullListParam,
     ) -> Result<pb::DirectGetFoldersFullListResponse, GenErr> {
         Ok(pb::DirectGetFoldersFullListResponse::default())
+    }
+    async fn DirectSendActionDoing(
+        up: &UserParam,
+        param: pb::DirectSendActionDoingParam,
+    ) -> Result<pb::DirectSendActionDoingResponse, GenErr> {
+        Ok(pb::DirectSendActionDoingResponse::default())
+    }
+    async fn DirectClearHistories(
+        up: &UserParam,
+        param: pb::DirectClearHistoriesParam,
+    ) -> Result<pb::DirectClearHistoriesResponse, GenErr> {
+        Ok(pb::DirectClearHistoriesResponse::default())
+    }
+    async fn DirectDeleteDirect(
+        up: &UserParam,
+        param: pb::DirectDeleteDirectParam,
+    ) -> Result<pb::DirectDeleteDirectResponse, GenErr> {
+        Ok(pb::DirectDeleteDirectResponse::default())
     }
 }
 #[async_trait]
@@ -903,6 +921,15 @@ pub trait RPC_Group_Handler {
     }
 }
 #[async_trait]
+pub trait RPC_Profile_Handler {
+    async fn ProfileSetSettings(
+        up: &UserParam,
+        param: pb::ProfileSetSettingsParam,
+    ) -> Result<pb::ProfileSetSettingsResponse, GenErr> {
+        Ok(pb::ProfileSetSettingsResponse::default())
+    }
+}
+#[async_trait]
 pub trait RPC_Sample_Handler {
     async fn GetUsers1(
         up: &UserParam,
@@ -937,14 +964,17 @@ pub trait RPC_Sample_Handler {
 }
 #[async_trait]
 pub trait RPC_Shared_Handler {
-    async fn Echo(up: &UserParam, param: pb::EchoParam) -> Result<pb::EchoResponse, GenErr> {
-        Ok(pb::EchoResponse::default())
-    }
-    async fn CheckUserName(
+    async fn SharedEcho(
         up: &UserParam,
-        param: pb::CheckUserNameParam,
-    ) -> Result<pb::CheckUserNameResponse, GenErr> {
-        Ok(pb::CheckUserNameResponse::default())
+        param: pb::SharedEchoParam,
+    ) -> Result<pb::SharedEchoResponse, GenErr> {
+        Ok(pb::SharedEchoResponse::default())
+    }
+    async fn SharedCheckUserName(
+        up: &UserParam,
+        param: pb::SharedCheckUserNameParam,
+    ) -> Result<pb::SharedCheckUserNameResponse, GenErr> {
+        Ok(pb::SharedCheckUserNameResponse::default())
     }
 }
 #[async_trait]
@@ -1057,11 +1087,35 @@ pub trait RPC_Upload_Handler {
 }
 #[async_trait]
 pub trait RPC_User_Handler {
-    async fn ChangePhoneNumber(
+    async fn UserChangePhoneNumber(
         up: &UserParam,
-        param: pb::ChangePhoneNumberParam,
-    ) -> Result<pb::ChangePhoneNumberResponse, GenErr> {
-        Ok(pb::ChangePhoneNumberResponse::default())
+        param: pb::UserChangePhoneNumberParam,
+    ) -> Result<pb::UserChangePhoneNumberResponse, GenErr> {
+        Ok(pb::UserChangePhoneNumberResponse::default())
+    }
+    async fn UserRemoveSession(
+        up: &UserParam,
+        param: pb::UserRemoveSessionParam,
+    ) -> Result<pb::UserRemoveSessionResponse, GenErr> {
+        Ok(pb::UserRemoveSessionResponse::default())
+    }
+    async fn UserRemoveOtherSessions(
+        up: &UserParam,
+        param: pb::UserRemoveOtherParam,
+    ) -> Result<pb::UserRemoveOtherResponse, GenErr> {
+        Ok(pb::UserRemoveOtherResponse::default())
+    }
+    async fn UserGetMe(
+        up: &UserParam,
+        param: pb::UserGetMeParam,
+    ) -> Result<pb::UserGetMeResponse, GenErr> {
+        Ok(pb::UserGetMeResponse::default())
+    }
+    async fn UserGetActiveSessions(
+        up: &UserParam,
+        param: pb::UserGetActiveSessionsParam,
+    ) -> Result<pb::UserGetActiveSessionsResponse, GenErr> {
+        Ok(pb::UserGetActiveSessionsResponse::default())
     }
 }
 
@@ -1073,26 +1127,35 @@ pub trait IPC_CMaster_Handler2: Send + Sync {
 }
 #[async_trait]
 pub trait RPC_Auth_Handler2: Send + Sync {
-    async fn SendConfirmCode(
+    async fn AuthSendConfirmCode(
         &self,
-        param: pb::SendConfirmCodeParam,
-    ) -> Result<pb::SendConfirmCodeResponse, GenErr> {
-        Ok(pb::SendConfirmCodeResponse::default())
+        param: pb::AuthSendConfirmCodeParam,
+    ) -> Result<pb::AuthSendConfirmCodeResponse, GenErr> {
+        Ok(pb::AuthSendConfirmCodeResponse::default())
     }
-    async fn ConfirmCode(
+    async fn AuthConfirmCode(
         &self,
-        param: pb::ConfirmCodeParam,
-    ) -> Result<pb::ConfirmCodeResponse, GenErr> {
-        Ok(pb::ConfirmCodeResponse::default())
+        param: pb::AuthConfirmCodeParam,
+    ) -> Result<pb::AuthConfirmCodeResponse, GenErr> {
+        Ok(pb::AuthConfirmCodeResponse::default())
     }
-    async fn SingUp(&self, param: pb::SingUpParam) -> Result<pb::SingUpResponse, GenErr> {
-        Ok(pb::SingUpResponse::default())
+    async fn AuthSingUp(
+        &self,
+        param: pb::AuthSingUpParam,
+    ) -> Result<pb::AuthSingUpResponse, GenErr> {
+        Ok(pb::AuthSingUpResponse::default())
     }
-    async fn SingIn(&self, param: pb::SingInParam) -> Result<pb::SingInResponse, GenErr> {
-        Ok(pb::SingInResponse::default())
+    async fn AuthSingIn(
+        &self,
+        param: pb::AuthSingInParam,
+    ) -> Result<pb::AuthSingInResponse, GenErr> {
+        Ok(pb::AuthSingInResponse::default())
     }
-    async fn LogOut(&self, param: pb::LogOutParam) -> Result<pb::LogOutResponse, GenErr> {
-        Ok(pb::LogOutResponse::default())
+    async fn AuthLogOut(
+        &self,
+        param: pb::AuthLogOutParam,
+    ) -> Result<pb::AuthLogOutResponse, GenErr> {
+        Ok(pb::AuthLogOutResponse::default())
     }
 }
 #[async_trait]
@@ -1409,12 +1472,6 @@ pub trait RPC_Chat_Handler2: Send + Sync {
 }
 #[async_trait]
 pub trait RPC_Direct_Handler2: Send + Sync {
-    async fn DirectDeleteDirect(
-        &self,
-        param: pb::DirectDeleteDirectParam,
-    ) -> Result<pb::DirectDeleteDirectResponse, GenErr> {
-        Ok(pb::DirectDeleteDirectResponse::default())
-    }
     async fn DirectChangeTitle(
         &self,
         param: pb::DirectChangeTitleParam,
@@ -1426,12 +1483,6 @@ pub trait RPC_Direct_Handler2: Send + Sync {
         param: pb::DirectSetCustomNotificationParam,
     ) -> Result<pb::DirectSetCustomNotificationResponse, GenErr> {
         Ok(pb::DirectSetCustomNotificationResponse::default())
-    }
-    async fn DirectSendActionDoing(
-        &self,
-        param: pb::DirectSendActionDoingParam,
-    ) -> Result<pb::DirectSendActionDoingResponse, GenErr> {
-        Ok(pb::DirectSendActionDoingResponse::default())
     }
     async fn DirectSetDraft(
         &self,
@@ -1480,12 +1531,6 @@ pub trait RPC_Direct_Handler2: Send + Sync {
         param: pb::DirectUnArchiveDirectsParam,
     ) -> Result<pb::DirectUnArchiveDirectsResponse, GenErr> {
         Ok(pb::DirectUnArchiveDirectsResponse::default())
-    }
-    async fn DirectClearHistories(
-        &self,
-        param: pb::DirectClearHistoriesParam,
-    ) -> Result<pb::DirectClearHistoriesResponse, GenErr> {
-        Ok(pb::DirectClearHistoriesResponse::default())
     }
     async fn DirectMuteDirects(
         &self,
@@ -1558,6 +1603,24 @@ pub trait RPC_Direct_Handler2: Send + Sync {
         param: pb::DirectGetFoldersFullListParam,
     ) -> Result<pb::DirectGetFoldersFullListResponse, GenErr> {
         Ok(pb::DirectGetFoldersFullListResponse::default())
+    }
+    async fn DirectSendActionDoing(
+        &self,
+        param: pb::DirectSendActionDoingParam,
+    ) -> Result<pb::DirectSendActionDoingResponse, GenErr> {
+        Ok(pb::DirectSendActionDoingResponse::default())
+    }
+    async fn DirectClearHistories(
+        &self,
+        param: pb::DirectClearHistoriesParam,
+    ) -> Result<pb::DirectClearHistoriesResponse, GenErr> {
+        Ok(pb::DirectClearHistoriesResponse::default())
+    }
+    async fn DirectDeleteDirect(
+        &self,
+        param: pb::DirectDeleteDirectParam,
+    ) -> Result<pb::DirectDeleteDirectResponse, GenErr> {
+        Ok(pb::DirectDeleteDirectResponse::default())
     }
 }
 #[async_trait]
@@ -1750,6 +1813,15 @@ pub trait RPC_Group_Handler2: Send + Sync {
     }
 }
 #[async_trait]
+pub trait RPC_Profile_Handler2: Send + Sync {
+    async fn ProfileSetSettings(
+        &self,
+        param: pb::ProfileSetSettingsParam,
+    ) -> Result<pb::ProfileSetSettingsResponse, GenErr> {
+        Ok(pb::ProfileSetSettingsResponse::default())
+    }
+}
+#[async_trait]
 pub trait RPC_Sample_Handler2: Send + Sync {
     async fn GetUsers1(&self, param: pb::GetUsers1Param) -> Result<pb::GetUsers1Response, GenErr> {
         Ok(pb::GetUsers1Response::default())
@@ -1781,14 +1853,17 @@ pub trait RPC_Sample_Handler2: Send + Sync {
 }
 #[async_trait]
 pub trait RPC_Shared_Handler2: Send + Sync {
-    async fn Echo(&self, param: pb::EchoParam) -> Result<pb::EchoResponse, GenErr> {
-        Ok(pb::EchoResponse::default())
-    }
-    async fn CheckUserName(
+    async fn SharedEcho(
         &self,
-        param: pb::CheckUserNameParam,
-    ) -> Result<pb::CheckUserNameResponse, GenErr> {
-        Ok(pb::CheckUserNameResponse::default())
+        param: pb::SharedEchoParam,
+    ) -> Result<pb::SharedEchoResponse, GenErr> {
+        Ok(pb::SharedEchoResponse::default())
+    }
+    async fn SharedCheckUserName(
+        &self,
+        param: pb::SharedCheckUserNameParam,
+    ) -> Result<pb::SharedCheckUserNameResponse, GenErr> {
+        Ok(pb::SharedCheckUserNameResponse::default())
     }
 }
 #[async_trait]
@@ -1883,11 +1958,32 @@ pub trait RPC_Upload_Handler2: Send + Sync {
 }
 #[async_trait]
 pub trait RPC_User_Handler2: Send + Sync {
-    async fn ChangePhoneNumber(
+    async fn UserChangePhoneNumber(
         &self,
-        param: pb::ChangePhoneNumberParam,
-    ) -> Result<pb::ChangePhoneNumberResponse, GenErr> {
-        Ok(pb::ChangePhoneNumberResponse::default())
+        param: pb::UserChangePhoneNumberParam,
+    ) -> Result<pb::UserChangePhoneNumberResponse, GenErr> {
+        Ok(pb::UserChangePhoneNumberResponse::default())
+    }
+    async fn UserRemoveSession(
+        &self,
+        param: pb::UserRemoveSessionParam,
+    ) -> Result<pb::UserRemoveSessionResponse, GenErr> {
+        Ok(pb::UserRemoveSessionResponse::default())
+    }
+    async fn UserRemoveOtherSessions(
+        &self,
+        param: pb::UserRemoveOtherParam,
+    ) -> Result<pb::UserRemoveOtherResponse, GenErr> {
+        Ok(pb::UserRemoveOtherResponse::default())
+    }
+    async fn UserGetMe(&self, param: pb::UserGetMeParam) -> Result<pb::UserGetMeResponse, GenErr> {
+        Ok(pb::UserGetMeResponse::default())
+    }
+    async fn UserGetActiveSessions(
+        &self,
+        param: pb::UserGetActiveSessionsParam,
+    ) -> Result<pb::UserGetActiveSessionsResponse, GenErr> {
+        Ok(pb::UserGetActiveSessionsResponse::default())
     }
 }
 
@@ -1899,6 +1995,7 @@ pub trait All_Rpc_Handler:
     + RPC_Chat_Handler2
     + RPC_Direct_Handler2
     + RPC_Group_Handler2
+    + RPC_Profile_Handler2
     + RPC_Sample_Handler2
     + RPC_Shared_Handler2
     + RPC_Shop_Handler2
@@ -1915,11 +2012,11 @@ pub mod method_ids {
     pub const GetNextId: u32 = 929964228;
 
     // Service: RPC_Auth
-    pub const SendConfirmCode: u32 = 939965206;
-    pub const ConfirmCode: u32 = 1740258084;
-    pub const SingUp: u32 = 291193302;
-    pub const SingIn: u32 = 1017957090;
-    pub const LogOut: u32 = 1283119009;
+    pub const AuthSendConfirmCode: u32 = 2008549258;
+    pub const AuthConfirmCode: u32 = 536667693;
+    pub const AuthSingUp: u32 = 1188731761;
+    pub const AuthSingIn: u32 = 145780334;
+    pub const AuthLogOut: u32 = 370097782;
 
     // Service: RPC_Channel
     pub const ChannelCreateChannel: u32 = 143251225;
@@ -1977,10 +2074,8 @@ pub mod method_ids {
     pub const ChatGetMediaList: u32 = 1346774525;
 
     // Service: RPC_Direct
-    pub const DirectDeleteDirect: u32 = 1478067518;
     pub const DirectChangeTitle: u32 = 2041790485;
     pub const DirectSetCustomNotification: u32 = 548699291;
-    pub const DirectSendActionDoing: u32 = 1417285757;
     pub const DirectSetDraft: u32 = 1860345925;
     pub const DirectDeleteDirects: u32 = 1291891637;
     pub const DirectMarkAsRead: u32 = 1801774787;
@@ -1989,7 +2084,6 @@ pub mod method_ids {
     pub const DirectUnPinDirects: u32 = 1517245560;
     pub const DirectArchiveDirects: u32 = 1441782770;
     pub const DirectUnArchiveDirects: u32 = 1951553867;
-    pub const DirectClearHistories: u32 = 904052140;
     pub const DirectMuteDirects: u32 = 1138477048;
     pub const DirectUnMuteDirects: u32 = 1691834263;
     pub const DirectCreateFolder: u32 = 1878673022;
@@ -2002,6 +2096,9 @@ pub mod method_ids {
     pub const DirectGetChannelsList: u32 = 1608173619;
     pub const DirectGetFoldersList: u32 = 1384523712;
     pub const DirectGetFoldersFullList: u32 = 611850722;
+    pub const DirectSendActionDoing: u32 = 1417285757;
+    pub const DirectClearHistories: u32 = 904052140;
+    pub const DirectDeleteDirect: u32 = 1478067518;
 
     // Service: RPC_Group
     pub const GroupCreateGroup: u32 = 1205960678;
@@ -2036,6 +2133,9 @@ pub mod method_ids {
     pub const GroupGetAdminsList: u32 = 332260610;
     pub const GroupAvatarGetList: u32 = 939443722;
 
+    // Service: RPC_Profile
+    pub const ProfileSetSettings: u32 = 308739811;
+
     // Service: RPC_Sample
     pub const GetUsers1: u32 = 486248681;
     pub const GetProfiles: u32 = 822554282;
@@ -2044,8 +2144,8 @@ pub mod method_ids {
     pub const GetMessages: u32 = 1160951872;
 
     // Service: RPC_Shared
-    pub const Echo: u32 = 101973561;
-    pub const CheckUserName: u32 = 1897027349;
+    pub const SharedEcho: u32 = 57075660;
+    pub const SharedCheckUserName: u32 = 435850322;
 
     // Service: RPC_Shop
     pub const ShopEEE: u32 = 912385050;
@@ -2079,7 +2179,11 @@ pub mod method_ids {
     pub const UploadFile: u32 = 1702285478;
 
     // Service: RPC_User
-    pub const ChangePhoneNumber: u32 = 706069694;
+    pub const UserChangePhoneNumber: u32 = 51450414;
+    pub const UserRemoveSession: u32 = 1173893234;
+    pub const UserRemoveOtherSessions: u32 = 2042311148;
+    pub const UserGetMe: u32 = 1362817625;
+    pub const UserGetActiveSessions: u32 = 214259267;
 
     pub const ExampleChangePhoneNumber8: u32 = 79874;
 }
@@ -2090,11 +2194,11 @@ pub enum MethodIds {
     GetNextId = 929964228,
 
     // Service: RPC_Auth
-    SendConfirmCode = 939965206,
-    ConfirmCode = 1740258084,
-    SingUp = 291193302,
-    SingIn = 1017957090,
-    LogOut = 1283119009,
+    AuthSendConfirmCode = 2008549258,
+    AuthConfirmCode = 536667693,
+    AuthSingUp = 1188731761,
+    AuthSingIn = 145780334,
+    AuthLogOut = 370097782,
 
     // Service: RPC_Channel
     ChannelCreateChannel = 143251225,
@@ -2152,10 +2256,8 @@ pub enum MethodIds {
     ChatGetMediaList = 1346774525,
 
     // Service: RPC_Direct
-    DirectDeleteDirect = 1478067518,
     DirectChangeTitle = 2041790485,
     DirectSetCustomNotification = 548699291,
-    DirectSendActionDoing = 1417285757,
     DirectSetDraft = 1860345925,
     DirectDeleteDirects = 1291891637,
     DirectMarkAsRead = 1801774787,
@@ -2164,7 +2266,6 @@ pub enum MethodIds {
     DirectUnPinDirects = 1517245560,
     DirectArchiveDirects = 1441782770,
     DirectUnArchiveDirects = 1951553867,
-    DirectClearHistories = 904052140,
     DirectMuteDirects = 1138477048,
     DirectUnMuteDirects = 1691834263,
     DirectCreateFolder = 1878673022,
@@ -2177,6 +2278,9 @@ pub enum MethodIds {
     DirectGetChannelsList = 1608173619,
     DirectGetFoldersList = 1384523712,
     DirectGetFoldersFullList = 611850722,
+    DirectSendActionDoing = 1417285757,
+    DirectClearHistories = 904052140,
+    DirectDeleteDirect = 1478067518,
 
     // Service: RPC_Group
     GroupCreateGroup = 1205960678,
@@ -2211,6 +2315,9 @@ pub enum MethodIds {
     GroupGetAdminsList = 332260610,
     GroupAvatarGetList = 939443722,
 
+    // Service: RPC_Profile
+    ProfileSetSettings = 308739811,
+
     // Service: RPC_Sample
     GetUsers1 = 486248681,
     GetProfiles = 822554282,
@@ -2219,8 +2326,8 @@ pub enum MethodIds {
     GetMessages = 1160951872,
 
     // Service: RPC_Shared
-    Echo = 101973561,
-    CheckUserName = 1897027349,
+    SharedEcho = 57075660,
+    SharedCheckUserName = 435850322,
 
     // Service: RPC_Shop
     ShopEEE = 912385050,
@@ -2254,7 +2361,11 @@ pub enum MethodIds {
     UploadFile = 1702285478,
 
     // Service: RPC_User
-    ChangePhoneNumber = 706069694,
+    UserChangePhoneNumber = 51450414,
+    UserRemoveSession = 1173893234,
+    UserRemoveOtherSessions = 2042311148,
+    UserGetMe = 1362817625,
+    UserGetActiveSessions = 214259267,
 }
 
 pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
@@ -2270,45 +2381,48 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
         }
 
         // RPC_Auth
-        method_ids::SendConfirmCode => {
-            let rpc_param: pb::SendConfirmCodeParam =
+        method_ids::AuthSendConfirmCode => {
+            let rpc_param: pb::AuthSendConfirmCodeParam =
                 prost::Message::decode(invoke.rpc_data.as_slice())?;
             RpcInvoke {
-                method_id: 939965206 as i64,
-                rpc_service: RPC_Auth(RPC_Auth_MethodData::SendConfirmCode(rpc_param)),
+                method_id: 2008549258 as i64,
+                rpc_service: RPC_Auth(RPC_Auth_MethodData::AuthSendConfirmCode(rpc_param)),
             }
         }
 
-        method_ids::ConfirmCode => {
-            let rpc_param: pb::ConfirmCodeParam =
+        method_ids::AuthConfirmCode => {
+            let rpc_param: pb::AuthConfirmCodeParam =
                 prost::Message::decode(invoke.rpc_data.as_slice())?;
             RpcInvoke {
-                method_id: 1740258084 as i64,
-                rpc_service: RPC_Auth(RPC_Auth_MethodData::ConfirmCode(rpc_param)),
+                method_id: 536667693 as i64,
+                rpc_service: RPC_Auth(RPC_Auth_MethodData::AuthConfirmCode(rpc_param)),
             }
         }
 
-        method_ids::SingUp => {
-            let rpc_param: pb::SingUpParam = prost::Message::decode(invoke.rpc_data.as_slice())?;
+        method_ids::AuthSingUp => {
+            let rpc_param: pb::AuthSingUpParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
             RpcInvoke {
-                method_id: 291193302 as i64,
-                rpc_service: RPC_Auth(RPC_Auth_MethodData::SingUp(rpc_param)),
+                method_id: 1188731761 as i64,
+                rpc_service: RPC_Auth(RPC_Auth_MethodData::AuthSingUp(rpc_param)),
             }
         }
 
-        method_ids::SingIn => {
-            let rpc_param: pb::SingInParam = prost::Message::decode(invoke.rpc_data.as_slice())?;
+        method_ids::AuthSingIn => {
+            let rpc_param: pb::AuthSingInParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
             RpcInvoke {
-                method_id: 1017957090 as i64,
-                rpc_service: RPC_Auth(RPC_Auth_MethodData::SingIn(rpc_param)),
+                method_id: 145780334 as i64,
+                rpc_service: RPC_Auth(RPC_Auth_MethodData::AuthSingIn(rpc_param)),
             }
         }
 
-        method_ids::LogOut => {
-            let rpc_param: pb::LogOutParam = prost::Message::decode(invoke.rpc_data.as_slice())?;
+        method_ids::AuthLogOut => {
+            let rpc_param: pb::AuthLogOutParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
             RpcInvoke {
-                method_id: 1283119009 as i64,
-                rpc_service: RPC_Auth(RPC_Auth_MethodData::LogOut(rpc_param)),
+                method_id: 370097782 as i64,
+                rpc_service: RPC_Auth(RPC_Auth_MethodData::AuthLogOut(rpc_param)),
             }
         }
 
@@ -2782,15 +2896,6 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
         }
 
         // RPC_Direct
-        method_ids::DirectDeleteDirect => {
-            let rpc_param: pb::DirectDeleteDirectParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1478067518 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectDeleteDirect(rpc_param)),
-            }
-        }
-
         method_ids::DirectChangeTitle => {
             let rpc_param: pb::DirectChangeTitleParam =
                 prost::Message::decode(invoke.rpc_data.as_slice())?;
@@ -2808,15 +2913,6 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
                 rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectSetCustomNotification(
                     rpc_param,
                 )),
-            }
-        }
-
-        method_ids::DirectSendActionDoing => {
-            let rpc_param: pb::DirectSendActionDoingParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1417285757 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectSendActionDoing(rpc_param)),
             }
         }
 
@@ -2889,15 +2985,6 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
             RpcInvoke {
                 method_id: 1951553867 as i64,
                 rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectUnArchiveDirects(rpc_param)),
-            }
-        }
-
-        method_ids::DirectClearHistories => {
-            let rpc_param: pb::DirectClearHistoriesParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 904052140 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectClearHistories(rpc_param)),
             }
         }
 
@@ -3006,6 +3093,33 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
             RpcInvoke {
                 method_id: 611850722 as i64,
                 rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectGetFoldersFullList(rpc_param)),
+            }
+        }
+
+        method_ids::DirectSendActionDoing => {
+            let rpc_param: pb::DirectSendActionDoingParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1417285757 as i64,
+                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectSendActionDoing(rpc_param)),
+            }
+        }
+
+        method_ids::DirectClearHistories => {
+            let rpc_param: pb::DirectClearHistoriesParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 904052140 as i64,
+                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectClearHistories(rpc_param)),
+            }
+        }
+
+        method_ids::DirectDeleteDirect => {
+            let rpc_param: pb::DirectDeleteDirectParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1478067518 as i64,
+                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectDeleteDirect(rpc_param)),
             }
         }
 
@@ -3292,6 +3406,16 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
             }
         }
 
+        // RPC_Profile
+        method_ids::ProfileSetSettings => {
+            let rpc_param: pb::ProfileSetSettingsParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 308739811 as i64,
+                rpc_service: RPC_Profile(RPC_Profile_MethodData::ProfileSetSettings(rpc_param)),
+            }
+        }
+
         // RPC_Sample
         method_ids::GetUsers1 => {
             let rpc_param: pb::GetUsers1Param = prost::Message::decode(invoke.rpc_data.as_slice())?;
@@ -3338,20 +3462,21 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
         }
 
         // RPC_Shared
-        method_ids::Echo => {
-            let rpc_param: pb::EchoParam = prost::Message::decode(invoke.rpc_data.as_slice())?;
+        method_ids::SharedEcho => {
+            let rpc_param: pb::SharedEchoParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
             RpcInvoke {
-                method_id: 101973561 as i64,
-                rpc_service: RPC_Shared(RPC_Shared_MethodData::Echo(rpc_param)),
+                method_id: 57075660 as i64,
+                rpc_service: RPC_Shared(RPC_Shared_MethodData::SharedEcho(rpc_param)),
             }
         }
 
-        method_ids::CheckUserName => {
-            let rpc_param: pb::CheckUserNameParam =
+        method_ids::SharedCheckUserName => {
+            let rpc_param: pb::SharedCheckUserNameParam =
                 prost::Message::decode(invoke.rpc_data.as_slice())?;
             RpcInvoke {
-                method_id: 1897027349 as i64,
-                rpc_service: RPC_Shared(RPC_Shared_MethodData::CheckUserName(rpc_param)),
+                method_id: 435850322 as i64,
+                rpc_service: RPC_Shared(RPC_Shared_MethodData::SharedCheckUserName(rpc_param)),
             }
         }
 
@@ -3575,12 +3700,47 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
         }
 
         // RPC_User
-        method_ids::ChangePhoneNumber => {
-            let rpc_param: pb::ChangePhoneNumberParam =
+        method_ids::UserChangePhoneNumber => {
+            let rpc_param: pb::UserChangePhoneNumberParam =
                 prost::Message::decode(invoke.rpc_data.as_slice())?;
             RpcInvoke {
-                method_id: 706069694 as i64,
-                rpc_service: RPC_User(RPC_User_MethodData::ChangePhoneNumber(rpc_param)),
+                method_id: 51450414 as i64,
+                rpc_service: RPC_User(RPC_User_MethodData::UserChangePhoneNumber(rpc_param)),
+            }
+        }
+
+        method_ids::UserRemoveSession => {
+            let rpc_param: pb::UserRemoveSessionParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1173893234 as i64,
+                rpc_service: RPC_User(RPC_User_MethodData::UserRemoveSession(rpc_param)),
+            }
+        }
+
+        method_ids::UserRemoveOtherSessions => {
+            let rpc_param: pb::UserRemoveOtherParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 2042311148 as i64,
+                rpc_service: RPC_User(RPC_User_MethodData::UserRemoveOtherSessions(rpc_param)),
+            }
+        }
+
+        method_ids::UserGetMe => {
+            let rpc_param: pb::UserGetMeParam = prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1362817625 as i64,
+                rpc_service: RPC_User(RPC_User_MethodData::UserGetMe(rpc_param)),
+            }
+        }
+
+        method_ids::UserGetActiveSessions => {
+            let rpc_param: pb::UserGetActiveSessionsParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 214259267 as i64,
+                rpc_service: RPC_User(RPC_User_MethodData::UserGetActiveSessions(rpc_param)),
             }
         }
 
@@ -3601,37 +3761,37 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
         },
 
         RpcServiceData::RPC_Auth(method) => match method {
-            RPC_Auth_MethodData::SendConfirmCode(param) => {
+            RPC_Auth_MethodData::AuthSendConfirmCode(param) => {
                 let handler = eror(&reg.RPC_Auth)?;
-                let response = handler.SendConfirmCode(param).await?;
+                let response = handler.AuthSendConfirmCode(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
-            RPC_Auth_MethodData::ConfirmCode(param) => {
+            RPC_Auth_MethodData::AuthConfirmCode(param) => {
                 let handler = eror(&reg.RPC_Auth)?;
-                let response = handler.ConfirmCode(param).await?;
+                let response = handler.AuthConfirmCode(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
-            RPC_Auth_MethodData::SingUp(param) => {
+            RPC_Auth_MethodData::AuthSingUp(param) => {
                 let handler = eror(&reg.RPC_Auth)?;
-                let response = handler.SingUp(param).await?;
+                let response = handler.AuthSingUp(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
-            RPC_Auth_MethodData::SingIn(param) => {
+            RPC_Auth_MethodData::AuthSingIn(param) => {
                 let handler = eror(&reg.RPC_Auth)?;
-                let response = handler.SingIn(param).await?;
+                let response = handler.AuthSingIn(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
-            RPC_Auth_MethodData::LogOut(param) => {
+            RPC_Auth_MethodData::AuthLogOut(param) => {
                 let handler = eror(&reg.RPC_Auth)?;
-                let response = handler.LogOut(param).await?;
+                let response = handler.AuthLogOut(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -3999,13 +4159,6 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
         },
 
         RpcServiceData::RPC_Direct(method) => match method {
-            RPC_Direct_MethodData::DirectDeleteDirect(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectDeleteDirect(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
             RPC_Direct_MethodData::DirectChangeTitle(param) => {
                 let handler = eror(&reg.RPC_Direct)?;
                 let response = handler.DirectChangeTitle(param).await?;
@@ -4016,13 +4169,6 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
             RPC_Direct_MethodData::DirectSetCustomNotification(param) => {
                 let handler = eror(&reg.RPC_Direct)?;
                 let response = handler.DirectSetCustomNotification(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Direct_MethodData::DirectSendActionDoing(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectSendActionDoing(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -4079,13 +4225,6 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
             RPC_Direct_MethodData::DirectUnArchiveDirects(param) => {
                 let handler = eror(&reg.RPC_Direct)?;
                 let response = handler.DirectUnArchiveDirects(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Direct_MethodData::DirectClearHistories(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectClearHistories(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -4170,6 +4309,27 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
             RPC_Direct_MethodData::DirectGetFoldersFullList(param) => {
                 let handler = eror(&reg.RPC_Direct)?;
                 let response = handler.DirectGetFoldersFullList(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Direct_MethodData::DirectSendActionDoing(param) => {
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectSendActionDoing(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Direct_MethodData::DirectClearHistories(param) => {
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectClearHistories(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Direct_MethodData::DirectDeleteDirect(param) => {
+                let handler = eror(&reg.RPC_Direct)?;
+                let response = handler.DirectDeleteDirect(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -4394,6 +4554,15 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
             }
         },
 
+        RpcServiceData::RPC_Profile(method) => match method {
+            RPC_Profile_MethodData::ProfileSetSettings(param) => {
+                let handler = eror(&reg.RPC_Profile)?;
+                let response = handler.ProfileSetSettings(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+        },
+
         RpcServiceData::RPC_Sample(method) => match method {
             RPC_Sample_MethodData::GetUsers1(param) => {
                 let handler = eror(&reg.RPC_Sample)?;
@@ -4432,16 +4601,16 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
         },
 
         RpcServiceData::RPC_Shared(method) => match method {
-            RPC_Shared_MethodData::Echo(param) => {
+            RPC_Shared_MethodData::SharedEcho(param) => {
                 let handler = eror(&reg.RPC_Shared)?;
-                let response = handler.Echo(param).await?;
+                let response = handler.SharedEcho(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
-            RPC_Shared_MethodData::CheckUserName(param) => {
+            RPC_Shared_MethodData::SharedCheckUserName(param) => {
                 let handler = eror(&reg.RPC_Shared)?;
-                let response = handler.CheckUserName(param).await?;
+                let response = handler.SharedCheckUserName(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -4641,9 +4810,37 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
         },
 
         RpcServiceData::RPC_User(method) => match method {
-            RPC_User_MethodData::ChangePhoneNumber(param) => {
+            RPC_User_MethodData::UserChangePhoneNumber(param) => {
                 let handler = eror(&reg.RPC_User)?;
-                let response = handler.ChangePhoneNumber(param).await?;
+                let response = handler.UserChangePhoneNumber(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_User_MethodData::UserRemoveSession(param) => {
+                let handler = eror(&reg.RPC_User)?;
+                let response = handler.UserRemoveSession(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_User_MethodData::UserRemoveOtherSessions(param) => {
+                let handler = eror(&reg.RPC_User)?;
+                let response = handler.UserRemoveOtherSessions(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_User_MethodData::UserGetMe(param) => {
+                let handler = eror(&reg.RPC_User)?;
+                let response = handler.UserGetMe(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_User_MethodData::UserGetActiveSessions(param) => {
+                let handler = eror(&reg.RPC_User)?;
+                let response = handler.UserGetActiveSessions(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -4661,6 +4858,7 @@ pub struct RPC_Registry {
     pub RPC_Chat: Option<Box<Arc<dyn RPC_Chat_Handler2>>>,
     pub RPC_Direct: Option<Box<Arc<dyn RPC_Direct_Handler2>>>,
     pub RPC_Group: Option<Box<Arc<dyn RPC_Group_Handler2>>>,
+    pub RPC_Profile: Option<Box<Arc<dyn RPC_Profile_Handler2>>>,
     pub RPC_Sample: Option<Box<Arc<dyn RPC_Sample_Handler2>>>,
     pub RPC_Shared: Option<Box<Arc<dyn RPC_Shared_Handler2>>>,
     pub RPC_Shop: Option<Box<Arc<dyn RPC_Shop_Handler2>>>,
@@ -4680,6 +4878,8 @@ impl RPC_Direct_Handler for RPC_Registry {}
 impl RPC_Direct_Handler2 for RPC_Registry {}
 impl RPC_Group_Handler for RPC_Registry {}
 impl RPC_Group_Handler2 for RPC_Registry {}
+impl RPC_Profile_Handler for RPC_Registry {}
+impl RPC_Profile_Handler2 for RPC_Registry {}
 impl RPC_Sample_Handler for RPC_Registry {}
 impl RPC_Sample_Handler2 for RPC_Registry {}
 impl RPC_Shared_Handler for RPC_Registry {}
@@ -4715,34 +4915,45 @@ impl common::RpcClient {
     }
 
     // service: RPC_Auth
-    pub async fn SendConfirmCode(
+    pub async fn AuthSendConfirmCode(
         &self,
-        param: pb::SendConfirmCodeParam,
-    ) -> Result<pb::SendConfirmCodeResponse, GenErr> {
-        let pb_res = self.rpc_invoke(&param, method_ids::SendConfirmCode).await?;
+        param: pb::AuthSendConfirmCodeParam,
+    ) -> Result<pb::AuthSendConfirmCodeResponse, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::AuthSendConfirmCode)
+            .await?;
         Ok(pb_res)
     }
 
-    pub async fn ConfirmCode(
+    pub async fn AuthConfirmCode(
         &self,
-        param: pb::ConfirmCodeParam,
-    ) -> Result<pb::ConfirmCodeResponse, GenErr> {
-        let pb_res = self.rpc_invoke(&param, method_ids::ConfirmCode).await?;
+        param: pb::AuthConfirmCodeParam,
+    ) -> Result<pb::AuthConfirmCodeResponse, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::AuthConfirmCode).await?;
         Ok(pb_res)
     }
 
-    pub async fn SingUp(&self, param: pb::SingUpParam) -> Result<pb::SingUpResponse, GenErr> {
-        let pb_res = self.rpc_invoke(&param, method_ids::SingUp).await?;
+    pub async fn AuthSingUp(
+        &self,
+        param: pb::AuthSingUpParam,
+    ) -> Result<pb::AuthSingUpResponse, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::AuthSingUp).await?;
         Ok(pb_res)
     }
 
-    pub async fn SingIn(&self, param: pb::SingInParam) -> Result<pb::SingInResponse, GenErr> {
-        let pb_res = self.rpc_invoke(&param, method_ids::SingIn).await?;
+    pub async fn AuthSingIn(
+        &self,
+        param: pb::AuthSingInParam,
+    ) -> Result<pb::AuthSingInResponse, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::AuthSingIn).await?;
         Ok(pb_res)
     }
 
-    pub async fn LogOut(&self, param: pb::LogOutParam) -> Result<pb::LogOutResponse, GenErr> {
-        let pb_res = self.rpc_invoke(&param, method_ids::LogOut).await?;
+    pub async fn AuthLogOut(
+        &self,
+        param: pb::AuthLogOutParam,
+    ) -> Result<pb::AuthLogOutResponse, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::AuthLogOut).await?;
         Ok(pb_res)
     }
 
@@ -5247,16 +5458,6 @@ impl common::RpcClient {
     }
 
     // service: RPC_Direct
-    pub async fn DirectDeleteDirect(
-        &self,
-        param: pb::DirectDeleteDirectParam,
-    ) -> Result<pb::DirectDeleteDirectResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectDeleteDirect)
-            .await?;
-        Ok(pb_res)
-    }
-
     pub async fn DirectChangeTitle(
         &self,
         param: pb::DirectChangeTitleParam,
@@ -5273,16 +5474,6 @@ impl common::RpcClient {
     ) -> Result<pb::DirectSetCustomNotificationResponse, GenErr> {
         let pb_res = self
             .rpc_invoke(&param, method_ids::DirectSetCustomNotification)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn DirectSendActionDoing(
-        &self,
-        param: pb::DirectSendActionDoingParam,
-    ) -> Result<pb::DirectSendActionDoingResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectSendActionDoing)
             .await?;
         Ok(pb_res)
     }
@@ -5361,16 +5552,6 @@ impl common::RpcClient {
     ) -> Result<pb::DirectUnArchiveDirectsResponse, GenErr> {
         let pb_res = self
             .rpc_invoke(&param, method_ids::DirectUnArchiveDirects)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn DirectClearHistories(
-        &self,
-        param: pb::DirectClearHistoriesParam,
-    ) -> Result<pb::DirectClearHistoriesResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectClearHistories)
             .await?;
         Ok(pb_res)
     }
@@ -5491,6 +5672,36 @@ impl common::RpcClient {
     ) -> Result<pb::DirectGetFoldersFullListResponse, GenErr> {
         let pb_res = self
             .rpc_invoke(&param, method_ids::DirectGetFoldersFullList)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectSendActionDoing(
+        &self,
+        param: pb::DirectSendActionDoingParam,
+    ) -> Result<pb::DirectSendActionDoingResponse, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::DirectSendActionDoing)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectClearHistories(
+        &self,
+        param: pb::DirectClearHistoriesParam,
+    ) -> Result<pb::DirectClearHistoriesResponse, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::DirectClearHistories)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn DirectDeleteDirect(
+        &self,
+        param: pb::DirectDeleteDirectParam,
+    ) -> Result<pb::DirectDeleteDirectResponse, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::DirectDeleteDirect)
             .await?;
         Ok(pb_res)
     }
@@ -5786,6 +5997,17 @@ impl common::RpcClient {
         Ok(pb_res)
     }
 
+    // service: RPC_Profile
+    pub async fn ProfileSetSettings(
+        &self,
+        param: pb::ProfileSetSettingsParam,
+    ) -> Result<pb::ProfileSetSettingsResponse, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::ProfileSetSettings)
+            .await?;
+        Ok(pb_res)
+    }
+
     // service: RPC_Sample
     pub async fn GetUsers1(
         &self,
@@ -5828,16 +6050,21 @@ impl common::RpcClient {
     }
 
     // service: RPC_Shared
-    pub async fn Echo(&self, param: pb::EchoParam) -> Result<pb::EchoResponse, GenErr> {
-        let pb_res = self.rpc_invoke(&param, method_ids::Echo).await?;
+    pub async fn SharedEcho(
+        &self,
+        param: pb::SharedEchoParam,
+    ) -> Result<pb::SharedEchoResponse, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::SharedEcho).await?;
         Ok(pb_res)
     }
 
-    pub async fn CheckUserName(
+    pub async fn SharedCheckUserName(
         &self,
-        param: pb::CheckUserNameParam,
-    ) -> Result<pb::CheckUserNameResponse, GenErr> {
-        let pb_res = self.rpc_invoke(&param, method_ids::CheckUserName).await?;
+        param: pb::SharedCheckUserNameParam,
+    ) -> Result<pb::SharedCheckUserNameResponse, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::SharedCheckUserName)
+            .await?;
         Ok(pb_res)
     }
 
@@ -6013,12 +6240,50 @@ impl common::RpcClient {
     }
 
     // service: RPC_User
-    pub async fn ChangePhoneNumber(
+    pub async fn UserChangePhoneNumber(
         &self,
-        param: pb::ChangePhoneNumberParam,
-    ) -> Result<pb::ChangePhoneNumberResponse, GenErr> {
+        param: pb::UserChangePhoneNumberParam,
+    ) -> Result<pb::UserChangePhoneNumberResponse, GenErr> {
         let pb_res = self
-            .rpc_invoke(&param, method_ids::ChangePhoneNumber)
+            .rpc_invoke(&param, method_ids::UserChangePhoneNumber)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn UserRemoveSession(
+        &self,
+        param: pb::UserRemoveSessionParam,
+    ) -> Result<pb::UserRemoveSessionResponse, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::UserRemoveSession)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn UserRemoveOtherSessions(
+        &self,
+        param: pb::UserRemoveOtherParam,
+    ) -> Result<pb::UserRemoveOtherResponse, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::UserRemoveOtherSessions)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn UserGetMe(
+        &self,
+        param: pb::UserGetMeParam,
+    ) -> Result<pb::UserGetMeResponse, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::UserGetMe).await?;
+        Ok(pb_res)
+    }
+
+    pub async fn UserGetActiveSessions(
+        &self,
+        param: pb::UserGetActiveSessionsParam,
+    ) -> Result<pb::UserGetActiveSessionsResponse, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::UserGetActiveSessions)
             .await?;
         Ok(pb_res)
     }
@@ -6036,31 +6301,40 @@ impl IPC_CMaster_Handler2 for _RRR_ {
 }
 #[async_trait]
 impl RPC_Auth_Handler2 for _RRR_ {
-    async fn SendConfirmCode(
+    async fn AuthSendConfirmCode(
         &self,
-        param: pb::SendConfirmCodeParam,
-    ) -> Result<pb::SendConfirmCodeResponse, GenErr> {
-        println!("called SendConfirmCode in the impl code.");
-        Ok(pb::SendConfirmCodeResponse::default())
+        param: pb::AuthSendConfirmCodeParam,
+    ) -> Result<pb::AuthSendConfirmCodeResponse, GenErr> {
+        println!("called AuthSendConfirmCode in the impl code.");
+        Ok(pb::AuthSendConfirmCodeResponse::default())
     }
-    async fn ConfirmCode(
+    async fn AuthConfirmCode(
         &self,
-        param: pb::ConfirmCodeParam,
-    ) -> Result<pb::ConfirmCodeResponse, GenErr> {
-        println!("called ConfirmCode in the impl code.");
-        Ok(pb::ConfirmCodeResponse::default())
+        param: pb::AuthConfirmCodeParam,
+    ) -> Result<pb::AuthConfirmCodeResponse, GenErr> {
+        println!("called AuthConfirmCode in the impl code.");
+        Ok(pb::AuthConfirmCodeResponse::default())
     }
-    async fn SingUp(&self, param: pb::SingUpParam) -> Result<pb::SingUpResponse, GenErr> {
-        println!("called SingUp in the impl code.");
-        Ok(pb::SingUpResponse::default())
+    async fn AuthSingUp(
+        &self,
+        param: pb::AuthSingUpParam,
+    ) -> Result<pb::AuthSingUpResponse, GenErr> {
+        println!("called AuthSingUp in the impl code.");
+        Ok(pb::AuthSingUpResponse::default())
     }
-    async fn SingIn(&self, param: pb::SingInParam) -> Result<pb::SingInResponse, GenErr> {
-        println!("called SingIn in the impl code.");
-        Ok(pb::SingInResponse::default())
+    async fn AuthSingIn(
+        &self,
+        param: pb::AuthSingInParam,
+    ) -> Result<pb::AuthSingInResponse, GenErr> {
+        println!("called AuthSingIn in the impl code.");
+        Ok(pb::AuthSingInResponse::default())
     }
-    async fn LogOut(&self, param: pb::LogOutParam) -> Result<pb::LogOutResponse, GenErr> {
-        println!("called LogOut in the impl code.");
-        Ok(pb::LogOutResponse::default())
+    async fn AuthLogOut(
+        &self,
+        param: pb::AuthLogOutParam,
+    ) -> Result<pb::AuthLogOutResponse, GenErr> {
+        println!("called AuthLogOut in the impl code.");
+        Ok(pb::AuthLogOutResponse::default())
     }
 }
 #[async_trait]
@@ -6428,13 +6702,6 @@ impl RPC_Chat_Handler2 for _RRR_ {
 }
 #[async_trait]
 impl RPC_Direct_Handler2 for _RRR_ {
-    async fn DirectDeleteDirect(
-        &self,
-        param: pb::DirectDeleteDirectParam,
-    ) -> Result<pb::DirectDeleteDirectResponse, GenErr> {
-        println!("called DirectDeleteDirect in the impl code.");
-        Ok(pb::DirectDeleteDirectResponse::default())
-    }
     async fn DirectChangeTitle(
         &self,
         param: pb::DirectChangeTitleParam,
@@ -6448,13 +6715,6 @@ impl RPC_Direct_Handler2 for _RRR_ {
     ) -> Result<pb::DirectSetCustomNotificationResponse, GenErr> {
         println!("called DirectSetCustomNotification in the impl code.");
         Ok(pb::DirectSetCustomNotificationResponse::default())
-    }
-    async fn DirectSendActionDoing(
-        &self,
-        param: pb::DirectSendActionDoingParam,
-    ) -> Result<pb::DirectSendActionDoingResponse, GenErr> {
-        println!("called DirectSendActionDoing in the impl code.");
-        Ok(pb::DirectSendActionDoingResponse::default())
     }
     async fn DirectSetDraft(
         &self,
@@ -6511,13 +6771,6 @@ impl RPC_Direct_Handler2 for _RRR_ {
     ) -> Result<pb::DirectUnArchiveDirectsResponse, GenErr> {
         println!("called DirectUnArchiveDirects in the impl code.");
         Ok(pb::DirectUnArchiveDirectsResponse::default())
-    }
-    async fn DirectClearHistories(
-        &self,
-        param: pb::DirectClearHistoriesParam,
-    ) -> Result<pb::DirectClearHistoriesResponse, GenErr> {
-        println!("called DirectClearHistories in the impl code.");
-        Ok(pb::DirectClearHistoriesResponse::default())
     }
     async fn DirectMuteDirects(
         &self,
@@ -6602,6 +6855,27 @@ impl RPC_Direct_Handler2 for _RRR_ {
     ) -> Result<pb::DirectGetFoldersFullListResponse, GenErr> {
         println!("called DirectGetFoldersFullList in the impl code.");
         Ok(pb::DirectGetFoldersFullListResponse::default())
+    }
+    async fn DirectSendActionDoing(
+        &self,
+        param: pb::DirectSendActionDoingParam,
+    ) -> Result<pb::DirectSendActionDoingResponse, GenErr> {
+        println!("called DirectSendActionDoing in the impl code.");
+        Ok(pb::DirectSendActionDoingResponse::default())
+    }
+    async fn DirectClearHistories(
+        &self,
+        param: pb::DirectClearHistoriesParam,
+    ) -> Result<pb::DirectClearHistoriesResponse, GenErr> {
+        println!("called DirectClearHistories in the impl code.");
+        Ok(pb::DirectClearHistoriesResponse::default())
+    }
+    async fn DirectDeleteDirect(
+        &self,
+        param: pb::DirectDeleteDirectParam,
+    ) -> Result<pb::DirectDeleteDirectResponse, GenErr> {
+        println!("called DirectDeleteDirect in the impl code.");
+        Ok(pb::DirectDeleteDirectResponse::default())
     }
 }
 #[async_trait]
@@ -6825,6 +7099,16 @@ impl RPC_Group_Handler2 for _RRR_ {
     }
 }
 #[async_trait]
+impl RPC_Profile_Handler2 for _RRR_ {
+    async fn ProfileSetSettings(
+        &self,
+        param: pb::ProfileSetSettingsParam,
+    ) -> Result<pb::ProfileSetSettingsResponse, GenErr> {
+        println!("called ProfileSetSettings in the impl code.");
+        Ok(pb::ProfileSetSettingsResponse::default())
+    }
+}
+#[async_trait]
 impl RPC_Sample_Handler2 for _RRR_ {
     async fn GetUsers1(&self, param: pb::GetUsers1Param) -> Result<pb::GetUsers1Response, GenErr> {
         println!("called GetUsers1 in the impl code.");
@@ -6861,16 +7145,19 @@ impl RPC_Sample_Handler2 for _RRR_ {
 }
 #[async_trait]
 impl RPC_Shared_Handler2 for _RRR_ {
-    async fn Echo(&self, param: pb::EchoParam) -> Result<pb::EchoResponse, GenErr> {
-        println!("called Echo in the impl code.");
-        Ok(pb::EchoResponse::default())
-    }
-    async fn CheckUserName(
+    async fn SharedEcho(
         &self,
-        param: pb::CheckUserNameParam,
-    ) -> Result<pb::CheckUserNameResponse, GenErr> {
-        println!("called CheckUserName in the impl code.");
-        Ok(pb::CheckUserNameResponse::default())
+        param: pb::SharedEchoParam,
+    ) -> Result<pb::SharedEchoResponse, GenErr> {
+        println!("called SharedEcho in the impl code.");
+        Ok(pb::SharedEchoResponse::default())
+    }
+    async fn SharedCheckUserName(
+        &self,
+        param: pb::SharedCheckUserNameParam,
+    ) -> Result<pb::SharedCheckUserNameResponse, GenErr> {
+        println!("called SharedCheckUserName in the impl code.");
+        Ok(pb::SharedCheckUserNameResponse::default())
     }
 }
 #[async_trait]
@@ -6992,11 +7279,36 @@ impl RPC_Upload_Handler2 for _RRR_ {
 }
 #[async_trait]
 impl RPC_User_Handler2 for _RRR_ {
-    async fn ChangePhoneNumber(
+    async fn UserChangePhoneNumber(
         &self,
-        param: pb::ChangePhoneNumberParam,
-    ) -> Result<pb::ChangePhoneNumberResponse, GenErr> {
-        println!("called ChangePhoneNumber in the impl code.");
-        Ok(pb::ChangePhoneNumberResponse::default())
+        param: pb::UserChangePhoneNumberParam,
+    ) -> Result<pb::UserChangePhoneNumberResponse, GenErr> {
+        println!("called UserChangePhoneNumber in the impl code.");
+        Ok(pb::UserChangePhoneNumberResponse::default())
+    }
+    async fn UserRemoveSession(
+        &self,
+        param: pb::UserRemoveSessionParam,
+    ) -> Result<pb::UserRemoveSessionResponse, GenErr> {
+        println!("called UserRemoveSession in the impl code.");
+        Ok(pb::UserRemoveSessionResponse::default())
+    }
+    async fn UserRemoveOtherSessions(
+        &self,
+        param: pb::UserRemoveOtherParam,
+    ) -> Result<pb::UserRemoveOtherResponse, GenErr> {
+        println!("called UserRemoveOtherSessions in the impl code.");
+        Ok(pb::UserRemoveOtherResponse::default())
+    }
+    async fn UserGetMe(&self, param: pb::UserGetMeParam) -> Result<pb::UserGetMeResponse, GenErr> {
+        println!("called UserGetMe in the impl code.");
+        Ok(pb::UserGetMeResponse::default())
+    }
+    async fn UserGetActiveSessions(
+        &self,
+        param: pb::UserGetActiveSessionsParam,
+    ) -> Result<pb::UserGetActiveSessionsResponse, GenErr> {
+        println!("called UserGetActiveSessions in the impl code.");
+        Ok(pb::UserGetActiveSessionsResponse::default())
     }
 }

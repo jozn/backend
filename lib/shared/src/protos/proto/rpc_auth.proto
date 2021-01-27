@@ -4,7 +4,18 @@ package pb;
 
 import "global.proto";
 
-message SendConfirmCodeParam {
+
+service RPC_Auth {
+//    rpc CheckPhone (UserParam_CheckUserName2) returns (UserResponse_CheckUserName2);
+    rpc AuthSendConfirmCode (AuthSendConfirmCodeParam) returns (AuthSendConfirmCodeResponse);
+    rpc AuthConfirmCode (AuthConfirmCodeParam) returns (AuthConfirmCodeResponse);
+    rpc AuthSingUp (AuthSingUpParam) returns (AuthSingUpResponse);
+    rpc AuthSingIn (AuthSingInParam) returns (AuthSingInResponse);
+    rpc AuthLogOut (AuthLogOutParam) returns (AuthLogOutResponse);
+}
+
+
+message AuthSendConfirmCodeParam {
     string Hash = 1;
     string Phone = 2; // 98... 989015132328
     string CountryCode = 3;
@@ -16,7 +27,7 @@ enum SendConfirmCodeTypeEnum {
     SEND_CODE_EMAIL = 1;
 }
 
-message SendConfirmCodeResponse {
+message AuthSendConfirmCodeResponse {
     bool Done =1;
     string ErrorMessage =2;
     bool JustEmailRegister = 3 ;
@@ -24,19 +35,21 @@ message SendConfirmCodeResponse {
     bool IsLogin = 5;
 }
 
-message ConfirmCodeParam {
+
+message AuthConfirmCodeParam {
     string Hash = 1;
     string Phone = 2; // 98... 989015132328
     int32 Code = 3; //4 digit 4215
 }
 
-message ConfirmCodeResponse {
+message AuthConfirmCodeResponse {
     bool Done =1;
     string ErrorMessage = 2;
-//    SelfUserView SelfUserView = 3; //if it is login
+    //    SelfUserView SelfUserView = 3; //if it is login
 }
 
-message SingUpParam {
+
+message AuthSingUpParam {
     string Hash = 1;
     string FirstName = 2;
     string LastName = 3;
@@ -45,39 +58,30 @@ message SingUpParam {
     string Email = 6;
 }
 
-message SingUpResponse {
+message AuthSingUpResponse {
     bool Done =1;
     string ErrorMessage = 2;
-//    SelfUserView SelfUserView = 3;
+    //    SelfUserView SelfUserView = 3;
 }
 
-message SingInParam {
-    string UserNamePhoneEmail = 4; 
+
+message AuthSingInParam {
+    string UserNamePhoneEmail = 4;
     string Password = 5; // 98... 989015132328
 }
 
-message SingInResponse {
-   bool Done =1;
-   string ErrorMessage = 2;
-//    SelfUserView SelfUserView = 3;
+message AuthSingInResponse {
+    bool Done =1;
+    string ErrorMessage = 2;
+    //    SelfUserView SelfUserView = 3;
 }
 
-message LogOutParam {
-   
+
+message AuthLogOutParam {
+
 }
 
-message LogOutResponse {
+message AuthLogOutResponse {
     bool Done =1;
     string ErrorMessage =2;
 }
-
-
-service RPC_Auth {
-//    rpc CheckPhone (UserParam_CheckUserName2) returns (UserResponse_CheckUserName2);
-    rpc SendConfirmCode (SendConfirmCodeParam) returns (SendConfirmCodeResponse);
-    rpc ConfirmCode (ConfirmCodeParam) returns (ConfirmCodeResponse);
-    rpc SingUp (SingUpParam) returns (SingUpResponse);
-    rpc SingIn (SingInParam) returns (SingInResponse);
-    rpc LogOut (LogOutParam) returns (LogOutResponse);
-}
-

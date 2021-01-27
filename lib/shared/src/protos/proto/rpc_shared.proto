@@ -4,28 +4,28 @@ package pb;
 
 import "global.proto";
 
-message EchoParam {
+
+service RPC_Shared {
+    rpc SharedEcho (SharedEchoParam) returns (SharedEchoResponse);
+    rpc SharedCheckUserName (SharedCheckUserNameParam) returns (SharedCheckUserNameResponse);
+}
+
+message SharedEchoParam {
     string text = 1;
 }
 
-message EchoResponse {
+message SharedEchoResponse {
     bool done =1;
     string text = 2;
 }
 
-message CheckUserNameParam {
+
+message SharedCheckUserNameParam {
     string username = 1;
 }
 
-message CheckUserNameResponse {
+message SharedCheckUserNameResponse {
     bool is_available =1;
     string username = 2;
     string show_message = 3;
 }
-
-service RPC_Shared {
-    rpc Echo (EchoParam) returns (EchoResponse);
-    rpc CheckUserName (CheckUserNameParam) returns (CheckUserNameResponse);
-
-}
-

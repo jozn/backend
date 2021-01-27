@@ -98,8 +98,10 @@ impl DBCassandra {
     pub fn get_channel_followers(&self, channel_id: i64) -> Result<Vec<i64>, GenErr> {
         let sess = &self.session;
 
-        let rows = xc::ChannelFollower_Selector::new().channel_cid_eq(channel_id).get_rows(sess)?;
-        let mut out =vec![];
+        let rows = xc::ChannelFollower_Selector::new()
+            .channel_cid_eq(channel_id)
+            .get_rows(sess)?;
+        let mut out = vec![];
         for r in rows {
             out.push(r.profile_cid);
         }
@@ -112,7 +114,7 @@ impl DBCassandra {
 
         let r = xc::ChannelFollower {
             channel_cid,
-            profile_cid
+            profile_cid,
         };
         r.save(sess)?;
 
@@ -120,11 +122,14 @@ impl DBCassandra {
     }
 
     // =================== Channel Message Like ====================
-    pub fn get_message_likes(&self, message_gid: i64) -> Result<Vec<i64>, GenErr> {//todo paging
+    pub fn get_message_likes(&self, message_gid: i64) -> Result<Vec<i64>, GenErr> {
+        //todo paging
         let sess = &self.session;
 
-        let rows = xc::MsgLike_Selector::new().message_gid_eq(message_gid).get_rows(sess)?;
-        let mut out =vec![];
+        let rows = xc::MsgLike_Selector::new()
+            .message_gid_eq(message_gid)
+            .get_rows(sess)?;
+        let mut out = vec![];
         for r in rows {
             out.push(r.profile_cid);
         }
@@ -137,7 +142,7 @@ impl DBCassandra {
 
         let r = xc::MsgLike {
             message_gid,
-            profile_cid
+            profile_cid,
         };
         r.save(sess)?;
 
@@ -145,12 +150,15 @@ impl DBCassandra {
     }
 
     // =================== Channel Message Comment ====================
-    pub fn get_message_comments(&self, message_gid: i64) -> Result<Vec<pb::Comment>, GenErr> {//todo paging
+    pub fn get_message_comments(&self, message_gid: i64) -> Result<Vec<pb::Comment>, GenErr> {
+        //todo paging
         let sess = &self.session;
 
         // todo
-        let rows = xc::MsgComment_Selector::new().message_gid_eq(message_gid).get_rows(sess)?;
-        let mut out =vec![];
+        let rows = xc::MsgComment_Selector::new()
+            .message_gid_eq(message_gid)
+            .get_rows(sess)?;
+        let mut out = vec![];
         for r in rows {
             out.push(common::prost_decode(&r.pb_data)?);
         }
@@ -160,9 +168,9 @@ impl DBCassandra {
 
     pub fn save_message_comment(&self, comment: &pb::Comment) -> Result<(), GenErr> {
         let sess = &self.session;
-        
+
         let c = common::prost_encode(comment)?;
-        let r = xc::MsgComment{
+        let r = xc::MsgComment {
             comment_gid: comment.comment_gid as i64,
             message_gid: comment.message_gid as i64,
             pb_data: c,
@@ -171,7 +179,6 @@ impl DBCassandra {
 
         Ok(())
     }
-
 }
 
 // Chat Impl
@@ -262,8 +269,10 @@ impl DBCassandra {
     pub fn get_profile_followings(&self, profile_cid: i64) -> Result<Vec<i64>, GenErr> {
         let sess = &self.session;
 
-        let rows = xc::ProfileFollow_Selector::new().profile_cid_eq(profile_cid).get_rows(sess)?;
-        let mut out =vec![];
+        let rows = xc::ProfileFollow_Selector::new()
+            .profile_cid_eq(profile_cid)
+            .get_rows(sess)?;
+        let mut out = vec![];
         for r in rows {
             out.push(r.profile_cid);
         }
@@ -277,11 +286,10 @@ impl DBCassandra {
 
         let r = xc::ProfileFollow {
             channel_cid,
-            profile_cid
+            profile_cid,
         };
         r.save(sess)?;
 
         Ok(())
     }
-
 }

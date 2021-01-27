@@ -1044,8 +1044,6 @@ pub enum DevicePlatform {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelCommand {
-    #[prost(uint32, tag = "1")]
-    pub channel_cid: u32,
     #[prost(
         oneof = "channel_command::SubCommand",
         tags = "50, 51, 52, 30, 31, 40, 41, 10, 11, 12, 200, 201, 300, 301, 400, 401, 80, 81"
@@ -1258,6 +1256,59 @@ pub mod channel_command {
     }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChatCommand {
+    #[prost(oneof = "chat_command::SubCommand", tags = "10, 11, 12, 13")]
+    pub sub_command: ::std::option::Option<chat_command::SubCommand>,
+}
+pub mod chat_command {
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QSendMessage {
+        #[prost(uint32, tag = "1")]
+        pub group_id: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QEditMessage {
+        #[prost(uint32, tag = "1")]
+        pub group_id: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QDeleteMessages {
+        #[prost(uint32, tag = "1")]
+        pub group_id: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QDeleteHistory {}
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum SubCommand {
+        #[prost(message, tag = "10")]
+        SendMessage(QSendMessage),
+        #[prost(message, tag = "11")]
+        EditMessage(QEditMessage),
+        #[prost(message, tag = "12")]
+        DeleteMessages(QDeleteMessages),
+        #[prost(message, tag = "13")]
+        DeleteHistory(QDeleteHistory),
+    }
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DirectCommand {
+    #[prost(oneof = "direct_command::SubCommand", tags = "10, 50")]
+    pub sub_command: ::std::option::Option<direct_command::SubCommand>,
+}
+pub mod direct_command {
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QChangeTitle {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QDeleteDirects {}
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum SubCommand {
+        #[prost(message, tag = "10")]
+        ChangeTitle(QChangeTitle),
+        #[prost(message, tag = "50")]
+        DeleteDirects(QDeleteDirects),
+    }
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupCommand {
     #[prost(
         oneof = "group_command::SubCommand",
@@ -1411,6 +1462,42 @@ pub mod group_command {
         AvatarDelete(QAvatarDelete),
         #[prost(message, tag = "82")]
         ReportGroup(QReportGroup),
+    }
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProfileCommand {
+    #[prost(oneof = "profile_command::SubCommand", tags = "10")]
+    pub sub_command: ::std::option::Option<profile_command::SubCommand>,
+}
+pub mod profile_command {
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QSetSettings {}
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum SubCommand {
+        #[prost(message, tag = "10")]
+        SetSettings(QSetSettings),
+    }
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserCommand {
+    #[prost(oneof = "user_command::SubCommand", tags = "10, 20, 21")]
+    pub sub_command: ::std::option::Option<user_command::SubCommand>,
+}
+pub mod user_command {
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QChangePhoneNumber {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QRemoveSession {}
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QRemoveOtherSessions {}
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum SubCommand {
+        #[prost(message, tag = "10")]
+        ChangePhoneNumber(QChangePhoneNumber),
+        #[prost(message, tag = "20")]
+        RemoveSession(QRemoveSession),
+        #[prost(message, tag = "21")]
+        RemoveOtherSessions(QRemoveOtherSessions),
     }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1802,7 +1889,7 @@ pub struct GetNextIdResponse {
     pub error: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SendConfirmCodeParam {
+pub struct AuthSendConfirmCodeParam {
     #[prost(string, tag = "1")]
     pub hash: std::string::String,
     /// 98... 989015132328
@@ -1814,7 +1901,7 @@ pub struct SendConfirmCodeParam {
     pub resend: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SendConfirmCodeResponse {
+pub struct AuthSendConfirmCodeResponse {
     #[prost(bool, tag = "1")]
     pub done: bool,
     #[prost(string, tag = "2")]
@@ -1827,7 +1914,7 @@ pub struct SendConfirmCodeResponse {
     pub is_login: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ConfirmCodeParam {
+pub struct AuthConfirmCodeParam {
     #[prost(string, tag = "1")]
     pub hash: std::string::String,
     /// 98... 989015132328
@@ -1838,7 +1925,7 @@ pub struct ConfirmCodeParam {
     pub code: i32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ConfirmCodeResponse {
+pub struct AuthConfirmCodeResponse {
     #[prost(bool, tag = "1")]
     pub done: bool,
     ///    SelfUserView SelfUserView = 3; //if it is login
@@ -1846,7 +1933,7 @@ pub struct ConfirmCodeResponse {
     pub error_message: std::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SingUpParam {
+pub struct AuthSingUpParam {
     #[prost(string, tag = "1")]
     pub hash: std::string::String,
     #[prost(string, tag = "2")]
@@ -1861,7 +1948,7 @@ pub struct SingUpParam {
     pub email: std::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SingUpResponse {
+pub struct AuthSingUpResponse {
     #[prost(bool, tag = "1")]
     pub done: bool,
     ///    SelfUserView SelfUserView = 3;
@@ -1869,7 +1956,7 @@ pub struct SingUpResponse {
     pub error_message: std::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SingInParam {
+pub struct AuthSingInParam {
     #[prost(string, tag = "4")]
     pub user_name_phone_email: std::string::String,
     /// 98... 989015132328
@@ -1877,7 +1964,7 @@ pub struct SingInParam {
     pub password: std::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SingInResponse {
+pub struct AuthSingInResponse {
     #[prost(bool, tag = "1")]
     pub done: bool,
     ///    SelfUserView SelfUserView = 3;
@@ -1885,9 +1972,9 @@ pub struct SingInResponse {
     pub error_message: std::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LogOutParam {}
+pub struct AuthLogOutParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LogOutResponse {
+pub struct AuthLogOutResponse {
     #[prost(bool, tag = "1")]
     pub done: bool,
     #[prost(string, tag = "2")]
@@ -2312,30 +2399,18 @@ pub struct ChatGetMediaListParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChatGetMediaListResponse {}
 //========= One =========
-// CRUD
 
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectDeleteDirectParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectDeleteDirectResponse {}
-// Pin, Archives, Marks
-
+/// Pin, Archives, Marks
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DirectChangeTitleParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DirectChangeTitleResponse {}
-// Notifications
-
+/// Notifications
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DirectSetCustomNotificationParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DirectSetCustomNotificationResponse {}
-// Others
-
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectSendActionDoingParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectSendActionDoingResponse {}
+/// Others
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DirectSetDraftParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2373,14 +2448,7 @@ pub struct DirectArchiveDirectsResponse {}
 pub struct DirectUnArchiveDirectsParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DirectUnArchiveDirectsResponse {}
-// Messages
-
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectClearHistoriesParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectClearHistoriesResponse {}
-// Notifications
-
+/// Notifications
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DirectMuteDirectsParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2389,10 +2457,8 @@ pub struct DirectMuteDirectsResponse {}
 pub struct DirectUnMuteDirectsParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DirectUnMuteDirectsResponse {}
-//========= Many End =========
-
-// Folders
-
+///========= Many End =========
+/// Folders
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DirectCreateFolderParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2401,13 +2467,6 @@ pub struct DirectCreateFolderResponse {}
 pub struct DirectChangeFolderParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DirectChangeFolderResponse {}
-//
-//message Param {
-//}
-//
-//message Response {
-//}
-
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DirectRemoveFromFolderParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2420,8 +2479,7 @@ pub struct DirectReordersFolderResponse {}
 pub struct DirectDeleteFolderParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DirectDeleteFolderResponse {}
-// Views
-
+/// Views
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DirectGetChatsListParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2442,6 +2500,22 @@ pub struct DirectGetFoldersListResponse {}
 pub struct DirectGetFoldersFullListParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DirectGetFoldersFullListResponse {}
+/// Dep
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DirectSendActionDoingParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DirectSendActionDoingResponse {}
+/// Messages
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DirectClearHistoriesParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DirectClearHistoriesResponse {}
+// CRUD
+
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DirectDeleteDirectParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DirectDeleteDirectResponse {}
 /// CrDU
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupCreateGroupParam {
@@ -2731,6 +2805,13 @@ pub struct GroupSetDraftParam {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupSetDraftResponse {}
+// Add Profile
+
+/// Settings
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProfileSetSettingsParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProfileSetSettingsResponse {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetUsers1Param {}
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2767,24 +2848,24 @@ pub struct GetMessagesResponse {
     pub directs: ::std::vec::Vec<Message>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EchoParam {
+pub struct SharedEchoParam {
     #[prost(string, tag = "1")]
     pub text: std::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EchoResponse {
+pub struct SharedEchoResponse {
     #[prost(bool, tag = "1")]
     pub done: bool,
     #[prost(string, tag = "2")]
     pub text: std::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CheckUserNameParam {
+pub struct SharedCheckUserNameParam {
     #[prost(string, tag = "1")]
     pub username: std::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CheckUserNameResponse {
+pub struct SharedCheckUserNameResponse {
     #[prost(bool, tag = "1")]
     pub is_available: bool,
     #[prost(string, tag = "2")]
@@ -2805,12 +2886,35 @@ pub struct UploadFileResponse {
     #[prost(string, tag = "2")]
     pub text: std::string::String,
 }
+/// Phone
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChangePhoneNumberParam {}
+pub struct UserChangePhoneNumberParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChangePhoneNumberResponse {
+pub struct UserChangePhoneNumberResponse {
     #[prost(bool, tag = "1")]
     pub done: bool,
     #[prost(string, tag = "2")]
     pub text: std::string::String,
 }
+// Email
+
+// Password
+
+/// Session
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserRemoveSessionParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserRemoveSessionResponse {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserRemoveOtherParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserRemoveOtherResponse {}
+/// Views
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserGetMeParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserGetMeResponse {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserGetActiveSessionsParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserGetActiveSessionsResponse {}

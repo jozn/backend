@@ -1,3 +1,5 @@
+phone/email is per User not per Profile
+====
 + todo: increase the range of tags number > pb can handle to few thousand numb n 2 bytes
 + Add message rich text > replace string with it
 + finer grade sepratin of rpc category (avatars, pins,..)
