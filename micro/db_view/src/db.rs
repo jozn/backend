@@ -45,6 +45,27 @@ impl DBCassandra {
         Ok(())
     }
 
+    pub fn save_channel_verify(&self, channel: &pb::Channel) -> Result<(), GenErr> {
+        let sess = &self.session;
+
+        let pb = prost_encode(channel)?;
+        let xch = xc::Channel {
+            channel_id: channel.channel_cid as i64,
+            pb_data: pb,
+        };
+
+        xch.save(sess)?;
+
+        let x = xc::Channel_Selector::new()
+            .channel_id_eq(channel.channel_cid as i64)
+            .get_row(&sess)?;
+
+        assert_eq!(x.pb_data, pb);
+        println!("Channels pb data in cassandra is equal.");
+
+        Ok(())
+    }
+
     // =================== Channel Message ====================
     pub fn get_channel_message(
         &self,
@@ -151,31 +172,6 @@ impl DBCassandra {
         Ok(())
     }
 
-    // =================== Channel Following ====================
-    pub fn get_profile_followings(&self, profile_cid: i64) -> Result<Vec<i64>, GenErr> {
-        let sess = &self.session;
-
-        let rows = xc::ProfileFollow_Selector::new().profile_cid_eq(profile_cid).get_rows(sess)?;
-        let mut out =vec![];
-        for r in rows {
-            out.push(r.profile_cid);
-        }
-
-        Ok(out)
-    }
-
-    // todo this with channel must be in one batch transaction
-    pub fn save_profile_following(&self, channel_cid: i64, profile_cid: i64) -> Result<(), GenErr> {
-        let sess = &self.session;
-
-        let r = xc::ProfileFollow {
-            channel_cid,
-            profile_cid
-        };
-        r.save(sess)?;
-
-        Ok(())
-    }
 }
 
 // Chat Impl
@@ -262,68 +258,30 @@ impl DBCassandra {
         Ok(())
     }
 
-}
+    // =================== Profile Following ====================
+    pub fn get_profile_followings(&self, profile_cid: i64) -> Result<Vec<i64>, GenErr> {
+        let sess = &self.session;
 
-// Deprecated > remove
-pub fn get_channel(channel_id: u64) -> Result<pb::Channel, GenErr> {
-    let sess = session::get_session();
+        let rows = xc::ProfileFollow_Selector::new().profile_cid_eq(profile_cid).get_rows(sess)?;
+        let mut out =vec![];
+        for r in rows {
+            out.push(r.profile_cid);
+        }
 
-    let x = xc::Channel_Selector::new()
-        .channel_id_eq(channel_id as i64)
-        .get_row(&sess)
-        .unwrap();
-    println!("channel data: {:?}", x.pb_data.as_slice());
-    let ch: pb::Channel = shared::common::prost_decode(&x.pb_data)?;
-    // let ch = ::prost::Message::decode(x.pb_data.as_slice())?;
+        Ok(out)
+    }
 
-    Ok(ch)
-}
+    // todo this with channel must be in one batch transaction
+    pub fn save_profile_following(&self, channel_cid: i64, profile_cid: i64) -> Result<(), GenErr> {
+        let sess = &self.session;
 
-pub fn get_channel_messages(channel_id: u64) -> Result<pb::Channel, GenErr> {
-    let sess = session::get_session();
+        let r = xc::ProfileFollow {
+            channel_cid,
+            profile_cid
+        };
+        r.save(sess)?;
 
-    let x = xc::ChannelMsg_Selector::new()
-        .channel_id_eq(channel_id as i64)
-        .and_msg_id_eq(234)
-        .get_row(&sess)
-        .unwrap();
-    println!("channel data: {:?}", x.pb_data.as_slice());
-    let ch: pb::Channel = shared::common::prost_decode(&x.pb_data)?;
-    // let ch = ::prost::Message::decode(x.pb_data.as_slice())?;
+        Ok(())
+    }
 
-    Ok(ch)
-}
-
-pub fn save_channel(channel: &pb::Channel) -> Result<(), GenErr> {
-    let sess = session::get_session();
-
-    let pb = prost_encode(channel)?;
-    let xch = xc::Channel {
-        channel_id: channel.channel_cid as i64,
-        pb_data: pb,
-    };
-
-    xch.save(&sess)?;
-
-    Ok(())
-}
-
-pub fn save_channel_verify(channel: &pb::Channel) -> Result<(), GenErr> {
-    let sess = session::get_session();
-
-    let pb = prost_encode(channel)?;
-    let xch = xc::Channel {
-        channel_id: channel.channel_cid as i64,
-        pb_data: pb.clone(),
-    };
-    xch.save(&sess)?;
-
-    let x = xc::Channel_Selector::new()
-        .channel_id_eq(channel.channel_cid as i64)
-        .get_row(&sess)
-        .unwrap();
-
-    assert_eq!(x.pb_data, pb);
-
-    Ok(())
 }
