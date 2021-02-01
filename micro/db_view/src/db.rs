@@ -21,7 +21,7 @@ impl DBCassandra {
         let sess = &self.session;
 
         let x = xc::Channel_Selector::new()
-            .channel_id_eq(channel_id as i64)
+            .channel_cid_eq(channel_id as i64)
             .get_row(sess)?;
 
         println!("channel data: {:?}", x.pb_data.as_slice());
@@ -36,7 +36,7 @@ impl DBCassandra {
 
         let pb = prost_encode(channel)?;
         let xch = xc::Channel {
-            channel_id: channel.channel_cid as i64,
+            channel_cid: channel.channel_cid as i64,
             pb_data: pb,
         };
 
@@ -50,14 +50,14 @@ impl DBCassandra {
 
         let pb = prost_encode(channel)?;
         let xch = xc::Channel {
-            channel_id: channel.channel_cid as i64,
+            channel_cid: channel.channel_cid as i64,
             pb_data: pb.clone(),
         };
 
         xch.save(sess)?;
 
         let x = xc::Channel_Selector::new()
-            .channel_id_eq(channel.channel_cid as i64)
+            .channel_cid_eq(channel.channel_cid as i64)
             .get_row(sess)?;
 
         assert_eq!(x.pb_data, pb);
@@ -74,7 +74,7 @@ impl DBCassandra {
     ) -> Result<pb::Message, GenErr> {
         let sess = &self.session;
 
-        let r = xc::get_channel_msg_by_channel_id_and_msg_id(sess, channel_id, message_id)?;
+        let r = xc::get_channel_msg_by_channel_cid_and_msg_gid(sess, channel_id, message_id)?;
         let ch = common::prost_decode(&r.pb_data)?;
 
         Ok(ch)
@@ -85,8 +85,8 @@ impl DBCassandra {
 
         let pb = prost_encode(message)?;
         let r = xc::ChannelMsg {
-            channel_id: message.by_profile_cid as i64, //todo fixme bug
-            msg_id: message.message_gid as i64,
+            channel_cid: message.by_profile_cid as i64, //todo fixme bug
+            msg_gid: message.message_gid as i64,
             pb_data: pb,
         };
         r.save(sess)?;
@@ -113,6 +113,7 @@ impl DBCassandra {
         let sess = &self.session;
 
         let r = xc::ChannelFollower {
+            follow_gid: 1, //todo
             channel_cid,
             profile_cid,
         };
@@ -187,7 +188,7 @@ impl DBCassandra {
     pub fn get_chat(&self, profile_id: i64, chat_id: i64) -> Result<pb::Chat, GenErr> {
         let sess = &self.session;
 
-        let r = xc::get_chat_by_profile_cid_and_chat_id(sess, profile_id, chat_id)?;
+        let r = xc::get_chat_by_profile_cid_and_chat_gid(sess, profile_id, chat_id)?;
         let chat = common::prost_decode(&r.pb_data)?;
 
         Ok(chat)
@@ -201,7 +202,7 @@ impl DBCassandra {
         let pb = prost_encode(chat)?;
         // For Profile 1
         let r1 = xc::Chat {
-            chat_id: chat.chat_gid as i64,
+            chat_gid: chat.chat_gid as i64,
             profile_cid: chat.profile1_cid as i64,
             pb_data: pb.clone(),
         };
@@ -209,7 +210,7 @@ impl DBCassandra {
 
         // For Profile 2
         let r2 = xc::Chat {
-            chat_id: chat.chat_gid as i64,
+            chat_gid: chat.chat_gid as i64,
             profile_cid: chat.profile2_cid as i64,
             pb_data: pb,
         };
@@ -279,7 +280,7 @@ impl DBCassandra {
     pub fn get_profile_followings(&self, profile_cid: i64) -> Result<Vec<i64>, GenErr> {
         let sess = &self.session;
 
-        let rows = xc::ProfileFollow_Selector::new()
+        let rows = xc::ProfileFollower_Selector::new()
             .profile_cid_eq(profile_cid)
             .get_rows(sess)?;
         let mut out = vec![];
@@ -294,7 +295,8 @@ impl DBCassandra {
     pub fn save_profile_following(&self, channel_cid: i64, profile_cid: i64) -> Result<(), GenErr> {
         let sess = &self.session;
 
-        let r = xc::ProfileFollow {
+        let r = xc::ProfileFollower {
+            follow_gid: 0, //todo
             channel_cid,
             profile_cid,
         };

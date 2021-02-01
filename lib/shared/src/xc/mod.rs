@@ -1,7 +1,6 @@
 pub mod common;
 pub use common::*;
 
-
 pub mod channel;
 pub mod channel_follower;
 pub mod channel_follower_bk;
@@ -25,7 +24,6 @@ pub mod profile_follower_sort;
 pub mod profile_subscriber;
 pub mod profile_subscriber_sort;
 pub mod user;
-
 
 pub use channel::*;
 pub use channel_follower::*;
