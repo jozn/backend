@@ -174,7 +174,7 @@ message Direct {
   uint32 pined_msgs_count = 108; // mut
 
   // Chat / Peer Chat
-  PeerChat peer_chat = 433; // s_imut
+  Chat chat = 433; // s_imut
   Contact contact = 49; // ? must use profile
   Profile profile = 149;  // Profile > or Peer Chat ?
 
@@ -215,7 +215,8 @@ message DirectCustomNotification {
 }
 
 //==================== Peer Chat ==================
-message PeerChat {//?? or embed
+message Chat {//?? or embed
+  fixed64 chat_gid = 7; // imut
   uint32 profile1_cid = 1; // imut
   uint32 profile2_cid = 2; // imut
 
@@ -612,7 +613,7 @@ message Like {
 }
 
 //==================== Views ==================
-message Chat {}
+message Chat_2 {}
 
 
 message NewMessageInput { // C: Common

@@ -16,7 +16,7 @@ struct RowStruct {
 */
 #[derive(Clone, Debug, PartialEq)]
 struct Channel {
-	pub channel_id: i64,   // channel_id    partition_key  0
+	pub channel_cid: i64,   // channel_cid    partition_key  0
 	pub pb_data: Vec<u8>,   // pb_data    regular  -1
 	
 	_exists: bool,
@@ -24,11 +24,12 @@ struct Channel {
 }
 /*
 := &xc.Channel {
-	channel_id: 0i64,
+	channel_cid: 0i64,
 	pb_data: vec![],
 */
 #[derive(Clone, Debug, PartialEq)]
 struct ChannelFollower {
+	pub follow_gid: i64,   // follow_gid    clustering  1
 	pub channel_cid: i64,   // channel_cid    partition_key  0
 	pub profile_cid: i64,   // profile_cid    clustering  0
 	
@@ -37,13 +38,42 @@ struct ChannelFollower {
 }
 /*
 := &xc.ChannelFollower {
+	follow_gid: 0i64,
 	channel_cid: 0i64,
 	profile_cid: 0i64,
 */
 #[derive(Clone, Debug, PartialEq)]
+struct ChannelFollowerBk {
+	pub channel_cid: i64,   // channel_cid    partition_key  0
+	pub profile_cid: i64,   // profile_cid    clustering  0
+	
+	_exists: bool,
+	_deleted: bool,
+}
+/*
+:= &xc.ChannelFollowerBk {
+	channel_cid: 0i64,
+	profile_cid: 0i64,
+*/
+#[derive(Clone, Debug, PartialEq)]
+struct ChannelFollowerSort {
+	pub profile_cid: i64,   // profile_cid    clustering  1
+	pub channel_cid: i64,   // channel_cid    partition_key  0
+	pub follow_gid: i64,   // follow_gid    clustering  0
+	
+	_exists: bool,
+	_deleted: bool,
+}
+/*
+:= &xc.ChannelFollowerSort {
+	profile_cid: 0i64,
+	channel_cid: 0i64,
+	follow_gid: 0i64,
+*/
+#[derive(Clone, Debug, PartialEq)]
 struct ChannelMsg {
-	pub channel_id: i64,   // channel_id    partition_key  0
-	pub msg_id: i64,   // msg_id    clustering  0
+	pub channel_cid: i64,   // channel_cid    partition_key  0
+	pub msg_gid: i64,   // msg_gid    clustering  0
 	pub pb_data: Vec<u8>,   // pb_data    regular  -1
 	
 	_exists: bool,
@@ -51,12 +81,28 @@ struct ChannelMsg {
 }
 /*
 := &xc.ChannelMsg {
-	channel_id: 0i64,
-	msg_id: 0i64,
+	channel_cid: 0i64,
+	msg_gid: 0i64,
 	pb_data: vec![],
 */
 #[derive(Clone, Debug, PartialEq)]
+struct ChannelMsgMedia {
+	pub msg_gid: i64,   // msg_gid    clustering  1
+	pub channel_cid: i64,   // channel_cid    partition_key  0
+	pub media_type_id: i64,   // media_type_id    clustering  0
+	
+	_exists: bool,
+	_deleted: bool,
+}
+/*
+:= &xc.ChannelMsgMedia {
+	msg_gid: 0i64,
+	channel_cid: 0i64,
+	media_type_id: 0i64,
+*/
+#[derive(Clone, Debug, PartialEq)]
 struct ChannelSubscriber {
+	pub subscriber_gid: i64,   // subscriber_gid    clustering  1
 	pub channel_cid: i64,   // channel_cid    partition_key  0
 	pub profile_cid: i64,   // profile_cid    clustering  0
 	
@@ -65,12 +111,41 @@ struct ChannelSubscriber {
 }
 /*
 := &xc.ChannelSubscriber {
+	subscriber_gid: 0i64,
 	channel_cid: 0i64,
 	profile_cid: 0i64,
 */
 #[derive(Clone, Debug, PartialEq)]
+struct ChannelSubscriberBk {
+	pub channel_cid: i64,   // channel_cid    partition_key  0
+	pub profile_cid: i64,   // profile_cid    clustering  0
+	
+	_exists: bool,
+	_deleted: bool,
+}
+/*
+:= &xc.ChannelSubscriberBk {
+	channel_cid: 0i64,
+	profile_cid: 0i64,
+*/
+#[derive(Clone, Debug, PartialEq)]
+struct ChannelSubscriberSort {
+	pub profile_cid: i64,   // profile_cid    clustering  1
+	pub channel_cid: i64,   // channel_cid    partition_key  0
+	pub subscriber_gid: i64,   // subscriber_gid    clustering  0
+	
+	_exists: bool,
+	_deleted: bool,
+}
+/*
+:= &xc.ChannelSubscriberSort {
+	profile_cid: 0i64,
+	channel_cid: 0i64,
+	subscriber_gid: 0i64,
+*/
+#[derive(Clone, Debug, PartialEq)]
 struct Chat {
-	pub chat_id: i64,   // chat_id    clustering  0
+	pub chat_gid: i64,   // chat_gid    clustering  0
 	pub profile_cid: i64,   // profile_cid    partition_key  0
 	pub pb_data: Vec<u8>,   // pb_data    regular  -1
 	
@@ -79,14 +154,15 @@ struct Chat {
 }
 /*
 := &xc.Chat {
-	chat_id: 0i64,
+	chat_gid: 0i64,
 	profile_cid: 0i64,
 	pb_data: vec![],
 */
 #[derive(Clone, Debug, PartialEq)]
 struct ChatMsg {
-	pub chat_id: i64,   // chat_id    partition_key  0
-	pub msg_id: i64,   // msg_id    clustering  0
+	pub chat_gid: i64,   // chat_gid    partition_key  1
+	pub msg_gid: i64,   // msg_gid    clustering  0
+	pub profile_cid: i64,   // profile_cid    partition_key  0
 	pub pb_data: Vec<u8>,   // pb_data    regular  -1
 	
 	_exists: bool,
@@ -94,8 +170,24 @@ struct ChatMsg {
 }
 /*
 := &xc.ChatMsg {
-	chat_id: 0i64,
-	msg_id: 0i64,
+	chat_gid: 0i64,
+	msg_gid: 0i64,
+	profile_cid: 0i64,
+	pb_data: vec![],
+*/
+#[derive(Clone, Debug, PartialEq)]
+struct Direct {
+	pub direct_gid: i64,   // direct_gid    clustering  0
+	pub profile_cid: i64,   // profile_cid    partition_key  0
+	pub pb_data: Vec<u8>,   // pb_data    regular  -1
+	
+	_exists: bool,
+	_deleted: bool,
+}
+/*
+:= &xc.Direct {
+	direct_gid: 0i64,
+	profile_cid: 0i64,
 	pb_data: vec![],
 */
 #[derive(Clone, Debug, PartialEq)]
@@ -123,32 +215,6 @@ struct FileRef {
 := &xc.FileRef {
 	file_gid: 0i64,
 	ref_id: 0i64,
-*/
-#[derive(Clone, Debug, PartialEq)]
-struct Messages {
-	pub chat_id: i64,   // chat_id    partition_key  0
-	pub data: Vec<u8>,   // data    regular  -1
-	
-	_exists: bool,
-	_deleted: bool,
-}
-/*
-:= &xc.Messages {
-	chat_id: 0i64,
-	data: vec![],
-*/
-#[derive(Clone, Debug, PartialEq)]
-struct Messages12 {
-	pub chat_id: i64,   // chat_id    partition_key  0
-	pub data: Vec<u8>,   // data    regular  -1
-	
-	_exists: bool,
-	_deleted: bool,
-}
-/*
-:= &xc.Messages12 {
-	chat_id: 0i64,
-	data: vec![],
 */
 #[derive(Clone, Debug, PartialEq)]
 struct MsgComment {
@@ -205,7 +271,8 @@ struct Profile {
 	pb_data: vec![],
 */
 #[derive(Clone, Debug, PartialEq)]
-struct ProfileFollow {
+struct ProfileFollower {
+	pub follow_gid: i64,   // follow_gid    clustering  1
 	pub channel_cid: i64,   // channel_cid    clustering  0
 	pub profile_cid: i64,   // profile_cid    partition_key  0
 	
@@ -213,12 +280,29 @@ struct ProfileFollow {
 	_deleted: bool,
 }
 /*
-:= &xc.ProfileFollow {
+:= &xc.ProfileFollower {
+	follow_gid: 0i64,
 	channel_cid: 0i64,
 	profile_cid: 0i64,
 */
 #[derive(Clone, Debug, PartialEq)]
-struct ProfileSubscribe {
+struct ProfileFollowerSort {
+	pub channel_cid: i64,   // channel_cid    clustering  1
+	pub follow_gid: i64,   // follow_gid    clustering  0
+	pub profile_cid: i64,   // profile_cid    partition_key  0
+	
+	_exists: bool,
+	_deleted: bool,
+}
+/*
+:= &xc.ProfileFollowerSort {
+	channel_cid: 0i64,
+	follow_gid: 0i64,
+	profile_cid: 0i64,
+*/
+#[derive(Clone, Debug, PartialEq)]
+struct ProfileSubscriber {
+	pub subscriber_gid: i64,   // subscriber_gid    clustering  1
 	pub channel_cid: i64,   // channel_cid    clustering  0
 	pub profile_cid: i64,   // profile_cid    partition_key  0
 	
@@ -226,9 +310,25 @@ struct ProfileSubscribe {
 	_deleted: bool,
 }
 /*
-:= &xc.ProfileSubscribe {
+:= &xc.ProfileSubscriber {
+	subscriber_gid: 0i64,
 	channel_cid: 0i64,
 	profile_cid: 0i64,
+*/
+#[derive(Clone, Debug, PartialEq)]
+struct ProfileSubscriberSort {
+	pub channel_cid: i64,   // channel_cid    clustering  1
+	pub profile_cid: i64,   // profile_cid    partition_key  0
+	pub subscriber_gid: i64,   // subscriber_gid    clustering  0
+	
+	_exists: bool,
+	_deleted: bool,
+}
+/*
+:= &xc.ProfileSubscriberSort {
+	channel_cid: 0i64,
+	profile_cid: 0i64,
+	subscriber_gid: 0i64,
 */
 #[derive(Clone, Debug, PartialEq)]
 struct User {
@@ -251,40 +351,52 @@ type LogTableCql struct{
     
     Channel bool
     ChannelFollower bool
+    ChannelFollowerBk bool
+    ChannelFollowerSort bool
     ChannelMsg bool
+    ChannelMsgMedia bool
     ChannelSubscriber bool
+    ChannelSubscriberBk bool
+    ChannelSubscriberSort bool
     Chat bool
     ChatMsg bool
+    Direct bool
     File bool
     FileRef bool
-    Messages bool
-    Messages12 bool
     MsgComment bool
     MsgLike bool
     MsgReshare bool
     Profile bool
-    ProfileFollow bool
-    ProfileSubscribe bool
+    ProfileFollower bool
+    ProfileFollowerSort bool
+    ProfileSubscriber bool
+    ProfileSubscriberSort bool
     User bool
 }
 
 var LogTableCqlReq = LogTableCql{
     Channel: true ,
     ChannelFollower: true ,
+    ChannelFollowerBk: true ,
+    ChannelFollowerSort: true ,
     ChannelMsg: true ,
+    ChannelMsgMedia: true ,
     ChannelSubscriber: true ,
+    ChannelSubscriberBk: true ,
+    ChannelSubscriberSort: true ,
     Chat: true ,
     ChatMsg: true ,
+    Direct: true ,
     File: true ,
     FileRef: true ,
-    Messages: true ,
-    Messages12: true ,
     MsgComment: true ,
     MsgLike: true ,
     MsgReshare: true ,
     Profile: true ,
-    ProfileFollow: true ,
-    ProfileSubscribe: true ,
+    ProfileFollower: true ,
+    ProfileFollowerSort: true ,
+    ProfileSubscriber: true ,
+    ProfileSubscriberSort: true ,
     User: true ,
 }
 

@@ -1,13 +1,14 @@
+
 use cdrs::authenticators::StaticPasswordAuthenticator;
 use cdrs::cluster::session::{new as new_session, Session};
 use cdrs::cluster::{ClusterTcpConfig, NodeTcpConfigBuilder, TcpConnectionPool};
 use cdrs::load_balancing::RoundRobin;
 use cdrs::query::*;
 
-use cdrs::frame::frame_error::CDRSError;
-use cdrs::frame::{Frame, IntoBytes};
+use cdrs::frame::{IntoBytes, Frame};
 use cdrs::types::from_cdrs::FromCDRSByName;
 use cdrs::types::prelude::*;
+use cdrs::frame::frame_error::CDRSError;
 use cdrs::Error as DriverError;
 
 // pub type CurrentSession = Session<RoundRobin<TcpConnectionPool<StaticPasswordAuthenticator>>>;
@@ -22,8 +23,8 @@ pub trait FCQueryExecutor {
         query: Q,
         values: V,
     ) -> cdrs::error::Result<Frame>
-    where
-        Self: Sized;
+        where
+            Self: Sized;
 }
 
 #[derive(Debug, Clone)]
@@ -46,7 +47,8 @@ impl From<DriverError> for CWError {
     fn from(err: Error) -> Self {
         match err {
             DriverError::Server(serr) => CWError::Server(serr),
-            _ => CWError::Driver(err),
+            _ => CWError::Driver(err)
         }
     }
 }
+

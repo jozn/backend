@@ -20,40 +20,29 @@ use cdrs::Error as DriverError;
 use crate::xc::common::*;
 
 #[derive(Default, Clone, Debug, PartialEq)]
-pub struct ChatMsg {
-    pub chat_gid: i64,   // chat_gid    partition_key  1
-    pub msg_gid: i64,   // msg_gid    clustering  0
-    pub profile_cid: i64,   // profile_cid    partition_key  0
-    pub pb_data: Vec<u8>,   // pb_data    regular  -1
+pub struct ChannelFollowerSort {
+    pub profile_cid: i64,   // profile_cid    clustering  1
+    pub channel_cid: i64,   // channel_cid    partition_key  0
+    pub follow_gid: i64,   // follow_gid    clustering  0
 }
 
-impl ChatMsg {
+impl ChannelFollowerSort {
     pub fn save(&self, session: impl FCQueryExecutor) -> Result<(),CWError> {
         let mut columns = vec![];
         let mut values :Vec<Value> = vec![];
 
         
 		// partition key and clustering key always must be present
-		columns.push("chat_gid");
-        values.push(self.chat_gid.clone().into());
-
-		// partition key and clustering key always must be present
-		columns.push("msg_gid");
-        values.push(self.msg_gid.clone().into());
-
-		// partition key and clustering key always must be present
 		columns.push("profile_cid");
         values.push(self.profile_cid.clone().into());
 
-		if !self.pb_data.is_empty() {
-            let val = Value{
-                body: self.pb_data.clone(),
-                value_type: ValueType::Normal(self.pb_data.len() as i32)
-            };
+		// partition key and clustering key always must be present
+		columns.push("channel_cid");
+        values.push(self.channel_cid.clone().into());
 
-            columns.push("pb_data");
-            values.push(val);
-       	}
+		// partition key and clustering key always must be present
+		columns.push("follow_gid");
+        values.push(self.follow_gid.clone().into());
 
 
         if columns.len() == 0 {
@@ -64,7 +53,7 @@ impl ChatMsg {
         let mut cql_question = "?,".repeat(columns.len());
         cql_question.remove(cql_question.len()-1);
 
-        let cql_query = format!("INSERT INTO flip.chat_msg ({}) VALUES ({})", cql_columns, cql_question);
+        let cql_query = format!("INSERT INTO flip.channel_follower_sort ({}) VALUES ({})", cql_columns, cql_question);
 
         println!("{} - {}", &cql_query, &cql_question);
 
@@ -74,13 +63,12 @@ impl ChatMsg {
     }
 
     pub fn delete(&self, session: impl FCQueryExecutor) -> Result<(), CWError> {
-        let mut deleter = ChatMsg_Deleter::new();
+        let mut deleter = ChannelFollowerSort_Deleter::new();
       
-        deleter.chat_gid_eq(self.chat_gid);
+        deleter.channel_cid_eq(self.channel_cid);
     
-      deleter.and_profile_cid_Eq(self.profile_cid);
-    
-        deleter.and_msg_gid_eq(self.msg_gid);
+        deleter.and_profile_cid_eq(self.profile_cid);
+        deleter.and_follow_gid_eq(self.follow_gid);
 
         let res = deleter.delete(session)?;
 
@@ -103,7 +91,7 @@ fn _get_where(wheres: Vec<WhereClause>) ->  (String, Vec<Value>) {
 }
 
 #[derive(Default, Debug)]
-pub struct ChatMsg_Selector {
+pub struct ChannelFollowerSort_Selector {
     wheres: Vec<WhereClause>,
     select_cols: Vec<&'static str>,
     order_by: Vec<&'static str>,
@@ -111,9 +99,9 @@ pub struct ChatMsg_Selector {
     allow_filter: bool,
 }
 
-impl ChatMsg_Selector {
+impl ChannelFollowerSort_Selector {
     pub fn new() -> Self {
-        ChatMsg_Selector::default()
+        ChannelFollowerSort_Selector::default()
     }
 
     pub fn limit(&mut self, size: u32) -> &mut Self {
@@ -132,23 +120,18 @@ impl ChatMsg_Selector {
     }
 
     //each column select
-    pub fn select_chat_gid(&mut self) -> &mut Self {
-        self.select_cols.push("chat_gid");
-        self
-    }
-    
-    pub fn select_msg_gid(&mut self) -> &mut Self {
-        self.select_cols.push("msg_gid");
-        self
-    }
-    
     pub fn select_profile_cid(&mut self) -> &mut Self {
         self.select_cols.push("profile_cid");
         self
     }
     
-    pub fn select_pb_data(&mut self) -> &mut Self {
-        self.select_cols.push("pb_data");
+    pub fn select_channel_cid(&mut self) -> &mut Self {
+        self.select_cols.push("channel_cid");
+        self
+    }
+    
+    pub fn select_follow_gid(&mut self) -> &mut Self {
+        self.select_cols.push("follow_gid");
         self
     }
     
@@ -160,7 +143,7 @@ impl ChatMsg_Selector {
             self.select_cols.join(", ")
         };
 
-        let mut cql_query = format!("SELECT {} FROM flip.chat_msg", cql_select);
+        let mut cql_query = format!("SELECT {} FROM flip.channel_follower_sort", cql_select);
 
         let (cql_where, where_values) = _get_where(self.wheres.clone());
 
@@ -184,7 +167,7 @@ impl ChatMsg_Selector {
         (cql_query, where_values)
     }
 
-    pub fn _get_rows_with_size(&mut self,session: impl FCQueryExecutor, size: i64) -> Result<Vec<ChatMsg>, CWError>   {
+    pub fn _get_rows_with_size(&mut self,session: impl FCQueryExecutor, size: i64) -> Result<Vec<ChannelFollowerSort>, CWError>   {
 
         let(cql_query, query_values) = self._to_cql();
 
@@ -214,16 +197,14 @@ impl ChatMsg_Selector {
         let mut rows = vec![];
 
         for db_row in db_raws {
-            let mut row = ChatMsg::default();
+            let mut row = ChannelFollowerSort::default();
             
-                
-            row.chat_gid = db_row.by_name("chat_gid")?.unwrap_or_default();
-                
-            row.msg_gid = db_row.by_name("msg_gid")?.unwrap_or_default();
                 
             row.profile_cid = db_row.by_name("profile_cid")?.unwrap_or_default();
                 
-            row.pb_data = db_row.by_name::<Blob>("pb_data")?.unwrap_or(Blob::new(vec![])).into_vec();
+            row.channel_cid = db_row.by_name("channel_cid")?.unwrap_or_default();
+                
+            row.follow_gid = db_row.by_name("follow_gid")?.unwrap_or_default();
 
             rows.push(row);
         }
@@ -231,11 +212,11 @@ impl ChatMsg_Selector {
         Ok(rows)
     }
 
-    pub fn get_rows(&mut self, session: impl FCQueryExecutor) -> Result<Vec<ChatMsg>, CWError>{
+    pub fn get_rows(&mut self, session: impl FCQueryExecutor) -> Result<Vec<ChannelFollowerSort>, CWError>{
         self._get_rows_with_size(session,-1)
     }
 
-    pub fn get_row(&mut self, session: impl FCQueryExecutor) -> Result<ChatMsg, CWError>{
+    pub fn get_row(&mut self, session: impl FCQueryExecutor) -> Result<ChannelFollowerSort, CWError>{
         let rows = self._get_rows_with_size(session,1)?;
 
         let opt = rows.get(0);
@@ -246,288 +227,28 @@ impl ChatMsg_Selector {
     }
 
     
-    pub fn order_by_msg_gid_asc(&mut self) -> &mut Self {
-		self.order_by.push("msg_gid ASC");
+    pub fn order_by_profile_cid_asc(&mut self) -> &mut Self {
+		self.order_by.push("profile_cid ASC");
         self
     }
 
-	pub fn order_by_msg_gid_desc(&mut self) -> &mut Self {
-		self.order_by.push("msg_gid DESC");
+	pub fn order_by_profile_cid_desc(&mut self) -> &mut Self {
+		self.order_by.push("profile_cid DESC");
+        self
+    }
+
+    pub fn order_by_follow_gid_asc(&mut self) -> &mut Self {
+		self.order_by.push("follow_gid ASC");
+        self
+    }
+
+	pub fn order_by_follow_gid_desc(&mut self) -> &mut Self {
+		self.order_by.push("follow_gid DESC");
         self
     }
 
 
     
-    pub fn chat_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " chat_gid = ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn chat_gid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " chat_gid < ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn chat_gid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " chat_gid <= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn chat_gid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " chat_gid > ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn chat_gid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " chat_gid >= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_chat_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND chat_gid = ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_chat_gid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND chat_gid < ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_chat_gid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND chat_gid <= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_chat_gid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND chat_gid > ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_chat_gid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND chat_gid >= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_chat_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR chat_gid = ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_chat_gid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR chat_gid < ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_chat_gid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR chat_gid <= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_chat_gid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR chat_gid > ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_chat_gid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR chat_gid >= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn msg_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " msg_gid = ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn msg_gid_lt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " msg_gid < ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn msg_gid_le (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " msg_gid <= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn msg_gid_gt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " msg_gid > ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn msg_gid_ge (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " msg_gid >= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_msg_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND msg_gid = ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_msg_gid_lt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND msg_gid < ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_msg_gid_le (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND msg_gid <= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_msg_gid_gt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND msg_gid > ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_msg_gid_ge (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND msg_gid >= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_msg_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR msg_gid = ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_msg_gid_lt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR msg_gid < ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_msg_gid_le (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR msg_gid <= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_msg_gid_gt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR msg_gid > ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_msg_gid_ge (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR msg_gid >= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
     pub fn profile_cid_eq (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid = ?".to_string(),
@@ -537,7 +258,7 @@ impl ChatMsg_Selector {
         self
     }
 
-    pub fn profile_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn profile_cid_lt (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid < ?".to_string(),
             args: val.into(),
@@ -546,7 +267,7 @@ impl ChatMsg_Selector {
         self
     }
 
-    pub fn profile_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn profile_cid_le (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid <= ?".to_string(),
             args: val.into(),
@@ -555,7 +276,7 @@ impl ChatMsg_Selector {
         self
     }
 
-    pub fn profile_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn profile_cid_gt (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid > ?".to_string(),
             args: val.into(),
@@ -564,7 +285,7 @@ impl ChatMsg_Selector {
         self
     }
 
-    pub fn profile_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn profile_cid_ge (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid >= ?".to_string(),
             args: val.into(),
@@ -582,7 +303,7 @@ impl ChatMsg_Selector {
         self
     }
 
-    pub fn and_profile_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn and_profile_cid_lt (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid < ?".to_string(),
             args: val.into(),
@@ -591,7 +312,7 @@ impl ChatMsg_Selector {
         self
     }
 
-    pub fn and_profile_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn and_profile_cid_le (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid <= ?".to_string(),
             args: val.into(),
@@ -600,7 +321,7 @@ impl ChatMsg_Selector {
         self
     }
 
-    pub fn and_profile_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn and_profile_cid_gt (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid > ?".to_string(),
             args: val.into(),
@@ -609,7 +330,7 @@ impl ChatMsg_Selector {
         self
     }
 
-    pub fn and_profile_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn and_profile_cid_ge (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid >= ?".to_string(),
             args: val.into(),
@@ -627,7 +348,7 @@ impl ChatMsg_Selector {
         self
     }
 
-    pub fn or_profile_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn or_profile_cid_lt (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid < ?".to_string(),
             args: val.into(),
@@ -636,7 +357,7 @@ impl ChatMsg_Selector {
         self
     }
 
-    pub fn or_profile_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn or_profile_cid_le (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid <= ?".to_string(),
             args: val.into(),
@@ -645,7 +366,7 @@ impl ChatMsg_Selector {
         self
     }
 
-    pub fn or_profile_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn or_profile_cid_gt (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid > ?".to_string(),
             args: val.into(),
@@ -654,7 +375,7 @@ impl ChatMsg_Selector {
         self
     }
 
-    pub fn or_profile_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn or_profile_cid_ge (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid >= ?".to_string(),
             args: val.into(),
@@ -663,104 +384,278 @@ impl ChatMsg_Selector {
         self
     }
 
+    pub fn channel_cid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " channel_cid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn channel_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " channel_cid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn channel_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " channel_cid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn channel_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " channel_cid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn channel_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " channel_cid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_channel_cid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND channel_cid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_channel_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND channel_cid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_channel_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND channel_cid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_channel_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND channel_cid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_channel_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND channel_cid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_channel_cid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR channel_cid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_channel_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR channel_cid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_channel_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR channel_cid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_channel_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR channel_cid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_channel_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR channel_cid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn follow_gid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " follow_gid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn follow_gid_lt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " follow_gid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn follow_gid_le (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " follow_gid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn follow_gid_gt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " follow_gid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn follow_gid_ge (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " follow_gid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_follow_gid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND follow_gid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_follow_gid_lt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND follow_gid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_follow_gid_le (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND follow_gid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_follow_gid_gt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND follow_gid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_follow_gid_ge (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND follow_gid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_follow_gid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR follow_gid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_follow_gid_lt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR follow_gid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_follow_gid_le (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR follow_gid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_follow_gid_gt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR follow_gid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_follow_gid_ge (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR follow_gid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
 
     
-    pub fn chat_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
-        if len == 0 {
-            return self
-        }
-
-        let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!(" chat_gid IN ({})", marks),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_chat_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
-        if len == 0 {
-            return self
-        }
-
-        let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!("AND chat_gid IN ({})", marks),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_chat_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
-        if len == 0 {
-            return self
-        }
-
-        let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!("OR chat_gid IN ({})", marks),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn msg_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
-        if len == 0 {
-            return self
-        }
-
-        let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!(" msg_gid IN ({})", marks),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_msg_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
-        if len == 0 {
-            return self
-        }
-
-        let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!("AND msg_gid IN ({})", marks),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_msg_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
-        if len == 0 {
-            return self
-        }
-
-        let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!("OR msg_gid IN ({})", marks),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
     pub fn profile_cid_in (&mut self, val: Vec<i64> ) -> &mut Self {
 		let len = val.len();
         if len == 0 {
@@ -809,25 +704,121 @@ impl ChatMsg_Selector {
         self
     }
 
+    pub fn channel_cid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!(" channel_cid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_channel_cid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!("AND channel_cid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_channel_cid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!("OR channel_cid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn follow_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!(" follow_gid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_follow_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!("AND follow_gid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_follow_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!("OR follow_gid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
 
 }
 
 
 #[derive(Default, Debug)]
-pub struct ChatMsg_Deleter {
+pub struct ChannelFollowerSort_Deleter {
     wheres: Vec<WhereClause>,
     delete_cols: Vec<&'static str>,
 }
 
 #[derive(Default, Debug)]
-pub struct ChatMsg_Updater {
+pub struct ChannelFollowerSort_Updater {
     wheres: Vec<WhereClause>,
     updates: HashMap<&'static str, Value>,
 }
 
-impl ChatMsg_Updater {
+impl ChannelFollowerSort_Updater {
     pub fn new() -> Self {
-        ChatMsg_Updater::default()
+        ChannelFollowerSort_Updater::default()
     }
 
     pub fn update(&mut self,session: impl FCQueryExecutor) -> cdrs::error::Result<Frame>  {
@@ -856,9 +847,9 @@ impl ChatMsg_Updater {
 
         // Build final query
         let mut cql_query = if self.wheres.is_empty() {
-            format!("UPDATE flip.chat_msg SET {}", cql_update)
+            format!("UPDATE flip.channel_follower_sort SET {}", cql_update)
         } else {
-            format!("UPDATE flip.chat_msg SET {} WHERE {}", cql_update, cql_where)
+            format!("UPDATE flip.channel_follower_sort SET {} WHERE {}", cql_update, cql_where)
         };
 
         let query_values = QueryValues::SimpleValues(all_vals);
@@ -868,298 +859,23 @@ impl ChatMsg_Updater {
     }
 
     
-    pub fn update_chat_gid(&mut self, val: i64) -> &mut Self {
-        self.updates.insert("chat_gid = ?", val.into());
-        self
-    }
-
-    pub fn update_msg_gid(&mut self, val: i64) -> &mut Self {
-        self.updates.insert("msg_gid = ?", val.into());
-        self
-    }
-
     pub fn update_profile_cid(&mut self, val: i64) -> &mut Self {
         self.updates.insert("profile_cid = ?", val.into());
         self
     }
 
-    pub fn update_pb_data(&mut self, val: &Vec<u8>) -> &mut Self {
-        self.updates.insert("pb_data = ?", Blob::new(val.clone()).into());
+    pub fn update_channel_cid(&mut self, val: i64) -> &mut Self {
+        self.updates.insert("channel_cid = ?", val.into());
+        self
+    }
+
+    pub fn update_follow_gid(&mut self, val: i64) -> &mut Self {
+        self.updates.insert("follow_gid = ?", val.into());
         self
     }
 
 
     
-    pub fn chat_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " chat_gid = ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn chat_gid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " chat_gid < ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn chat_gid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " chat_gid <= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn chat_gid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " chat_gid > ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn chat_gid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " chat_gid >= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_chat_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND chat_gid = ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_chat_gid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND chat_gid < ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_chat_gid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND chat_gid <= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_chat_gid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND chat_gid > ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_chat_gid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND chat_gid >= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_chat_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR chat_gid = ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_chat_gid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR chat_gid < ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_chat_gid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR chat_gid <= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_chat_gid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR chat_gid > ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_chat_gid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR chat_gid >= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn msg_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " msg_gid = ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn msg_gid_lt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " msg_gid < ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn msg_gid_le (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " msg_gid <= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn msg_gid_gt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " msg_gid > ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn msg_gid_ge (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " msg_gid >= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_msg_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND msg_gid = ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_msg_gid_lt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND msg_gid < ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_msg_gid_le (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND msg_gid <= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_msg_gid_gt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND msg_gid > ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_msg_gid_ge (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND msg_gid >= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_msg_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR msg_gid = ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_msg_gid_lt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR msg_gid < ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_msg_gid_le (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR msg_gid <= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_msg_gid_gt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR msg_gid > ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_msg_gid_ge (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR msg_gid >= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
     pub fn profile_cid_eq (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid = ?".to_string(),
@@ -1169,7 +885,7 @@ impl ChatMsg_Updater {
         self
     }
 
-    pub fn profile_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn profile_cid_lt (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid < ?".to_string(),
             args: val.into(),
@@ -1178,7 +894,7 @@ impl ChatMsg_Updater {
         self
     }
 
-    pub fn profile_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn profile_cid_le (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid <= ?".to_string(),
             args: val.into(),
@@ -1187,7 +903,7 @@ impl ChatMsg_Updater {
         self
     }
 
-    pub fn profile_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn profile_cid_gt (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid > ?".to_string(),
             args: val.into(),
@@ -1196,7 +912,7 @@ impl ChatMsg_Updater {
         self
     }
 
-    pub fn profile_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn profile_cid_ge (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid >= ?".to_string(),
             args: val.into(),
@@ -1214,7 +930,7 @@ impl ChatMsg_Updater {
         self
     }
 
-    pub fn and_profile_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn and_profile_cid_lt (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid < ?".to_string(),
             args: val.into(),
@@ -1223,7 +939,7 @@ impl ChatMsg_Updater {
         self
     }
 
-    pub fn and_profile_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn and_profile_cid_le (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid <= ?".to_string(),
             args: val.into(),
@@ -1232,7 +948,7 @@ impl ChatMsg_Updater {
         self
     }
 
-    pub fn and_profile_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn and_profile_cid_gt (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid > ?".to_string(),
             args: val.into(),
@@ -1241,7 +957,7 @@ impl ChatMsg_Updater {
         self
     }
 
-    pub fn and_profile_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn and_profile_cid_ge (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid >= ?".to_string(),
             args: val.into(),
@@ -1259,7 +975,7 @@ impl ChatMsg_Updater {
         self
     }
 
-    pub fn or_profile_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn or_profile_cid_lt (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid < ?".to_string(),
             args: val.into(),
@@ -1268,7 +984,7 @@ impl ChatMsg_Updater {
         self
     }
 
-    pub fn or_profile_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn or_profile_cid_le (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid <= ?".to_string(),
             args: val.into(),
@@ -1277,7 +993,7 @@ impl ChatMsg_Updater {
         self
     }
 
-    pub fn or_profile_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn or_profile_cid_gt (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid > ?".to_string(),
             args: val.into(),
@@ -1286,7 +1002,7 @@ impl ChatMsg_Updater {
         self
     }
 
-    pub fn or_profile_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn or_profile_cid_ge (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid >= ?".to_string(),
             args: val.into(),
@@ -1295,104 +1011,278 @@ impl ChatMsg_Updater {
         self
     }
 
+    pub fn channel_cid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " channel_cid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn channel_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " channel_cid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn channel_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " channel_cid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn channel_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " channel_cid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn channel_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " channel_cid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_channel_cid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND channel_cid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_channel_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND channel_cid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_channel_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND channel_cid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_channel_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND channel_cid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_channel_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND channel_cid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_channel_cid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR channel_cid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_channel_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR channel_cid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_channel_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR channel_cid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_channel_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR channel_cid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_channel_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR channel_cid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn follow_gid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " follow_gid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn follow_gid_lt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " follow_gid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn follow_gid_le (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " follow_gid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn follow_gid_gt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " follow_gid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn follow_gid_ge (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " follow_gid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_follow_gid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND follow_gid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_follow_gid_lt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND follow_gid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_follow_gid_le (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND follow_gid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_follow_gid_gt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND follow_gid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_follow_gid_ge (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND follow_gid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_follow_gid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR follow_gid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_follow_gid_lt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR follow_gid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_follow_gid_le (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR follow_gid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_follow_gid_gt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR follow_gid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_follow_gid_ge (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR follow_gid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
 
     
-    pub fn chat_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
-        if len == 0 {
-            return self
-        }
-
-        let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!(" chat_gid IN ({})", marks),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_chat_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
-        if len == 0 {
-            return self
-        }
-
-        let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!("AND chat_gid IN ({})", marks),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_chat_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
-        if len == 0 {
-            return self
-        }
-
-        let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!("OR chat_gid IN ({})", marks),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn msg_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
-        if len == 0 {
-            return self
-        }
-
-        let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!(" msg_gid IN ({})", marks),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_msg_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
-        if len == 0 {
-            return self
-        }
-
-        let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!("AND msg_gid IN ({})", marks),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_msg_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
-        if len == 0 {
-            return self
-        }
-
-        let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!("OR msg_gid IN ({})", marks),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
     pub fn profile_cid_in (&mut self, val: Vec<i64> ) -> &mut Self {
 		let len = val.len();
         if len == 0 {
@@ -1441,31 +1331,122 @@ impl ChatMsg_Updater {
         self
     }
 
+    pub fn channel_cid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!(" channel_cid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_channel_cid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!("AND channel_cid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_channel_cid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!("OR channel_cid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn follow_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!(" follow_gid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_follow_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!("AND follow_gid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_follow_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!("OR follow_gid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
 }
 
-impl ChatMsg_Deleter {
+impl ChannelFollowerSort_Deleter {
     pub fn new() -> Self {
-        ChatMsg_Deleter::default()
+        ChannelFollowerSort_Deleter::default()
     }
 
     //each column delete
-    pub fn delete_chat_gid(&mut self) -> &mut Self {
-        self.delete_cols.push("chat_gid");
-        self
-    }
-    
-    pub fn delete_msg_gid(&mut self) -> &mut Self {
-        self.delete_cols.push("msg_gid");
-        self
-    }
-    
     pub fn delete_profile_cid(&mut self) -> &mut Self {
         self.delete_cols.push("profile_cid");
         self
     }
     
-    pub fn delete_pb_data(&mut self) -> &mut Self {
-        self.delete_cols.push("pb_data");
+    pub fn delete_channel_cid(&mut self) -> &mut Self {
+        self.delete_cols.push("channel_cid");
+        self
+    }
+    
+    pub fn delete_follow_gid(&mut self) -> &mut Self {
+        self.delete_cols.push("follow_gid");
         self
     }
     
@@ -1483,8 +1464,8 @@ impl ChatMsg_Deleter {
 
         let where_str = where_str.join(" ");
 
-        let cql_query = format!("DELETE {} FROM flip.chat_msg WHERE {}", del_col, where_str);
-        //let cql_query = "DELETE " + del_col + " FROM flip.chat_msg WHERE " + where_str ;
+        let cql_query = format!("DELETE {} FROM flip.channel_follower_sort WHERE {}", del_col, where_str);
+        //let cql_query = "DELETE " + del_col + " FROM flip.channel_follower_sort WHERE " + where_str ;
 
         let query_values = QueryValues::SimpleValues(where_arr);
         println!("{} - {:?}", &cql_query, &query_values);
@@ -1495,276 +1476,6 @@ impl ChatMsg_Deleter {
     }
 
     
-    pub fn chat_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " chat_gid = ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn chat_gid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " chat_gid < ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn chat_gid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " chat_gid <= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn chat_gid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " chat_gid > ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn chat_gid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " chat_gid >= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_chat_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND chat_gid = ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_chat_gid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND chat_gid < ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_chat_gid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND chat_gid <= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_chat_gid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND chat_gid > ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_chat_gid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND chat_gid >= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_chat_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR chat_gid = ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_chat_gid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR chat_gid < ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_chat_gid_le_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR chat_gid <= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_chat_gid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR chat_gid > ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_chat_gid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR chat_gid >= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn msg_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " msg_gid = ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn msg_gid_lt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " msg_gid < ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn msg_gid_le (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " msg_gid <= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn msg_gid_gt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " msg_gid > ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn msg_gid_ge (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: " msg_gid >= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_msg_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND msg_gid = ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_msg_gid_lt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND msg_gid < ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_msg_gid_le (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND msg_gid <= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_msg_gid_gt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND msg_gid > ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_msg_gid_ge (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "AND msg_gid >= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_msg_gid_eq (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR msg_gid = ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_msg_gid_lt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR msg_gid < ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_msg_gid_le (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR msg_gid <= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_msg_gid_gt (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR msg_gid > ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_msg_gid_ge (&mut self, val: i64 ) -> &mut Self {
-        let w = WhereClause{
-            condition: "OR msg_gid >= ?".to_string(),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
     pub fn profile_cid_eq (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid = ?".to_string(),
@@ -1774,7 +1485,7 @@ impl ChatMsg_Deleter {
         self
     }
 
-    pub fn profile_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn profile_cid_lt (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid < ?".to_string(),
             args: val.into(),
@@ -1783,7 +1494,7 @@ impl ChatMsg_Deleter {
         self
     }
 
-    pub fn profile_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn profile_cid_le (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid <= ?".to_string(),
             args: val.into(),
@@ -1792,7 +1503,7 @@ impl ChatMsg_Deleter {
         self
     }
 
-    pub fn profile_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn profile_cid_gt (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid > ?".to_string(),
             args: val.into(),
@@ -1801,7 +1512,7 @@ impl ChatMsg_Deleter {
         self
     }
 
-    pub fn profile_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn profile_cid_ge (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid >= ?".to_string(),
             args: val.into(),
@@ -1819,7 +1530,7 @@ impl ChatMsg_Deleter {
         self
     }
 
-    pub fn and_profile_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn and_profile_cid_lt (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid < ?".to_string(),
             args: val.into(),
@@ -1828,7 +1539,7 @@ impl ChatMsg_Deleter {
         self
     }
 
-    pub fn and_profile_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn and_profile_cid_le (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid <= ?".to_string(),
             args: val.into(),
@@ -1837,7 +1548,7 @@ impl ChatMsg_Deleter {
         self
     }
 
-    pub fn and_profile_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn and_profile_cid_gt (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid > ?".to_string(),
             args: val.into(),
@@ -1846,7 +1557,7 @@ impl ChatMsg_Deleter {
         self
     }
 
-    pub fn and_profile_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn and_profile_cid_ge (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid >= ?".to_string(),
             args: val.into(),
@@ -1864,7 +1575,7 @@ impl ChatMsg_Deleter {
         self
     }
 
-    pub fn or_profile_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn or_profile_cid_lt (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid < ?".to_string(),
             args: val.into(),
@@ -1873,7 +1584,7 @@ impl ChatMsg_Deleter {
         self
     }
 
-    pub fn or_profile_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn or_profile_cid_le (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid <= ?".to_string(),
             args: val.into(),
@@ -1882,7 +1593,7 @@ impl ChatMsg_Deleter {
         self
     }
 
-    pub fn or_profile_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn or_profile_cid_gt (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid > ?".to_string(),
             args: val.into(),
@@ -1891,7 +1602,7 @@ impl ChatMsg_Deleter {
         self
     }
 
-    pub fn or_profile_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
+    pub fn or_profile_cid_ge (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid >= ?".to_string(),
             args: val.into(),
@@ -1900,104 +1611,278 @@ impl ChatMsg_Deleter {
         self
     }
 
+    pub fn channel_cid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " channel_cid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn channel_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " channel_cid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn channel_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " channel_cid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn channel_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " channel_cid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn channel_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " channel_cid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_channel_cid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND channel_cid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_channel_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND channel_cid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_channel_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND channel_cid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_channel_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND channel_cid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_channel_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND channel_cid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_channel_cid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR channel_cid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_channel_cid_lt_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR channel_cid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_channel_cid_le_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR channel_cid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_channel_cid_gt_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR channel_cid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_channel_cid_ge_filtering (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR channel_cid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn follow_gid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " follow_gid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn follow_gid_lt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " follow_gid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn follow_gid_le (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " follow_gid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn follow_gid_gt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " follow_gid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn follow_gid_ge (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " follow_gid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_follow_gid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND follow_gid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_follow_gid_lt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND follow_gid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_follow_gid_le (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND follow_gid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_follow_gid_gt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND follow_gid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_follow_gid_ge (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND follow_gid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_follow_gid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR follow_gid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_follow_gid_lt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR follow_gid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_follow_gid_le (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR follow_gid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_follow_gid_gt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR follow_gid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_follow_gid_ge (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR follow_gid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
 
     
-    pub fn chat_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
-        if len == 0 {
-            return self
-        }
-
-        let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!(" chat_gid IN ({})", marks),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_chat_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
-        if len == 0 {
-            return self
-        }
-
-        let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!("AND chat_gid IN ({})", marks),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_chat_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
-        if len == 0 {
-            return self
-        }
-
-        let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!("OR chat_gid IN ({})", marks),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn msg_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
-        if len == 0 {
-            return self
-        }
-
-        let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!(" msg_gid IN ({})", marks),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn and_msg_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
-        if len == 0 {
-            return self
-        }
-
-        let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!("AND msg_gid IN ({})", marks),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
-    pub fn or_msg_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
-		let len = val.len();
-        if len == 0 {
-            return self
-        }
-
-        let mut marks = "?,".repeat(len);
-        marks.remove(marks.len()-1);
-        let w = WhereClause{
-			condition: format!("OR msg_gid IN ({})", marks),
-            args: val.into(),
-        };
-        self.wheres.push(w);
-        self
-    }
-
     pub fn profile_cid_in (&mut self, val: Vec<i64> ) -> &mut Self {
 		let len = val.len();
         if len == 0 {
@@ -2046,14 +1931,110 @@ impl ChatMsg_Deleter {
         self
     }
 
+    pub fn channel_cid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!(" channel_cid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_channel_cid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!("AND channel_cid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_channel_cid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!("OR channel_cid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn follow_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!(" follow_gid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_follow_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!("AND follow_gid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_follow_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!("OR follow_gid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
 }
 
 
-pub fn get_chat_msg_by_chat_gid_and_profile_cid_and_msg_gid(session: impl FCQueryExecutor, p1:i64,p2:i64,p3:i64) -> Result<ChatMsg,CWError> {
-	let m = ChatMsg_Selector::new()
-		.chat_gid_eq(p1)
+pub fn get_channel_follower_sort_by_channel_cid_and_profile_cid_and_follow_gid(session: impl FCQueryExecutor, p1:i64,p2:i64,p3:i64) -> Result<ChannelFollowerSort,CWError> {
+	let m = ChannelFollowerSort_Selector::new()
+		.channel_cid_eq(p1)
 		.and_profile_cid_eq(p2)
-		.and_msg_gid_eq(p3)
+		.and_follow_gid_eq(p3)
 		.get_row(session)?;
 	Ok(m)
 }

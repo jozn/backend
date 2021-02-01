@@ -20,17 +20,22 @@ use cdrs::Error as DriverError;
 use crate::xc::common::*;
 
 #[derive(Default, Clone, Debug, PartialEq)]
-pub struct Profile {
+pub struct Direct {
+    pub direct_gid: i64,   // direct_gid    clustering  0
     pub profile_cid: i64,   // profile_cid    partition_key  0
     pub pb_data: Vec<u8>,   // pb_data    regular  -1
 }
 
-impl Profile {
+impl Direct {
     pub fn save(&self, session: impl FCQueryExecutor) -> Result<(),CWError> {
         let mut columns = vec![];
         let mut values :Vec<Value> = vec![];
 
         
+		// partition key and clustering key always must be present
+		columns.push("direct_gid");
+        values.push(self.direct_gid.clone().into());
+
 		// partition key and clustering key always must be present
 		columns.push("profile_cid");
         values.push(self.profile_cid.clone().into());
@@ -54,7 +59,7 @@ impl Profile {
         let mut cql_question = "?,".repeat(columns.len());
         cql_question.remove(cql_question.len()-1);
 
-        let cql_query = format!("INSERT INTO flip.profile ({}) VALUES ({})", cql_columns, cql_question);
+        let cql_query = format!("INSERT INTO flip.direct ({}) VALUES ({})", cql_columns, cql_question);
 
         println!("{} - {}", &cql_query, &cql_question);
 
@@ -64,10 +69,11 @@ impl Profile {
     }
 
     pub fn delete(&self, session: impl FCQueryExecutor) -> Result<(), CWError> {
-        let mut deleter = Profile_Deleter::new();
+        let mut deleter = Direct_Deleter::new();
       
         deleter.profile_cid_eq(self.profile_cid);
     
+        deleter.and_direct_gid_eq(self.direct_gid);
 
         let res = deleter.delete(session)?;
 
@@ -90,7 +96,7 @@ fn _get_where(wheres: Vec<WhereClause>) ->  (String, Vec<Value>) {
 }
 
 #[derive(Default, Debug)]
-pub struct Profile_Selector {
+pub struct Direct_Selector {
     wheres: Vec<WhereClause>,
     select_cols: Vec<&'static str>,
     order_by: Vec<&'static str>,
@@ -98,9 +104,9 @@ pub struct Profile_Selector {
     allow_filter: bool,
 }
 
-impl Profile_Selector {
+impl Direct_Selector {
     pub fn new() -> Self {
-        Profile_Selector::default()
+        Direct_Selector::default()
     }
 
     pub fn limit(&mut self, size: u32) -> &mut Self {
@@ -119,6 +125,11 @@ impl Profile_Selector {
     }
 
     //each column select
+    pub fn select_direct_gid(&mut self) -> &mut Self {
+        self.select_cols.push("direct_gid");
+        self
+    }
+    
     pub fn select_profile_cid(&mut self) -> &mut Self {
         self.select_cols.push("profile_cid");
         self
@@ -137,7 +148,7 @@ impl Profile_Selector {
             self.select_cols.join(", ")
         };
 
-        let mut cql_query = format!("SELECT {} FROM flip.profile", cql_select);
+        let mut cql_query = format!("SELECT {} FROM flip.direct", cql_select);
 
         let (cql_where, where_values) = _get_where(self.wheres.clone());
 
@@ -161,7 +172,7 @@ impl Profile_Selector {
         (cql_query, where_values)
     }
 
-    pub fn _get_rows_with_size(&mut self,session: impl FCQueryExecutor, size: i64) -> Result<Vec<Profile>, CWError>   {
+    pub fn _get_rows_with_size(&mut self,session: impl FCQueryExecutor, size: i64) -> Result<Vec<Direct>, CWError>   {
 
         let(cql_query, query_values) = self._to_cql();
 
@@ -191,8 +202,10 @@ impl Profile_Selector {
         let mut rows = vec![];
 
         for db_row in db_raws {
-            let mut row = Profile::default();
+            let mut row = Direct::default();
             
+                
+            row.direct_gid = db_row.by_name("direct_gid")?.unwrap_or_default();
                 
             row.profile_cid = db_row.by_name("profile_cid")?.unwrap_or_default();
                 
@@ -204,11 +217,11 @@ impl Profile_Selector {
         Ok(rows)
     }
 
-    pub fn get_rows(&mut self, session: impl FCQueryExecutor) -> Result<Vec<Profile>, CWError>{
+    pub fn get_rows(&mut self, session: impl FCQueryExecutor) -> Result<Vec<Direct>, CWError>{
         self._get_rows_with_size(session,-1)
     }
 
-    pub fn get_row(&mut self, session: impl FCQueryExecutor) -> Result<Profile, CWError>{
+    pub fn get_row(&mut self, session: impl FCQueryExecutor) -> Result<Direct, CWError>{
         let rows = self._get_rows_with_size(session,1)?;
 
         let opt = rows.get(0);
@@ -219,8 +232,153 @@ impl Profile_Selector {
     }
 
     
+    pub fn order_by_direct_gid_asc(&mut self) -> &mut Self {
+		self.order_by.push("direct_gid ASC");
+        self
+    }
+
+	pub fn order_by_direct_gid_desc(&mut self) -> &mut Self {
+		self.order_by.push("direct_gid DESC");
+        self
+    }
+
 
     
+    pub fn direct_gid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " direct_gid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn direct_gid_lt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " direct_gid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn direct_gid_le (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " direct_gid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn direct_gid_gt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " direct_gid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn direct_gid_ge (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " direct_gid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_direct_gid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND direct_gid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_direct_gid_lt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND direct_gid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_direct_gid_le (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND direct_gid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_direct_gid_gt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND direct_gid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_direct_gid_ge (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND direct_gid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_direct_gid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR direct_gid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_direct_gid_lt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR direct_gid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_direct_gid_le (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR direct_gid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_direct_gid_gt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR direct_gid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_direct_gid_ge (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR direct_gid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
     pub fn profile_cid_eq (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid = ?".to_string(),
@@ -358,6 +516,54 @@ impl Profile_Selector {
 
 
     
+    pub fn direct_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!(" direct_gid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_direct_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!("AND direct_gid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_direct_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!("OR direct_gid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
     pub fn profile_cid_in (&mut self, val: Vec<i64> ) -> &mut Self {
 		let len = val.len();
         if len == 0 {
@@ -411,20 +617,20 @@ impl Profile_Selector {
 
 
 #[derive(Default, Debug)]
-pub struct Profile_Deleter {
+pub struct Direct_Deleter {
     wheres: Vec<WhereClause>,
     delete_cols: Vec<&'static str>,
 }
 
 #[derive(Default, Debug)]
-pub struct Profile_Updater {
+pub struct Direct_Updater {
     wheres: Vec<WhereClause>,
     updates: HashMap<&'static str, Value>,
 }
 
-impl Profile_Updater {
+impl Direct_Updater {
     pub fn new() -> Self {
-        Profile_Updater::default()
+        Direct_Updater::default()
     }
 
     pub fn update(&mut self,session: impl FCQueryExecutor) -> cdrs::error::Result<Frame>  {
@@ -453,9 +659,9 @@ impl Profile_Updater {
 
         // Build final query
         let mut cql_query = if self.wheres.is_empty() {
-            format!("UPDATE flip.profile SET {}", cql_update)
+            format!("UPDATE flip.direct SET {}", cql_update)
         } else {
-            format!("UPDATE flip.profile SET {} WHERE {}", cql_update, cql_where)
+            format!("UPDATE flip.direct SET {} WHERE {}", cql_update, cql_where)
         };
 
         let query_values = QueryValues::SimpleValues(all_vals);
@@ -465,6 +671,11 @@ impl Profile_Updater {
     }
 
     
+    pub fn update_direct_gid(&mut self, val: i64) -> &mut Self {
+        self.updates.insert("direct_gid = ?", val.into());
+        self
+    }
+
     pub fn update_profile_cid(&mut self, val: i64) -> &mut Self {
         self.updates.insert("profile_cid = ?", val.into());
         self
@@ -477,6 +688,141 @@ impl Profile_Updater {
 
 
     
+    pub fn direct_gid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " direct_gid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn direct_gid_lt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " direct_gid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn direct_gid_le (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " direct_gid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn direct_gid_gt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " direct_gid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn direct_gid_ge (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " direct_gid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_direct_gid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND direct_gid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_direct_gid_lt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND direct_gid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_direct_gid_le (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND direct_gid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_direct_gid_gt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND direct_gid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_direct_gid_ge (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND direct_gid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_direct_gid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR direct_gid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_direct_gid_lt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR direct_gid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_direct_gid_le (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR direct_gid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_direct_gid_gt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR direct_gid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_direct_gid_ge (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR direct_gid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
     pub fn profile_cid_eq (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid = ?".to_string(),
@@ -614,6 +960,54 @@ impl Profile_Updater {
 
 
     
+    pub fn direct_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!(" direct_gid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_direct_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!("AND direct_gid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_direct_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!("OR direct_gid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
     pub fn profile_cid_in (&mut self, val: Vec<i64> ) -> &mut Self {
 		let len = val.len();
         if len == 0 {
@@ -664,12 +1058,17 @@ impl Profile_Updater {
 
 }
 
-impl Profile_Deleter {
+impl Direct_Deleter {
     pub fn new() -> Self {
-        Profile_Deleter::default()
+        Direct_Deleter::default()
     }
 
     //each column delete
+    pub fn delete_direct_gid(&mut self) -> &mut Self {
+        self.delete_cols.push("direct_gid");
+        self
+    }
+    
     pub fn delete_profile_cid(&mut self) -> &mut Self {
         self.delete_cols.push("profile_cid");
         self
@@ -694,8 +1093,8 @@ impl Profile_Deleter {
 
         let where_str = where_str.join(" ");
 
-        let cql_query = format!("DELETE {} FROM flip.profile WHERE {}", del_col, where_str);
-        //let cql_query = "DELETE " + del_col + " FROM flip.profile WHERE " + where_str ;
+        let cql_query = format!("DELETE {} FROM flip.direct WHERE {}", del_col, where_str);
+        //let cql_query = "DELETE " + del_col + " FROM flip.direct WHERE " + where_str ;
 
         let query_values = QueryValues::SimpleValues(where_arr);
         println!("{} - {:?}", &cql_query, &query_values);
@@ -706,6 +1105,141 @@ impl Profile_Deleter {
     }
 
     
+    pub fn direct_gid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " direct_gid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn direct_gid_lt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " direct_gid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn direct_gid_le (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " direct_gid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn direct_gid_gt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " direct_gid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn direct_gid_ge (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: " direct_gid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_direct_gid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND direct_gid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_direct_gid_lt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND direct_gid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_direct_gid_le (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND direct_gid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_direct_gid_gt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND direct_gid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_direct_gid_ge (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND direct_gid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_direct_gid_eq (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR direct_gid = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_direct_gid_lt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR direct_gid < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_direct_gid_le (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR direct_gid <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_direct_gid_gt (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR direct_gid > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_direct_gid_ge (&mut self, val: i64 ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR direct_gid >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
     pub fn profile_cid_eq (&mut self, val: i64 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid = ?".to_string(),
@@ -843,6 +1377,54 @@ impl Profile_Deleter {
 
 
     
+    pub fn direct_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!(" direct_gid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_direct_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!("AND direct_gid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_direct_gid_in (&mut self, val: Vec<i64> ) -> &mut Self {
+		let len = val.len();
+        if len == 0 {
+            return self
+        }
+
+        let mut marks = "?,".repeat(len);
+        marks.remove(marks.len()-1);
+        let w = WhereClause{
+			condition: format!("OR direct_gid IN ({})", marks),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
     pub fn profile_cid_in (&mut self, val: Vec<i64> ) -> &mut Self {
 		let len = val.len();
         if len == 0 {
@@ -894,9 +1476,10 @@ impl Profile_Deleter {
 }
 
 
-pub fn get_profile_by_profile_cid(session: impl FCQueryExecutor, p1:i64) -> Result<Profile,CWError> {
-	let m = Profile_Selector::new()
+pub fn get_direct_by_profile_cid_and_direct_gid(session: impl FCQueryExecutor, p1:i64,p2:i64) -> Result<Direct,CWError> {
+	let m = Direct_Selector::new()
 		.profile_cid_eq(p1)
+		.and_direct_gid_eq(p2)
 		.get_row(session)?;
 	Ok(m)
 }

@@ -1,5 +1,4 @@
 use crate::pb;
-use crate::pb::{EchoParam, EchoResponse};
 use crate::{errors::GenErr, UserParam};
 use async_trait::async_trait;
 
@@ -9,7 +8,7 @@ use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Error as HyperError, Request, Response, Server};
 use std::convert::Infallible;
 use std::net::SocketAddr;
-
+/*
 enum Http2 {
     Not = 40,
     No = 2,
@@ -88,7 +87,7 @@ impl RPC_Chat2_Trait for Ut {
         unimplemented!()
     }
 }
-
+*/
 /////////////////////Http
 
 pub type FHttpResponse = (u16, Vec<u8>);

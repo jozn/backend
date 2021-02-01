@@ -1,6 +1,5 @@
 //#![rustfmt::skip]
 
-use crate::pb::{EchoParam, EchoResponse};
 use crate::{common, pb};
 use crate::{errors::GenErr, UserParam};
 use async_trait::async_trait;

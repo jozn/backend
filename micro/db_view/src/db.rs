@@ -51,14 +51,14 @@ impl DBCassandra {
         let pb = prost_encode(channel)?;
         let xch = xc::Channel {
             channel_id: channel.channel_cid as i64,
-            pb_data: pb,
+            pb_data: pb.clone(),
         };
 
         xch.save(sess)?;
 
         let x = xc::Channel_Selector::new()
             .channel_id_eq(channel.channel_cid as i64)
-            .get_row(&sess)?;
+            .get_row(sess)?;
 
         assert_eq!(x.pb_data, pb);
         println!("Channels pb data in cassandra is equal.");
@@ -196,14 +196,24 @@ impl DBCassandra {
     pub fn save_chat(&self, chat: &pb::Chat) -> Result<(), GenErr> {
         let sess = &self.session;
 
+        //todo should be in batch
+
         let pb = prost_encode(chat)?;
-        let r = xc::Chat {
-            //todo fixme
-            chat_id: 1,
-            profile_cid: 0,
-            pb_data: vec![],
+        // For Profile 1
+        let r1 = xc::Chat {
+            chat_id: chat.chat_gid as i64,
+            profile_cid: chat.profile1_cid as i64,
+            pb_data: pb.clone(),
         };
-        r.save(sess)?;
+        r1.save(sess)?;
+
+        // For Profile 2
+        let r2 = xc::Chat {
+            chat_id: chat.chat_gid as i64,
+            profile_cid: chat.profile2_cid as i64,
+            pb_data: pb,
+        };
+        r2.save(sess)?;
 
         Ok(())
     }
@@ -243,7 +253,7 @@ impl DBCassandra {
 // Profile Impl
 impl DBCassandra {
     // =================== Profile ====================
-    pub fn get_profile(&self, profile_cid: i64, chat_gid: i64) -> Result<pb::Profile, GenErr> {
+    pub fn get_profile(&self, profile_cid: i64) -> Result<pb::Profile, GenErr> {
         let sess = &self.session;
 
         let r = xc::get_profile_by_profile_cid(sess, profile_cid)?;
@@ -274,7 +284,7 @@ impl DBCassandra {
             .get_rows(sess)?;
         let mut out = vec![];
         for r in rows {
-            out.push(r.profile_cid);
+            out.push(r.channel_cid);
         }
 
         Ok(out)

@@ -257,7 +257,7 @@ pub struct Direct {
     ///
     /// s_imut
     #[prost(message, optional, tag = "433")]
-    pub peer_chat: ::std::option::Option<PeerChat>,
+    pub chat: ::std::option::Option<Chat>,
     /// ? must use profile
     #[prost(message, optional, tag = "49")]
     pub contact: ::std::option::Option<Contact>,
@@ -334,7 +334,10 @@ pub struct DirectCustomNotification {
 ///
 ///?? or embed
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PeerChat {
+pub struct Chat {
+    /// imut
+    #[prost(fixed64, tag = "7")]
+    pub chat_gid: u64,
     /// imut
     #[prost(uint32, tag = "1")]
     pub profile1_cid: u32,
@@ -868,7 +871,7 @@ pub struct Like {
 }
 ///==================== Views ==================
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Chat {}
+pub struct Chat2 {}
 /// C: Common
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct NewMessageInput {
@@ -1044,6 +1047,8 @@ pub enum DevicePlatform {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelCommand {
+    #[prost(uint32, tag = "1")]
+    pub channel_cid: u32,
     #[prost(
         oneof = "channel_command::SubCommand",
         tags = "50, 51, 52, 30, 31, 40, 41, 10, 11, 12, 200, 201, 300, 301, 400, 401, 80, 81"
