@@ -84,7 +84,9 @@ impl EventHandler {
     }
 }
 
-pub trait EventProcess: Send + Sync + 'static {
+// With removing Sync we make it Single Threaded
+// pub trait EventProcess: Send + Sync + 'static {
+pub trait EventProcess: Send + 'static {
     fn process_event(&self, event: pb::EventCommand) -> u8;
 }
 

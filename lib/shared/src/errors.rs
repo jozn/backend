@@ -10,6 +10,8 @@ pub enum GenErr {
 
     CassadraError,
     NoRpcRegistry,
+
+    NotFound,
 }
 
 impl From<reqwest::Error> for GenErr {
@@ -35,3 +37,16 @@ impl From<CWError> for GenErr {
         GenErr::CassadraError
     }
 }
+
+/*impl From<Option::None> for GenErr {
+    fn from(_: Option::None) -> Self {
+        GenErr::NotFound
+    }
+}
+*/
+/*impl From<std::option::NoneError> for GenErr {
+    fn from(_: std::option::NoneError) -> Self {
+        GenErr::NotFound
+    }
+}
+*/

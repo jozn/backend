@@ -11,12 +11,6 @@ CREATE TABLE IF NOT EXISTS flip.channel (
     PRIMARY KEY (channel_cid)
 ); 
 
-CREATE TABLE IF NOT EXISTS flip.channel_follower_bk (
-    channel_cid bigint,
-    profile_cid bigint,
-    PRIMARY KEY (channel_cid, profile_cid)
-); 
-
 CREATE TABLE IF NOT EXISTS flip.channel_follower (
     channel_cid bigint,
     profile_cid bigint,
@@ -40,7 +34,7 @@ CREATE TABLE IF NOT EXISTS flip.channel_msg (
 
 CREATE TABLE IF NOT EXISTS flip.channel_msg_media (
     channel_cid bigint,
-    media_type_id bigint,
+    media_type_id tinyint,
     msg_gid bigint,
     PRIMARY KEY ((channel_cid), media_type_id, msg_gid)
 ); 
