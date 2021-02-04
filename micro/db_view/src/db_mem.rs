@@ -53,25 +53,27 @@ impl db_trait::DBChannels for DBMem {
 
     fn get_channel_message(&self, channel_id: i64, message_id: i64) -> Result<Message, GenErr> {
         let mut m = self.get_inner();
-        let mp = m.channel_msgs.get(&channel_id).ok_or(GenErr::NotFound)?;
+        // println!("#2.5 {:?}", m.channel_msgs.len());
+        let mp = m.channel_msgs.get(&101).ok_or(GenErr::NotFound)?;
+        // let mp = m.channel_msgs.get(&101);
+        // for v in m.channel_msgs.iter(){
+        //     println!("#1 {}", v.0);
+        // }
+        // println!("#3 {}", mp.is_some());
         let msg = mp.get(&message_id).ok_or(GenErr::NotFound)?;
         Ok(msg.clone())
     }
 
     fn save_channel_message(&self, message: &Message) -> Result<(), GenErr> {
         let mut m = self.get_inner();
-        let mut mp = m.channel_msgs.get_mut(&(message.channel_cid as i64));
-        if mp.is_none() {
-            // m.channel_msgs.insert(message.channel_cid as i64, HashMap::new());
-        }
-        let mut mp = m.channel_msgs.get_mut(&(message.channel_cid as i64));
-        // mp.insert(message.message_gid as i64, message.clone());
-       match mp {
+        let channel_cid = message.channel_cid as i64;
+        let mut mp = m.channel_msgs.get_mut(&channel_cid);
+        match mp {
             None => {
                 let mut nm  = HashMap::new();
                 nm.insert(message.message_gid as i64, message.clone());
-                m.channel_msgs.insert(message.channel_cid as i64, nm);
-
+                m.channel_msgs.insert(channel_cid, nm);
+                // println!("#2");
             }
             Some(r) => {
                 r.insert(message.message_gid as i64, message.clone());
@@ -130,7 +132,7 @@ impl db_trait::DBChannels for DBMem {
             None => {
                 let mut a = vec![];
                 a.push(profile_cid);
-                m.channel_followers.insert(message_gid, a);
+                m.msgs_likes.insert(message_gid, a);
             }
             Some(a) => {
                 a.push(profile_cid)

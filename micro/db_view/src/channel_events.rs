@@ -92,7 +92,7 @@ impl events::EventProcess for ChannelEvents {
                 self.db.save_channel_follower(q.channel_cid as i64, q.by_profile_cid as i64)?;
             }
             UnFollowChannel(_) => {}
-            Subscribe(_) => {}
+            Subscribe(_) => {} // todo @ it 4
             UnSubscribe(_) => {}
             SendMessage(q) => {
                 let i = q.message_input.unwrap();
@@ -111,7 +111,7 @@ impl events::EventProcess for ChannelEvents {
                     deleted: false,
                     forward: None,
                     reply_to: None,
-                    channel_cid: 0,
+                    channel_cid: q.channel_cid,
                     setting: None,
                     counts: None,
                     group_cid: 0,
@@ -147,7 +147,7 @@ impl events::EventProcess for ChannelEvents {
             UnLikeMessage(q) => {
                 //todo it2
             }
-            ReShareMessage(_) => {}
+            ReShareMessage(_) => {} // todo @ it 4
             UnReShareMessage(_) => {}
             AddComment(q) => {
                 let com = pb::Comment{
@@ -174,5 +174,177 @@ fn conv_to_channel_sub_command(event: EventCommand) -> pb::channel_command::SubC
     match cmd {
         Command::Channel(ch_cmd) => ch_cmd.sub_command.unwrap(),
         _ => (panic!("can not convert to channel sub command")),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use pb::channel_command::*;
+    use pb::channel_command::SubCommand::*;
+    use crate::events::EventProcess;
+    use shared::pb::NewMessageInput;
+    use std::ops::Index;
+
+    struct ChannelTester {
+        proc: ChannelEvents,
+    }
+
+    impl ChannelTester {
+        fn new() -> Self {
+            ChannelTester{
+                proc: ChannelEvents::new_mem(),
+            }
+        }
+
+        fn send(&self, cmd: pb::channel_command::SubCommand) {
+            let chcmd = pb::ChannelCommand {
+                channel_cid: 4,
+                sub_command: Some(cmd.clone()),
+            };
+
+            let qevent = shared::pb::EventCommand {
+                event_id: 1 as u64,
+                user_id: 2,
+                command: Some(pb::event_command::Command::Channel(chcmd)),
+                // command: pb::event_command::Command::Channel(pb::ChannelCommand)
+            };
+
+            self.proc.process_event(qevent).unwrap();
+        }
+
+        fn start_tests(&self) {
+            let CHANNEL_CID = 101;
+            let PROFILE_CID = 100;
+
+            // CreateChannel
+            let q = QCreateChannel{
+                channel_cid: CHANNEL_CID,
+                creator_profile_cid: PROFILE_CID,
+                channel_title: "t".to_string(),
+                user_name: "".to_string(),
+                about: "a".to_string()
+            };
+
+            self.send(CreateChannel(q));
+
+            let db = &self.proc.db;
+
+            let ch = self.proc.db.get_channel(101).unwrap();
+            assert_eq!(ch.creator_profile_cid, 100);
+
+
+            // CreateChannel
+            let q = QEditChannel{
+                channel_cid: CHANNEL_CID,
+                by_profile_cid: PROFILE_CID,
+                set_new_title: true,
+                new_title: "NT".to_string(),
+                set_new_about: true,
+                new_about: "NABOUT".to_string()
+            };
+            self.send(EditChannel(q));
+
+            let ch = db.get_channel(CHANNEL_CID as i64).unwrap();
+            assert_eq!(ch.channel_title,"NT".to_string() );
+            assert_eq!(ch.about,"NABOUT".to_string() );
+
+
+            // FollowChannel
+            let q = QFollowChannel{
+                channel_cid: CHANNEL_CID,
+                by_profile_cid: 107,
+            };
+            self.send(FollowChannel(q));
+
+            let ch = db.get_channel_followers(CHANNEL_CID as i64).unwrap();
+            assert!(ch.get(0).unwrap() == &107);
+
+
+            // SendMessage
+            let q = QSendMessage{
+                channel_cid: CHANNEL_CID,
+                message_input: Some(NewMessageInput{
+                    message_gid: 1000,
+                    by_profile_cid: PROFILE_CID,
+                    message_type: 1,
+                    text: "ver1".to_string(),
+                    via_app_id: 0,
+                    seq: 1,
+                    created_time: 2,
+                    verified: false
+                })
+            };
+            self.send(SendMessage(q));
+
+            let msg = db.get_channel_message(CHANNEL_CID as i64, 1000).unwrap();
+            assert!(msg.text.eq("ver1"));
+
+
+            // EditMessage
+            let q = QEditMessage{
+                channel_cid: CHANNEL_CID,
+                message_gid: 1000,
+                by_profile_cid: PROFILE_CID,
+                new_text: "ver2".to_string()
+            };
+            self.send(EditMessage(q));
+
+            let msg = db.get_channel_message(CHANNEL_CID as i64, 1000).unwrap();
+            assert!(msg.text.eq("ver2"));
+
+
+            // DeleteMessages
+            let q = QDeleteMessages{
+                channel_cid: CHANNEL_CID,
+                by_profile_cid: PROFILE_CID,
+                message_gids: vec![1000]
+            };
+            self.send(DeleteMessages(q));
+
+            let msg = db.get_channel_message(CHANNEL_CID as i64, 1000).unwrap();
+            assert!(msg.deleted == true);
+
+
+            // LikeMessage
+            let q = QLikeMessage{
+                channel_cid: CHANNEL_CID,
+                message_gid: 1000,
+                by_profile_cid: 212,
+            };
+            self.send(LikeMessage(q));
+
+            let arr = db.get_message_likes(1000).unwrap();
+            assert_eq!(arr.get(0).unwrap(), &212);
+
+
+            // LikeMessage
+            let q = QAddComment{
+                channel_cid: CHANNEL_CID,
+                message_gid: 1000,
+                by_profile_cid: 212,
+                comment_text: "comment1".to_string()
+            };
+            self.send(AddComment(q));
+
+            let arr = db.get_message_comments(1000).unwrap();
+            assert_eq!(arr.get(0).unwrap().text, "comment1".to_string());
+
+
+            println!("Channel Tests Worked Correctly");
+        }
+    }
+
+
+    #[test]
+    fn channels_tests() {
+        println!("it works!");
+        let ct = ChannelTester::new();
+        ct.start_tests();
+    }
+
+    #[test]
+    fn it_works() {
+        println!("it works!");
     }
 }
