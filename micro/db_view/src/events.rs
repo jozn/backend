@@ -11,11 +11,12 @@ use std::time::Duration;
 
 use std::sync::mpsc;
 use tokio::sync::oneshot;
+use shared::errors::GenErr;
 
 #[derive(Debug)]
 pub struct FEventReq {
     pub event: pb::EventCommand,
-    pub result: tokio::sync::oneshot::Sender<u8>,
+    pub result: tokio::sync::oneshot::Sender<u8>, // todo fixme
 }
 
 #[derive(Debug)]
@@ -41,7 +42,7 @@ impl EventHandler {
         match cmd.clone() {
             Command::Channel(ch_cmd) => {
                 self.send_event_to_shared_thread(1, event_req, || {
-                    Box::new(channel_events::ChannelEvents::new())
+                    Box::new(channel_events::ChannelEvents::new_mem())
                 });
             }
             Command::Group(gr_cmd) => {
@@ -68,7 +69,7 @@ impl EventHandler {
                         // println!("+++ ++++{:?}", 88888);
                         let out_res = handler_builder().process_event(e.event);
 
-                        e.result.send(out_res);
+                        e.result.send(8);
                     }
                 });
 
@@ -87,7 +88,7 @@ impl EventHandler {
 // With removing Sync we make it Single Threaded
 // pub trait EventProcess: Send + Sync + 'static {
 pub trait EventProcess: Send + 'static {
-    fn process_event(&self, event: pb::EventCommand) -> u8;
+    fn process_event(&self, event: pb::EventCommand) -> Result<bool,GenErr>;
 }
 
 #[cfg(test)]

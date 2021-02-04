@@ -4,12 +4,13 @@ use crate::{db, events, session};
 use shared::pb::event_command::Command;
 use shared::pb::group_command::SubCommand;
 use shared::pb::EventCommand;
+use shared::errors::GenErr;
 
 #[derive(Default, Debug)]
 pub struct GroupEvents {}
 
 impl events::EventProcess for GroupEvents {
-    fn process_event(&self, event: EventCommand) -> u8 {
+    fn process_event(&self, event: EventCommand) ->Result<bool, GenErr> {
         let ch_sub = conv_to_group_sub_command(event.clone());
 
         use SubCommand::*;
@@ -18,7 +19,7 @@ impl events::EventProcess for GroupEvents {
         }
 
         let x = 1;
-        7
+        Ok(true)
     }
 }
 

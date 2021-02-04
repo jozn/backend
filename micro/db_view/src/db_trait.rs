@@ -10,7 +10,7 @@ pub trait  DBChannels {
 
     fn save_channel(&self, channel: &pb::Channel) -> Result<(), GenErr> ;
 
-    fn save_channel_verify(&self, channel: &pb::Channel) -> Result<(), GenErr>;
+    //fn save_channel_verify(&self, channel: &pb::Channel) -> Result<(), GenErr>;
     // =================== Channel Message ====================
     fn get_channel_message(
         &self,

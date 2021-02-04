@@ -51,10 +51,6 @@ impl db_trait::DBChannels for DBMem {
         Ok(())
     }
 
-    fn save_channel_verify(&self, channel: &Channel) -> Result<(), GenErr> {
-        unimplemented!()
-    }
-
     fn get_channel_message(&self, channel_id: i64, message_id: i64) -> Result<Message, GenErr> {
         let mut m = self.get_inner();
         let mp = m.channel_msgs.get(&channel_id).ok_or(GenErr::NotFound)?;
@@ -135,7 +131,6 @@ impl db_trait::DBChannels for DBMem {
                 let mut a = vec![];
                 a.push(profile_cid);
                 m.channel_followers.insert(message_gid, a);
-
             }
             Some(a) => {
                 a.push(profile_cid)

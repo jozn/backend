@@ -4,6 +4,7 @@ use crate::{db, events, session,db_trait, db_mem};
 use shared::pb::channel_command::SubCommand;
 use shared::pb::event_command::Command;
 use shared::pb::EventCommand;
+use shared::errors::GenErr;
 
 // todo: message+about texts to rich text
 // Single Threaded
@@ -17,7 +18,7 @@ pub struct ChannelEvents {
 // impl !Sync for ChannelEvents{}
 
 impl ChannelEvents {
-    pub fn new() -> Self {
+    pub fn new_mem() -> Self {
         ChannelEvents {
             db_old: db::DBCassandra::new(),
             db: Box::new(db_mem::DBMem::new())
@@ -26,7 +27,7 @@ impl ChannelEvents {
 }
 
 impl events::EventProcess for ChannelEvents {
-    fn process_event(&self, event: EventCommand) -> u8 {
+    fn process_event(&self, event: EventCommand) -> Result<bool, GenErr> {
         let ch_sub = conv_to_channel_sub_command(event.clone());
 
         use SubCommand::*;
@@ -59,14 +60,16 @@ impl events::EventProcess for ChannelEvents {
                     reshared_count: 0,
                     counts: None,
                 };
-                self.db.save_channel(&ch);
-                let c = self.db.get_channel(ch.channel_cid as i64);
-                println!("--> title >> {:}",c.unwrap().channel_title);
-                self.db_old.save_channel(&ch);
+                self.db.save_channel(&ch)?;
+
+                //todo remove below
+                let c = self.db.get_channel(ch.channel_cid as i64)?;
+                println!("--> title >> {:}",c.channel_title);
+                //self.db_old.save_channel(&ch);
                 // self.db.save_channel_message()
             }
             EditChannel(q) => {
-                let mut ch = self.db_old.get_channel(q.channel_cid as i64).unwrap(); //todo
+                let mut ch = self.db.get_channel(q.channel_cid as i64)?;
 
                 if q.set_new_title && q.new_title.len() > 0 {
                     ch.channel_title = q.new_title;
@@ -75,17 +78,19 @@ impl events::EventProcess for ChannelEvents {
                     ch.about = q.new_about;
                 }
 
-                self.db_old.save_channel(&ch);
+                self.db.save_channel(&ch)?;
             }
             DeleteChannel(q) => {
-                let mut ch = self.db_old.get_channel(q.channel_cid as i64).unwrap(); //todo
+                let mut ch = self.db.get_channel(q.channel_cid as i64)?;
 
                 ch.is_deleted = 1; //todo
 
-                self.db_old.save_channel(&ch);
+                self.db.save_channel(&ch)?;
                 // todo delete msgs, follwers,...
             }
-            FollowChannel(_) => {}
+            FollowChannel(q) => {
+                self.db.save_channel_follower(q.channel_cid as i64, q.by_profile_cid as i64)?;
+            }
             UnFollowChannel(_) => {}
             Subscribe(_) => {}
             UnSubscribe(_) => {}
@@ -114,44 +119,53 @@ impl events::EventProcess for ChannelEvents {
                     product: None,
                 };
 
-                self.db_old.save_channel_message(&m);
+                self.db.save_channel_message(&m)?;
                 //todo add media
             }
             EditMessage(q) => {
-                let mut msg = self
-                    .db_old
-                    .get_channel_message(q.channel_cid as i64, q.message_gid as i64)
-                    .unwrap(); //todo
+                let mut msg = self.db.get_channel_message(q.channel_cid as i64, q.message_gid as i64)?; //todo
 
                 msg.text = q.new_text;
 
-                self.db_old.save_channel_message(&msg);
+                self.db.save_channel_message(&msg)?;
             }
             DeleteMessages(q) => {
                 for mgid in q.message_gids {
                     let mut msg = self
-                        .db_old
-                        .get_channel_message(q.channel_cid as i64, mgid as i64)
-                        .unwrap(); //todo
+                        .db
+                        .get_channel_message(q.channel_cid as i64, mgid as i64)?;//todo
                     if msg.by_profile_cid == q.by_profile_cid {
                         msg.deleted = true;
-                        self.db_old.save_channel_message(&msg);
+                        self.db.save_channel_message(&msg);
                         //todo delete media
                     }
                 }
             }
-            LikeMessage(_) => {}
-            UnLikeMessage(_) => {}
+            LikeMessage(q) => {
+                self.db.save_message_like(q.message_gid as i64,q.by_profile_cid as i64)?;
+            }
+            UnLikeMessage(q) => {
+                //todo it2
+            }
             ReShareMessage(_) => {}
             UnReShareMessage(_) => {}
-            AddComment(_) => {}
+            AddComment(q) => {
+                let com = pb::Comment{
+                    comment_gid: 1, // todo add in QEvent comment_gid
+                    message_gid: q.message_gid,
+                    profile_cid: q.by_profile_cid,
+                    created_time: 16000000,
+                    text: q.comment_text,
+                };
+                self.db.save_message_comment(&com)?;
+            }
             DeleteComment(_) => {}
             AvatarAdd(_) => {}
             AvatarDelete(_) => {}
         }
 
         let x = 1;
-        14
+        Ok(true)
     }
 }
 
