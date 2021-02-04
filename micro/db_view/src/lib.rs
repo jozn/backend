@@ -1,3 +1,5 @@
+// #![feature(negative_impls)]
+
 pub mod channel_events;
 pub mod db;
 pub mod session;

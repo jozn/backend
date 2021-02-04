@@ -1,3 +1,5 @@
+// #![feature(negative_impls)]
+
 extern crate db_view;
 
 use db_view::events::FEventReq;

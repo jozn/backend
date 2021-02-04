@@ -1,6 +1,7 @@
 use crate::session;
 use shared::{common, common::prost_decode, common::prost_encode, errors::GenErr, pb, xc};
 
+//todo: Change save fns to owned
 
 // Channels Impl
 pub trait  DBChannels {
@@ -20,7 +21,7 @@ pub trait  DBChannels {
     fn save_channel_message(&self, message: &pb::Message) -> Result<(), GenErr> ;
 
     // =================== Channel Follower ====================
-    fn get_channel_followers(&self, channel_id: i64) -> Result<Vec<i64>, GenErr> ;
+    fn get_channel_followers(&self, channel_cid: i64) -> Result<Vec<i64>, GenErr> ;
 
     fn save_channel_follower(&self, channel_cid: i64, profile_cid: i64) -> Result<(), GenErr> ;
 
