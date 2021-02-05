@@ -9,9 +9,9 @@ use std::thread;
 use std::thread::Thread;
 use std::time::Duration;
 
+use shared::errors::GenErr;
 use std::sync::mpsc;
 use tokio::sync::oneshot;
-use shared::errors::GenErr;
 
 #[derive(Debug)]
 pub struct FEventReq {
@@ -88,7 +88,7 @@ impl EventHandler {
 // With removing Sync we make it Single Threaded
 // pub trait EventProcess: Send + Sync + 'static {
 pub trait EventProcess: Send + 'static {
-    fn process_event(&self, event: pb::EventCommand) -> Result<bool,GenErr>;
+    fn process_event(&self, event: pb::EventCommand) -> Result<bool, GenErr>;
 }
 
 #[cfg(test)]

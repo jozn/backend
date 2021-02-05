@@ -43,28 +43,10 @@ service RPC_Direct {
     rpc DirectUnMuteDirects (DirectUnMuteDirectsParam) returns (DirectUnMuteDirectsResponse);
     //========= Many End =========
 
-    // Folders (Not yet)
-    rpc DirectCreateFolder (DirectCreateFolderParam) returns (DirectCreateFolderResponse);
-    rpc DirectChangeFolder (DirectChangeFolderParam) returns (DirectChangeFolderResponse); // batch operation - includes and excludes - no state change but a all fresh data: name, includes, excludes
-    rpc DirectRemoveFromFolder (DirectRemoveFromFolderParam) returns (DirectRemoveFromFolderResponse);
-    rpc DirectReordersFolder (DirectReordersFolderParam) returns (DirectReordersFolderResponse);
-    rpc DirectDeleteFolder (DirectDeleteFolderParam) returns (DirectDeleteFolderResponse);
-
     // Views
     rpc DirectGetChatsList (DirectGetChatsListParam) returns (DirectGetChatsListResponse);
     rpc DirectGetGroupsList (DirectGetGroupsListParam) returns (DirectGetGroupsListResponse);
     rpc DirectGetChannelsList (DirectGetChannelsListParam) returns (DirectGetChannelsListResponse);
-
-    rpc DirectGetFoldersList (DirectGetFoldersListParam) returns (DirectGetFoldersListResponse); // Just folders
-    rpc DirectGetFoldersFullList (DirectGetFoldersFullListParam) returns (DirectGetFoldersFullListResponse); // folders with data
-
-
-    // Dep
-    rpc DirectSendActionDoing (DirectSendActionDoingParam) returns (DirectSendActionDoingResponse); // ? or each (chat, groups) by their own
-    // Messages
-    rpc DirectClearHistories (DirectClearHistoriesParam) returns (DirectClearHistoriesResponse);
-    // CRUD
-    rpc DirectDeleteDirect (DirectDeleteDirectParam) returns (DirectDeleteDirectResponse); // remove?
 }
 
 //========= One =========
@@ -160,43 +142,7 @@ message DirectUnMuteDirectsParam {
 
 message DirectUnMuteDirectsResponse {
 }
-
-
 //========= Many End =========
-// Folders
-message DirectCreateFolderParam {
-}
-
-message DirectCreateFolderResponse {
-}
-
-
-message DirectChangeFolderParam {
-}
-
-message DirectChangeFolderResponse {
-}
-
-
-message DirectRemoveFromFolderParam {
-}
-
-message DirectRemoveFromFolderResponse {
-}
-
-
-message DirectReordersFolderParam {
-}
-
-message DirectReordersFolderResponse {
-}
-
-
-message DirectDeleteFolderParam {
-}
-
-message DirectDeleteFolderResponse {
-}
 
 
 // Views
@@ -219,44 +165,6 @@ message DirectGetChannelsListParam {
 
 message DirectGetChannelsListResponse {
 }
-
-
-message DirectGetFoldersListParam {
-}
-
-message DirectGetFoldersListResponse {
-}
-
-
-message DirectGetFoldersFullListParam {
-}
-
-message DirectGetFoldersFullListResponse {
-}
-
-
-// Dep
-message DirectSendActionDoingParam {
-}
-
-message DirectSendActionDoingResponse {
-}
-
-// Messages
-message DirectClearHistoriesParam {
-}
-
-message DirectClearHistoriesResponse {
-}
-
-// CRUD
-
-message DirectDeleteDirectParam {
-}
-
-message DirectDeleteDirectResponse {
-}
-
 
 /*
 

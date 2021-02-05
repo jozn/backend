@@ -8,7 +8,7 @@ import "global.proto";
 service RPC_Profile {
     //rpc Profile (Param) returns (Response);
 
-    // Add Profile (here or in User)
+    // Add Profile (here or in User? > here)
 
     // Settings
     rpc ProfileSetSettings (ProfileSetSettingsParam) returns (ProfileSetSettingsResponse); // qevent_id_10

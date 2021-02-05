@@ -1,17 +1,17 @@
 use shared::{pb, xc};
 
-use crate::{db, events, session,db_trait, db_mem};
+use crate::{db, db_mem, db_trait, events, session};
+use shared::errors::GenErr;
 use shared::pb::channel_command::SubCommand;
 use shared::pb::event_command::Command;
 use shared::pb::EventCommand;
-use shared::errors::GenErr;
 
 // todo: message+about texts to rich text
 // Single Threaded
 // #[derive(Debug)]
 pub struct ChannelEvents {
     db_old: db::DBCassandra,
-    db: Box<dyn db_trait::DB + Send>
+    db: Box<dyn db_trait::DB + Send>,
 }
 
 // Make it Single Thread
@@ -21,7 +21,7 @@ impl ChannelEvents {
     pub fn new_mem() -> Self {
         ChannelEvents {
             db_old: db::DBCassandra::new(),
-            db: Box::new(db_mem::DBMem::new())
+            db: Box::new(db_mem::DBMem::new()),
         }
     }
 }
@@ -64,7 +64,7 @@ impl events::EventProcess for ChannelEvents {
 
                 //todo remove below
                 let c = self.db.get_channel(ch.channel_cid as i64)?;
-                println!("--> title >> {:}",c.channel_title);
+                println!("--> title >> {:}", c.channel_title);
                 //self.db_old.save_channel(&ch);
                 // self.db.save_channel_message()
             }
@@ -89,7 +89,8 @@ impl events::EventProcess for ChannelEvents {
                 // todo delete msgs, follwers,...
             }
             FollowChannel(q) => {
-                self.db.save_channel_follower(q.channel_cid as i64, q.by_profile_cid as i64)?;
+                self.db
+                    .save_channel_follower(q.channel_cid as i64, q.by_profile_cid as i64)?;
             }
             UnFollowChannel(_) => {}
             Subscribe(_) => {} // todo @ it 4
@@ -123,7 +124,9 @@ impl events::EventProcess for ChannelEvents {
                 //todo add media
             }
             EditMessage(q) => {
-                let mut msg = self.db.get_channel_message(q.channel_cid as i64, q.message_gid as i64)?; //todo
+                let mut msg = self
+                    .db
+                    .get_channel_message(q.channel_cid as i64, q.message_gid as i64)?; //todo
 
                 msg.text = q.new_text;
 
@@ -133,7 +136,7 @@ impl events::EventProcess for ChannelEvents {
                 for mgid in q.message_gids {
                     let mut msg = self
                         .db
-                        .get_channel_message(q.channel_cid as i64, mgid as i64)?;//todo
+                        .get_channel_message(q.channel_cid as i64, mgid as i64)?; //todo
                     if msg.by_profile_cid == q.by_profile_cid {
                         msg.deleted = true;
                         self.db.save_channel_message(&msg);
@@ -142,7 +145,8 @@ impl events::EventProcess for ChannelEvents {
                 }
             }
             LikeMessage(q) => {
-                self.db.save_message_like(q.message_gid as i64,q.by_profile_cid as i64)?;
+                self.db
+                    .save_message_like(q.message_gid as i64, q.by_profile_cid as i64)?;
             }
             UnLikeMessage(q) => {
                 //todo it2
@@ -150,7 +154,7 @@ impl events::EventProcess for ChannelEvents {
             ReShareMessage(_) => {} // todo @ it 4
             UnReShareMessage(_) => {}
             AddComment(q) => {
-                let com = pb::Comment{
+                let com = pb::Comment {
                     comment_gid: 1, // todo add in QEvent comment_gid
                     message_gid: q.message_gid,
                     profile_cid: q.by_profile_cid,
@@ -180,9 +184,9 @@ fn conv_to_channel_sub_command(event: EventCommand) -> pb::channel_command::SubC
 #[cfg(test)]
 mod tests {
     use super::*;
-    use pb::channel_command::*;
-    use pb::channel_command::SubCommand::*;
     use crate::events::EventProcess;
+    use pb::channel_command::SubCommand::*;
+    use pb::channel_command::*;
     use shared::pb::NewMessageInput;
     use std::ops::Index;
 
@@ -192,7 +196,7 @@ mod tests {
 
     impl ChannelTester {
         fn new() -> Self {
-            ChannelTester{
+            ChannelTester {
                 proc: ChannelEvents::new_mem(),
             }
         }
@@ -218,12 +222,12 @@ mod tests {
             let PROFILE_CID = 100;
 
             // CreateChannel
-            let q = QCreateChannel{
+            let q = QCreateChannel {
                 channel_cid: CHANNEL_CID,
                 creator_profile_cid: PROFILE_CID,
                 channel_title: "t".to_string(),
                 user_name: "".to_string(),
-                about: "a".to_string()
+                about: "a".to_string(),
             };
 
             self.send(CreateChannel(q));
@@ -233,25 +237,23 @@ mod tests {
             let ch = self.proc.db.get_channel(101).unwrap();
             assert_eq!(ch.creator_profile_cid, 100);
 
-
             // CreateChannel
-            let q = QEditChannel{
+            let q = QEditChannel {
                 channel_cid: CHANNEL_CID,
                 by_profile_cid: PROFILE_CID,
                 set_new_title: true,
                 new_title: "NT".to_string(),
                 set_new_about: true,
-                new_about: "NABOUT".to_string()
+                new_about: "NABOUT".to_string(),
             };
             self.send(EditChannel(q));
 
             let ch = db.get_channel(CHANNEL_CID as i64).unwrap();
-            assert_eq!(ch.channel_title,"NT".to_string() );
-            assert_eq!(ch.about,"NABOUT".to_string() );
-
+            assert_eq!(ch.channel_title, "NT".to_string());
+            assert_eq!(ch.about, "NABOUT".to_string());
 
             // FollowChannel
-            let q = QFollowChannel{
+            let q = QFollowChannel {
                 channel_cid: CHANNEL_CID,
                 by_profile_cid: 107,
             };
@@ -260,11 +262,10 @@ mod tests {
             let ch = db.get_channel_followers(CHANNEL_CID as i64).unwrap();
             assert!(ch.get(0).unwrap() == &107);
 
-
             // SendMessage
-            let q = QSendMessage{
+            let q = QSendMessage {
                 channel_cid: CHANNEL_CID,
-                message_input: Some(NewMessageInput{
+                message_input: Some(NewMessageInput {
                     message_gid: 1000,
                     by_profile_cid: PROFILE_CID,
                     message_type: 1,
@@ -272,42 +273,39 @@ mod tests {
                     via_app_id: 0,
                     seq: 1,
                     created_time: 2,
-                    verified: false
-                })
+                    verified: false,
+                }),
             };
             self.send(SendMessage(q));
 
             let msg = db.get_channel_message(CHANNEL_CID as i64, 1000).unwrap();
             assert!(msg.text.eq("ver1"));
 
-
             // EditMessage
-            let q = QEditMessage{
+            let q = QEditMessage {
                 channel_cid: CHANNEL_CID,
                 message_gid: 1000,
                 by_profile_cid: PROFILE_CID,
-                new_text: "ver2".to_string()
+                new_text: "ver2".to_string(),
             };
             self.send(EditMessage(q));
 
             let msg = db.get_channel_message(CHANNEL_CID as i64, 1000).unwrap();
             assert!(msg.text.eq("ver2"));
 
-
             // DeleteMessages
-            let q = QDeleteMessages{
+            let q = QDeleteMessages {
                 channel_cid: CHANNEL_CID,
                 by_profile_cid: PROFILE_CID,
-                message_gids: vec![1000]
+                message_gids: vec![1000],
             };
             self.send(DeleteMessages(q));
 
             let msg = db.get_channel_message(CHANNEL_CID as i64, 1000).unwrap();
             assert!(msg.deleted == true);
 
-
             // LikeMessage
-            let q = QLikeMessage{
+            let q = QLikeMessage {
                 channel_cid: CHANNEL_CID,
                 message_gid: 1000,
                 by_profile_cid: 212,
@@ -317,24 +315,21 @@ mod tests {
             let arr = db.get_message_likes(1000).unwrap();
             assert_eq!(arr.get(0).unwrap(), &212);
 
-
             // LikeMessage
-            let q = QAddComment{
+            let q = QAddComment {
                 channel_cid: CHANNEL_CID,
                 message_gid: 1000,
                 by_profile_cid: 212,
-                comment_text: "comment1".to_string()
+                comment_text: "comment1".to_string(),
             };
             self.send(AddComment(q));
 
             let arr = db.get_message_comments(1000).unwrap();
             assert_eq!(arr.get(0).unwrap().text, "comment1".to_string());
 
-
             println!("Channel Tests Worked Correctly");
         }
     }
-
 
     #[test]
     fn channels_tests() {

@@ -2462,28 +2462,6 @@ pub struct DirectMuteDirectsResponse {}
 pub struct DirectUnMuteDirectsParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DirectUnMuteDirectsResponse {}
-///========= Many End =========
-/// Folders
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectCreateFolderParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectCreateFolderResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectChangeFolderParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectChangeFolderResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectRemoveFromFolderParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectRemoveFromFolderResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectReordersFolderParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectReordersFolderResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectDeleteFolderParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectDeleteFolderResponse {}
 /// Views
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DirectGetChatsListParam {}
@@ -2497,30 +2475,6 @@ pub struct DirectGetGroupsListResponse {}
 pub struct DirectGetChannelsListParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DirectGetChannelsListResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectGetFoldersListParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectGetFoldersListResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectGetFoldersFullListParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectGetFoldersFullListResponse {}
-/// Dep
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectSendActionDoingParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectSendActionDoingResponse {}
-/// Messages
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectClearHistoriesParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectClearHistoriesResponse {}
-// CRUD
-
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectDeleteDirectParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectDeleteDirectResponse {}
 /// CrDU
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupCreateGroupParam {

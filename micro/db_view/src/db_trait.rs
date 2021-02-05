@@ -4,38 +4,34 @@ use shared::{common, common::prost_decode, common::prost_encode, errors::GenErr,
 //todo: Change save fns to owned
 
 // Channels Impl
-pub trait  DBChannels {
+pub trait DBChannels {
     // =================== Channel ====================
     fn get_channel(&self, channel_id: i64) -> Result<pb::Channel, GenErr>;
 
-    fn save_channel(&self, channel: &pb::Channel) -> Result<(), GenErr> ;
+    fn save_channel(&self, channel: &pb::Channel) -> Result<(), GenErr>;
 
     //fn save_channel_verify(&self, channel: &pb::Channel) -> Result<(), GenErr>;
     // =================== Channel Message ====================
-    fn get_channel_message(
-        &self,
-        channel_id: i64,
-        message_id: i64,
-    ) -> Result<pb::Message, GenErr>;
+    fn get_channel_message(&self, channel_id: i64, message_id: i64) -> Result<pb::Message, GenErr>;
 
-    fn save_channel_message(&self, message: &pb::Message) -> Result<(), GenErr> ;
+    fn save_channel_message(&self, message: &pb::Message) -> Result<(), GenErr>;
 
     // =================== Channel Follower ====================
-    fn get_channel_followers(&self, channel_cid: i64) -> Result<Vec<i64>, GenErr> ;
+    fn get_channel_followers(&self, channel_cid: i64) -> Result<Vec<i64>, GenErr>;
 
-    fn save_channel_follower(&self, channel_cid: i64, profile_cid: i64) -> Result<(), GenErr> ;
+    fn save_channel_follower(&self, channel_cid: i64, profile_cid: i64) -> Result<(), GenErr>;
 
     // =================== Channel Message Like ====================
-    fn get_message_likes(&self, message_gid: i64) -> Result<Vec<i64>, GenErr> ;
+    fn get_message_likes(&self, message_gid: i64) -> Result<Vec<i64>, GenErr>;
 
-    fn save_message_like(&self, message_gid: i64, profile_cid: i64) -> Result<(), GenErr> ;
+    fn save_message_like(&self, message_gid: i64, profile_cid: i64) -> Result<(), GenErr>;
 
     // =================== Channel Message Comment ====================
-    fn get_message_comments(&self, message_gid: i64) -> Result<Vec<pb::Comment>, GenErr> ;
-    fn save_message_comment(&self, comment: &pb::Comment) -> Result<(), GenErr> ;
+    fn get_message_comments(&self, message_gid: i64) -> Result<Vec<pb::Comment>, GenErr>;
+    fn save_message_comment(&self, comment: &pb::Comment) -> Result<(), GenErr>;
 }
 
-pub trait DB : DBChannels {}
+pub trait DB: DBChannels {}
 
 /*
 // Chat Impl

@@ -116,19 +116,9 @@ pub enum RPC_Direct_MethodData {
     DirectUnArchiveDirects(pb::DirectUnArchiveDirectsParam),
     DirectMuteDirects(pb::DirectMuteDirectsParam),
     DirectUnMuteDirects(pb::DirectUnMuteDirectsParam),
-    DirectCreateFolder(pb::DirectCreateFolderParam),
-    DirectChangeFolder(pb::DirectChangeFolderParam),
-    DirectRemoveFromFolder(pb::DirectRemoveFromFolderParam),
-    DirectReordersFolder(pb::DirectReordersFolderParam),
-    DirectDeleteFolder(pb::DirectDeleteFolderParam),
     DirectGetChatsList(pb::DirectGetChatsListParam),
     DirectGetGroupsList(pb::DirectGetGroupsListParam),
     DirectGetChannelsList(pb::DirectGetChannelsListParam),
-    DirectGetFoldersList(pb::DirectGetFoldersListParam),
-    DirectGetFoldersFullList(pb::DirectGetFoldersFullListParam),
-    DirectSendActionDoing(pb::DirectSendActionDoingParam),
-    DirectClearHistories(pb::DirectClearHistoriesParam),
-    DirectDeleteDirect(pb::DirectDeleteDirectParam),
 }
 #[derive(Debug)]
 pub enum RPC_Group_MethodData {
@@ -651,36 +641,6 @@ pub trait RPC_Direct_Handler {
     ) -> Result<pb::DirectUnMuteDirectsResponse, GenErr> {
         Ok(pb::DirectUnMuteDirectsResponse::default())
     }
-    async fn DirectCreateFolder(
-        up: &UserParam,
-        param: pb::DirectCreateFolderParam,
-    ) -> Result<pb::DirectCreateFolderResponse, GenErr> {
-        Ok(pb::DirectCreateFolderResponse::default())
-    }
-    async fn DirectChangeFolder(
-        up: &UserParam,
-        param: pb::DirectChangeFolderParam,
-    ) -> Result<pb::DirectChangeFolderResponse, GenErr> {
-        Ok(pb::DirectChangeFolderResponse::default())
-    }
-    async fn DirectRemoveFromFolder(
-        up: &UserParam,
-        param: pb::DirectRemoveFromFolderParam,
-    ) -> Result<pb::DirectRemoveFromFolderResponse, GenErr> {
-        Ok(pb::DirectRemoveFromFolderResponse::default())
-    }
-    async fn DirectReordersFolder(
-        up: &UserParam,
-        param: pb::DirectReordersFolderParam,
-    ) -> Result<pb::DirectReordersFolderResponse, GenErr> {
-        Ok(pb::DirectReordersFolderResponse::default())
-    }
-    async fn DirectDeleteFolder(
-        up: &UserParam,
-        param: pb::DirectDeleteFolderParam,
-    ) -> Result<pb::DirectDeleteFolderResponse, GenErr> {
-        Ok(pb::DirectDeleteFolderResponse::default())
-    }
     async fn DirectGetChatsList(
         up: &UserParam,
         param: pb::DirectGetChatsListParam,
@@ -698,36 +658,6 @@ pub trait RPC_Direct_Handler {
         param: pb::DirectGetChannelsListParam,
     ) -> Result<pb::DirectGetChannelsListResponse, GenErr> {
         Ok(pb::DirectGetChannelsListResponse::default())
-    }
-    async fn DirectGetFoldersList(
-        up: &UserParam,
-        param: pb::DirectGetFoldersListParam,
-    ) -> Result<pb::DirectGetFoldersListResponse, GenErr> {
-        Ok(pb::DirectGetFoldersListResponse::default())
-    }
-    async fn DirectGetFoldersFullList(
-        up: &UserParam,
-        param: pb::DirectGetFoldersFullListParam,
-    ) -> Result<pb::DirectGetFoldersFullListResponse, GenErr> {
-        Ok(pb::DirectGetFoldersFullListResponse::default())
-    }
-    async fn DirectSendActionDoing(
-        up: &UserParam,
-        param: pb::DirectSendActionDoingParam,
-    ) -> Result<pb::DirectSendActionDoingResponse, GenErr> {
-        Ok(pb::DirectSendActionDoingResponse::default())
-    }
-    async fn DirectClearHistories(
-        up: &UserParam,
-        param: pb::DirectClearHistoriesParam,
-    ) -> Result<pb::DirectClearHistoriesResponse, GenErr> {
-        Ok(pb::DirectClearHistoriesResponse::default())
-    }
-    async fn DirectDeleteDirect(
-        up: &UserParam,
-        param: pb::DirectDeleteDirectParam,
-    ) -> Result<pb::DirectDeleteDirectResponse, GenErr> {
-        Ok(pb::DirectDeleteDirectResponse::default())
     }
 }
 #[async_trait]
@@ -1543,36 +1473,6 @@ pub trait RPC_Direct_Handler2: Send + Sync {
     ) -> Result<pb::DirectUnMuteDirectsResponse, GenErr> {
         Ok(pb::DirectUnMuteDirectsResponse::default())
     }
-    async fn DirectCreateFolder(
-        &self,
-        param: pb::DirectCreateFolderParam,
-    ) -> Result<pb::DirectCreateFolderResponse, GenErr> {
-        Ok(pb::DirectCreateFolderResponse::default())
-    }
-    async fn DirectChangeFolder(
-        &self,
-        param: pb::DirectChangeFolderParam,
-    ) -> Result<pb::DirectChangeFolderResponse, GenErr> {
-        Ok(pb::DirectChangeFolderResponse::default())
-    }
-    async fn DirectRemoveFromFolder(
-        &self,
-        param: pb::DirectRemoveFromFolderParam,
-    ) -> Result<pb::DirectRemoveFromFolderResponse, GenErr> {
-        Ok(pb::DirectRemoveFromFolderResponse::default())
-    }
-    async fn DirectReordersFolder(
-        &self,
-        param: pb::DirectReordersFolderParam,
-    ) -> Result<pb::DirectReordersFolderResponse, GenErr> {
-        Ok(pb::DirectReordersFolderResponse::default())
-    }
-    async fn DirectDeleteFolder(
-        &self,
-        param: pb::DirectDeleteFolderParam,
-    ) -> Result<pb::DirectDeleteFolderResponse, GenErr> {
-        Ok(pb::DirectDeleteFolderResponse::default())
-    }
     async fn DirectGetChatsList(
         &self,
         param: pb::DirectGetChatsListParam,
@@ -1590,36 +1490,6 @@ pub trait RPC_Direct_Handler2: Send + Sync {
         param: pb::DirectGetChannelsListParam,
     ) -> Result<pb::DirectGetChannelsListResponse, GenErr> {
         Ok(pb::DirectGetChannelsListResponse::default())
-    }
-    async fn DirectGetFoldersList(
-        &self,
-        param: pb::DirectGetFoldersListParam,
-    ) -> Result<pb::DirectGetFoldersListResponse, GenErr> {
-        Ok(pb::DirectGetFoldersListResponse::default())
-    }
-    async fn DirectGetFoldersFullList(
-        &self,
-        param: pb::DirectGetFoldersFullListParam,
-    ) -> Result<pb::DirectGetFoldersFullListResponse, GenErr> {
-        Ok(pb::DirectGetFoldersFullListResponse::default())
-    }
-    async fn DirectSendActionDoing(
-        &self,
-        param: pb::DirectSendActionDoingParam,
-    ) -> Result<pb::DirectSendActionDoingResponse, GenErr> {
-        Ok(pb::DirectSendActionDoingResponse::default())
-    }
-    async fn DirectClearHistories(
-        &self,
-        param: pb::DirectClearHistoriesParam,
-    ) -> Result<pb::DirectClearHistoriesResponse, GenErr> {
-        Ok(pb::DirectClearHistoriesResponse::default())
-    }
-    async fn DirectDeleteDirect(
-        &self,
-        param: pb::DirectDeleteDirectParam,
-    ) -> Result<pb::DirectDeleteDirectResponse, GenErr> {
-        Ok(pb::DirectDeleteDirectResponse::default())
     }
 }
 #[async_trait]
@@ -2085,19 +1955,9 @@ pub mod method_ids {
     pub const DirectUnArchiveDirects: u32 = 1951553867;
     pub const DirectMuteDirects: u32 = 1138477048;
     pub const DirectUnMuteDirects: u32 = 1691834263;
-    pub const DirectCreateFolder: u32 = 1878673022;
-    pub const DirectChangeFolder: u32 = 1861381591;
-    pub const DirectRemoveFromFolder: u32 = 1818954127;
-    pub const DirectReordersFolder: u32 = 1264591958;
-    pub const DirectDeleteFolder: u32 = 962281627;
     pub const DirectGetChatsList: u32 = 1570934969;
     pub const DirectGetGroupsList: u32 = 545957996;
     pub const DirectGetChannelsList: u32 = 1608173619;
-    pub const DirectGetFoldersList: u32 = 1384523712;
-    pub const DirectGetFoldersFullList: u32 = 611850722;
-    pub const DirectSendActionDoing: u32 = 1417285757;
-    pub const DirectClearHistories: u32 = 904052140;
-    pub const DirectDeleteDirect: u32 = 1478067518;
 
     // Service: RPC_Group
     pub const GroupCreateGroup: u32 = 1205960678;
@@ -2267,19 +2127,9 @@ pub enum MethodIds {
     DirectUnArchiveDirects = 1951553867,
     DirectMuteDirects = 1138477048,
     DirectUnMuteDirects = 1691834263,
-    DirectCreateFolder = 1878673022,
-    DirectChangeFolder = 1861381591,
-    DirectRemoveFromFolder = 1818954127,
-    DirectReordersFolder = 1264591958,
-    DirectDeleteFolder = 962281627,
     DirectGetChatsList = 1570934969,
     DirectGetGroupsList = 545957996,
     DirectGetChannelsList = 1608173619,
-    DirectGetFoldersList = 1384523712,
-    DirectGetFoldersFullList = 611850722,
-    DirectSendActionDoing = 1417285757,
-    DirectClearHistories = 904052140,
-    DirectDeleteDirect = 1478067518,
 
     // Service: RPC_Group
     GroupCreateGroup = 1205960678,
@@ -3005,51 +2855,6 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
             }
         }
 
-        method_ids::DirectCreateFolder => {
-            let rpc_param: pb::DirectCreateFolderParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1878673022 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectCreateFolder(rpc_param)),
-            }
-        }
-
-        method_ids::DirectChangeFolder => {
-            let rpc_param: pb::DirectChangeFolderParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1861381591 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectChangeFolder(rpc_param)),
-            }
-        }
-
-        method_ids::DirectRemoveFromFolder => {
-            let rpc_param: pb::DirectRemoveFromFolderParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1818954127 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectRemoveFromFolder(rpc_param)),
-            }
-        }
-
-        method_ids::DirectReordersFolder => {
-            let rpc_param: pb::DirectReordersFolderParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1264591958 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectReordersFolder(rpc_param)),
-            }
-        }
-
-        method_ids::DirectDeleteFolder => {
-            let rpc_param: pb::DirectDeleteFolderParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 962281627 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectDeleteFolder(rpc_param)),
-            }
-        }
-
         method_ids::DirectGetChatsList => {
             let rpc_param: pb::DirectGetChatsListParam =
                 prost::Message::decode(invoke.rpc_data.as_slice())?;
@@ -3074,51 +2879,6 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
             RpcInvoke {
                 method_id: 1608173619 as i64,
                 rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectGetChannelsList(rpc_param)),
-            }
-        }
-
-        method_ids::DirectGetFoldersList => {
-            let rpc_param: pb::DirectGetFoldersListParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1384523712 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectGetFoldersList(rpc_param)),
-            }
-        }
-
-        method_ids::DirectGetFoldersFullList => {
-            let rpc_param: pb::DirectGetFoldersFullListParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 611850722 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectGetFoldersFullList(rpc_param)),
-            }
-        }
-
-        method_ids::DirectSendActionDoing => {
-            let rpc_param: pb::DirectSendActionDoingParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1417285757 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectSendActionDoing(rpc_param)),
-            }
-        }
-
-        method_ids::DirectClearHistories => {
-            let rpc_param: pb::DirectClearHistoriesParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 904052140 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectClearHistories(rpc_param)),
-            }
-        }
-
-        method_ids::DirectDeleteDirect => {
-            let rpc_param: pb::DirectDeleteDirectParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1478067518 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectDeleteDirect(rpc_param)),
             }
         }
 
@@ -4242,41 +4002,6 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
                 v8
             }
 
-            RPC_Direct_MethodData::DirectCreateFolder(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectCreateFolder(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Direct_MethodData::DirectChangeFolder(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectChangeFolder(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Direct_MethodData::DirectRemoveFromFolder(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectRemoveFromFolder(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Direct_MethodData::DirectReordersFolder(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectReordersFolder(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Direct_MethodData::DirectDeleteFolder(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectDeleteFolder(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
             RPC_Direct_MethodData::DirectGetChatsList(param) => {
                 let handler = eror(&reg.RPC_Direct)?;
                 let response = handler.DirectGetChatsList(param).await?;
@@ -4294,41 +4019,6 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
             RPC_Direct_MethodData::DirectGetChannelsList(param) => {
                 let handler = eror(&reg.RPC_Direct)?;
                 let response = handler.DirectGetChannelsList(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Direct_MethodData::DirectGetFoldersList(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectGetFoldersList(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Direct_MethodData::DirectGetFoldersFullList(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectGetFoldersFullList(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Direct_MethodData::DirectSendActionDoing(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectSendActionDoing(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Direct_MethodData::DirectClearHistories(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectClearHistories(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Direct_MethodData::DirectDeleteDirect(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectDeleteDirect(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -5575,56 +5265,6 @@ impl common::RpcClient {
         Ok(pb_res)
     }
 
-    pub async fn DirectCreateFolder(
-        &self,
-        param: pb::DirectCreateFolderParam,
-    ) -> Result<pb::DirectCreateFolderResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectCreateFolder)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn DirectChangeFolder(
-        &self,
-        param: pb::DirectChangeFolderParam,
-    ) -> Result<pb::DirectChangeFolderResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectChangeFolder)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn DirectRemoveFromFolder(
-        &self,
-        param: pb::DirectRemoveFromFolderParam,
-    ) -> Result<pb::DirectRemoveFromFolderResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectRemoveFromFolder)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn DirectReordersFolder(
-        &self,
-        param: pb::DirectReordersFolderParam,
-    ) -> Result<pb::DirectReordersFolderResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectReordersFolder)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn DirectDeleteFolder(
-        &self,
-        param: pb::DirectDeleteFolderParam,
-    ) -> Result<pb::DirectDeleteFolderResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectDeleteFolder)
-            .await?;
-        Ok(pb_res)
-    }
-
     pub async fn DirectGetChatsList(
         &self,
         param: pb::DirectGetChatsListParam,
@@ -5651,56 +5291,6 @@ impl common::RpcClient {
     ) -> Result<pb::DirectGetChannelsListResponse, GenErr> {
         let pb_res = self
             .rpc_invoke(&param, method_ids::DirectGetChannelsList)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn DirectGetFoldersList(
-        &self,
-        param: pb::DirectGetFoldersListParam,
-    ) -> Result<pb::DirectGetFoldersListResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectGetFoldersList)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn DirectGetFoldersFullList(
-        &self,
-        param: pb::DirectGetFoldersFullListParam,
-    ) -> Result<pb::DirectGetFoldersFullListResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectGetFoldersFullList)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn DirectSendActionDoing(
-        &self,
-        param: pb::DirectSendActionDoingParam,
-    ) -> Result<pb::DirectSendActionDoingResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectSendActionDoing)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn DirectClearHistories(
-        &self,
-        param: pb::DirectClearHistoriesParam,
-    ) -> Result<pb::DirectClearHistoriesResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectClearHistories)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn DirectDeleteDirect(
-        &self,
-        param: pb::DirectDeleteDirectParam,
-    ) -> Result<pb::DirectDeleteDirectResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectDeleteDirect)
             .await?;
         Ok(pb_res)
     }
@@ -6785,41 +6375,6 @@ impl RPC_Direct_Handler2 for _RRR_ {
         println!("called DirectUnMuteDirects in the impl code.");
         Ok(pb::DirectUnMuteDirectsResponse::default())
     }
-    async fn DirectCreateFolder(
-        &self,
-        param: pb::DirectCreateFolderParam,
-    ) -> Result<pb::DirectCreateFolderResponse, GenErr> {
-        println!("called DirectCreateFolder in the impl code.");
-        Ok(pb::DirectCreateFolderResponse::default())
-    }
-    async fn DirectChangeFolder(
-        &self,
-        param: pb::DirectChangeFolderParam,
-    ) -> Result<pb::DirectChangeFolderResponse, GenErr> {
-        println!("called DirectChangeFolder in the impl code.");
-        Ok(pb::DirectChangeFolderResponse::default())
-    }
-    async fn DirectRemoveFromFolder(
-        &self,
-        param: pb::DirectRemoveFromFolderParam,
-    ) -> Result<pb::DirectRemoveFromFolderResponse, GenErr> {
-        println!("called DirectRemoveFromFolder in the impl code.");
-        Ok(pb::DirectRemoveFromFolderResponse::default())
-    }
-    async fn DirectReordersFolder(
-        &self,
-        param: pb::DirectReordersFolderParam,
-    ) -> Result<pb::DirectReordersFolderResponse, GenErr> {
-        println!("called DirectReordersFolder in the impl code.");
-        Ok(pb::DirectReordersFolderResponse::default())
-    }
-    async fn DirectDeleteFolder(
-        &self,
-        param: pb::DirectDeleteFolderParam,
-    ) -> Result<pb::DirectDeleteFolderResponse, GenErr> {
-        println!("called DirectDeleteFolder in the impl code.");
-        Ok(pb::DirectDeleteFolderResponse::default())
-    }
     async fn DirectGetChatsList(
         &self,
         param: pb::DirectGetChatsListParam,
@@ -6840,41 +6395,6 @@ impl RPC_Direct_Handler2 for _RRR_ {
     ) -> Result<pb::DirectGetChannelsListResponse, GenErr> {
         println!("called DirectGetChannelsList in the impl code.");
         Ok(pb::DirectGetChannelsListResponse::default())
-    }
-    async fn DirectGetFoldersList(
-        &self,
-        param: pb::DirectGetFoldersListParam,
-    ) -> Result<pb::DirectGetFoldersListResponse, GenErr> {
-        println!("called DirectGetFoldersList in the impl code.");
-        Ok(pb::DirectGetFoldersListResponse::default())
-    }
-    async fn DirectGetFoldersFullList(
-        &self,
-        param: pb::DirectGetFoldersFullListParam,
-    ) -> Result<pb::DirectGetFoldersFullListResponse, GenErr> {
-        println!("called DirectGetFoldersFullList in the impl code.");
-        Ok(pb::DirectGetFoldersFullListResponse::default())
-    }
-    async fn DirectSendActionDoing(
-        &self,
-        param: pb::DirectSendActionDoingParam,
-    ) -> Result<pb::DirectSendActionDoingResponse, GenErr> {
-        println!("called DirectSendActionDoing in the impl code.");
-        Ok(pb::DirectSendActionDoingResponse::default())
-    }
-    async fn DirectClearHistories(
-        &self,
-        param: pb::DirectClearHistoriesParam,
-    ) -> Result<pb::DirectClearHistoriesResponse, GenErr> {
-        println!("called DirectClearHistories in the impl code.");
-        Ok(pb::DirectClearHistoriesResponse::default())
-    }
-    async fn DirectDeleteDirect(
-        &self,
-        param: pb::DirectDeleteDirectParam,
-    ) -> Result<pb::DirectDeleteDirectResponse, GenErr> {
-        println!("called DirectDeleteDirect in the impl code.");
-        Ok(pb::DirectDeleteDirectResponse::default())
     }
 }
 #[async_trait]

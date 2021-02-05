@@ -1,16 +1,16 @@
 use shared::{pb, xc};
 
 use crate::{db, events, session};
+use shared::errors::GenErr;
 use shared::pb::event_command::Command;
 use shared::pb::group_command::SubCommand;
 use shared::pb::EventCommand;
-use shared::errors::GenErr;
 
 #[derive(Default, Debug)]
 pub struct GroupEvents {}
 
 impl events::EventProcess for GroupEvents {
-    fn process_event(&self, event: EventCommand) ->Result<bool, GenErr> {
+    fn process_event(&self, event: EventCommand) -> Result<bool, GenErr> {
         let ch_sub = conv_to_group_sub_command(event.clone());
 
         use SubCommand::*;

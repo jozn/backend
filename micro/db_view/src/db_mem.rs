@@ -1,13 +1,13 @@
 #![feature(negative_impls)]
 
-use shared::{common, common::prost_decode, common::prost_encode, errors::GenErr, pb, xc};
-use crate::{db, events, session,db_trait};
-use shared::pb::{Comment, Message, Channel};
+use crate::{db, db_trait, events, session};
 use prost::alloc::sync::Arc;
-use std::sync::{Mutex, MutexGuard};
-use std::ops::DerefMut;
-use std::collections::HashMap;
+use shared::pb::{Channel, Comment, Message};
+use shared::{common, common::prost_decode, common::prost_encode, errors::GenErr, pb, xc};
 use std::collections::hash_map::RandomState;
+use std::collections::HashMap;
+use std::ops::DerefMut;
+use std::sync::{Mutex, MutexGuard};
 
 #[derive(Default)]
 pub struct DBMem {
@@ -18,11 +18,11 @@ pub struct DBMem {
 #[derive(Default)]
 struct DBMemInner {
     tables: Vec<String>,
-    channels: HashMap<i64,pb::Channel>,
-    channel_msgs: HashMap<i64,HashMap<i64, pb::Message>>,
-    channel_followers: HashMap<i64,Vec<i64>>,
-    msgs_likes: HashMap<i64,Vec<i64>>,
-    msg_comment: HashMap<i64,Vec<pb::Comment>>,
+    channels: HashMap<i64, pb::Channel>,
+    channel_msgs: HashMap<i64, HashMap<i64, pb::Message>>,
+    channel_followers: HashMap<i64, Vec<i64>>,
+    msgs_likes: HashMap<i64, Vec<i64>>,
+    msg_comment: HashMap<i64, Vec<pb::Comment>>,
 }
 
 // impl !Sync for DBMemInner{}
@@ -47,7 +47,8 @@ impl db_trait::DBChannels for DBMem {
 
     fn save_channel(&self, channel: &Channel) -> Result<(), GenErr> {
         let mut m = self.get_inner();
-        m.channels.insert(channel.channel_cid as i64, channel.clone());
+        m.channels
+            .insert(channel.channel_cid as i64, channel.clone());
         Ok(())
     }
 
@@ -70,7 +71,7 @@ impl db_trait::DBChannels for DBMem {
         let mut mp = m.channel_msgs.get_mut(&channel_cid);
         match mp {
             None => {
-                let mut nm  = HashMap::new();
+                let mut nm = HashMap::new();
                 nm.insert(message.message_gid as i64, message.clone());
                 m.channel_msgs.insert(channel_cid, nm);
                 // println!("#2");
@@ -86,12 +87,8 @@ impl db_trait::DBChannels for DBMem {
         let mut m = self.get_inner();
         let arr = m.channel_followers.get(&channel_id);
         match arr {
-            None => {
-                Ok(vec![])
-            }
-            Some(a) => {
-                Ok(a.clone())
-            }
+            None => Ok(vec![]),
+            Some(a) => Ok(a.clone()),
         }
     }
 
@@ -103,11 +100,8 @@ impl db_trait::DBChannels for DBMem {
                 let mut a = vec![];
                 a.push(profile_cid);
                 m.channel_followers.insert(channel_cid, a);
-
             }
-            Some(a) => {
-                a.push(profile_cid)
-            }
+            Some(a) => a.push(profile_cid),
         }
         Ok(())
     }
@@ -116,12 +110,8 @@ impl db_trait::DBChannels for DBMem {
         let mut m = self.get_inner();
         let arr = m.msgs_likes.get(&message_gid);
         match arr {
-            None => {
-                Ok(vec![])
-            }
-            Some(a) => {
-                Ok(a.clone())
-            }
+            None => Ok(vec![]),
+            Some(a) => Ok(a.clone()),
         }
     }
 
@@ -134,9 +124,7 @@ impl db_trait::DBChannels for DBMem {
                 a.push(profile_cid);
                 m.msgs_likes.insert(message_gid, a);
             }
-            Some(a) => {
-                a.push(profile_cid)
-            }
+            Some(a) => a.push(profile_cid),
         }
         Ok(())
     }
@@ -145,12 +133,8 @@ impl db_trait::DBChannels for DBMem {
         let mut m = self.get_inner();
         let arr = m.msg_comment.get(&message_gid);
         match arr {
-            None => {
-                Ok(vec![])
-            }
-            Some(a) => {
-                Ok(a.clone())
-            }
+            None => Ok(vec![]),
+            Some(a) => Ok(a.clone()),
         }
     }
 
@@ -162,11 +146,8 @@ impl db_trait::DBChannels for DBMem {
                 let mut a = vec![];
                 a.push(comment.clone());
                 m.msg_comment.insert(comment.message_gid as i64, a);
-
             }
-            Some(a) => {
-                a.push(comment.clone())
-            }
+            Some(a) => a.push(comment.clone()),
         }
         Ok(())
     }

@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+package pb;
+
+import "global.proto";
+
+// direct: holder of chat, groups, subscribed channels - holder of state of users and underlying object: unseen count, last seen, ...
+// it will be a list in the ui in mobiles, like whatsapp or telegram
+
+// rules: qevent_rpc
+service RPC_Direct_Old {
+  // Dep
+  rpc DirectSendActionDoing (DirectSendActionDoingParam) returns (DirectSendActionDoingResponse); // ? or each (chat, groups) by their own
+  // Messages
+  rpc DirectClearHistories (DirectClearHistoriesParam) returns (DirectClearHistoriesResponse);
+  // CRUD
+  rpc DirectDeleteDirect (DirectDeleteDirectParam) returns (DirectDeleteDirectResponse); // remove?
+  // Folders > Never > Delete
+  rpc DirectCreateFolder (DirectCreateFolderParam) returns (DirectCreateFolderResponse);
+  rpc DirectChangeFolder (DirectChangeFolderParam) returns (DirectChangeFolderResponse); // batch operation - includes and excludes - no state change but a all fresh data: name, includes, excludes
+  rpc DirectRemoveFromFolder (DirectRemoveFromFolderParam) returns (DirectRemoveFromFolderResponse);
+  rpc DirectReordersFolder (DirectReordersFolderParam) returns (DirectReordersFolderResponse);
+  rpc DirectDeleteFolder (DirectDeleteFolderParam) returns (DirectDeleteFolderResponse);
+
+  rpc DirectGetFoldersList (DirectGetFoldersListParam) returns (DirectGetFoldersListResponse); // Just folders
+  rpc DirectGetFoldersFullList (DirectGetFoldersFullListParam) returns (DirectGetFoldersFullListResponse); // folders with data
+}
+
+// Dep
+message DirectSendActionDoingParam {
+}
+
+message DirectSendActionDoingResponse {
+}
+
+// Messages
+message DirectClearHistoriesParam {
+}
+
+message DirectClearHistoriesResponse {
+}
+
+// CRUD
+
+message DirectDeleteDirectParam {
+}
+
+message DirectDeleteDirectResponse {
+}
+
+// Folders
+message DirectCreateFolderParam {
+}
+
+message DirectCreateFolderResponse {
+}
+
+
+message DirectChangeFolderParam {
+}
+
+message DirectChangeFolderResponse {
+}
+
+
+message DirectRemoveFromFolderParam {
+}
+
+message DirectRemoveFromFolderResponse {
+}
+
+
+message DirectReordersFolderParam {
+}
+
+message DirectReordersFolderResponse {
+}
+
+
+message DirectDeleteFolderParam {
+}
+
+message DirectDeleteFolderResponse {
+}
+
+
+message DirectGetFoldersListParam {
+}
+
+message DirectGetFoldersListResponse {
+}
+
+
+message DirectGetFoldersFullListParam {
+}
+
+message DirectGetFoldersFullListResponse {
+}
