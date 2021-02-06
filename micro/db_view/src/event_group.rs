@@ -7,9 +7,9 @@ use shared::pb::group_command::SubCommand;
 use shared::pb::EventCommand;
 
 #[derive(Default, Debug)]
-pub struct GroupEvents {}
+pub struct EventGroup {}
 
-impl events::EventProcess for GroupEvents {
+impl events::EventProcess for EventGroup {
     fn process_event(&self, event: EventCommand) -> Result<bool, GenErr> {
         let ch_sub = conv_to_group_sub_command(event.clone());
 

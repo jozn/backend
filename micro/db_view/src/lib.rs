@@ -6,11 +6,12 @@
 #![allow(warnings)]
 #![allow(soft_unstable)]
 
-pub mod channel_events;
 pub mod db;
+pub mod event_channel;
 pub mod session;
 
 pub mod db_mem;
 pub mod db_trait;
+pub mod event_group;
+pub mod event_user;
 pub mod events;
-pub mod group_events;

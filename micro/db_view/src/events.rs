@@ -1,7 +1,7 @@
 use shared::{pb, xc};
 
 use crate::session;
-use crate::{channel_events, group_events};
+use crate::{event_channel, event_group, event_user};
 use shared::pb::event_command::Command;
 
 use std::collections::{HashMap, HashSet};
@@ -40,16 +40,22 @@ impl EventHandler {
         );
 
         match cmd.clone() {
+            Command::User(ch_cmd) => {
+                self.send_event_to_shared_thread(12, event_req, || {
+                    Box::new(event_user::EventUser::new_mem())
+                });
+            }
             Command::Channel(ch_cmd) => {
                 self.send_event_to_shared_thread(1, event_req, || {
-                    Box::new(channel_events::ChannelEvents::new_mem())
+                    Box::new(event_channel::EventChannel::new_mem())
                 });
             }
             Command::Group(gr_cmd) => {
                 self.send_event_to_shared_thread(2, event_req, || {
-                    Box::new(group_events::GroupEvents::default())
+                    Box::new(event_group::EventGroup::default())
                 });
             }
+            _ => {}
         }
     }
 

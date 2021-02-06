@@ -9,7 +9,7 @@ use shared::pb::EventCommand;
 // todo: message+about texts to rich text
 // Single Threaded
 // #[derive(Debug)]
-pub struct ChannelEvents {
+pub struct EventChannel {
     db_old: db::DBCassandra,
     db: Box<dyn db_trait::DB + Send>,
 }
@@ -17,16 +17,16 @@ pub struct ChannelEvents {
 // Make it Single Thread
 // impl !Sync for ChannelEvents{}
 
-impl ChannelEvents {
+impl EventChannel {
     pub fn new_mem() -> Self {
-        ChannelEvents {
+        EventChannel {
             db_old: db::DBCassandra::new(),
             db: Box::new(db_mem::DBMem::new()),
         }
     }
 }
 
-impl events::EventProcess for ChannelEvents {
+impl events::EventProcess for EventChannel {
     fn process_event(&self, event: EventCommand) -> Result<bool, GenErr> {
         let ch_sub = conv_to_channel_sub_command(event.clone());
 
@@ -191,13 +191,13 @@ mod tests {
     use std::ops::Index;
 
     struct ChannelTester {
-        proc: ChannelEvents,
+        proc: EventChannel,
     }
 
     impl ChannelTester {
         fn new() -> Self {
             ChannelTester {
-                proc: ChannelEvents::new_mem(),
+                proc: EventChannel::new_mem(),
             }
         }
 
