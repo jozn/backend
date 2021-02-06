@@ -1485,10 +1485,49 @@ pub mod profile_command {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserCommand {
-    #[prost(oneof = "user_command::SubCommand", tags = "10, 20, 21")]
+    #[prost(
+        oneof = "user_command::SubCommand",
+        tags = "100, 101, 800, 801, 802, 300, 400, 401"
+    )]
     pub sub_command: ::std::option::Option<user_command::SubCommand>,
 }
 pub mod user_command {
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QRegisterUser {
+        #[prost(uint32, tag = "1")]
+        pub user_cid: u32,
+        #[prost(string, tag = "2")]
+        pub first_name: std::string::String,
+        #[prost(string, tag = "3")]
+        pub last_name: std::string::String,
+        #[prost(string, tag = "15")]
+        pub phone: std::string::String,
+        #[prost(uint32, tag = "5")]
+        pub created_time: u32,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QEditUser {
+        #[prost(uint32, tag = "1")]
+        pub user_cid: u32,
+        #[prost(bool, tag = "3")]
+        pub set_new_name: bool,
+        #[prost(string, tag = "4")]
+        pub new_first_name: std::string::String,
+        #[prost(string, tag = "6")]
+        pub new_last_name: std::string::String,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QDeleteSendCode {
+        #[prost(bool, tag = "1")]
+        pub resend: bool,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QDeleteConfirmCode {
+        #[prost(string, tag = "3")]
+        pub code: std::string::String,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QDeleteUser {}
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QChangePhoneNumber {}
     #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1497,11 +1536,21 @@ pub mod user_command {
     pub struct QRemoveOtherSessions {}
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum SubCommand {
-        #[prost(message, tag = "10")]
+        #[prost(message, tag = "100")]
+        RegisterUser(QRegisterUser),
+        #[prost(message, tag = "101")]
+        EditUser(QEditUser),
+        #[prost(message, tag = "800")]
+        DeleteSendCode(QDeleteSendCode),
+        #[prost(message, tag = "801")]
+        DeleteConfirmCode(QDeleteConfirmCode),
+        #[prost(message, tag = "802")]
+        DeleteUser(QDeleteUser),
+        #[prost(message, tag = "300")]
         ChangePhoneNumber(QChangePhoneNumber),
-        #[prost(message, tag = "20")]
+        #[prost(message, tag = "400")]
         RemoveSession(QRemoveSession),
-        #[prost(message, tag = "21")]
+        #[prost(message, tag = "401")]
         RemoveOtherSessions(QRemoveOtherSessions),
     }
 }
@@ -2844,6 +2893,70 @@ pub struct UploadFileResponse {
     pub done: bool,
     #[prost(string, tag = "2")]
     pub text: std::string::String,
+}
+/// CrUd
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserRegisterUserParam {
+    #[prost(uint32, tag = "1")]
+    pub user_cid: u32,
+    #[prost(string, tag = "2")]
+    pub first_name: std::string::String,
+    #[prost(string, tag = "3")]
+    pub last_name: std::string::String,
+    #[prost(string, tag = "15")]
+    pub phone: std::string::String,
+    #[prost(uint32, tag = "5")]
+    pub created_time: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserRegisterUserResponse {
+    #[prost(message, optional, tag = "1")]
+    pub user: ::std::option::Option<User>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserEditUserParam {
+    #[prost(uint32, tag = "1")]
+    pub user_cid: u32,
+    #[prost(bool, tag = "3")]
+    pub set_new_name: bool,
+    #[prost(string, tag = "4")]
+    pub new_first_name: std::string::String,
+    #[prost(string, tag = "6")]
+    pub new_last_name: std::string::String,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserEditUserResponse {
+    #[prost(message, optional, tag = "1")]
+    pub user: ::std::option::Option<User>,
+}
+/// Delete User
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserDeleteSendCodeParam {
+    #[prost(bool, tag = "1")]
+    pub resend: bool,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserDeleteSendCodeResponse {
+    #[prost(string, repeated, tag = "4")]
+    pub sms_numbers: ::std::vec::Vec<std::string::String>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserDeleteConfirmCodeParam {
+    ///4 digit 4215
+    #[prost(string, tag = "3")]
+    pub code: std::string::String,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserDeleteConfirmCodeResponse {
+    #[prost(bool, tag = "1")]
+    pub done: bool,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserDeleteUserParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserDeleteUserResponse {
+    #[prost(bool, tag = "1")]
+    pub done: bool,
 }
 /// Phone
 #[derive(Clone, PartialEq, ::prost::Message)]

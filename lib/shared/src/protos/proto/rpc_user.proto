@@ -8,15 +8,24 @@ import "global.proto";
 service RPC_User {
     //rpc User (Param) returns (Response);
 
+    // CrUd
+    rpc UserRegisterUser (UserRegisterUserParam) returns (UserRegisterUserResponse); // qevent_id_100
+    rpc UserEditUser (UserEditUserParam) returns (UserEditUserResponse); // qevent
+
+    // Delete
+    rpc UserDeleteSendCode (UserDeleteSendCodeParam) returns (UserDeleteSendCodeResponse);  // qevent_id_800
+    rpc UserDeleteConfirmCode (UserDeleteConfirmCodeParam) returns (UserDeleteConfirmCodeResponse); // qevent
+    rpc UserDeleteUser (UserDeleteUserParam) returns (UserDeleteUserResponse); // qevent
+
     // Phone (phone is per User not per Profile)
-    rpc UserChangePhoneNumber (UserChangePhoneNumberParam) returns (UserChangePhoneNumberResponse); // qevent_id_10
+    rpc UserChangePhoneNumber (UserChangePhoneNumberParam) returns (UserChangePhoneNumberResponse); // qevent_id_300
 
     // Email
 
     // Password
 
     // Session
-    rpc UserRemoveSession (UserRemoveSessionParam) returns (UserRemoveSessionResponse); // qevent_id_20
+    rpc UserRemoveSession (UserRemoveSessionParam) returns (UserRemoveSessionResponse); // qevent_id_400
     rpc UserRemoveOtherSessions (UserRemoveOtherParam) returns (UserRemoveOtherResponse); // qevent
 
     // Settings > not in here in Profile
@@ -26,6 +35,59 @@ service RPC_User {
     rpc UserGetActiveSessions (UserGetActiveSessionsParam) returns (UserGetActiveSessionsResponse);
 
 }
+
+// CrUd
+message UserRegisterUserParam {
+    uint32 user_cid = 1;
+    string first_name = 2;
+    string last_name = 3;
+    string phone = 15;
+    uint32 created_time = 5;
+}
+
+message UserRegisterUserResponse {
+    User user = 1;
+}
+
+
+message UserEditUserParam {
+    uint32 user_cid = 1;
+    bool set_new_name = 3;
+    string new_first_name = 4;
+    string new_last_name = 6;
+}
+
+message UserEditUserResponse {
+    User user = 1;
+}
+
+
+// Delete User
+message UserDeleteSendCodeParam {
+    bool Resend = 1;
+}
+
+message UserDeleteSendCodeResponse {
+    repeated string sms_numbers = 4;
+}
+
+
+message UserDeleteConfirmCodeParam {
+    string code = 3; //4 digit 4215
+}
+
+message UserDeleteConfirmCodeResponse {
+    bool done = 1;
+}
+
+
+message UserDeleteUserParam {
+}
+
+message UserDeleteUserResponse {
+    bool done = 1;
+}
+
 
 // Phone
 message UserChangePhoneNumberParam {

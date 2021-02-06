@@ -206,6 +206,11 @@ pub enum RPC_Upload_MethodData {
 }
 #[derive(Debug)]
 pub enum RPC_User_MethodData {
+    UserRegisterUser(pb::UserRegisterUserParam),
+    UserEditUser(pb::UserEditUserParam),
+    UserDeleteSendCode(pb::UserDeleteSendCodeParam),
+    UserDeleteConfirmCode(pb::UserDeleteConfirmCodeParam),
+    UserDeleteUser(pb::UserDeleteUserParam),
     UserChangePhoneNumber(pb::UserChangePhoneNumberParam),
     UserRemoveSession(pb::UserRemoveSessionParam),
     UserRemoveOtherSessions(pb::UserRemoveOtherParam),
@@ -1016,6 +1021,36 @@ pub trait RPC_Upload_Handler {
 }
 #[async_trait]
 pub trait RPC_User_Handler {
+    async fn UserRegisterUser(
+        up: &UserParam,
+        param: pb::UserRegisterUserParam,
+    ) -> Result<pb::UserRegisterUserResponse, GenErr> {
+        Ok(pb::UserRegisterUserResponse::default())
+    }
+    async fn UserEditUser(
+        up: &UserParam,
+        param: pb::UserEditUserParam,
+    ) -> Result<pb::UserEditUserResponse, GenErr> {
+        Ok(pb::UserEditUserResponse::default())
+    }
+    async fn UserDeleteSendCode(
+        up: &UserParam,
+        param: pb::UserDeleteSendCodeParam,
+    ) -> Result<pb::UserDeleteSendCodeResponse, GenErr> {
+        Ok(pb::UserDeleteSendCodeResponse::default())
+    }
+    async fn UserDeleteConfirmCode(
+        up: &UserParam,
+        param: pb::UserDeleteConfirmCodeParam,
+    ) -> Result<pb::UserDeleteConfirmCodeResponse, GenErr> {
+        Ok(pb::UserDeleteConfirmCodeResponse::default())
+    }
+    async fn UserDeleteUser(
+        up: &UserParam,
+        param: pb::UserDeleteUserParam,
+    ) -> Result<pb::UserDeleteUserResponse, GenErr> {
+        Ok(pb::UserDeleteUserResponse::default())
+    }
     async fn UserChangePhoneNumber(
         up: &UserParam,
         param: pb::UserChangePhoneNumberParam,
@@ -1827,6 +1862,36 @@ pub trait RPC_Upload_Handler2: Send + Sync {
 }
 #[async_trait]
 pub trait RPC_User_Handler2: Send + Sync {
+    async fn UserRegisterUser(
+        &self,
+        param: pb::UserRegisterUserParam,
+    ) -> Result<pb::UserRegisterUserResponse, GenErr> {
+        Ok(pb::UserRegisterUserResponse::default())
+    }
+    async fn UserEditUser(
+        &self,
+        param: pb::UserEditUserParam,
+    ) -> Result<pb::UserEditUserResponse, GenErr> {
+        Ok(pb::UserEditUserResponse::default())
+    }
+    async fn UserDeleteSendCode(
+        &self,
+        param: pb::UserDeleteSendCodeParam,
+    ) -> Result<pb::UserDeleteSendCodeResponse, GenErr> {
+        Ok(pb::UserDeleteSendCodeResponse::default())
+    }
+    async fn UserDeleteConfirmCode(
+        &self,
+        param: pb::UserDeleteConfirmCodeParam,
+    ) -> Result<pb::UserDeleteConfirmCodeResponse, GenErr> {
+        Ok(pb::UserDeleteConfirmCodeResponse::default())
+    }
+    async fn UserDeleteUser(
+        &self,
+        param: pb::UserDeleteUserParam,
+    ) -> Result<pb::UserDeleteUserResponse, GenErr> {
+        Ok(pb::UserDeleteUserResponse::default())
+    }
     async fn UserChangePhoneNumber(
         &self,
         param: pb::UserChangePhoneNumberParam,
@@ -2038,6 +2103,11 @@ pub mod method_ids {
     pub const UploadFile: u32 = 1702285478;
 
     // Service: RPC_User
+    pub const UserRegisterUser: u32 = 1322893071;
+    pub const UserEditUser: u32 = 1645828453;
+    pub const UserDeleteSendCode: u32 = 1007116723;
+    pub const UserDeleteConfirmCode: u32 = 2120919452;
+    pub const UserDeleteUser: u32 = 1206281254;
     pub const UserChangePhoneNumber: u32 = 51450414;
     pub const UserRemoveSession: u32 = 1173893234;
     pub const UserRemoveOtherSessions: u32 = 2042311148;
@@ -2210,6 +2280,11 @@ pub enum MethodIds {
     UploadFile = 1702285478,
 
     // Service: RPC_User
+    UserRegisterUser = 1322893071,
+    UserEditUser = 1645828453,
+    UserDeleteSendCode = 1007116723,
+    UserDeleteConfirmCode = 2120919452,
+    UserDeleteUser = 1206281254,
     UserChangePhoneNumber = 51450414,
     UserRemoveSession = 1173893234,
     UserRemoveOtherSessions = 2042311148,
@@ -3459,6 +3534,51 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
         }
 
         // RPC_User
+        method_ids::UserRegisterUser => {
+            let rpc_param: pb::UserRegisterUserParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1322893071 as i64,
+                rpc_service: RPC_User(RPC_User_MethodData::UserRegisterUser(rpc_param)),
+            }
+        }
+
+        method_ids::UserEditUser => {
+            let rpc_param: pb::UserEditUserParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1645828453 as i64,
+                rpc_service: RPC_User(RPC_User_MethodData::UserEditUser(rpc_param)),
+            }
+        }
+
+        method_ids::UserDeleteSendCode => {
+            let rpc_param: pb::UserDeleteSendCodeParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1007116723 as i64,
+                rpc_service: RPC_User(RPC_User_MethodData::UserDeleteSendCode(rpc_param)),
+            }
+        }
+
+        method_ids::UserDeleteConfirmCode => {
+            let rpc_param: pb::UserDeleteConfirmCodeParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 2120919452 as i64,
+                rpc_service: RPC_User(RPC_User_MethodData::UserDeleteConfirmCode(rpc_param)),
+            }
+        }
+
+        method_ids::UserDeleteUser => {
+            let rpc_param: pb::UserDeleteUserParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1206281254 as i64,
+                rpc_service: RPC_User(RPC_User_MethodData::UserDeleteUser(rpc_param)),
+            }
+        }
+
         method_ids::UserChangePhoneNumber => {
             let rpc_param: pb::UserChangePhoneNumberParam =
                 prost::Message::decode(invoke.rpc_data.as_slice())?;
@@ -4499,6 +4619,41 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
         },
 
         RpcServiceData::RPC_User(method) => match method {
+            RPC_User_MethodData::UserRegisterUser(param) => {
+                let handler = eror(&reg.RPC_User)?;
+                let response = handler.UserRegisterUser(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_User_MethodData::UserEditUser(param) => {
+                let handler = eror(&reg.RPC_User)?;
+                let response = handler.UserEditUser(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_User_MethodData::UserDeleteSendCode(param) => {
+                let handler = eror(&reg.RPC_User)?;
+                let response = handler.UserDeleteSendCode(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_User_MethodData::UserDeleteConfirmCode(param) => {
+                let handler = eror(&reg.RPC_User)?;
+                let response = handler.UserDeleteConfirmCode(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_User_MethodData::UserDeleteUser(param) => {
+                let handler = eror(&reg.RPC_User)?;
+                let response = handler.UserDeleteUser(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
             RPC_User_MethodData::UserChangePhoneNumber(param) => {
                 let handler = eror(&reg.RPC_User)?;
                 let response = handler.UserChangePhoneNumber(param).await?;
@@ -5829,6 +5984,52 @@ impl common::RpcClient {
     }
 
     // service: RPC_User
+    pub async fn UserRegisterUser(
+        &self,
+        param: pb::UserRegisterUserParam,
+    ) -> Result<pb::UserRegisterUserResponse, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::UserRegisterUser)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn UserEditUser(
+        &self,
+        param: pb::UserEditUserParam,
+    ) -> Result<pb::UserEditUserResponse, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::UserEditUser).await?;
+        Ok(pb_res)
+    }
+
+    pub async fn UserDeleteSendCode(
+        &self,
+        param: pb::UserDeleteSendCodeParam,
+    ) -> Result<pb::UserDeleteSendCodeResponse, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::UserDeleteSendCode)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn UserDeleteConfirmCode(
+        &self,
+        param: pb::UserDeleteConfirmCodeParam,
+    ) -> Result<pb::UserDeleteConfirmCodeResponse, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::UserDeleteConfirmCode)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn UserDeleteUser(
+        &self,
+        param: pb::UserDeleteUserParam,
+    ) -> Result<pb::UserDeleteUserResponse, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::UserDeleteUser).await?;
+        Ok(pb_res)
+    }
+
     pub async fn UserChangePhoneNumber(
         &self,
         param: pb::UserChangePhoneNumberParam,
@@ -6798,6 +6999,41 @@ impl RPC_Upload_Handler2 for _RRR_ {
 }
 #[async_trait]
 impl RPC_User_Handler2 for _RRR_ {
+    async fn UserRegisterUser(
+        &self,
+        param: pb::UserRegisterUserParam,
+    ) -> Result<pb::UserRegisterUserResponse, GenErr> {
+        println!("called UserRegisterUser in the impl code.");
+        Ok(pb::UserRegisterUserResponse::default())
+    }
+    async fn UserEditUser(
+        &self,
+        param: pb::UserEditUserParam,
+    ) -> Result<pb::UserEditUserResponse, GenErr> {
+        println!("called UserEditUser in the impl code.");
+        Ok(pb::UserEditUserResponse::default())
+    }
+    async fn UserDeleteSendCode(
+        &self,
+        param: pb::UserDeleteSendCodeParam,
+    ) -> Result<pb::UserDeleteSendCodeResponse, GenErr> {
+        println!("called UserDeleteSendCode in the impl code.");
+        Ok(pb::UserDeleteSendCodeResponse::default())
+    }
+    async fn UserDeleteConfirmCode(
+        &self,
+        param: pb::UserDeleteConfirmCodeParam,
+    ) -> Result<pb::UserDeleteConfirmCodeResponse, GenErr> {
+        println!("called UserDeleteConfirmCode in the impl code.");
+        Ok(pb::UserDeleteConfirmCodeResponse::default())
+    }
+    async fn UserDeleteUser(
+        &self,
+        param: pb::UserDeleteUserParam,
+    ) -> Result<pb::UserDeleteUserResponse, GenErr> {
+        println!("called UserDeleteUser in the impl code.");
+        Ok(pb::UserDeleteUserResponse::default())
+    }
     async fn UserChangePhoneNumber(
         &self,
         param: pb::UserChangePhoneNumberParam,
