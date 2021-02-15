@@ -30,7 +30,7 @@ pub trait DBChannels {
 pub trait DBUser {
     // =================== User ====================
     fn get_user_by_cid(&self, user_cid: i64) -> Result<pb::User, GenErr>;
-    fn get_user_by_phone(&self, user_cid: i64) -> Result<pb::User, GenErr>;
+    fn get_user_by_phone(&self, phone: &str) -> Result<pb::User, GenErr>;
     fn save_user(&self, user: &pb::User) -> Result<(), GenErr> ;
     fn delete_user(&self, user: &pb::User) -> Result<(), GenErr> ;
 
@@ -73,7 +73,8 @@ trait DBChat {
 }
 
 
-pub trait DB: DBChannels + DBProfile + DBUser + DBChat  {}
+pub trait DB: DBChannels + DBUser  {}
+// pub trait DB: DBChannels + DBProfile + DBUser + DBChat {}
 
 /*
 // Chat Impl

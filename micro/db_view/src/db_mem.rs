@@ -2,7 +2,7 @@
 
 use crate::{db, db_trait, events, session};
 use prost::alloc::sync::Arc;
-use shared::pb::{Channel, Comment, Message};
+use shared::pb::{Channel, Comment, Message, User, Session};
 use shared::{common, common::prost_decode, common::prost_encode, errors::GenErr, pb, xc};
 use std::collections::hash_map::RandomState;
 use std::collections::HashMap;
@@ -17,6 +17,10 @@ pub struct DBMem {
 
 #[derive(Default)]
 struct DBMemInner {
+    // User
+    users: HashMap<i64, pb::User>,
+    user_sessions: HashMap<i64, HashMap<String, pb::Session>>,
+
     tables: Vec<String>,
     channels: HashMap<i64, pb::Channel>,
     channel_msgs: HashMap<i64, HashMap<i64, pb::Message>>,
@@ -55,7 +59,7 @@ impl db_trait::DBChannels for DBMem {
     fn get_channel_message(&self, channel_id: i64, message_id: i64) -> Result<Message, GenErr> {
         let mut m = self.get_inner();
         // println!("#2.5 {:?}", m.channel_msgs.len());
-        let mp = m.channel_msgs.get(&101).ok_or(GenErr::NotFound)?;
+        let mp = m.channel_msgs.get(&channel_id).ok_or(GenErr::NotFound)?;
         // let mp = m.channel_msgs.get(&101);
         // for v in m.channel_msgs.iter(){
         //     println!("#1 {}", v.0);
@@ -149,6 +153,76 @@ impl db_trait::DBChannels for DBMem {
             }
             Some(a) => a.push(comment.clone()),
         }
+        Ok(())
+    }
+}
+
+impl db_trait::DBUser for DBMem {
+    fn get_user_by_cid(&self, user_cid: i64) -> Result<User, GenErr> {
+        let mut m = self.get_inner();
+        let r = m.users.get(&user_cid).ok_or(GenErr::NotFound)?;
+        Ok(r.clone())
+    }
+
+    fn get_user_by_phone(&self, phone: &str) -> Result<User, GenErr> {
+        let mut m = self.get_inner();
+        for (i,u) in m.users.iter() {
+            if u.phone == phone {
+                return Ok(u.clone())
+            }
+        };
+        Err(GenErr::NotFound)
+    }
+
+    fn save_user(&self, user: &User) -> Result<(), GenErr> {
+        let mut m = self.get_inner();
+        m.users.insert(user.user_cid as i64, user.clone());
+        Ok(())
+    }
+
+    fn delete_user(&self, user: &User) -> Result<(), GenErr> {
+        let mut u = user.clone();
+        u.is_deleted = true;
+        self.save_user(&u)
+    }
+
+    fn get_user_session(&self, user_cid: i64, session_id: String) -> Result<Session, GenErr> {
+        let mut m = self.get_inner();
+        let mp = m.user_sessions.get(&user_cid).ok_or(GenErr::NotFound)?;
+        let sess = mp.get(&session_id).ok_or(GenErr::NotFound)?;
+        Ok(sess.clone())
+    }
+
+    fn save_user_session(&self, session: &Session) -> Result<(), GenErr> {
+        let mut m = self.get_inner();
+        let user_cid = session.user_cid as i64;
+        let channel_cid = session.session_uuid.clone();
+        let mut mp = m.user_sessions.get_mut(&user_cid);
+        match mp {
+            None => {
+                let mut nm = HashMap::new();
+                nm.insert(channel_cid.clone(), session.clone());
+                m.user_sessions.insert(user_cid, nm);
+            }
+            Some(r) => {
+                r.insert(channel_cid.clone(), session.clone());
+            }
+        };
+        Ok(())
+    }
+
+    fn delete_user_session(&self, session: &Session) -> Result<(), GenErr> {
+        let mut m = self.get_inner();
+        let channel_cid = session.session_uuid.clone();
+        let mut mp = m.user_sessions.get_mut(&(session.user_cid as i64));
+        match mp {
+            None => {
+
+            }
+            Some(r) => {
+                r.remove(&channel_cid);
+            }
+        };
         Ok(())
     }
 }
