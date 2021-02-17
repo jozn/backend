@@ -24,3 +24,7 @@ rocksdb = "0.15.0"
 byteorder = "1"
 
 #bindgen = "0.55.0"
+
+# tokio + rustls
+sqlx = { version = "0.5", features = [ "runtime-tokio-rustls" ] }
+structopt = "0.3.21"

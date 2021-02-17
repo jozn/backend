@@ -6,7 +6,6 @@ package pb;
 
 
 message ChannelCommand {
-  uint32 channel_cid = 1;
   oneof sub_command {
     QCreateChannel CreateChannel = 50;
     QEditChannel EditChannel = 51;

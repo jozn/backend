@@ -2,7 +2,7 @@
 
 use crate::{db, db_trait, events, session};
 use prost::alloc::sync::Arc;
-use shared::pb::{Channel, Comment, Message, User, Session};
+use shared::pb::{Channel, Comment, Message, Session, User};
 use shared::{common, common::prost_decode, common::prost_encode, errors::GenErr, pb, xc};
 use std::collections::hash_map::RandomState;
 use std::collections::HashMap;
@@ -166,11 +166,11 @@ impl db_trait::DBUser for DBMem {
 
     fn get_user_by_phone(&self, phone: &str) -> Result<User, GenErr> {
         let mut m = self.get_inner();
-        for (i,u) in m.users.iter() {
+        for (i, u) in m.users.iter() {
             if u.phone == phone {
-                return Ok(u.clone())
+                return Ok(u.clone());
             }
-        };
+        }
         Err(GenErr::NotFound)
     }
 
@@ -216,9 +216,7 @@ impl db_trait::DBUser for DBMem {
         let channel_cid = session.session_uuid.clone();
         let mut mp = m.user_sessions.get_mut(&(session.user_cid as i64));
         match mp {
-            None => {
-
-            }
+            None => {}
             Some(r) => {
                 r.remove(&channel_cid);
             }
