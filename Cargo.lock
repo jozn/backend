@@ -4058,6 +4058,7 @@ version = "0.1.0"
 dependencies = [
  "mysql_async",
  "mysql_common 0.26.0",
+ "shared",
  "sqlx",
  "tokio 1.0.1",
 ]

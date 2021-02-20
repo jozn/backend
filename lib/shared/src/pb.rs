@@ -1047,8 +1047,6 @@ pub enum DevicePlatform {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelCommand {
-    #[prost(uint32, tag = "1")]
-    pub channel_cid: u32,
     #[prost(
         oneof = "channel_command::SubCommand",
         tags = "50, 51, 52, 30, 31, 40, 41, 10, 11, 12, 200, 201, 300, 301, 400, 401, 80, 81"
