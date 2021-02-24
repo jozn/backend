@@ -141,10 +141,7 @@ message ChatCommand {
 
 message DirectCommand {
   oneof sub_command {
-    QChangeTitle ChangeTitle = 10;
     QDeleteDirects DeleteDirects = 50;
-  }
-  message QChangeTitle {
   }
   message QDeleteDirects {
   }

@@ -104,7 +104,6 @@ pub enum RPC_Chat_MethodData {
 }
 #[derive(Debug)]
 pub enum RPC_Direct_MethodData {
-    DirectChangeTitle(pb::DirectChangeTitleParam),
     DirectSetCustomNotification(pb::DirectSetCustomNotificationParam),
     DirectSetDraft(pb::DirectSetDraftParam),
     DirectDeleteDirects(pb::DirectDeleteDirectsParam),
@@ -574,12 +573,6 @@ pub trait RPC_Chat_Handler {
 }
 #[async_trait]
 pub trait RPC_Direct_Handler {
-    async fn DirectChangeTitle(
-        up: &UserParam,
-        param: pb::DirectChangeTitleParam,
-    ) -> Result<pb::DirectChangeTitleResponse, GenErr> {
-        Ok(pb::DirectChangeTitleResponse::default())
-    }
     async fn DirectSetCustomNotification(
         up: &UserParam,
         param: pb::DirectSetCustomNotificationParam,
@@ -1436,12 +1429,6 @@ pub trait RPC_Chat_Handler2: Send + Sync {
 }
 #[async_trait]
 pub trait RPC_Direct_Handler2: Send + Sync {
-    async fn DirectChangeTitle(
-        &self,
-        param: pb::DirectChangeTitleParam,
-    ) -> Result<pb::DirectChangeTitleResponse, GenErr> {
-        Ok(pb::DirectChangeTitleResponse::default())
-    }
     async fn DirectSetCustomNotification(
         &self,
         param: pb::DirectSetCustomNotificationParam,
@@ -2008,7 +1995,6 @@ pub mod method_ids {
     pub const ChatGetMediaList: u32 = 1346774525;
 
     // Service: RPC_Direct
-    pub const DirectChangeTitle: u32 = 2041790485;
     pub const DirectSetCustomNotification: u32 = 548699291;
     pub const DirectSetDraft: u32 = 1860345925;
     pub const DirectDeleteDirects: u32 = 1291891637;
@@ -2185,7 +2171,6 @@ pub enum MethodIds {
     ChatGetMediaList = 1346774525,
 
     // Service: RPC_Direct
-    DirectChangeTitle = 2041790485,
     DirectSetCustomNotification = 548699291,
     DirectSetDraft = 1860345925,
     DirectDeleteDirects = 1291891637,
@@ -2820,15 +2805,6 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
         }
 
         // RPC_Direct
-        method_ids::DirectChangeTitle => {
-            let rpc_param: pb::DirectChangeTitleParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 2041790485 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectChangeTitle(rpc_param)),
-            }
-        }
-
         method_ids::DirectSetCustomNotification => {
             let rpc_param: pb::DirectSetCustomNotificationParam =
                 prost::Message::decode(invoke.rpc_data.as_slice())?;
@@ -4038,13 +4014,6 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
         },
 
         RpcServiceData::RPC_Direct(method) => match method {
-            RPC_Direct_MethodData::DirectChangeTitle(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectChangeTitle(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
             RPC_Direct_MethodData::DirectSetCustomNotification(param) => {
                 let handler = eror(&reg.RPC_Direct)?;
                 let response = handler.DirectSetCustomNotification(param).await?;
@@ -5302,16 +5271,6 @@ impl common::RpcClient {
     }
 
     // service: RPC_Direct
-    pub async fn DirectChangeTitle(
-        &self,
-        param: pb::DirectChangeTitleParam,
-    ) -> Result<pb::DirectChangeTitleResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectChangeTitle)
-            .await?;
-        Ok(pb_res)
-    }
-
     pub async fn DirectSetCustomNotification(
         &self,
         param: pb::DirectSetCustomNotificationParam,
@@ -6492,13 +6451,6 @@ impl RPC_Chat_Handler2 for _RRR_ {
 }
 #[async_trait]
 impl RPC_Direct_Handler2 for _RRR_ {
-    async fn DirectChangeTitle(
-        &self,
-        param: pb::DirectChangeTitleParam,
-    ) -> Result<pb::DirectChangeTitleResponse, GenErr> {
-        println!("called DirectChangeTitle in the impl code.");
-        Ok(pb::DirectChangeTitleResponse::default())
-    }
     async fn DirectSetCustomNotification(
         &self,
         param: pb::DirectSetCustomNotificationParam,
