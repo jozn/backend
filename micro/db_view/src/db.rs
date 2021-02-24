@@ -1,6 +1,7 @@
 use crate::session;
 use shared::{common, common::prost_decode, common::prost_encode, errors::GenErr, pb, xc};
 
+// Entire Signature is deprecated
 pub struct DBCassandra {
     pub session: session::FlipCassandraSession,
 }

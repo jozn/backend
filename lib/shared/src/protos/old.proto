@@ -9,6 +9,10 @@ import "global.proto";
 
 // rules: qevent_rpc
 service RPC_Direct_Old {
+  //========= One =========
+  // Title
+  rpc DirectChangeTitle (DirectChangeTitleParam) returns (DirectChangeTitleResponse); // qevent_id_10
+
   // Dep
   rpc DirectSendActionDoing (DirectSendActionDoingParam) returns (DirectSendActionDoingResponse); // ? or each (chat, groups) by their own
   // Messages
@@ -25,6 +29,15 @@ service RPC_Direct_Old {
   rpc DirectGetFoldersList (DirectGetFoldersListParam) returns (DirectGetFoldersListResponse); // Just folders
   rpc DirectGetFoldersFullList (DirectGetFoldersFullListParam) returns (DirectGetFoldersFullListResponse); // folders with data
 }
+
+
+// Pin, Archives, Marks
+message DirectChangeTitleParam {
+}
+
+message DirectChangeTitleResponse {
+}
+
 
 // Dep
 message DirectSendActionDoingParam {

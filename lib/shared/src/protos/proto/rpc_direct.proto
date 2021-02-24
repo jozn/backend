@@ -11,10 +11,6 @@ import "global.proto";
 service RPC_Direct {
     //rpc Direct (Param) returns (Response);
 
-    //========= One =========
-    // Title
-    rpc DirectChangeTitle (DirectChangeTitleParam) returns (DirectChangeTitleResponse); // qevent_id_10
-
     // Notifications
     rpc DirectSetCustomNotification (DirectSetCustomNotificationParam) returns (DirectSetCustomNotificationResponse); // event_id_20
 
@@ -34,7 +30,7 @@ service RPC_Direct {
     rpc DirectPinDirects (DirectPinDirectsParam) returns (DirectPinDirectsResponse);
     rpc DirectUnPinDirects (DirectUnPinDirectsParam) returns (DirectUnPinDirectsResponse);
 
-    // Archives
+    // Archives - Just Chats and maybe Groups
     rpc DirectArchiveDirects (DirectArchiveDirectsParam) returns (DirectArchiveDirectsResponse);
     rpc DirectUnArchiveDirects (DirectUnArchiveDirectsParam) returns (DirectUnArchiveDirectsResponse);
 
@@ -50,14 +46,6 @@ service RPC_Direct {
 }
 
 //========= One =========
-
-// Pin, Archives, Marks
-message DirectChangeTitleParam {
-}
-
-message DirectChangeTitleResponse {
-}
-
 
 // Notifications
 message DirectSetCustomNotificationParam {

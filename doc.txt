@@ -1,3 +1,6 @@
+// todo: iterate over Direct as we have solidifed ui of chats, groups, channel > notifications,
+// todo: research notfications in whatsApp > after near-launch
+
 policy:
 + all cassandra int be of bigint
 
