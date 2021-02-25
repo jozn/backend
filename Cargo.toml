@@ -1,7 +1,7 @@
 [workspace]
 members = [
     "lib/shared",
-    "archives/shared2",
+#    "archives/shared2",
     "micro/gateway",
 #    "micro/cmaster",
     "micro/db_view",
@@ -11,6 +11,7 @@ members = [
 
 ]
 exclude =[
-#    "micro/logic"
-    "micro/cmaster"
+#    "micro/logic",
+    "micro/cmaster",
+
 ]
