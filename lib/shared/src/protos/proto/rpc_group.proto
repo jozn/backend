@@ -56,6 +56,8 @@ service RPC_Group {
     rpc GroupGetMembersList (GroupGetMembersListParam) returns (GroupGetMembersListResponse);
     rpc GroupGetAdminsList (GroupGetAdminsListParam) returns (GroupGetAdminsListResponse);
     rpc GroupAvatarGetList (GroupAvatarGetListParam) returns (GroupAvatarGetListResponse);
+
+    // Inbox
 }
 
 

@@ -87,7 +87,7 @@ mod tests {
             let CHANNEL_CID = 101;
             let PROFILE_CID = 100;
 
-            // CreateChannel
+            //====== CreateChannel
             let q = QCreateChannel {
                 channel_cid: CHANNEL_CID,
                 creator_profile_cid: PROFILE_CID,

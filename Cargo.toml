@@ -1,7 +1,7 @@
 [workspace]
 members = [
     "lib/shared",
-    "lib/shared2",
+    "archives/shared2",
     "micro/gateway",
 #    "micro/cmaster",
     "micro/db_view",

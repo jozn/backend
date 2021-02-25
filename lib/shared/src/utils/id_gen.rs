@@ -2,6 +2,7 @@ extern crate rand;
 use rand::Rng;
 use std::fmt::Formatter;
 use std::fmt::{Display, Result};
+
 use std::thread;
 use std::time;
 use std::time::Duration;

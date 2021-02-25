@@ -221,7 +221,7 @@ mod tests {
             let CHANNEL_CID = 101;
             let PROFILE_CID = 100;
 
-            // CreateChannel
+            //====== CreateChannel
             let q = QCreateChannel {
                 channel_cid: CHANNEL_CID,
                 creator_profile_cid: PROFILE_CID,
@@ -237,7 +237,7 @@ mod tests {
             let ch = self.proc.db.get_channel(101).unwrap();
             assert_eq!(ch.creator_profile_cid, 100);
 
-            // CreateChannel
+            //======  CreateChannel
             let q = QEditChannel {
                 channel_cid: CHANNEL_CID,
                 by_profile_cid: PROFILE_CID,
@@ -252,7 +252,7 @@ mod tests {
             assert_eq!(ch.channel_title, "NT".to_string());
             assert_eq!(ch.about, "NABOUT".to_string());
 
-            // FollowChannel
+            //======  FollowChannel
             let q = QFollowChannel {
                 channel_cid: CHANNEL_CID,
                 by_profile_cid: 107,
@@ -262,7 +262,7 @@ mod tests {
             let ch = db.get_channel_followers(CHANNEL_CID as i64).unwrap();
             assert!(ch.get(0).unwrap() == &107);
 
-            // SendMessage
+            //======  SendMessage
             let q = QSendMessage {
                 channel_cid: CHANNEL_CID,
                 message_input: Some(NewMessageInput {
@@ -281,7 +281,7 @@ mod tests {
             let msg = db.get_channel_message(CHANNEL_CID as i64, 1000).unwrap();
             assert!(msg.text.eq("ver1"));
 
-            // EditMessage
+            //======  EditMessage
             let q = QEditMessage {
                 channel_cid: CHANNEL_CID,
                 message_gid: 1000,
@@ -293,7 +293,7 @@ mod tests {
             let msg = db.get_channel_message(CHANNEL_CID as i64, 1000).unwrap();
             assert!(msg.text.eq("ver2"));
 
-            // DeleteMessages
+            //======  DeleteMessages
             let q = QDeleteMessages {
                 channel_cid: CHANNEL_CID,
                 by_profile_cid: PROFILE_CID,
@@ -304,7 +304,7 @@ mod tests {
             let msg = db.get_channel_message(CHANNEL_CID as i64, 1000).unwrap();
             assert!(msg.deleted == true);
 
-            // LikeMessage
+            //======  LikeMessage
             let q = QLikeMessage {
                 channel_cid: CHANNEL_CID,
                 message_gid: 1000,
@@ -315,7 +315,7 @@ mod tests {
             let arr = db.get_message_likes(1000).unwrap();
             assert_eq!(arr.get(0).unwrap(), &212);
 
-            // LikeMessage
+            //======  AddComment
             let q = QAddComment {
                 channel_cid: CHANNEL_CID,
                 message_gid: 1000,

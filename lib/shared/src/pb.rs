@@ -1047,6 +1047,8 @@ pub enum DevicePlatform {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelCommand {
+    #[prost(uint32, tag = "1")]
+    pub channel_cid: u32,
     #[prost(
         oneof = "channel_command::SubCommand",
         tags = "50, 51, 52, 30, 31, 40, 41, 10, 11, 12, 200, 201, 300, 301, 400, 401, 80, 81"
@@ -1295,18 +1297,14 @@ pub mod chat_command {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DirectCommand {
-    #[prost(oneof = "direct_command::SubCommand", tags = "10, 50")]
+    #[prost(oneof = "direct_command::SubCommand", tags = "50")]
     pub sub_command: ::std::option::Option<direct_command::SubCommand>,
 }
 pub mod direct_command {
     #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct QChangeTitle {}
-    #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QDeleteDirects {}
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum SubCommand {
-        #[prost(message, tag = "10")]
-        ChangeTitle(QChangeTitle),
         #[prost(message, tag = "50")]
         DeleteDirects(QDeleteDirects),
     }
@@ -2137,11 +2135,6 @@ pub struct ChatGetMediaListParam {}
 pub struct ChatGetMediaListResponse {}
 //========= One =========
 
-/// Pin, Archives, Marks
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectChangeTitleParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectChangeTitleResponse {}
 /// Notifications
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DirectSetCustomNotificationParam {}

@@ -1,5 +1,7 @@
 // todo: iterate over Direct as we have solidifed ui of chats, groups, channel > notifications,
 // todo: research notfications in whatsApp > after near-launch
+// todo: direct probebly should be deprecated as ui is slidified and functionaty diffrect considerblay > cosider add direct to chats,...
+// todo: replace direct with Inbox (Chat, Group, Channel)
 
 policy:
 + all cassandra int be of bigint
