@@ -2,7 +2,7 @@
 
 use crate::{db, db_trait, events, session};
 use prost::alloc::sync::Arc;
-use shared::pb::{Channel, Comment, Message, Session, User, Profile, Contact};
+use shared::pb::{Channel, Comment, Message, Session, User, Profile, Contact, Chat};
 use shared::{common, common::prost_decode, common::prost_encode, errors::GenErr, pb, xc};
 use std::collections::hash_map::RandomState;
 use std::collections::HashMap;
@@ -37,7 +37,7 @@ struct DBMemInner {
 
 #[derive(Default, Debug)]
 struct MemProfile {
-    profiles: pb::Profile,
+    profile: pb::Profile,
     following: Vec<i64>,
     contacts: Vec<Contact>,
 }
@@ -260,15 +260,22 @@ impl db_trait::DBUser for DBMem {
 
 impl db_trait::DBProfile for DBMem {
     fn get_profile(&self, profile_cid: i64) -> Result<Profile, GenErr> {
-        let mut m = self.get_inner();
+        let p = self.get_profile_inner(profile_cid)?;
+        let p = p.lock().unwrap();
+        Ok(p.profile.clone())
+/*        let mut m = self.get_inner();
         let profile = m.profiles_old.get(&profile_cid).ok_or(GenErr::NotFound)?;
-        Ok(profile.clone())
+        Ok(profile.clone())*/
     }
 
     fn save_profile(&self, profile: &Profile) -> Result<(), GenErr> {
-        let mut m = self.get_inner();
-        m.profiles_old.insert(profile.profile_cid as i64, profile.clone());
+        let p = self.get_profile_inner(profile.profile_cid as i64)?;
+        let mut p = p.lock().unwrap();
+        p.profile = profile.clone();
         Ok(())
+       /* let mut m = self.get_inner();
+        m.profiles_old.insert(profile.profile_cid as i64, profile.clone());
+        Ok(())*/
     }
 
     fn get_profile_followings(&self, profile_cid: i64) -> Result<Vec<i64>, GenErr> {
@@ -305,4 +312,38 @@ impl db_trait::DBProfile for DBMem {
         Ok(())
     }
 }
+
+impl db_trait::DBChat for DBMem {
+    fn get_chat(&self, profile_id: i64, chat_id: i64) -> Result<Chat, GenErr> {
+        let p = self.get_chat_inner(chat_id)?;
+        let p = p.lock().unwrap();
+        Ok(p.chat.clone())
+    }
+
+    fn save_chat(&self, chat: &Chat) -> Result<(), GenErr> {
+        let p = self.get_chat_inner(chat.chat_gid as i64)?;
+        let mut p = p.lock().unwrap();
+        p.chat = chat.clone();
+        Ok(())
+    }
+
+    fn get_chat_message(&self, channel_id: i64, message_id: i64) -> Result<Message, GenErr> {
+        let p = self.get_chat_inner(channel_id)?;
+        let p = p.lock().unwrap();
+        for m in &p.messages {
+            if m.message_gid as i64 == message_id {
+                return Ok(m.clone())
+            }
+        }
+        Err(GenErr::NotFound)
+    }
+
+    fn save_chat_message(&self, message: &Message) -> Result<(), GenErr> {
+        let p = self.get_chat_inner(chat.chat_gid as i64)?;
+        let mut p = p.lock().unwrap();
+        p.messages.push(message.clone());
+        Ok(())
+    }
+}
+
 

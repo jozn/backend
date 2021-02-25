@@ -68,11 +68,11 @@ pub trait DBProfile {
 
 pub trait DBChat {
     // =================== Chat ====================
-    fn get_chat(&self, profile_id: i64, chat_id: i64) -> Result<pb::Chat, GenErr>;
+    fn get_chat(&self, profile_cid: i64, chat_gid: i64) -> Result<pb::Chat, GenErr>;
     fn save_chat(&self, chat: &pb::Chat) -> Result<(), GenErr>;
 
     // =================== Chat Message ====================
-    fn get_chat_message(&self, channel_id: i64, message_id: i64) -> Result<pb::Message, GenErr>;
+    fn get_chat_message(&self, chat_gid: i64, message_gid: i64) -> Result<pb::Message, GenErr>;
     fn save_chat_message(&self, message: &pb::Message) -> Result<(), GenErr>;
 }
 
