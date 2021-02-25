@@ -528,10 +528,10 @@ pub struct ProductPriceInfo {
 pub struct Inboxer {
     /// Info 1-10
     ///
-    /// imut
+    /// imut  > del
     #[prost(fixed64, tag = "1")]
     pub inboxer_gid: u64,
-    /// imutt
+    /// imutt > del
     #[prost(uint32, tag = "5")]
     pub profile_cid: u32,
     /// Meta info (sync) - mut
@@ -824,9 +824,8 @@ pub struct Like {
     #[prost(uint32, tag = "3")]
     pub created_time: u32,
 }
-///==================== Views ==================
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Chat2 {}
+//==================== Views ==================
+
 /// C: Common
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct NewMessageInput {
@@ -2010,7 +2009,11 @@ pub struct ChannelGetInboxParam {}
 pub struct ChannelGetInboxResponse {}
 /// crud
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChatDeleteChatParam {}
+pub struct ChatDeleteChatParam {
+    /// both - many
+    #[prost(uint64, tag = "1")]
+    pub chat_id: u64,
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChatDeleteChatResponse {}
 // Members

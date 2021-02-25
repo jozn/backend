@@ -47,6 +47,8 @@ service RPC_Chat {
 
 // crud
 message ChatDeleteChatParam {
+    uint64 chat_id = 1;
+    // both - many
 }
 
 message ChatDeleteChatResponse {

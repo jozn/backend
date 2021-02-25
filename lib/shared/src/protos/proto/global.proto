@@ -406,8 +406,8 @@ message ProductPriceInfo {//todo
 //==================== Inboxer ==================
 message Inboxer {
   // Info 1-10
-  fixed64 inboxer_gid = 1; // imut
-  uint32 profile_cid = 5; // imutt
+  fixed64 inboxer_gid = 1; // imut  > del
+  uint32 profile_cid = 5; // imutt > del
 
   // Meta info (sync) - mut
   uint32 unseen_count = 12; // mut
@@ -594,8 +594,6 @@ message Like {
 }
 
 //==================== Views ==================
-message Chat_2 {}
-
 
 message NewMessageInput { // C: Common
   fixed64 message_gid = 1; // imut

@@ -32,7 +32,7 @@ pub trait DBUser {
     fn get_user_by_cid(&self, user_cid: i64) -> Result<pb::User, GenErr>;
     fn get_user_by_phone(&self, phone: &str) -> Result<pb::User, GenErr>;
     fn save_user(&self, user: &pb::User) -> Result<(), GenErr>;
-    fn delete_user(&self, user: &pb::User) -> Result<(), GenErr>;
+    // fn delete_user(&self, user: &pb::User) -> Result<(), GenErr>;
 
     // =================== User Session ====================
     fn get_user_session(&self, user_cid: i64, session_id: String) -> Result<pb::Session, GenErr>;
@@ -52,7 +52,7 @@ pub trait DBProfile {
 
     // =================== Profile Contacts ====================
     fn get_profile_contacts(&self, profile_cid: i64) -> Result<Vec<pb::Contact>, GenErr>;
-    fn save_profile_contacts(&self, contacts: Vec<pb::Contact>) -> Result<(), GenErr>;
+    fn save_profile_contacts(&self, profile_cid: i64, contacts: Vec<pb::Contact>) -> Result<(), GenErr>;
     fn remove_profile_contacts(&self, profile_cid: i64) -> Result<(), GenErr>;
 
 /*    // =================== Profile Directs ====================
@@ -66,7 +66,7 @@ pub trait DBProfile {
     ) -> Result<(), GenErr>;*/
 }
 
-trait DBChat {
+pub trait DBChat {
     // =================== Chat ====================
     fn get_chat(&self, profile_id: i64, chat_id: i64) -> Result<pb::Chat, GenErr>;
     fn save_chat(&self, chat: &pb::Chat) -> Result<(), GenErr>;
