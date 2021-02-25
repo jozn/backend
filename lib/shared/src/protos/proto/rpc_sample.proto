@@ -41,7 +41,7 @@ message GetDirectsParam {
 
 }
 message GetDirectsResponse {
-    repeated Direct directs = 1;
+    //repeated Direct directs = 1;
 }
 
 message GetMessagesParam {

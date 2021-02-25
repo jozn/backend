@@ -8,7 +8,8 @@ import "global.proto";
 service RPC_Chat {
     //rpc Chat (Param) returns (Response);
 
-    // crud: c: with sending msg, u: none, d: with direct
+    // cruD: c: with sending msg, u: none,
+    rpc ChatDeleteChat (ChatDeleteChatParam) returns (ChatDeleteChatResponse); // qevent_id_50
 
     // Privacy: none in here, with settings in profile privacy
 
@@ -18,17 +19,38 @@ service RPC_Chat {
     rpc ChatDeleteMessages (ChatDeleteMessagesParam) returns (ChatDeleteMessagesResponse); // qevent
     rpc ChatDeleteHistory (ChatDeleteHistoryParam) returns (ChatDeleteHistoryResponse); // qevent
 
+    // Notifications
+    rpc ChatSetNotification (ChatSetNotificationParam) returns (ChatSetNotificationResponse); // event_id_20
+    // add? MuteChat?
+
     // Others
     rpc ChatSendDoingAction (ChatSendDoingActionParam) returns (ChatSendDoingActionResponse);
     rpc ChatReportChat (ChatReportChatParam) returns (ChatReportChatResponse);
+
+    // Set Draft: here or an rpc shared with others?
+
+    //========= Inbox ===========
+    // MarkAsRead / MarkAsUnRead
+
+    // PinChat / UnPinChat
+
+    // ArchiveChat / UnArchiveChat
+    // Mute
+    //========= End of Inbox ===========
 
     // Views
     rpc ChatGetFull (ChatGetFullMessageParam) returns (ChatGetFullMessageResponse);
     rpc ChatGetMessagesList (ChatGetMessagesListParam) returns (ChatGetMessagesListResponse);
     rpc ChatGetMediaList (ChatGetMediaListParam) returns (ChatGetMediaListResponse);
+    rpc ChatGetInbox (ChatGetInboxParam) returns (ChatGetInboxResponse);
 }
 
 // crud
+message ChatDeleteChatParam {
+}
+
+message ChatDeleteChatResponse {
+}
 
 // Members
 
@@ -66,6 +88,14 @@ message ChatDeleteHistoryParam {
 
 message ChatDeleteHistoryResponse {
 }
+
+// Notifications
+message ChatSetNotificationParam {
+}
+
+message ChatSetNotificationResponse {
+}
+
 
 // Others
 
@@ -109,6 +139,11 @@ message ChatGetMediaListParam {
 message ChatGetMediaListResponse {
 }
 
+message ChatGetInboxParam {
+}
+
+message ChatGetInboxResponse {
+}
 // Dep
 
 /*

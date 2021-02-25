@@ -11,7 +11,7 @@ message EventCommand {
   oneof command {
     UserCommand user = 17;
     ProfileCommand profile = 7;
-    DirectCommand direct = 8;
+    //DirectCommand direct = 8;
     ChatCommand chat = 9;
     ChannelCommand channel = 5;
     GroupCommand group = 6;

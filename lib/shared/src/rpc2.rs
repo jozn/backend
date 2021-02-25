@@ -23,7 +23,6 @@ pub enum RpcServiceData {
     RPC_Auth(RPC_Auth_MethodData),
     RPC_Channel(RPC_Channel_MethodData),
     RPC_Chat(RPC_Chat_MethodData),
-    RPC_Direct(RPC_Direct_MethodData),
     RPC_Group(RPC_Group_MethodData),
     RPC_Profile(RPC_Profile_MethodData),
     RPC_Sample(RPC_Sample_MethodData),
@@ -88,36 +87,23 @@ pub enum RPC_Channel_MethodData {
     ChannelGetSubscribers(pb::ChannelGetSubscribersParam),
     ChannelBlocked(pb::ChannelBlockedParam),
     ChannelAvatarGetList(pb::ChannelAvatarGetListParam),
+    ChannelGetInbox(pb::ChannelGetInboxParam),
     ChannelGetFollowings(pb::ChannelGetFollowingsParam),
 }
 #[derive(Debug)]
 pub enum RPC_Chat_MethodData {
+    ChatDeleteChat(pb::ChatDeleteChatParam),
     ChatSendMessage(pb::ChatSendMessageParam),
     ChatEditMessage(pb::ChatEditMessageParam),
     ChatDeleteMessages(pb::ChatDeleteMessagesParam),
     ChatDeleteHistory(pb::ChatDeleteHistoryParam),
+    ChatSetNotification(pb::ChatSetNotificationParam),
     ChatSendDoingAction(pb::ChatSendDoingActionParam),
     ChatReportChat(pb::ChatReportChatParam),
     ChatGetFull(pb::ChatGetFullMessageParam),
     ChatGetMessagesList(pb::ChatGetMessagesListParam),
     ChatGetMediaList(pb::ChatGetMediaListParam),
-}
-#[derive(Debug)]
-pub enum RPC_Direct_MethodData {
-    DirectSetCustomNotification(pb::DirectSetCustomNotificationParam),
-    DirectSetDraft(pb::DirectSetDraftParam),
-    DirectDeleteDirects(pb::DirectDeleteDirectsParam),
-    DirectMarkAsRead(pb::DirectMarkAsReadParam),
-    DirectMarkAsUnRead(pb::DirectMarkAsUnReadParam),
-    DirectPinDirects(pb::DirectPinDirectsParam),
-    DirectUnPinDirects(pb::DirectUnPinDirectsParam),
-    DirectArchiveDirects(pb::DirectArchiveDirectsParam),
-    DirectUnArchiveDirects(pb::DirectUnArchiveDirectsParam),
-    DirectMuteDirects(pb::DirectMuteDirectsParam),
-    DirectUnMuteDirects(pb::DirectUnMuteDirectsParam),
-    DirectGetChatsList(pb::DirectGetChatsListParam),
-    DirectGetGroupsList(pb::DirectGetGroupsListParam),
-    DirectGetChannelsList(pb::DirectGetChannelsListParam),
+    ChatGetInbox(pb::ChatGetInboxParam),
 }
 #[derive(Debug)]
 pub enum RPC_Group_MethodData {
@@ -132,6 +118,7 @@ pub enum RPC_Group_MethodData {
     GroupJoinGroup(pb::JoinGroupParam),
     GroupLeaveGroup(pb::GroupLeaveGroupParam),
     GroupAddMember(pb::GroupAddMemberParam),
+    GroupSetNotification(pb::GroupSetNotificationParam),
     GroupChangePrivacy(pb::GroupChangePrivacyParam),
     GroupChangeDefaultPermission(pb::GroupChangeDefaultPermissionParam),
     GroupRevokeLink(pb::GroupRevokeLinkParam),
@@ -152,6 +139,7 @@ pub enum RPC_Group_MethodData {
     GroupGetMembersList(pb::GroupGetMembersListParam),
     GroupGetAdminsList(pb::GroupGetAdminsListParam),
     GroupAvatarGetList(pb::GroupAvatarGetListParam),
+    GroupGetInbox(pb::GroupGetInboxParam),
 }
 #[derive(Debug)]
 pub enum RPC_Profile_MethodData {
@@ -507,6 +495,12 @@ pub trait RPC_Channel_Handler {
     ) -> Result<pb::ChannelAvatarGetListResponse, GenErr> {
         Ok(pb::ChannelAvatarGetListResponse::default())
     }
+    async fn ChannelGetInbox(
+        up: &UserParam,
+        param: pb::ChannelGetInboxParam,
+    ) -> Result<pb::ChannelGetInboxResponse, GenErr> {
+        Ok(pb::ChannelGetInboxResponse::default())
+    }
     async fn ChannelGetFollowings(
         up: &UserParam,
         param: pb::ChannelGetFollowingsParam,
@@ -516,6 +510,12 @@ pub trait RPC_Channel_Handler {
 }
 #[async_trait]
 pub trait RPC_Chat_Handler {
+    async fn ChatDeleteChat(
+        up: &UserParam,
+        param: pb::ChatDeleteChatParam,
+    ) -> Result<pb::ChatDeleteChatResponse, GenErr> {
+        Ok(pb::ChatDeleteChatResponse::default())
+    }
     async fn ChatSendMessage(
         up: &UserParam,
         param: pb::ChatSendMessageParam,
@@ -539,6 +539,12 @@ pub trait RPC_Chat_Handler {
         param: pb::ChatDeleteHistoryParam,
     ) -> Result<pb::ChatDeleteHistoryResponse, GenErr> {
         Ok(pb::ChatDeleteHistoryResponse::default())
+    }
+    async fn ChatSetNotification(
+        up: &UserParam,
+        param: pb::ChatSetNotificationParam,
+    ) -> Result<pb::ChatSetNotificationResponse, GenErr> {
+        Ok(pb::ChatSetNotificationResponse::default())
     }
     async fn ChatSendDoingAction(
         up: &UserParam,
@@ -570,92 +576,11 @@ pub trait RPC_Chat_Handler {
     ) -> Result<pb::ChatGetMediaListResponse, GenErr> {
         Ok(pb::ChatGetMediaListResponse::default())
     }
-}
-#[async_trait]
-pub trait RPC_Direct_Handler {
-    async fn DirectSetCustomNotification(
+    async fn ChatGetInbox(
         up: &UserParam,
-        param: pb::DirectSetCustomNotificationParam,
-    ) -> Result<pb::DirectSetCustomNotificationResponse, GenErr> {
-        Ok(pb::DirectSetCustomNotificationResponse::default())
-    }
-    async fn DirectSetDraft(
-        up: &UserParam,
-        param: pb::DirectSetDraftParam,
-    ) -> Result<pb::DirectSetDraftResponse, GenErr> {
-        Ok(pb::DirectSetDraftResponse::default())
-    }
-    async fn DirectDeleteDirects(
-        up: &UserParam,
-        param: pb::DirectDeleteDirectsParam,
-    ) -> Result<pb::DirectDeleteDirectsResponse, GenErr> {
-        Ok(pb::DirectDeleteDirectsResponse::default())
-    }
-    async fn DirectMarkAsRead(
-        up: &UserParam,
-        param: pb::DirectMarkAsReadParam,
-    ) -> Result<pb::DirectMarkAsReadResponse, GenErr> {
-        Ok(pb::DirectMarkAsReadResponse::default())
-    }
-    async fn DirectMarkAsUnRead(
-        up: &UserParam,
-        param: pb::DirectMarkAsUnReadParam,
-    ) -> Result<pb::DirectMarkAsUnReadResponse, GenErr> {
-        Ok(pb::DirectMarkAsUnReadResponse::default())
-    }
-    async fn DirectPinDirects(
-        up: &UserParam,
-        param: pb::DirectPinDirectsParam,
-    ) -> Result<pb::DirectPinDirectsResponse, GenErr> {
-        Ok(pb::DirectPinDirectsResponse::default())
-    }
-    async fn DirectUnPinDirects(
-        up: &UserParam,
-        param: pb::DirectUnPinDirectsParam,
-    ) -> Result<pb::DirectUnPinDirectsResponse, GenErr> {
-        Ok(pb::DirectUnPinDirectsResponse::default())
-    }
-    async fn DirectArchiveDirects(
-        up: &UserParam,
-        param: pb::DirectArchiveDirectsParam,
-    ) -> Result<pb::DirectArchiveDirectsResponse, GenErr> {
-        Ok(pb::DirectArchiveDirectsResponse::default())
-    }
-    async fn DirectUnArchiveDirects(
-        up: &UserParam,
-        param: pb::DirectUnArchiveDirectsParam,
-    ) -> Result<pb::DirectUnArchiveDirectsResponse, GenErr> {
-        Ok(pb::DirectUnArchiveDirectsResponse::default())
-    }
-    async fn DirectMuteDirects(
-        up: &UserParam,
-        param: pb::DirectMuteDirectsParam,
-    ) -> Result<pb::DirectMuteDirectsResponse, GenErr> {
-        Ok(pb::DirectMuteDirectsResponse::default())
-    }
-    async fn DirectUnMuteDirects(
-        up: &UserParam,
-        param: pb::DirectUnMuteDirectsParam,
-    ) -> Result<pb::DirectUnMuteDirectsResponse, GenErr> {
-        Ok(pb::DirectUnMuteDirectsResponse::default())
-    }
-    async fn DirectGetChatsList(
-        up: &UserParam,
-        param: pb::DirectGetChatsListParam,
-    ) -> Result<pb::DirectGetChatsListResponse, GenErr> {
-        Ok(pb::DirectGetChatsListResponse::default())
-    }
-    async fn DirectGetGroupsList(
-        up: &UserParam,
-        param: pb::DirectGetGroupsListParam,
-    ) -> Result<pb::DirectGetGroupsListResponse, GenErr> {
-        Ok(pb::DirectGetGroupsListResponse::default())
-    }
-    async fn DirectGetChannelsList(
-        up: &UserParam,
-        param: pb::DirectGetChannelsListParam,
-    ) -> Result<pb::DirectGetChannelsListResponse, GenErr> {
-        Ok(pb::DirectGetChannelsListResponse::default())
+        param: pb::ChatGetInboxParam,
+    ) -> Result<pb::ChatGetInboxResponse, GenErr> {
+        Ok(pb::ChatGetInboxResponse::default())
     }
 }
 #[async_trait]
@@ -725,6 +650,12 @@ pub trait RPC_Group_Handler {
         param: pb::GroupAddMemberParam,
     ) -> Result<pb::GroupAddMemberResponse, GenErr> {
         Ok(pb::GroupAddMemberResponse::default())
+    }
+    async fn GroupSetNotification(
+        up: &UserParam,
+        param: pb::GroupSetNotificationParam,
+    ) -> Result<pb::GroupSetNotificationResponse, GenErr> {
+        Ok(pb::GroupSetNotificationResponse::default())
     }
     async fn GroupChangePrivacy(
         up: &UserParam,
@@ -845,6 +776,12 @@ pub trait RPC_Group_Handler {
         param: pb::GroupAvatarGetListParam,
     ) -> Result<pb::GroupAvatarGetListResponse, GenErr> {
         Ok(pb::GroupAvatarGetListResponse::default())
+    }
+    async fn GroupGetInbox(
+        up: &UserParam,
+        param: pb::GroupGetInboxParam,
+    ) -> Result<pb::GroupGetInboxResponse, GenErr> {
+        Ok(pb::GroupGetInboxResponse::default())
     }
 }
 #[async_trait]
@@ -1363,6 +1300,12 @@ pub trait RPC_Channel_Handler2: Send + Sync {
     ) -> Result<pb::ChannelAvatarGetListResponse, GenErr> {
         Ok(pb::ChannelAvatarGetListResponse::default())
     }
+    async fn ChannelGetInbox(
+        &self,
+        param: pb::ChannelGetInboxParam,
+    ) -> Result<pb::ChannelGetInboxResponse, GenErr> {
+        Ok(pb::ChannelGetInboxResponse::default())
+    }
     async fn ChannelGetFollowings(
         &self,
         param: pb::ChannelGetFollowingsParam,
@@ -1372,6 +1315,12 @@ pub trait RPC_Channel_Handler2: Send + Sync {
 }
 #[async_trait]
 pub trait RPC_Chat_Handler2: Send + Sync {
+    async fn ChatDeleteChat(
+        &self,
+        param: pb::ChatDeleteChatParam,
+    ) -> Result<pb::ChatDeleteChatResponse, GenErr> {
+        Ok(pb::ChatDeleteChatResponse::default())
+    }
     async fn ChatSendMessage(
         &self,
         param: pb::ChatSendMessageParam,
@@ -1395,6 +1344,12 @@ pub trait RPC_Chat_Handler2: Send + Sync {
         param: pb::ChatDeleteHistoryParam,
     ) -> Result<pb::ChatDeleteHistoryResponse, GenErr> {
         Ok(pb::ChatDeleteHistoryResponse::default())
+    }
+    async fn ChatSetNotification(
+        &self,
+        param: pb::ChatSetNotificationParam,
+    ) -> Result<pb::ChatSetNotificationResponse, GenErr> {
+        Ok(pb::ChatSetNotificationResponse::default())
     }
     async fn ChatSendDoingAction(
         &self,
@@ -1426,92 +1381,11 @@ pub trait RPC_Chat_Handler2: Send + Sync {
     ) -> Result<pb::ChatGetMediaListResponse, GenErr> {
         Ok(pb::ChatGetMediaListResponse::default())
     }
-}
-#[async_trait]
-pub trait RPC_Direct_Handler2: Send + Sync {
-    async fn DirectSetCustomNotification(
+    async fn ChatGetInbox(
         &self,
-        param: pb::DirectSetCustomNotificationParam,
-    ) -> Result<pb::DirectSetCustomNotificationResponse, GenErr> {
-        Ok(pb::DirectSetCustomNotificationResponse::default())
-    }
-    async fn DirectSetDraft(
-        &self,
-        param: pb::DirectSetDraftParam,
-    ) -> Result<pb::DirectSetDraftResponse, GenErr> {
-        Ok(pb::DirectSetDraftResponse::default())
-    }
-    async fn DirectDeleteDirects(
-        &self,
-        param: pb::DirectDeleteDirectsParam,
-    ) -> Result<pb::DirectDeleteDirectsResponse, GenErr> {
-        Ok(pb::DirectDeleteDirectsResponse::default())
-    }
-    async fn DirectMarkAsRead(
-        &self,
-        param: pb::DirectMarkAsReadParam,
-    ) -> Result<pb::DirectMarkAsReadResponse, GenErr> {
-        Ok(pb::DirectMarkAsReadResponse::default())
-    }
-    async fn DirectMarkAsUnRead(
-        &self,
-        param: pb::DirectMarkAsUnReadParam,
-    ) -> Result<pb::DirectMarkAsUnReadResponse, GenErr> {
-        Ok(pb::DirectMarkAsUnReadResponse::default())
-    }
-    async fn DirectPinDirects(
-        &self,
-        param: pb::DirectPinDirectsParam,
-    ) -> Result<pb::DirectPinDirectsResponse, GenErr> {
-        Ok(pb::DirectPinDirectsResponse::default())
-    }
-    async fn DirectUnPinDirects(
-        &self,
-        param: pb::DirectUnPinDirectsParam,
-    ) -> Result<pb::DirectUnPinDirectsResponse, GenErr> {
-        Ok(pb::DirectUnPinDirectsResponse::default())
-    }
-    async fn DirectArchiveDirects(
-        &self,
-        param: pb::DirectArchiveDirectsParam,
-    ) -> Result<pb::DirectArchiveDirectsResponse, GenErr> {
-        Ok(pb::DirectArchiveDirectsResponse::default())
-    }
-    async fn DirectUnArchiveDirects(
-        &self,
-        param: pb::DirectUnArchiveDirectsParam,
-    ) -> Result<pb::DirectUnArchiveDirectsResponse, GenErr> {
-        Ok(pb::DirectUnArchiveDirectsResponse::default())
-    }
-    async fn DirectMuteDirects(
-        &self,
-        param: pb::DirectMuteDirectsParam,
-    ) -> Result<pb::DirectMuteDirectsResponse, GenErr> {
-        Ok(pb::DirectMuteDirectsResponse::default())
-    }
-    async fn DirectUnMuteDirects(
-        &self,
-        param: pb::DirectUnMuteDirectsParam,
-    ) -> Result<pb::DirectUnMuteDirectsResponse, GenErr> {
-        Ok(pb::DirectUnMuteDirectsResponse::default())
-    }
-    async fn DirectGetChatsList(
-        &self,
-        param: pb::DirectGetChatsListParam,
-    ) -> Result<pb::DirectGetChatsListResponse, GenErr> {
-        Ok(pb::DirectGetChatsListResponse::default())
-    }
-    async fn DirectGetGroupsList(
-        &self,
-        param: pb::DirectGetGroupsListParam,
-    ) -> Result<pb::DirectGetGroupsListResponse, GenErr> {
-        Ok(pb::DirectGetGroupsListResponse::default())
-    }
-    async fn DirectGetChannelsList(
-        &self,
-        param: pb::DirectGetChannelsListParam,
-    ) -> Result<pb::DirectGetChannelsListResponse, GenErr> {
-        Ok(pb::DirectGetChannelsListResponse::default())
+        param: pb::ChatGetInboxParam,
+    ) -> Result<pb::ChatGetInboxResponse, GenErr> {
+        Ok(pb::ChatGetInboxResponse::default())
     }
 }
 #[async_trait]
@@ -1581,6 +1455,12 @@ pub trait RPC_Group_Handler2: Send + Sync {
         param: pb::GroupAddMemberParam,
     ) -> Result<pb::GroupAddMemberResponse, GenErr> {
         Ok(pb::GroupAddMemberResponse::default())
+    }
+    async fn GroupSetNotification(
+        &self,
+        param: pb::GroupSetNotificationParam,
+    ) -> Result<pb::GroupSetNotificationResponse, GenErr> {
+        Ok(pb::GroupSetNotificationResponse::default())
     }
     async fn GroupChangePrivacy(
         &self,
@@ -1701,6 +1581,12 @@ pub trait RPC_Group_Handler2: Send + Sync {
         param: pb::GroupAvatarGetListParam,
     ) -> Result<pb::GroupAvatarGetListResponse, GenErr> {
         Ok(pb::GroupAvatarGetListResponse::default())
+    }
+    async fn GroupGetInbox(
+        &self,
+        param: pb::GroupGetInboxParam,
+    ) -> Result<pb::GroupGetInboxResponse, GenErr> {
+        Ok(pb::GroupGetInboxResponse::default())
     }
 }
 #[async_trait]
@@ -1914,7 +1800,6 @@ pub trait All_Rpc_Handler:
     + RPC_Auth_Handler2
     + RPC_Channel_Handler2
     + RPC_Chat_Handler2
-    + RPC_Direct_Handler2
     + RPC_Group_Handler2
     + RPC_Profile_Handler2
     + RPC_Sample_Handler2
@@ -1981,34 +1866,22 @@ pub mod method_ids {
     pub const ChannelGetSubscribers: u32 = 2146806736;
     pub const ChannelBlocked: u32 = 1674411747;
     pub const ChannelAvatarGetList: u32 = 1925044843;
+    pub const ChannelGetInbox: u32 = 811688572;
     pub const ChannelGetFollowings: u32 = 1838438980;
 
     // Service: RPC_Chat
+    pub const ChatDeleteChat: u32 = 130139014;
     pub const ChatSendMessage: u32 = 1131621475;
     pub const ChatEditMessage: u32 = 1806258329;
     pub const ChatDeleteMessages: u32 = 933526170;
     pub const ChatDeleteHistory: u32 = 1088992782;
+    pub const ChatSetNotification: u32 = 740262999;
     pub const ChatSendDoingAction: u32 = 1319324241;
     pub const ChatReportChat: u32 = 1345425871;
     pub const ChatGetFull: u32 = 1768678453;
     pub const ChatGetMessagesList: u32 = 121549718;
     pub const ChatGetMediaList: u32 = 1346774525;
-
-    // Service: RPC_Direct
-    pub const DirectSetCustomNotification: u32 = 548699291;
-    pub const DirectSetDraft: u32 = 1860345925;
-    pub const DirectDeleteDirects: u32 = 1291891637;
-    pub const DirectMarkAsRead: u32 = 1801774787;
-    pub const DirectMarkAsUnRead: u32 = 313746334;
-    pub const DirectPinDirects: u32 = 1179089068;
-    pub const DirectUnPinDirects: u32 = 1517245560;
-    pub const DirectArchiveDirects: u32 = 1441782770;
-    pub const DirectUnArchiveDirects: u32 = 1951553867;
-    pub const DirectMuteDirects: u32 = 1138477048;
-    pub const DirectUnMuteDirects: u32 = 1691834263;
-    pub const DirectGetChatsList: u32 = 1570934969;
-    pub const DirectGetGroupsList: u32 = 545957996;
-    pub const DirectGetChannelsList: u32 = 1608173619;
+    pub const ChatGetInbox: u32 = 1556609489;
 
     // Service: RPC_Group
     pub const GroupCreateGroup: u32 = 1205960678;
@@ -2022,6 +1895,7 @@ pub mod method_ids {
     pub const GroupJoinGroup: u32 = 591743429;
     pub const GroupLeaveGroup: u32 = 361834630;
     pub const GroupAddMember: u32 = 676599227;
+    pub const GroupSetNotification: u32 = 1169707665;
     pub const GroupChangePrivacy: u32 = 1497988410;
     pub const GroupChangeDefaultPermission: u32 = 605792138;
     pub const GroupRevokeLink: u32 = 406592509;
@@ -2042,6 +1916,7 @@ pub mod method_ids {
     pub const GroupGetMembersList: u32 = 429215412;
     pub const GroupGetAdminsList: u32 = 332260610;
     pub const GroupAvatarGetList: u32 = 939443722;
+    pub const GroupGetInbox: u32 = 1722848299;
 
     // Service: RPC_Profile
     pub const ProfileSetSettings: u32 = 308739811;
@@ -2157,34 +2032,22 @@ pub enum MethodIds {
     ChannelGetSubscribers = 2146806736,
     ChannelBlocked = 1674411747,
     ChannelAvatarGetList = 1925044843,
+    ChannelGetInbox = 811688572,
     ChannelGetFollowings = 1838438980,
 
     // Service: RPC_Chat
+    ChatDeleteChat = 130139014,
     ChatSendMessage = 1131621475,
     ChatEditMessage = 1806258329,
     ChatDeleteMessages = 933526170,
     ChatDeleteHistory = 1088992782,
+    ChatSetNotification = 740262999,
     ChatSendDoingAction = 1319324241,
     ChatReportChat = 1345425871,
     ChatGetFull = 1768678453,
     ChatGetMessagesList = 121549718,
     ChatGetMediaList = 1346774525,
-
-    // Service: RPC_Direct
-    DirectSetCustomNotification = 548699291,
-    DirectSetDraft = 1860345925,
-    DirectDeleteDirects = 1291891637,
-    DirectMarkAsRead = 1801774787,
-    DirectMarkAsUnRead = 313746334,
-    DirectPinDirects = 1179089068,
-    DirectUnPinDirects = 1517245560,
-    DirectArchiveDirects = 1441782770,
-    DirectUnArchiveDirects = 1951553867,
-    DirectMuteDirects = 1138477048,
-    DirectUnMuteDirects = 1691834263,
-    DirectGetChatsList = 1570934969,
-    DirectGetGroupsList = 545957996,
-    DirectGetChannelsList = 1608173619,
+    ChatGetInbox = 1556609489,
 
     // Service: RPC_Group
     GroupCreateGroup = 1205960678,
@@ -2198,6 +2061,7 @@ pub enum MethodIds {
     GroupJoinGroup = 591743429,
     GroupLeaveGroup = 361834630,
     GroupAddMember = 676599227,
+    GroupSetNotification = 1169707665,
     GroupChangePrivacy = 1497988410,
     GroupChangeDefaultPermission = 605792138,
     GroupRevokeLink = 406592509,
@@ -2218,6 +2082,7 @@ pub enum MethodIds {
     GroupGetMembersList = 429215412,
     GroupGetAdminsList = 332260610,
     GroupAvatarGetList = 939443722,
+    GroupGetInbox = 1722848299,
 
     // Service: RPC_Profile
     ProfileSetSettings = 308739811,
@@ -2713,6 +2578,15 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
             }
         }
 
+        method_ids::ChannelGetInbox => {
+            let rpc_param: pb::ChannelGetInboxParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 811688572 as i64,
+                rpc_service: RPC_Channel(RPC_Channel_MethodData::ChannelGetInbox(rpc_param)),
+            }
+        }
+
         method_ids::ChannelGetFollowings => {
             let rpc_param: pb::ChannelGetFollowingsParam =
                 prost::Message::decode(invoke.rpc_data.as_slice())?;
@@ -2723,6 +2597,15 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
         }
 
         // RPC_Chat
+        method_ids::ChatDeleteChat => {
+            let rpc_param: pb::ChatDeleteChatParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 130139014 as i64,
+                rpc_service: RPC_Chat(RPC_Chat_MethodData::ChatDeleteChat(rpc_param)),
+            }
+        }
+
         method_ids::ChatSendMessage => {
             let rpc_param: pb::ChatSendMessageParam =
                 prost::Message::decode(invoke.rpc_data.as_slice())?;
@@ -2756,6 +2639,15 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
             RpcInvoke {
                 method_id: 1088992782 as i64,
                 rpc_service: RPC_Chat(RPC_Chat_MethodData::ChatDeleteHistory(rpc_param)),
+            }
+        }
+
+        method_ids::ChatSetNotification => {
+            let rpc_param: pb::ChatSetNotificationParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 740262999 as i64,
+                rpc_service: RPC_Chat(RPC_Chat_MethodData::ChatSetNotification(rpc_param)),
             }
         }
 
@@ -2804,132 +2696,12 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
             }
         }
 
-        // RPC_Direct
-        method_ids::DirectSetCustomNotification => {
-            let rpc_param: pb::DirectSetCustomNotificationParam =
+        method_ids::ChatGetInbox => {
+            let rpc_param: pb::ChatGetInboxParam =
                 prost::Message::decode(invoke.rpc_data.as_slice())?;
             RpcInvoke {
-                method_id: 548699291 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectSetCustomNotification(
-                    rpc_param,
-                )),
-            }
-        }
-
-        method_ids::DirectSetDraft => {
-            let rpc_param: pb::DirectSetDraftParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1860345925 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectSetDraft(rpc_param)),
-            }
-        }
-
-        method_ids::DirectDeleteDirects => {
-            let rpc_param: pb::DirectDeleteDirectsParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1291891637 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectDeleteDirects(rpc_param)),
-            }
-        }
-
-        method_ids::DirectMarkAsRead => {
-            let rpc_param: pb::DirectMarkAsReadParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1801774787 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectMarkAsRead(rpc_param)),
-            }
-        }
-
-        method_ids::DirectMarkAsUnRead => {
-            let rpc_param: pb::DirectMarkAsUnReadParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 313746334 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectMarkAsUnRead(rpc_param)),
-            }
-        }
-
-        method_ids::DirectPinDirects => {
-            let rpc_param: pb::DirectPinDirectsParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1179089068 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectPinDirects(rpc_param)),
-            }
-        }
-
-        method_ids::DirectUnPinDirects => {
-            let rpc_param: pb::DirectUnPinDirectsParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1517245560 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectUnPinDirects(rpc_param)),
-            }
-        }
-
-        method_ids::DirectArchiveDirects => {
-            let rpc_param: pb::DirectArchiveDirectsParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1441782770 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectArchiveDirects(rpc_param)),
-            }
-        }
-
-        method_ids::DirectUnArchiveDirects => {
-            let rpc_param: pb::DirectUnArchiveDirectsParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1951553867 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectUnArchiveDirects(rpc_param)),
-            }
-        }
-
-        method_ids::DirectMuteDirects => {
-            let rpc_param: pb::DirectMuteDirectsParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1138477048 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectMuteDirects(rpc_param)),
-            }
-        }
-
-        method_ids::DirectUnMuteDirects => {
-            let rpc_param: pb::DirectUnMuteDirectsParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1691834263 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectUnMuteDirects(rpc_param)),
-            }
-        }
-
-        method_ids::DirectGetChatsList => {
-            let rpc_param: pb::DirectGetChatsListParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1570934969 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectGetChatsList(rpc_param)),
-            }
-        }
-
-        method_ids::DirectGetGroupsList => {
-            let rpc_param: pb::DirectGetGroupsListParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 545957996 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectGetGroupsList(rpc_param)),
-            }
-        }
-
-        method_ids::DirectGetChannelsList => {
-            let rpc_param: pb::DirectGetChannelsListParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1608173619 as i64,
-                rpc_service: RPC_Direct(RPC_Direct_MethodData::DirectGetChannelsList(rpc_param)),
+                method_id: 1556609489 as i64,
+                rpc_service: RPC_Chat(RPC_Chat_MethodData::ChatGetInbox(rpc_param)),
             }
         }
 
@@ -3031,6 +2803,15 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
             RpcInvoke {
                 method_id: 676599227 as i64,
                 rpc_service: RPC_Group(RPC_Group_MethodData::GroupAddMember(rpc_param)),
+            }
+        }
+
+        method_ids::GroupSetNotification => {
+            let rpc_param: pb::GroupSetNotificationParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1169707665 as i64,
+                rpc_service: RPC_Group(RPC_Group_MethodData::GroupSetNotification(rpc_param)),
             }
         }
 
@@ -3213,6 +2994,15 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
             RpcInvoke {
                 method_id: 939443722 as i64,
                 rpc_service: RPC_Group(RPC_Group_MethodData::GroupAvatarGetList(rpc_param)),
+            }
+        }
+
+        method_ids::GroupGetInbox => {
+            let rpc_param: pb::GroupGetInboxParam =
+                prost::Message::decode(invoke.rpc_data.as_slice())?;
+            RpcInvoke {
+                method_id: 1722848299 as i64,
+                rpc_service: RPC_Group(RPC_Group_MethodData::GroupGetInbox(rpc_param)),
             }
         }
 
@@ -3940,6 +3730,13 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
                 v8
             }
 
+            RPC_Channel_MethodData::ChannelGetInbox(param) => {
+                let handler = eror(&reg.RPC_Channel)?;
+                let response = handler.ChannelGetInbox(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
             RPC_Channel_MethodData::ChannelGetFollowings(param) => {
                 let handler = eror(&reg.RPC_Channel)?;
                 let response = handler.ChannelGetFollowings(param).await?;
@@ -3949,6 +3746,13 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
         },
 
         RpcServiceData::RPC_Chat(method) => match method {
+            RPC_Chat_MethodData::ChatDeleteChat(param) => {
+                let handler = eror(&reg.RPC_Chat)?;
+                let response = handler.ChatDeleteChat(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
             RPC_Chat_MethodData::ChatSendMessage(param) => {
                 let handler = eror(&reg.RPC_Chat)?;
                 let response = handler.ChatSendMessage(param).await?;
@@ -3973,6 +3777,13 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
             RPC_Chat_MethodData::ChatDeleteHistory(param) => {
                 let handler = eror(&reg.RPC_Chat)?;
                 let response = handler.ChatDeleteHistory(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Chat_MethodData::ChatSetNotification(param) => {
+                let handler = eror(&reg.RPC_Chat)?;
+                let response = handler.ChatSetNotification(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -4011,103 +3822,10 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
                 let v8 = to_vev8(&response)?;
                 v8
             }
-        },
 
-        RpcServiceData::RPC_Direct(method) => match method {
-            RPC_Direct_MethodData::DirectSetCustomNotification(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectSetCustomNotification(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Direct_MethodData::DirectSetDraft(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectSetDraft(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Direct_MethodData::DirectDeleteDirects(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectDeleteDirects(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Direct_MethodData::DirectMarkAsRead(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectMarkAsRead(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Direct_MethodData::DirectMarkAsUnRead(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectMarkAsUnRead(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Direct_MethodData::DirectPinDirects(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectPinDirects(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Direct_MethodData::DirectUnPinDirects(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectUnPinDirects(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Direct_MethodData::DirectArchiveDirects(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectArchiveDirects(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Direct_MethodData::DirectUnArchiveDirects(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectUnArchiveDirects(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Direct_MethodData::DirectMuteDirects(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectMuteDirects(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Direct_MethodData::DirectUnMuteDirects(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectUnMuteDirects(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Direct_MethodData::DirectGetChatsList(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectGetChatsList(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Direct_MethodData::DirectGetGroupsList(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectGetGroupsList(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Direct_MethodData::DirectGetChannelsList(param) => {
-                let handler = eror(&reg.RPC_Direct)?;
-                let response = handler.DirectGetChannelsList(param).await?;
+            RPC_Chat_MethodData::ChatGetInbox(param) => {
+                let handler = eror(&reg.RPC_Chat)?;
+                let response = handler.ChatGetInbox(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -4187,6 +3905,13 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
             RPC_Group_MethodData::GroupAddMember(param) => {
                 let handler = eror(&reg.RPC_Group)?;
                 let response = handler.GroupAddMember(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Group_MethodData::GroupSetNotification(param) => {
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupSetNotification(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -4327,6 +4052,13 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
             RPC_Group_MethodData::GroupAvatarGetList(param) => {
                 let handler = eror(&reg.RPC_Group)?;
                 let response = handler.GroupAvatarGetList(param).await?;
+                let v8 = to_vev8(&response)?;
+                v8
+            }
+
+            RPC_Group_MethodData::GroupGetInbox(param) => {
+                let handler = eror(&reg.RPC_Group)?;
+                let response = handler.GroupGetInbox(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -4669,7 +4401,6 @@ pub struct RPC_Registry {
     pub RPC_Auth: Option<Box<Arc<dyn RPC_Auth_Handler2>>>,
     pub RPC_Channel: Option<Box<Arc<dyn RPC_Channel_Handler2>>>,
     pub RPC_Chat: Option<Box<Arc<dyn RPC_Chat_Handler2>>>,
-    pub RPC_Direct: Option<Box<Arc<dyn RPC_Direct_Handler2>>>,
     pub RPC_Group: Option<Box<Arc<dyn RPC_Group_Handler2>>>,
     pub RPC_Profile: Option<Box<Arc<dyn RPC_Profile_Handler2>>>,
     pub RPC_Sample: Option<Box<Arc<dyn RPC_Sample_Handler2>>>,
@@ -4687,8 +4418,6 @@ impl RPC_Channel_Handler for RPC_Registry {}
 impl RPC_Channel_Handler2 for RPC_Registry {}
 impl RPC_Chat_Handler for RPC_Registry {}
 impl RPC_Chat_Handler2 for RPC_Registry {}
-impl RPC_Direct_Handler for RPC_Registry {}
-impl RPC_Direct_Handler2 for RPC_Registry {}
 impl RPC_Group_Handler for RPC_Registry {}
 impl RPC_Group_Handler2 for RPC_Registry {}
 impl RPC_Profile_Handler for RPC_Registry {}
@@ -5177,6 +4906,14 @@ impl common::RpcClient {
         Ok(pb_res)
     }
 
+    pub async fn ChannelGetInbox(
+        &self,
+        param: pb::ChannelGetInboxParam,
+    ) -> Result<pb::ChannelGetInboxResponse, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::ChannelGetInbox).await?;
+        Ok(pb_res)
+    }
+
     pub async fn ChannelGetFollowings(
         &self,
         param: pb::ChannelGetFollowingsParam,
@@ -5188,6 +4925,14 @@ impl common::RpcClient {
     }
 
     // service: RPC_Chat
+    pub async fn ChatDeleteChat(
+        &self,
+        param: pb::ChatDeleteChatParam,
+    ) -> Result<pb::ChatDeleteChatResponse, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::ChatDeleteChat).await?;
+        Ok(pb_res)
+    }
+
     pub async fn ChatSendMessage(
         &self,
         param: pb::ChatSendMessageParam,
@@ -5220,6 +4965,16 @@ impl common::RpcClient {
     ) -> Result<pb::ChatDeleteHistoryResponse, GenErr> {
         let pb_res = self
             .rpc_invoke(&param, method_ids::ChatDeleteHistory)
+            .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn ChatSetNotification(
+        &self,
+        param: pb::ChatSetNotificationParam,
+    ) -> Result<pb::ChatSetNotificationResponse, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::ChatSetNotification)
             .await?;
         Ok(pb_res)
     }
@@ -5270,142 +5025,11 @@ impl common::RpcClient {
         Ok(pb_res)
     }
 
-    // service: RPC_Direct
-    pub async fn DirectSetCustomNotification(
+    pub async fn ChatGetInbox(
         &self,
-        param: pb::DirectSetCustomNotificationParam,
-    ) -> Result<pb::DirectSetCustomNotificationResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectSetCustomNotification)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn DirectSetDraft(
-        &self,
-        param: pb::DirectSetDraftParam,
-    ) -> Result<pb::DirectSetDraftResponse, GenErr> {
-        let pb_res = self.rpc_invoke(&param, method_ids::DirectSetDraft).await?;
-        Ok(pb_res)
-    }
-
-    pub async fn DirectDeleteDirects(
-        &self,
-        param: pb::DirectDeleteDirectsParam,
-    ) -> Result<pb::DirectDeleteDirectsResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectDeleteDirects)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn DirectMarkAsRead(
-        &self,
-        param: pb::DirectMarkAsReadParam,
-    ) -> Result<pb::DirectMarkAsReadResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectMarkAsRead)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn DirectMarkAsUnRead(
-        &self,
-        param: pb::DirectMarkAsUnReadParam,
-    ) -> Result<pb::DirectMarkAsUnReadResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectMarkAsUnRead)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn DirectPinDirects(
-        &self,
-        param: pb::DirectPinDirectsParam,
-    ) -> Result<pb::DirectPinDirectsResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectPinDirects)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn DirectUnPinDirects(
-        &self,
-        param: pb::DirectUnPinDirectsParam,
-    ) -> Result<pb::DirectUnPinDirectsResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectUnPinDirects)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn DirectArchiveDirects(
-        &self,
-        param: pb::DirectArchiveDirectsParam,
-    ) -> Result<pb::DirectArchiveDirectsResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectArchiveDirects)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn DirectUnArchiveDirects(
-        &self,
-        param: pb::DirectUnArchiveDirectsParam,
-    ) -> Result<pb::DirectUnArchiveDirectsResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectUnArchiveDirects)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn DirectMuteDirects(
-        &self,
-        param: pb::DirectMuteDirectsParam,
-    ) -> Result<pb::DirectMuteDirectsResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectMuteDirects)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn DirectUnMuteDirects(
-        &self,
-        param: pb::DirectUnMuteDirectsParam,
-    ) -> Result<pb::DirectUnMuteDirectsResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectUnMuteDirects)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn DirectGetChatsList(
-        &self,
-        param: pb::DirectGetChatsListParam,
-    ) -> Result<pb::DirectGetChatsListResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectGetChatsList)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn DirectGetGroupsList(
-        &self,
-        param: pb::DirectGetGroupsListParam,
-    ) -> Result<pb::DirectGetGroupsListResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectGetGroupsList)
-            .await?;
-        Ok(pb_res)
-    }
-
-    pub async fn DirectGetChannelsList(
-        &self,
-        param: pb::DirectGetChannelsListParam,
-    ) -> Result<pb::DirectGetChannelsListResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::DirectGetChannelsList)
-            .await?;
+        param: pb::ChatGetInboxParam,
+    ) -> Result<pb::ChatGetInboxResponse, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::ChatGetInbox).await?;
         Ok(pb_res)
     }
 
@@ -5505,6 +5129,16 @@ impl common::RpcClient {
         param: pb::GroupAddMemberParam,
     ) -> Result<pb::GroupAddMemberResponse, GenErr> {
         let pb_res = self.rpc_invoke(&param, method_ids::GroupAddMember).await?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupSetNotification(
+        &self,
+        param: pb::GroupSetNotificationParam,
+    ) -> Result<pb::GroupSetNotificationResponse, GenErr> {
+        let pb_res = self
+            .rpc_invoke(&param, method_ids::GroupSetNotification)
+            .await?;
         Ok(pb_res)
     }
 
@@ -5697,6 +5331,14 @@ impl common::RpcClient {
         let pb_res = self
             .rpc_invoke(&param, method_ids::GroupAvatarGetList)
             .await?;
+        Ok(pb_res)
+    }
+
+    pub async fn GroupGetInbox(
+        &self,
+        param: pb::GroupGetInboxParam,
+    ) -> Result<pb::GroupGetInboxResponse, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::GroupGetInbox).await?;
         Ok(pb_res)
     }
 
@@ -6375,6 +6017,13 @@ impl RPC_Channel_Handler2 for _RRR_ {
         println!("called ChannelAvatarGetList in the impl code.");
         Ok(pb::ChannelAvatarGetListResponse::default())
     }
+    async fn ChannelGetInbox(
+        &self,
+        param: pb::ChannelGetInboxParam,
+    ) -> Result<pb::ChannelGetInboxResponse, GenErr> {
+        println!("called ChannelGetInbox in the impl code.");
+        Ok(pb::ChannelGetInboxResponse::default())
+    }
     async fn ChannelGetFollowings(
         &self,
         param: pb::ChannelGetFollowingsParam,
@@ -6385,6 +6034,13 @@ impl RPC_Channel_Handler2 for _RRR_ {
 }
 #[async_trait]
 impl RPC_Chat_Handler2 for _RRR_ {
+    async fn ChatDeleteChat(
+        &self,
+        param: pb::ChatDeleteChatParam,
+    ) -> Result<pb::ChatDeleteChatResponse, GenErr> {
+        println!("called ChatDeleteChat in the impl code.");
+        Ok(pb::ChatDeleteChatResponse::default())
+    }
     async fn ChatSendMessage(
         &self,
         param: pb::ChatSendMessageParam,
@@ -6412,6 +6068,13 @@ impl RPC_Chat_Handler2 for _RRR_ {
     ) -> Result<pb::ChatDeleteHistoryResponse, GenErr> {
         println!("called ChatDeleteHistory in the impl code.");
         Ok(pb::ChatDeleteHistoryResponse::default())
+    }
+    async fn ChatSetNotification(
+        &self,
+        param: pb::ChatSetNotificationParam,
+    ) -> Result<pb::ChatSetNotificationResponse, GenErr> {
+        println!("called ChatSetNotification in the impl code.");
+        Ok(pb::ChatSetNotificationResponse::default())
     }
     async fn ChatSendDoingAction(
         &self,
@@ -6448,106 +6111,12 @@ impl RPC_Chat_Handler2 for _RRR_ {
         println!("called ChatGetMediaList in the impl code.");
         Ok(pb::ChatGetMediaListResponse::default())
     }
-}
-#[async_trait]
-impl RPC_Direct_Handler2 for _RRR_ {
-    async fn DirectSetCustomNotification(
+    async fn ChatGetInbox(
         &self,
-        param: pb::DirectSetCustomNotificationParam,
-    ) -> Result<pb::DirectSetCustomNotificationResponse, GenErr> {
-        println!("called DirectSetCustomNotification in the impl code.");
-        Ok(pb::DirectSetCustomNotificationResponse::default())
-    }
-    async fn DirectSetDraft(
-        &self,
-        param: pb::DirectSetDraftParam,
-    ) -> Result<pb::DirectSetDraftResponse, GenErr> {
-        println!("called DirectSetDraft in the impl code.");
-        Ok(pb::DirectSetDraftResponse::default())
-    }
-    async fn DirectDeleteDirects(
-        &self,
-        param: pb::DirectDeleteDirectsParam,
-    ) -> Result<pb::DirectDeleteDirectsResponse, GenErr> {
-        println!("called DirectDeleteDirects in the impl code.");
-        Ok(pb::DirectDeleteDirectsResponse::default())
-    }
-    async fn DirectMarkAsRead(
-        &self,
-        param: pb::DirectMarkAsReadParam,
-    ) -> Result<pb::DirectMarkAsReadResponse, GenErr> {
-        println!("called DirectMarkAsRead in the impl code.");
-        Ok(pb::DirectMarkAsReadResponse::default())
-    }
-    async fn DirectMarkAsUnRead(
-        &self,
-        param: pb::DirectMarkAsUnReadParam,
-    ) -> Result<pb::DirectMarkAsUnReadResponse, GenErr> {
-        println!("called DirectMarkAsUnRead in the impl code.");
-        Ok(pb::DirectMarkAsUnReadResponse::default())
-    }
-    async fn DirectPinDirects(
-        &self,
-        param: pb::DirectPinDirectsParam,
-    ) -> Result<pb::DirectPinDirectsResponse, GenErr> {
-        println!("called DirectPinDirects in the impl code.");
-        Ok(pb::DirectPinDirectsResponse::default())
-    }
-    async fn DirectUnPinDirects(
-        &self,
-        param: pb::DirectUnPinDirectsParam,
-    ) -> Result<pb::DirectUnPinDirectsResponse, GenErr> {
-        println!("called DirectUnPinDirects in the impl code.");
-        Ok(pb::DirectUnPinDirectsResponse::default())
-    }
-    async fn DirectArchiveDirects(
-        &self,
-        param: pb::DirectArchiveDirectsParam,
-    ) -> Result<pb::DirectArchiveDirectsResponse, GenErr> {
-        println!("called DirectArchiveDirects in the impl code.");
-        Ok(pb::DirectArchiveDirectsResponse::default())
-    }
-    async fn DirectUnArchiveDirects(
-        &self,
-        param: pb::DirectUnArchiveDirectsParam,
-    ) -> Result<pb::DirectUnArchiveDirectsResponse, GenErr> {
-        println!("called DirectUnArchiveDirects in the impl code.");
-        Ok(pb::DirectUnArchiveDirectsResponse::default())
-    }
-    async fn DirectMuteDirects(
-        &self,
-        param: pb::DirectMuteDirectsParam,
-    ) -> Result<pb::DirectMuteDirectsResponse, GenErr> {
-        println!("called DirectMuteDirects in the impl code.");
-        Ok(pb::DirectMuteDirectsResponse::default())
-    }
-    async fn DirectUnMuteDirects(
-        &self,
-        param: pb::DirectUnMuteDirectsParam,
-    ) -> Result<pb::DirectUnMuteDirectsResponse, GenErr> {
-        println!("called DirectUnMuteDirects in the impl code.");
-        Ok(pb::DirectUnMuteDirectsResponse::default())
-    }
-    async fn DirectGetChatsList(
-        &self,
-        param: pb::DirectGetChatsListParam,
-    ) -> Result<pb::DirectGetChatsListResponse, GenErr> {
-        println!("called DirectGetChatsList in the impl code.");
-        Ok(pb::DirectGetChatsListResponse::default())
-    }
-    async fn DirectGetGroupsList(
-        &self,
-        param: pb::DirectGetGroupsListParam,
-    ) -> Result<pb::DirectGetGroupsListResponse, GenErr> {
-        println!("called DirectGetGroupsList in the impl code.");
-        Ok(pb::DirectGetGroupsListResponse::default())
-    }
-    async fn DirectGetChannelsList(
-        &self,
-        param: pb::DirectGetChannelsListParam,
-    ) -> Result<pb::DirectGetChannelsListResponse, GenErr> {
-        println!("called DirectGetChannelsList in the impl code.");
-        Ok(pb::DirectGetChannelsListResponse::default())
+        param: pb::ChatGetInboxParam,
+    ) -> Result<pb::ChatGetInboxResponse, GenErr> {
+        println!("called ChatGetInbox in the impl code.");
+        Ok(pb::ChatGetInboxResponse::default())
     }
 }
 #[async_trait]
@@ -6628,6 +6197,13 @@ impl RPC_Group_Handler2 for _RRR_ {
     ) -> Result<pb::GroupAddMemberResponse, GenErr> {
         println!("called GroupAddMember in the impl code.");
         Ok(pb::GroupAddMemberResponse::default())
+    }
+    async fn GroupSetNotification(
+        &self,
+        param: pb::GroupSetNotificationParam,
+    ) -> Result<pb::GroupSetNotificationResponse, GenErr> {
+        println!("called GroupSetNotification in the impl code.");
+        Ok(pb::GroupSetNotificationResponse::default())
     }
     async fn GroupChangePrivacy(
         &self,
@@ -6768,6 +6344,13 @@ impl RPC_Group_Handler2 for _RRR_ {
     ) -> Result<pb::GroupAvatarGetListResponse, GenErr> {
         println!("called GroupAvatarGetList in the impl code.");
         Ok(pb::GroupAvatarGetListResponse::default())
+    }
+    async fn GroupGetInbox(
+        &self,
+        param: pb::GroupGetInboxParam,
+    ) -> Result<pb::GroupGetInboxResponse, GenErr> {
+        println!("called GroupGetInbox in the impl code.");
+        Ok(pb::GroupGetInboxResponse::default())
     }
 }
 #[async_trait]

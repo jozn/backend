@@ -24,6 +24,7 @@ service RPC_Group {
     rpc GroupJoinGroup (JoinGroupParam) returns (JoinGroupResponse); // qevent_id_50
     rpc GroupLeaveGroup (GroupLeaveGroupParam) returns (GroupLeaveGroupResponse); // qevent
     rpc GroupAddMember (GroupAddMemberParam) returns (GroupAddMemberResponse); // qevent
+    rpc GroupSetNotification (GroupSetNotificationParam) returns (GroupSetNotificationResponse);
 
     // Privacy
     rpc GroupChangePrivacy (GroupChangePrivacyParam) returns (GroupChangePrivacyResponse); // event_id_70
@@ -49,6 +50,15 @@ service RPC_Group {
     rpc GroupSendDoingAction (GroupSendDoingActionParam) returns (GroupSendDoingActionResponse);
     rpc GroupReportGroup (GroupReportGroupParam) returns (GroupReportGroupResponse); // qevent -- should be here
 
+    //========= Inbox ===========
+    // MarkAsRead / MarkAsUnRead
+
+    // Pin / UnPin
+
+    // Archive / UnArchive
+    // Mute?
+    //========= End of Inbox ===========
+
     // Views
     rpc GroupGetFull (GroupGetFullParam) returns (GroupGetFullResponse);
     rpc GroupGetMessagesList (GroupGetMessagesListParam) returns (GroupGetMessagesListResponse);
@@ -58,6 +68,7 @@ service RPC_Group {
     rpc GroupAvatarGetList (GroupAvatarGetListParam) returns (GroupAvatarGetListResponse);
 
     // Inbox
+    rpc GroupGetInbox (GroupGetInboxParam) returns (GroupGetInboxResponse);
 }
 
 
@@ -177,6 +188,12 @@ message GroupAddMemberParam {
 message GroupAddMemberResponse {
 }
 
+
+message GroupSetNotificationParam {
+}
+
+message GroupSetNotificationResponse {
+}
 
 // Privacy
 message GroupChangePrivacyParam {
@@ -372,6 +389,13 @@ message GroupGetAdminsListParam {
 }
 
 message GroupGetAdminsListResponse {
+}
+
+
+message GroupGetInboxParam {
+}
+
+message GroupGetInboxResponse {
 }
 
 

@@ -3,6 +3,82 @@ syntax = "proto3";
 package pb;
 
 import "global.proto";
+// DEPRECATED: as ui is now solidified we merge this rpc int each chat, channels and groups when
+// they are appropirate > it leads to more rpc and codes but it make things to easer to reason
+// about and let them evoulve independently
+
+//==================== Direct - From Global ==================
+enum DirectTypeEnum {
+    DEO = 0;
+    PROFILE =1 ;
+    CHANNEL =2;
+    GROUP =3;
+}
+
+message Direct {
+    // Info 1-10
+    fixed64 direct_gid = 1; // imut
+    uint32 profile_cid = 5; // imut
+    DirectTypeEnum direct_type = 102; // imut
+    string custom_title = 9; // mut
+    uint32 created_time = 33; // imut
+
+    // Meta info (sync) - mut
+    uint32 unseen_count = 12; // mut
+    fixed64 sort_time_ms = 45; // mut
+    fixed64 sync_time_ms = 104; // mut
+    fixed64 my_last_seen_seq = 16; // mut
+    fixed64 my_last_seen_msg_id = 17; // mut
+
+    // Access
+    bool is_active = 22;  // mut
+
+    // Pin
+    fixed64 pin_time_ms = 10; // mut
+    uint32 pined_msgs_count = 108; // mut
+
+    // Chat / Peer Chat
+    Chat chat = 433; // s_imut
+    Contact contact = 49; // ? must use profile
+    Profile profile = 149;  // Profile > or Peer Chat ?
+
+    // Channel
+    Channel channel = 48; // s_imut
+
+    // Group
+    Group group = 50; // s_imut
+    GroupMember group_member = 43; // s_imut
+    fixed64 visible_from_msg_gid = 11; // imut
+
+    // Messages
+    Message last_message = 25; // mut
+    Message pinned_message = 26; // mut
+
+    // Notification/Setting -> this is only for consumer, corresponding settings for owener are it object themself (ex: channels,...)
+    DirectCustomNotification custom_notification = 47;  // mut
+    uint32 mute_until = 29; // mut
+
+    // Draft
+    DirectDraft draft = 46;  // mut
+}
+
+message DirectDraft {
+    string draft_text = 34; // mut
+    int64 drat_reply_to_msg_id = 35; // mut
+}
+
+message DirectCustomNotification {
+    bool alert = 13;
+    bool preview = 14;
+    bool led_on = 15;
+    bool led_color = 16;
+    bool vibrate = 17;
+    bool popup = 18;
+    bool sound = 19;
+    bool priority = 20;
+}
+
+//================== End from Global ====================
 
 // direct: holder of chat, groups, subscribed channels - holder of state of users and underlying object: unseen count, last seen, ...
 // it will be a list in the ui in mobiles, like whatsapp or telegram

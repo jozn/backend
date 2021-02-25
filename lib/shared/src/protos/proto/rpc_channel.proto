@@ -28,7 +28,7 @@ service RPC_Channel {
     // Subscribe
     rpc ChannelSubscribe (ChannelSubscribeParam) returns (ChannelSubscribeResponse); // qevent_id_40
     rpc ChannelUnSubscribe (ChannelUnSubscribeParam) returns (ChannelUnSubscribeResponse); // qevent
-    rpc ChannelRemoveSubscribers (ChannelRemoveSubscribersParam) returns (ChannelRemoveSubscribersResponse); //
+    rpc ChannelRemoveSubscribers (ChannelRemoveSubscribersParam) returns (ChannelRemoveSubscribersResponse); // PROBEBELY DELETE: AS SUBCROBER LIST SHOULD BE HIDDEN
 
     // Privacy
     rpc ChannelChangePrivacy (ChannelChangePrivacyParam) returns (ChannelChangePrivacyResponse); // vent_id_70
@@ -70,6 +70,13 @@ service RPC_Channel {
     rpc ChannelReportChannel (ChannelReportChannelParam) returns (ChannelReportChannelResponse); //
     rpc ChannelReportMessage (ChannelReportMessageParam) returns (ChannelReportMessageResponse); //
 
+    //========= Inbox ===========
+    // MarkAsRead / MarkAsUnRead
+
+    // Pin / UnPin
+    // Mute
+    //========= End of Inbox ===========
+
     // Views
     rpc ChannelGetFull (ChannelGetFullParam) returns (ChannelGetFullResponse);
     rpc ChannelGetMessagesList (ChannelGetMessagesListParam) returns (ChannelGetMessagesListResponse);
@@ -79,6 +86,7 @@ service RPC_Channel {
     rpc ChannelGetSubscribers (ChannelGetSubscribersParam) returns (ChannelGetSubscribersResponse); // Policy?: should channel owner see this? or just see the follwers
     rpc ChannelBlocked (ChannelBlockedParam) returns (ChannelBlockedResponse); // Policy: NOT YET > Difterent form profile blocks
     rpc ChannelAvatarGetList (ChannelAvatarGetListParam) returns (ChannelAvatarGetListResponse);
+    rpc ChannelGetInbox (ChannelGetInboxParam) returns (ChannelGetInboxResponse);
 
     // Dep
     rpc ChannelGetFollowings (ChannelGetFollowingsParam) returns (ChannelGetFollowingsResponse); // move to profile
@@ -482,6 +490,12 @@ message ChannelAvatarGetListParam {
 }
 
 message ChannelAvatarGetListResponse {}
+
+message ChannelGetInboxParam {
+}
+
+message ChannelGetInboxResponse {
+}
 
 /*
 

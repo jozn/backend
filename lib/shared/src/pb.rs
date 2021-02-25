@@ -27,6 +27,7 @@
 
 ////////////////////////// Enums //////////////////////////
 
+/// todo: chat,group,channels draft: embed in types or in shared spared with one api
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SampleMessage {
     #[prost(oneof = "sample_message::TestOneof", tags = "4, 9, 10")]
@@ -192,9 +193,8 @@ pub struct Profile {
     /// mut
     #[prost(message, repeated, tag = "104")]
     pub channels: ::std::vec::Vec<Channel>,
-    /// mut
-    #[prost(message, repeated, tag = "105")]
-    pub directs: ::std::vec::Vec<Direct>,
+    ///  repeated Direct directs = 105;// mut
+    ///
     /// mut
     #[prost(message, repeated, tag = "106")]
     pub groups: ::std::vec::Vec<Group>,
@@ -204,82 +204,34 @@ pub struct Profile {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProfileSettings {}
+///==================== Peer Chat ==================
+///
+///?? or embed
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Direct {
-    /// Info 1-10
-    ///
+pub struct Chat {
     /// imut
-    #[prost(fixed64, tag = "1")]
-    pub direct_gid: u64,
+    #[prost(fixed64, tag = "7")]
+    pub chat_gid: u64,
     /// imut
-    #[prost(uint32, tag = "5")]
-    pub profile_cid: u32,
+    #[prost(uint32, tag = "1")]
+    pub profile1_cid: u32,
     /// imut
-    #[prost(enumeration = "DirectTypeEnum", tag = "102")]
-    pub direct_type: i32,
-    /// mut
-    #[prost(string, tag = "9")]
-    pub custom_title: std::string::String,
+    #[prost(uint32, tag = "2")]
+    pub profile2_cid: u32,
     /// imut
-    #[prost(uint32, tag = "33")]
-    pub created_time: u32,
-    /// Meta info (sync) - mut
+    #[prost(fixed64, tag = "3")]
+    pub direct1_gid: u64,
+    /// imut
+    #[prost(fixed64, tag = "4")]
+    pub direct2_gid: u64,
+    /// Views
     ///
-    /// mut
-    #[prost(uint32, tag = "12")]
-    pub unseen_count: u32,
-    /// mut
-    #[prost(fixed64, tag = "45")]
-    pub sort_time_ms: u64,
-    /// mut
-    #[prost(fixed64, tag = "104")]
-    pub sync_time_ms: u64,
-    /// mut
-    #[prost(fixed64, tag = "16")]
-    pub my_last_seen_seq: u64,
-    /// mut
-    #[prost(fixed64, tag = "17")]
-    pub my_last_seen_msg_id: u64,
-    /// Access
-    ///
-    /// mut
-    #[prost(bool, tag = "22")]
-    pub is_active: bool,
-    /// Pin
-    ///
-    /// mut
-    #[prost(fixed64, tag = "10")]
-    pub pin_time_ms: u64,
-    /// mut
-    #[prost(uint32, tag = "108")]
-    pub pined_msgs_count: u32,
-    /// Chat / Peer Chat
-    ///
-    /// s_imut
-    #[prost(message, optional, tag = "433")]
-    pub chat: ::std::option::Option<Chat>,
     /// ? must use profile
     #[prost(message, optional, tag = "49")]
     pub contact: ::std::option::Option<Contact>,
     /// Profile > or Peer Chat ?
     #[prost(message, optional, tag = "149")]
     pub profile: ::std::option::Option<Profile>,
-    /// Channel
-    ///
-    /// s_imut
-    #[prost(message, optional, tag = "48")]
-    pub channel: ::std::option::Option<Channel>,
-    /// Group
-    ///
-    /// s_imut
-    #[prost(message, optional, tag = "50")]
-    pub group: ::std::option::Option<Group>,
-    /// s_imut
-    #[prost(message, optional, tag = "43")]
-    pub group_member: ::std::option::Option<GroupMember>,
-    /// imut
-    #[prost(fixed64, tag = "11")]
-    pub visible_from_msg_gid: u64,
     /// Messages
     ///
     /// mut
@@ -288,53 +240,12 @@ pub struct Direct {
     /// mut
     #[prost(message, optional, tag = "26")]
     pub pinned_message: ::std::option::Option<Message>,
-    /// Notification/Setting -> this is only for consumer, corresponding settings for owener are it object themself (ex: channels,...)
-    ///
-    /// mut
-    #[prost(message, optional, tag = "47")]
-    pub custom_notification: ::std::option::Option<DirectCustomNotification>,
-    /// mut
-    #[prost(uint32, tag = "29")]
-    pub mute_until: u32,
-    /// Draft
-    ///
-    /// mut
-    #[prost(message, optional, tag = "46")]
-    pub draft: ::std::option::Option<DirectDraft>,
+    #[prost(message, optional, tag = "700")]
+    pub inboxer: ::std::option::Option<Inboxer>,
 }
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectDraft {
-    /// mut
-    #[prost(string, tag = "34")]
-    pub draft_text: std::string::String,
-    /// mut
-    #[prost(int64, tag = "35")]
-    pub drat_reply_to_msg_id: i64,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectCustomNotification {
-    #[prost(bool, tag = "13")]
-    pub alert: bool,
-    #[prost(bool, tag = "14")]
-    pub preview: bool,
-    #[prost(bool, tag = "15")]
-    pub led_on: bool,
-    #[prost(bool, tag = "16")]
-    pub led_color: bool,
-    #[prost(bool, tag = "17")]
-    pub vibrate: bool,
-    #[prost(bool, tag = "18")]
-    pub popup: bool,
-    #[prost(bool, tag = "19")]
-    pub sound: bool,
-    #[prost(bool, tag = "20")]
-    pub priority: bool,
-}
-///==================== Peer Chat ==================
-///
 ///?? or embed
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Chat {
+pub struct ChatDep {
     /// imut
     #[prost(fixed64, tag = "7")]
     pub chat_gid: u64,
@@ -528,6 +439,8 @@ pub struct Channel {
     /// mut
     #[prost(int64, tag = "40")]
     pub avatar_count: i64,
+    #[prost(message, optional, tag = "700")]
+    pub inboxer: ::std::option::Option<Inboxer>,
     /// Counts -> followers_count in profile
     #[prost(uint32, tag = "20")]
     pub followers_count: u32,
@@ -609,6 +522,40 @@ pub struct ProductPriceInfo {
     /// from 1000
     #[prost(uint32, tag = "3")]
     pub commission_rate: u32,
+}
+///==================== Inboxer ==================
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Inboxer {
+    /// Info 1-10
+    ///
+    /// imut
+    #[prost(fixed64, tag = "1")]
+    pub inboxer_gid: u64,
+    /// imutt
+    #[prost(uint32, tag = "5")]
+    pub profile_cid: u32,
+    /// Meta info (sync) - mut
+    ///
+    /// mut
+    #[prost(uint32, tag = "12")]
+    pub unseen_count: u32,
+    /// mut
+    #[prost(fixed64, tag = "45")]
+    pub sort_time_ms: u64,
+    /// mut
+    #[prost(fixed64, tag = "104")]
+    pub sync_time_ms: u64,
+    /// mut
+    #[prost(fixed64, tag = "16")]
+    pub my_last_seen_seq: u64,
+    /// mut
+    #[prost(fixed64, tag = "17")]
+    pub my_last_seen_msg_id: u64,
+    /// Pin
+    ///
+    /// mut
+    #[prost(fixed64, tag = "10")]
+    pub pin_time_ms: u64,
 }
 ///==================== Saved ==================
 ///
@@ -693,6 +640,14 @@ pub struct Group {
     pub moderator_counts: u32,
     #[prost(message, optional, tag = "200")]
     pub media_counts: ::std::option::Option<MediaCounts>,
+    /// Member
+    ///
+    /// s_imut
+    #[prost(message, optional, tag = "43")]
+    pub group_member: ::std::option::Option<GroupMember>,
+    /// imut
+    #[prost(fixed64, tag = "11")]
+    pub visible_from_msg_gid: u64,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupMember {
@@ -963,15 +918,6 @@ pub enum ProfileLevelEnum {
     DeletedByOwner = 3,
     DeletedIran = 4,
     SuspendedIran = 5,
-}
-///==================== Direct ==================
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum DirectTypeEnum {
-    Deo = 0,
-    Profile = 1,
-    Channel = 2,
-    Group = 3,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -1262,10 +1208,12 @@ pub mod channel_command {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChatCommand {
-    #[prost(oneof = "chat_command::SubCommand", tags = "10, 11, 12, 13")]
+    #[prost(oneof = "chat_command::SubCommand", tags = "50, 10, 11, 12, 13")]
     pub sub_command: ::std::option::Option<chat_command::SubCommand>,
 }
 pub mod chat_command {
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QDeleteChat {}
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QSendMessage {
         #[prost(uint32, tag = "1")]
@@ -1285,6 +1233,8 @@ pub mod chat_command {
     pub struct QDeleteHistory {}
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum SubCommand {
+        #[prost(message, tag = "50")]
+        DeleteChat(QDeleteChat),
         #[prost(message, tag = "10")]
         SendMessage(QSendMessage),
         #[prost(message, tag = "11")]
@@ -1293,20 +1243,6 @@ pub mod chat_command {
         DeleteMessages(QDeleteMessages),
         #[prost(message, tag = "13")]
         DeleteHistory(QDeleteHistory),
-    }
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectCommand {
-    #[prost(oneof = "direct_command::SubCommand", tags = "50")]
-    pub sub_command: ::std::option::Option<direct_command::SubCommand>,
-}
-pub mod direct_command {
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct QDeleteDirects {}
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum SubCommand {
-        #[prost(message, tag = "50")]
-        DeleteDirects(QDeleteDirects),
     }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1556,7 +1492,7 @@ pub struct EventCommand {
     pub event_id: u64,
     #[prost(uint32, tag = "2")]
     pub user_id: u32,
-    #[prost(oneof = "event_command::Command", tags = "17, 7, 8, 9, 5, 6")]
+    #[prost(oneof = "event_command::Command", tags = "17, 7, 9, 5, 6")]
     pub command: ::std::option::Option<event_command::Command>,
 }
 pub mod event_command {
@@ -1566,8 +1502,7 @@ pub mod event_command {
         User(super::UserCommand),
         #[prost(message, tag = "7")]
         Profile(super::ProfileCommand),
-        #[prost(message, tag = "8")]
-        Direct(super::DirectCommand),
+        ///DirectCommand direct = 8;
         #[prost(message, tag = "9")]
         Chat(super::ChatCommand),
         #[prost(message, tag = "5")]
@@ -2069,8 +2004,15 @@ pub struct ChannelAvatarGetListParam {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelAvatarGetListResponse {}
-// crud
-
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelGetInboxParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelGetInboxResponse {}
+/// crud
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChatDeleteChatParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChatDeleteChatResponse {}
 // Members
 
 // Privacy
@@ -2102,6 +2044,11 @@ pub struct ChatDeleteMessagesResponse {}
 pub struct ChatDeleteHistoryParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChatDeleteHistoryResponse {}
+/// Notifications
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChatSetNotificationParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChatSetNotificationResponse {}
 // Others
 
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2133,73 +2080,10 @@ pub struct ChatGetMessagesListResponse {}
 pub struct ChatGetMediaListParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChatGetMediaListResponse {}
-//========= One =========
-
-/// Notifications
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectSetCustomNotificationParam {}
+pub struct ChatGetInboxParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectSetCustomNotificationResponse {}
-/// Others
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectSetDraftParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectSetDraftResponse {}
-//========= One End =========
-
-///========= Many =========
-/// CRUD
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectDeleteDirectsParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectDeleteDirectsResponse {}
-/// = Pin, Archives, Marks
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectMarkAsReadParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectMarkAsReadResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectMarkAsUnReadParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectMarkAsUnReadResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectPinDirectsParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectPinDirectsResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectUnPinDirectsParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectUnPinDirectsResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectArchiveDirectsParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectArchiveDirectsResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectUnArchiveDirectsParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectUnArchiveDirectsResponse {}
-/// Notifications
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectMuteDirectsParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectMuteDirectsResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectUnMuteDirectsParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectUnMuteDirectsResponse {}
-/// Views
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectGetChatsListParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectGetChatsListResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectGetGroupsListParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectGetGroupsListResponse {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectGetChannelsListParam {}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DirectGetChannelsListResponse {}
+pub struct ChatGetInboxResponse {}
 /// CrDU
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupCreateGroupParam {
@@ -2325,6 +2209,10 @@ pub struct GroupAddMemberParam {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupAddMemberResponse {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupSetNotificationParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupSetNotificationResponse {}
 /// Privacy
 ///
 /// NOT NOW
@@ -2481,6 +2369,10 @@ pub struct GroupGetMembersListResponse {}
 pub struct GroupGetAdminsListParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupGetAdminsListResponse {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupGetInboxParam {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupGetInboxResponse {}
 /// Dep
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupSetDraftParam {
@@ -2519,11 +2411,9 @@ pub struct GetChannelsResponse {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetDirectsParam {}
+///repeated Direct directs = 1;
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetDirectsResponse {
-    #[prost(message, repeated, tag = "1")]
-    pub directs: ::std::vec::Vec<Direct>,
-}
+pub struct GetDirectsResponse {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetMessagesParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]

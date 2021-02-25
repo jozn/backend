@@ -54,6 +54,7 @@ impl events::EventProcess for EventChannel {
                     pinned_message: None,
                     avatar: None,
                     avatar_count: 0,
+                    inboxer: None,
                     followers_count: 0,
                     posts_count: 0,
                     likes_count: 0,

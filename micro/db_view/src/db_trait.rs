@@ -55,7 +55,7 @@ pub trait DBProfile {
     fn save_profile_contacts(&self, contacts: Vec<pb::Contact>) -> Result<(), GenErr>;
     fn remove_profile_contacts(&self, profile_cid: i64) -> Result<(), GenErr>;
 
-    // =================== Profile Directs ====================
+/*    // =================== Profile Directs ====================
     fn get_profile_chat_directs(&self, profile_cid: i64) -> Result<Vec<pb::Direct>, GenErr>;
     fn get_profile_channel_directs(&self, profile_cid: i64) -> Result<Vec<pb::Direct>, GenErr>;
     fn save_profile_direct(&self, contacts: &pb::Direct) -> Result<(), GenErr>;
@@ -63,7 +63,7 @@ pub trait DBProfile {
         &self,
         profile_cid: i64,
         directs: Vec<pb::Direct>,
-    ) -> Result<(), GenErr>;
+    ) -> Result<(), GenErr>;*/
 }
 
 trait DBChat {

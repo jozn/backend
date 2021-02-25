@@ -122,10 +122,13 @@ message ChannelCommand {
 
 message ChatCommand {
   oneof sub_command {
+    QDeleteChat DeleteChat = 50;
     QSendMessage SendMessage = 10;
     QEditMessage EditMessage = 11;
     QDeleteMessages DeleteMessages = 12;
     QDeleteHistory DeleteHistory = 13;
+  }
+  message QDeleteChat {
   }
   message QSendMessage {
       uint32 group_id = 1;
@@ -137,14 +140,6 @@ message ChatCommand {
       uint32 group_id = 1;
   }
   message QDeleteHistory {
-  }
-}
-
-message DirectCommand {
-  oneof sub_command {
-    QDeleteDirects DeleteDirects = 50;
-  }
-  message QDeleteDirects {
   }
 }
 
