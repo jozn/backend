@@ -13,20 +13,20 @@ service RPC_User {
     rpc UserEditUser (UserEditUserParam) returns (UserEditUserResponse); // qevent
 
     // Delete
-    rpc UserDeleteSendCode (UserDeleteSendCodeParam) returns (UserDeleteSendCodeResponse);  // qevent_id_800
-    rpc UserDeleteConfirmCode (UserDeleteConfirmCodeParam) returns (UserDeleteConfirmCodeResponse); // qevent
-    rpc UserDeleteUser (UserDeleteUserParam) returns (UserDeleteUserResponse); // qevent
+    rpc UserDeleteSendCode (UserDeleteSendCodeParam) returns (UserDeleteSendCodeResponse);  // event
+    rpc UserDeleteConfirmCode (UserDeleteConfirmCodeParam) returns (UserDeleteConfirmCodeResponse); // event
+    rpc UserDeleteUser (UserDeleteUserParam) returns (UserDeleteUserResponse); // event_id_800
 
     // Phone (phone is per User not per Profile)
-    rpc UserChangePhoneNumber (UserChangePhoneNumberParam) returns (UserChangePhoneNumberResponse); // qevent_id_300
+    rpc UserChangePhoneNumber (UserChangePhoneNumberParam) returns (UserChangePhoneNumberResponse); // event_id_300
 
     // Email
 
     // Password
 
     // Session
-    rpc UserRemoveSession (UserRemoveSessionParam) returns (UserRemoveSessionResponse); // qevent_id_400
-    rpc UserRemoveOtherSessions (UserRemoveOtherParam) returns (UserRemoveOtherResponse); // qevent
+    rpc UserRemoveSession (UserRemoveSessionParam) returns (UserRemoveSessionResponse); // event_id_400
+    rpc UserRemoveOtherSessions (UserRemoveOtherParam) returns (UserRemoveOtherResponse); // event
 
     // Settings > not in here in Profile
 

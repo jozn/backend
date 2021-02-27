@@ -2,7 +2,7 @@
 
 use crate::{db, db_trait, events, session};
 use prost::alloc::sync::Arc;
-use shared::pb::{Channel, Comment, Message, Session, User, Profile, Contact, Chat};
+use shared::pb::{Channel, Chat, Comment, Contact, Message, Profile, Session, User};
 use shared::{common, common::prost_decode, common::prost_encode, errors::GenErr, pb, xc};
 use std::collections::hash_map::RandomState;
 use std::collections::HashMap;
@@ -32,7 +32,6 @@ struct DBMemInner {
     profiles: HashMap<i64, Arc<Mutex<MemProfile>>>,
 
     chats: HashMap<i64, Arc<Mutex<MemChat>>>,
-
 }
 
 #[derive(Default, Debug)]
@@ -44,8 +43,8 @@ struct MemProfile {
 
 #[derive(Default, Debug)]
 struct MemChat {
-   chat: pb::Chat,
-   messages: Vec<pb::Message>,
+    chat: pb::Chat,
+    messages: Vec<pb::Message>,
 }
 
 // impl !Sync for DBMemInner{}
@@ -193,6 +192,10 @@ impl db_trait::DBChannels for DBMem {
 impl db_trait::DBUser for DBMem {
     fn get_user_by_cid(&self, user_cid: i64) -> Result<User, GenErr> {
         let mut m = self.get_inner();
+        // println!(">> mem: {:?}", &m.users.len());
+        // for v in m.users.clone().into_iter() {
+        //     println!(">> {:?} {:?}", v.0 , v.1.first_name);
+        // }
         let r = m.users.get(&user_cid).ok_or(GenErr::NotFound)?;
         Ok(r.clone())
     }
@@ -209,11 +212,12 @@ impl db_trait::DBUser for DBMem {
 
     fn save_user(&self, user: &User) -> Result<(), GenErr> {
         let mut m = self.get_inner();
+        // println!(">> {:?} {:?}", user.);
         m.users.insert(user.user_cid as i64, user.clone());
         Ok(())
     }
 
-/*    fn delete_user(&self, user: &User) -> Result<(), GenErr> {
+    /*    fn delete_user(&self, user: &User) -> Result<(), GenErr> {
         let mut u = user.clone();
         u.is_deleted = true;
         self.save_user(&u)
@@ -263,7 +267,7 @@ impl db_trait::DBProfile for DBMem {
         let p = self.get_profile_inner(profile_cid)?;
         let p = p.lock().unwrap();
         Ok(p.profile.clone())
-/*        let mut m = self.get_inner();
+        /*        let mut m = self.get_inner();
         let profile = m.profiles_old.get(&profile_cid).ok_or(GenErr::NotFound)?;
         Ok(profile.clone())*/
     }
@@ -273,7 +277,7 @@ impl db_trait::DBProfile for DBMem {
         let mut p = p.lock().unwrap();
         p.profile = profile.clone();
         Ok(())
-       /* let mut m = self.get_inner();
+        /* let mut m = self.get_inner();
         m.profiles_old.insert(profile.profile_cid as i64, profile.clone());
         Ok(())*/
     }
@@ -297,7 +301,11 @@ impl db_trait::DBProfile for DBMem {
         Ok(p.contacts.clone())
     }
 
-    fn save_profile_contacts(&self,profile_cid: i64, contacts: Vec<Contact>) -> Result<(), GenErr> {
+    fn save_profile_contacts(
+        &self,
+        profile_cid: i64,
+        contacts: Vec<Contact>,
+    ) -> Result<(), GenErr> {
         let p = self.get_profile_inner(profile_cid)?;
         let mut p = p.lock().unwrap();
         p.contacts.clear();
@@ -332,18 +340,16 @@ impl db_trait::DBChat for DBMem {
         let p = p.lock().unwrap();
         for m in &p.messages {
             if m.message_gid as i64 == message_id {
-                return Ok(m.clone())
+                return Ok(m.clone());
             }
         }
         Err(GenErr::NotFound)
     }
 
-    fn save_chat_message(&self, message: &Message) -> Result<(), GenErr> {
-        let p = self.get_chat_inner(chat.chat_gid as i64)?;
+    fn save_chat_message(&self, chat_gid: i64, message: &Message) -> Result<(), GenErr> {
+        let p = self.get_chat_inner(chat_gid)?;
         let mut p = p.lock().unwrap();
         p.messages.push(message.clone());
         Ok(())
     }
 }
-
-

@@ -129,6 +129,7 @@ message ChatCommand {
     QDeleteHistory DeleteHistory = 13;
   }
   message QDeleteChat {
+      uint64 chat_id = 1;
   }
   message QSendMessage {
       uint32 group_id = 1;
@@ -240,12 +241,6 @@ message UserCommand {
   oneof sub_command {
     QRegisterUser RegisterUser = 100;
     QEditUser EditUser = 101;
-    QDeleteSendCode DeleteSendCode = 800;
-    QDeleteConfirmCode DeleteConfirmCode = 801;
-    QDeleteUser DeleteUser = 802;
-    QChangePhoneNumber ChangePhoneNumber = 300;
-    QRemoveSession RemoveSession = 400;
-    QRemoveOtherSessions RemoveOtherSessions = 401;
   }
   message QRegisterUser {
       uint32 user_cid = 1;
@@ -259,20 +254,6 @@ message UserCommand {
       bool set_new_name = 3;
       string new_first_name = 4;
       string new_last_name = 6;
-  }
-  message QDeleteSendCode {
-      bool Resend = 1;
-  }
-  message QDeleteConfirmCode {
-      string code = 3;
-  }
-  message QDeleteUser {
-  }
-  message QChangePhoneNumber {
-  }
-  message QRemoveSession {
-  }
-  message QRemoveOtherSessions {
   }
 }
 

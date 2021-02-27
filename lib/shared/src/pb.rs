@@ -1212,7 +1212,10 @@ pub struct ChatCommand {
 }
 pub mod chat_command {
     #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct QDeleteChat {}
+    pub struct QDeleteChat {
+        #[prost(uint64, tag = "1")]
+        pub chat_id: u64,
+    }
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QSendMessage {
         #[prost(uint32, tag = "1")]
@@ -1416,10 +1419,7 @@ pub mod profile_command {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserCommand {
-    #[prost(
-        oneof = "user_command::SubCommand",
-        tags = "100, 101, 800, 801, 802, 300, 400, 401"
-    )]
+    #[prost(oneof = "user_command::SubCommand", tags = "100, 101")]
     pub sub_command: ::std::option::Option<user_command::SubCommand>,
 }
 pub mod user_command {
@@ -1447,42 +1447,12 @@ pub mod user_command {
         #[prost(string, tag = "6")]
         pub new_last_name: std::string::String,
     }
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct QDeleteSendCode {
-        #[prost(bool, tag = "1")]
-        pub resend: bool,
-    }
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct QDeleteConfirmCode {
-        #[prost(string, tag = "3")]
-        pub code: std::string::String,
-    }
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct QDeleteUser {}
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct QChangePhoneNumber {}
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct QRemoveSession {}
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct QRemoveOtherSessions {}
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum SubCommand {
         #[prost(message, tag = "100")]
         RegisterUser(QRegisterUser),
         #[prost(message, tag = "101")]
         EditUser(QEditUser),
-        #[prost(message, tag = "800")]
-        DeleteSendCode(QDeleteSendCode),
-        #[prost(message, tag = "801")]
-        DeleteConfirmCode(QDeleteConfirmCode),
-        #[prost(message, tag = "802")]
-        DeleteUser(QDeleteUser),
-        #[prost(message, tag = "300")]
-        ChangePhoneNumber(QChangePhoneNumber),
-        #[prost(message, tag = "400")]
-        RemoveSession(QRemoveSession),
-        #[prost(message, tag = "401")]
-        RemoveOtherSessions(QRemoveOtherSessions),
     }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]

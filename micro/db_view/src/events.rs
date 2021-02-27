@@ -42,7 +42,7 @@ impl EventHandler {
         match cmd.clone() {
             Command::User(ch_cmd) => {
                 self.send_event_to_shared_thread(12, event_req, || {
-                    Box::new(event_user::EventUser::new_mem())
+                    Box::new(event_user::UserEventProcessor::new_mem())
                 });
             }
             Command::Channel(ch_cmd) => {

@@ -328,15 +328,15 @@ mod tests {
             let arr = db.get_message_comments(1000).unwrap();
             assert_eq!(arr.get(0).unwrap().text, "comment1".to_string());
 
-            println!("Channel Tests Worked Correctly");
+            println!("Channel tests works correctly.");
         }
     }
 
     #[test]
     fn channels_tests() {
-        println!("it works!");
-        let ct = ChannelTester::new();
-        ct.start_tests();
+        println!("Channel events processing tests started.");
+        let channel_tester = ChannelTester::new();
+        channel_tester.start_tests();
     }
 
     #[test]
