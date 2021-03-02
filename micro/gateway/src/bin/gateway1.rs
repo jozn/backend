@@ -1,12 +1,14 @@
-use async_trait::async_trait;
+use std::sync::Arc;
 
+use async_trait::async_trait;
 use bytes::Bytes;
 use once_cell::sync::OnceCell;
+
+use gen::rpc2;
 use shared;
 use shared::errors::GenErr;
 use shared::new_rpc::{FHttpRequest, FHttpResponse, FIMicroService};
-use shared::{pb, rpc2};
-use std::sync::Arc;
+use shared::pb;
 
 static GATEWAY_INSTANCE: OnceCell<Gateway> = OnceCell::new();
 

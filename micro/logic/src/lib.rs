@@ -5,27 +5,30 @@
 #![allow(warnings)]
 #![allow(soft_unstable)]
 
-use async_trait::async_trait;
-use byteorder::ReadBytesExt;
-use byteorder::WriteBytesExt;
-use bytes::Bytes;
-use once_cell::sync::OnceCell;
-use shared;
-use shared::errors::GenErr;
-use shared::new_rpc::{FHttpRequest, FHttpResponse, FIMicroService};
-use shared::pb::{ConfirmCodeParam, ConfirmCodeResponse};
-use shared::rpc2::{IPC_CMaster_Handler2, RPC_Auth_Handler2, RPC_Registry};
-use shared::{pb, rpc2};
 use std::borrow::Borrow;
 use std::collections::{HashMap, HashSet};
 use std::iter::Map;
 use std::ops::{Deref, DerefMut};
 use std::panic::RefUnwindSafe;
+use std::sync::{Arc, atomic, Mutex};
 use std::sync::atomic::Ordering;
-use std::sync::{atomic, Arc, Mutex};
 use std::thread;
+
+use async_trait::async_trait;
+use byteorder::ReadBytesExt;
+use byteorder::WriteBytesExt;
+use bytes::Bytes;
+use once_cell::sync::OnceCell;
 use tokio::sync::mpsc::{channel, Receiver, Sender};
 use tokio::sync::oneshot;
+
+use gen::rpc2::{IPC_CMaster_Handler2, RPC_Auth_Handler2, RPC_Registry};
+use gen::rpc2;
+use shared;
+use shared::errors::GenErr;
+use shared::new_rpc::{FHttpRequest, FHttpResponse, FIMicroService};
+use shared::pb::{ConfirmCodeParam, ConfirmCodeResponse};
+use shared::pb;
 
 #[derive(Debug, Default)]
 pub struct UserSpaceCache {
@@ -61,7 +64,7 @@ impl rpc2::RPC_Channel_Handler2 for UserSpace {}
 pub enum Commands {
     InternalRpc,
     Exit,
-    Invoke(shared::rpc2::RpcInvoke),
+    Invoke(gen::rpc2::RpcInvoke),
 }
 
 #[derive(Debug)]
@@ -139,7 +142,7 @@ impl UserSpacMapper {
                 };
             }
 
-            let reg = shared::rpc2::RPC_Registry {
+            let reg = gen::rpc2::RPC_Registry {
                 RPC_Auth: add!(),
                 RPC_Channel: Some(Box::new(arc_us.clone())),
                 ..Default::default()
@@ -166,14 +169,15 @@ impl UserSpacMapper {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use tokio::sync::mpsc;
+
+    use super::*;
 
     #[tokio::test]
     async fn rpc_user_space_test1() {
         let invoke = pb::Invoke {
             namespace: 0,
-            method: shared::rpc2::method_ids::ConfirmCode,
+            method: gen::rpc2::method_ids::ConfirmCode,
             user_id: 3,
             action_id: 0,
             session: vec![],

@@ -6,8 +6,9 @@
 
 extern crate shared;
 
+use gen::rpc2;
 use serde::{Deserialize, Serialize};
-use shared::{pb, rpc2};
+use shared::pb;
 
 #[tokio::main]
 async fn main() {

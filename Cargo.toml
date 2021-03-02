@@ -1,5 +1,7 @@
 [workspace]
 members = [
+    "lib/gen_common",
+    "lib/gen",
     "lib/shared",
 #    "archives/shared2",
     "micro/gateway",

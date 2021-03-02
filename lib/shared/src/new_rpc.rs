@@ -1,8 +1,8 @@
-use crate::pb;
-use crate::{errors::GenErr, UserParam};
+use gen::pb;
+use gen::{errors::GenErr, UserParam};
 use async_trait::async_trait;
 
-use crate::rpc2;
+use gen::rpc2;
 use http::Version;
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Error as HyperError, Request, Response, Server};
