@@ -27,13 +27,32 @@ impl events::EventProcess for ChatEventProcessor {
         use SubCommand::*;
         match ch_sub {
             DeleteChat(q) => {
-                let chat = self.db.get_chat(event.profile_cid as i64,q.chat_gid as i64)?;
-                 // todo delete each message > extract
+                let chat = self
+                    .db
+                    .get_chat(event.profile_cid as i64, q.chat_gid as i64)?;
+                // todo delete each message > extract
             }
             SendMessage(q) => {
                 let chat = self
                     .db
-                    .get_chat(event.profile_cid as i64, q.chat_gid as i64)?;
+                    .get_chat(event.profile_cid as i64, q.chat_gid as i64);
+
+                if chat.is_err() {
+                    let chat = pb::Chat {
+                        chat_gid: q.chat_gid,
+                        profile1_cid: q.profile_cid as u32,
+                        profile2_cid: 0,
+                        direct1_gid: 0,
+                        direct2_gid: 0,
+                        contact: None,
+                        profile: None,
+                        last_message: None,
+                        pinned_message: None,
+                        inboxer: None,
+                    };
+                    self.db.save_chat(&chat);
+                }
+
                 let i = q.message_input.unwrap();
                 let m = pb::Message {
                     message_gid: i.message_gid,
@@ -57,8 +76,8 @@ impl events::EventProcess for ChatEventProcessor {
                     files: vec![],
                     product: None,
                 };
-                
-                self.db.save_chat_message(chat.chat_gid as i64, &m)?;
+                println!(">>> her");
+                self.db.save_chat_message(q.chat_gid as i64, &m)?;
                 //todo add media
             }
             EditMessage(_) => {
@@ -111,19 +130,25 @@ mod tests {
             let db = &self.proc.db;
 
             let user_cmd = pb::ChatCommand {
-                profile_cid: 0,
+                profile_cid: 2,
                 sub_command: Some(cmd.clone()),
             };
 
             let qevent = shared::pb::EventCommand {
-                event_id: 0,
+                event_id: 55,
                 user_cid: 0,
-                profile_cid: 5,
+                profile_cid: 2,
                 channel_cid: 0,
-                chat_gid: 0,
+                chat_gid: 1,
                 group_cid: 0,
                 command: Some(pb::event_command::Command::Chat(user_cmd)),
             };
+
+            self.proc.process_event(qevent).unwrap();
+        }
+
+        fn start_tests(&self) {
+            let db = &self.proc.db;
 
             //===== QRegisterUser
             let q = QSendMessage {
@@ -137,20 +162,13 @@ mod tests {
                     via_app_id: 0,
                     seq: 1,
                     created_time: 123,
-                    verified: false
-                })
+                    verified: false,
+                }),
             };
-
             self.send(SendMessage(q));
 
-            let chat = db.get_chat_message(1,21).unwrap();
-            assert_eq!(chat.text, "texting");
-
-            self.proc.process_event(qevent).unwrap();
-        }
-
-        fn start_tests(&self) {
-            let db = &self.proc.db;
+            let chat = db.get_chat_message(1, 21).unwrap();
+            assert_eq!(chat.text, "texting1");
 
             println!("Chat tests works correctly.");
         }

@@ -23,10 +23,10 @@ once_cell = "1.5.2"
 #rocksdb = "0.15.0"
 byteorder = "1"
 
-foundationdb = "0.4"
-futures = "0.3"
+#foundationdb = "0.4"
+#futures = "0.3"
 
-tikv-client = { git = "https://github.com/tikv/client-rust.git" }
+#tikv-client = { git = "https://github.com/tikv/client-rust.git" }
 
 cdrs = "3.0.0-beta.2"
 #bindgen = "0.55.0"
