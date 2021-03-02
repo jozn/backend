@@ -8,12 +8,12 @@ use std::ops::Add;
 fn main() {
     _extract_images_mod(
         "/home/hamid/life/__files__/Telegram/images",
-        "./lib/shared/src/mock/images.rs",
+        "./lib/shared/src/gen/mock/images.rs",
     );
 
     _extract_images_mod(
         "/home/hamid/life/__files__/avatars",
-        "./lib/shared/src/mock/avatars.rs",
+        "./lib/shared/src/gen/mock/avatars.rs",
     );
 }
 
