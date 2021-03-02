@@ -6,8 +6,10 @@ members = [
 #    "micro/cmaster",
     "micro/db_view",
     "micro/logic",
-    "micro/play",
-    "micro/tmp",
+
+    # Dev Playground
+    "dev_play/play",
+    "dev_play/tmp",
 
 ]
 exclude =[

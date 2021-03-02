@@ -10,6 +10,9 @@ use std::sync::Arc;
 
 static GATEWAY_INSTANCE: OnceCell<Gateway> = OnceCell::new();
 
+// Note: blocking Api was added due to crates incompatablity, now it's
+// fixed, just use async api.
+
 #[derive(Debug)]
 struct Gateway {
     pub endpoint: &'static str,

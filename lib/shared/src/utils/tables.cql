@@ -1,6 +1,6 @@
 //##### New Dump > Changed Manulay
 
-DROP KEYSPACE IF NOT EXISTS flip;
+DROP KEYSPACE flip;
 
 CREATE KEYSPACE IF NOT EXISTS flip WITH REPLICATION = { 'class' : 'org.apache.cassandra.locator.SimpleStrategy', 'replication_factor': '1' } AND DURABLE_WRITES = true;
 
