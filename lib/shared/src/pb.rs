@@ -1207,6 +1207,8 @@ pub mod channel_command {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChatCommand {
+    #[prost(uint32, tag = "1")]
+    pub profile_cid: u32,
     #[prost(oneof = "chat_command::SubCommand", tags = "50, 10, 11, 12, 13")]
     pub sub_command: ::std::option::Option<chat_command::SubCommand>,
 }
@@ -1214,25 +1216,46 @@ pub mod chat_command {
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QDeleteChat {
         #[prost(uint64, tag = "1")]
-        pub chat_id: u64,
+        pub profile_cid: u64,
+        #[prost(uint64, tag = "2")]
+        pub chat_gid: u64,
     }
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QSendMessage {
-        #[prost(uint32, tag = "1")]
-        pub group_id: u32,
+        #[prost(uint64, tag = "1")]
+        pub profile_cid: u64,
+        #[prost(uint64, tag = "2")]
+        pub chat_gid: u64,
+        #[prost(message, optional, tag = "3")]
+        pub message_input: ::std::option::Option<super::NewMessageInput>,
     }
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QEditMessage {
-        #[prost(uint32, tag = "1")]
-        pub group_id: u32,
+        #[prost(uint64, tag = "2")]
+        pub chat_gid: u64,
+        #[prost(fixed64, tag = "4")]
+        pub message_gid: u64,
+        #[prost(uint32, tag = "3")]
+        pub by_profile_cid: u32,
+        #[prost(string, tag = "6")]
+        pub new_text: std::string::String,
     }
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QDeleteMessages {
-        #[prost(uint32, tag = "1")]
-        pub group_id: u32,
+        #[prost(uint64, tag = "1")]
+        pub profile_cid: u64,
+        #[prost(uint64, tag = "2")]
+        pub chat_gid: u64,
+        #[prost(uint64, repeated, tag = "3")]
+        pub message_gids: ::std::vec::Vec<u64>,
     }
     #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct QDeleteHistory {}
+    pub struct QDeleteHistory {
+        #[prost(uint64, tag = "1")]
+        pub profile_cid: u64,
+        #[prost(uint64, tag = "2")]
+        pub chat_gid: u64,
+    }
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum SubCommand {
         #[prost(message, tag = "50")]
@@ -1460,7 +1483,15 @@ pub struct EventCommand {
     #[prost(fixed64, tag = "1")]
     pub event_id: u64,
     #[prost(uint32, tag = "2")]
-    pub user_id: u32,
+    pub user_cid: u32,
+    #[prost(uint32, tag = "1200")]
+    pub profile_cid: u32,
+    #[prost(uint32, tag = "1201")]
+    pub channel_cid: u32,
+    #[prost(uint64, tag = "1202")]
+    pub chat_gid: u64,
+    #[prost(uint32, tag = "1203")]
+    pub group_cid: u32,
     #[prost(oneof = "event_command::Command", tags = "17, 7, 9, 5, 6")]
     pub command: ::std::option::Option<event_command::Command>,
 }
@@ -1977,12 +2008,15 @@ pub struct ChannelAvatarGetListResponse {}
 pub struct ChannelGetInboxParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelGetInboxResponse {}
+/// todo : clean profile_cid
 /// crud
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChatDeleteChatParam {
-    /// both - many
     #[prost(uint64, tag = "1")]
-    pub chat_id: u64,
+    pub profile_cid: u64,
+    /// both - many
+    #[prost(uint64, tag = "2")]
+    pub chat_gid: u64,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChatDeleteChatResponse {}
@@ -1994,27 +2028,46 @@ pub struct ChatDeleteChatResponse {}
 
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChatSendMessageParam {
-    #[prost(uint32, tag = "1")]
-    pub group_id: u32,
+    #[prost(uint64, tag = "1")]
+    pub profile_cid: u64,
+    #[prost(uint64, tag = "2")]
+    pub chat_gid: u64,
+    #[prost(message, optional, tag = "3")]
+    pub message_input: ::std::option::Option<NewMessageInput>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChatSendMessageResponse {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChatEditMessageParam {
-    #[prost(uint32, tag = "1")]
-    pub group_id: u32,
+    #[prost(uint64, tag = "2")]
+    pub chat_gid: u64,
+    #[prost(fixed64, tag = "4")]
+    pub message_gid: u64,
+    #[prost(uint32, tag = "3")]
+    pub by_profile_cid: u32,
+    #[prost(string, tag = "6")]
+    pub new_text: std::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChatEditMessageResponse {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChatDeleteMessagesParam {
-    #[prost(uint32, tag = "1")]
-    pub group_id: u32,
+    #[prost(uint64, tag = "1")]
+    pub profile_cid: u64,
+    #[prost(uint64, tag = "2")]
+    pub chat_gid: u64,
+    #[prost(uint64, repeated, tag = "3")]
+    pub message_gids: ::std::vec::Vec<u64>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChatDeleteMessagesResponse {}
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChatDeleteHistoryParam {}
+pub struct ChatDeleteHistoryParam {
+    #[prost(uint64, tag = "1")]
+    pub profile_cid: u64,
+    #[prost(uint64, tag = "2")]
+    pub chat_gid: u64,
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChatDeleteHistoryResponse {}
 /// Notifications

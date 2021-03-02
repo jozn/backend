@@ -7,7 +7,13 @@ import "event.proto";
 
 message EventCommand {
   fixed64 event_id = 1;
-  uint32 user_id = 2;
+
+  uint32 user_cid = 2;
+  uint32 profile_cid = 1200;
+  uint32 channel_cid = 1201;
+  uint64 chat_gid = 1202;
+  uint32 group_cid = 1203;
+
   oneof command {
     UserCommand user = 17;
     ProfileCommand profile = 7;

@@ -96,7 +96,11 @@ mod tests {
 
             let qevent = shared::pb::EventCommand {
                 event_id: 1 as u64,
-                user_id: 2,
+                user_cid: 0,
+                profile_cid: 0,
+                channel_cid: 0,
+                chat_gid: 0,
+                group_cid: 0,
                 command: Some(pb::event_command::Command::User(user_cmd)),
             };
 

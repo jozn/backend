@@ -121,6 +121,7 @@ message ChannelCommand {
 }
 
 message ChatCommand {
+  uint32 profile_cid = 1;
   oneof sub_command {
     QDeleteChat DeleteChat = 50;
     QSendMessage SendMessage = 10;
@@ -129,22 +130,33 @@ message ChatCommand {
     QDeleteHistory DeleteHistory = 13;
   }
   message QDeleteChat {
-      uint64 chat_id = 1;
+      uint64 profile_cid = 1;
+      uint64 chat_gid = 2;
   }
   message QSendMessage {
-      uint32 group_id = 1;
+    uint64 profile_cid = 1;
+    uint64 chat_gid = 2;
+    NewMessageInput message_input = 3;
   }
   message QEditMessage {
-      uint32 group_id = 1;
+      uint64 chat_gid = 2;
+      fixed64 message_gid = 4;
+      uint32 by_profile_cid = 3;
+      string new_text = 6;
   }
   message QDeleteMessages {
-      uint32 group_id = 1;
+      uint64 profile_cid = 1;
+      uint64 chat_gid = 2;
+      repeated uint64 message_gids = 3;
   }
   message QDeleteHistory {
+      uint64 profile_cid = 1;
+      uint64 chat_gid = 2;
   }
 }
 
 message GroupCommand {
+  
   oneof sub_command {
     QCreateGroup CreateGroup = 40;
     QEditGroup EditGroup = 41;
@@ -230,6 +242,7 @@ message GroupCommand {
 }
 
 message ProfileCommand {
+  
   oneof sub_command {
     QSetSettings SetSettings = 10;
   }
@@ -238,6 +251,7 @@ message ProfileCommand {
 }
 
 message UserCommand {
+  
   oneof sub_command {
     QRegisterUser RegisterUser = 100;
     QEditUser EditUser = 101;

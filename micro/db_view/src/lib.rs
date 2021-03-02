@@ -12,6 +12,7 @@ pub mod session;
 
 pub mod db_mem;
 pub mod db_trait;
+pub mod event_chat;
 pub mod event_group;
 pub mod event_user;
 pub mod events;

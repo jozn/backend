@@ -35,7 +35,11 @@ async fn cmd_save_channels_handler() {
 
         let qevent = shared::pb::EventCommand {
             event_id: i as u64,
-            user_id: 2,
+            user_cid: 2,
+            profile_cid: 0,
+            channel_cid: 0,
+            chat_gid: 0,
+            group_cid: 0,
             command: Some(pb::event_command::Command::Channel(chcmd)),
             // command: pb::event_command::Command::Channel(pb::ChannelCommand)
         };

@@ -80,7 +80,7 @@ pub trait DBChat {
     fn save_chat_message(&self, chat_gid: i64, message: &pb::Message) -> Result<(), GenErr>;
 }
 
-pub trait DB: DBChannels + DBUser {}
+pub trait DB: DBChannels + DBUser + DBChat + DBProfile {}
 // pub trait DB: DBChannels + DBProfile + DBUser + DBChat {}
 
 /*

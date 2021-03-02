@@ -44,10 +44,11 @@ service RPC_Chat {
     rpc ChatGetMediaList (ChatGetMediaListParam) returns (ChatGetMediaListResponse);
     rpc ChatGetInbox (ChatGetInboxParam) returns (ChatGetInboxResponse);
 }
-
+// todo : clean profile_cid
 // crud
 message ChatDeleteChatParam {
-    uint64 chat_id = 1;
+    uint64 profile_cid = 1;
+    uint64 chat_gid = 2;
     // both - many
 }
 
@@ -62,7 +63,9 @@ message ChatDeleteChatResponse {
 // Messages
 
 message ChatSendMessageParam {
-    uint32 group_id = 1;
+    uint64 profile_cid = 1;
+    uint64 chat_gid = 2;
+    NewMessageInput message_input = 3;
 }
 
 message ChatSendMessageResponse {
@@ -70,7 +73,10 @@ message ChatSendMessageResponse {
 }
 
 message ChatEditMessageParam {
-    uint32 group_id = 1;
+    uint64 chat_gid = 2;
+    fixed64 message_gid = 4;
+    uint32 by_profile_cid = 3;
+    string new_text = 6;
 }
 
 message ChatEditMessageResponse {
@@ -78,7 +84,9 @@ message ChatEditMessageResponse {
 }
 
 message ChatDeleteMessagesParam {
-    uint32 group_id = 1;
+    uint64 profile_cid = 1;
+    uint64 chat_gid = 2;
+    repeated uint64 message_gids = 3;
 }
 
 message ChatDeleteMessagesResponse {
@@ -86,6 +94,8 @@ message ChatDeleteMessagesResponse {
 }
 
 message ChatDeleteHistoryParam {
+    uint64 profile_cid = 1;
+    uint64 chat_gid = 2;
 }
 
 message ChatDeleteHistoryResponse {
