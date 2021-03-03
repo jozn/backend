@@ -8,20 +8,20 @@ use shared::new_rpc::{FHttpRequest, FHttpResponse, FIMicroService};
 use shared::{pb, rpc2};
 use std::sync::Arc;
 
-static GATEWAY_INSTANCE: OnceCell<Gateway> = OnceCell::new();
+static FORWARD_INSTANCE: OnceCell<ForwardClient> = OnceCell::new();
 
 // Note: blocking Api was added due to crates incompatablity, now it's
 // fixed, just use async api.
 
 #[derive(Debug)]
-struct Gateway {
-    pub endpoint: &'static str,
-    pub reqwest_client: reqwest::Client,
+struct ForwardClient {
+    endpoint: String,
+    reqwest_client: reqwest::Client,
 }
 
-impl Gateway {
-    pub fn new(endpoint: &'static str) -> Self {
-        Gateway {
+impl ForwardClient {
+    pub fn new(endpoint: String) -> Self {
+        ForwardClient {
             endpoint: endpoint,
             reqwest_client: reqwest::Client::new(),
         }
@@ -35,7 +35,7 @@ impl Gateway {
     pub async fn send_http_request(&self, body_data: Vec<u8>) -> Result<Vec<u8>, GenErr> {
         let req = self
             .reqwest_client
-            .post(self.endpoint)
+            .post(&self.endpoint)
             .body(body_data)
             .send()
             .await?;
@@ -44,7 +44,6 @@ impl Gateway {
         let res_bytes = res_bytes.to_vec();
         Ok(res_bytes)
     }
-
 }
 
 #[derive(Debug)]
@@ -58,33 +57,43 @@ impl FIMicroService for GatewayMicro {
         4000
     }
 
+    // todo add self
     async fn serve_request(req: FHttpRequest) -> Result<FHttpResponse, GenErr> {
+        // println!(">>serving gateway request {:?}", req);
+
+        // Some path checking and validation
         if req.method == http::Method::GET && req.path == "/" {
             return Ok((200, b"This is gateway.".to_vec()));
         }
+        if req.path != "rpc" {
+            return Ok((404, b"Only /rpc route is recgonized".to_vec()));
+        }
+
         let body = req.body.clone();
+        // No serving of zero data (hence empty Invoke)
         if body.len() == 0 {
             return Ok((500, b"body is empty.".to_vec()));
         }
 
         let invoke: pb::Invoke = prost::Message::decode(body)?;
-        let gate = GATEWAY_INSTANCE.get().unwrap();
+        let gate = FORWARD_INSTANCE.get().unwrap();
 
+        // Handling rpc requests based on their method types
         match invoke.method {
+            // Especial handling of some rpc methods: for example if all
+            // groups calls must be directed to a particaluar shared
             rpc2::method_ids::GetProfiles => {
                 println!("rpc2::method_ids::Echo ");
+                Ok((200, b" manula".to_vec()))
             }
+
+            // All other rpc calls handling
             _ => {
                 println!("method {} ", invoke.method);
-
-                // todo remve blokign cod once reqwest support tokio1
-                // let res = gate.send_http_request(req.body.to_vec()).await?;
                 let res = gate.send_http_request(req.body.to_vec()).await?;
-
-                return Ok((200, res));
+                Ok((200, res))
             }
-        };
-        Ok((200, b" manula".to_vec()))
+        }
     }
 }
 
@@ -92,12 +101,12 @@ impl FIMicroService for GatewayMicro {
 async fn main() {
     println!("Starting gateway1");
 
-    let gateway = Gateway {
-        endpoint: "http://127.0.0.1:4001/rpc",
+    let forward = ForwardClient {
+        endpoint: "http://127.0.0.1:4001/rpc".to_string(), // logic micro listener
         reqwest_client: Default::default(),
     };
 
-    GATEWAY_INSTANCE.set(gateway).unwrap();
+    FORWARD_INSTANCE.set(forward).unwrap();
 
     let gateway_micro = GatewayMicro{
         // gateway: gateway,
