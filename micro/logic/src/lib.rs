@@ -36,7 +36,7 @@ pub struct UserSpaceCache {
     liked_posts: HashSet<String>,
 }
 
-// no locking
+// No locking
 #[derive(Debug)]
 pub struct UserSpace {
     sender: Sender<UserSpaceCmdReq>,
@@ -97,26 +97,16 @@ impl UserSpaceMapper {
         };
         let sending_res = req_sender_stream.send(us_cmd_req).await;
         match sending_res {
-            Ok(r) => {
-                // println!("+++ send sucess");
-            }
+            Ok(r) => {}
             Err(er) => {
                 println!("+++ send err {}", er);
             }
         }
 
         match req_receiver.await {
-            Ok(val_bts) => {
-                // println!("req recived {:?}", &val_bts);
-                Ok(val_bts)
-            }
+            Ok(val_bts) => Ok(val_bts),
             Err(e) => Err(GenErr::UserSpaceErr),
         }
-        // let res = req_receiver.try_recv();
-        // let res = req_receiver.;
-        // println!("req recived {:?}", res);
-
-        // Ok(b"".to_vec())
     }
 
     fn get_or_init_userspcace_cmd(&mut self, user_id: u32) -> Sender<UserSpaceCmdReq> {
@@ -165,7 +155,6 @@ impl UserSpaceMapper {
             };
 
             while let Some(us_cmd_req) = req_stream_receiver.recv().await {
-                // println!(">>>> inside of UserSpaceCmd matching ");
                 match us_cmd_req.cmd {
                     Commands::InternalRpc => {}
                     Commands::Exit => break,
@@ -178,10 +167,7 @@ impl UserSpaceMapper {
                             out_res.clone(),
                             &us_cmd_req.invoke_req,
                         );
-                        // println!("invoke res: {:?}", &out_res);
                         let res = us_cmd_req.result_chan.send(out_res); //fixme
-                        // println!("invoke res 22: {:?}", res);
-                        // let res = us_cmd_req.result.send(b"sucess".to_vec());
                     }
                 }
             }
@@ -199,7 +185,7 @@ mod tests {
     #[tokio::test]
     async fn rpc_user_space_test1() {
         let echo = pb::SharedEchoParam {
-            text: "echo me flip".to_string(),
+            text: "Echo me flip".to_string(),
         };
         let mut echo_data = vec![];
         prost::Message::encode(&echo, &mut echo_data).unwrap();
@@ -217,16 +203,8 @@ mod tests {
 
         let mut us = UserSpaceMapper::new();
         let out = us.serve_rpc_request_vec8(vec.clone()).await;
-        // let out = us.server_rpc_rec_vec8(vec).await;
 
-        println!("test user space");
-        tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-
-        println!("res of user space command: {:?} ", out);
         let o: pb::SharedEchoResponse = shared::common::prost_decode(&out.unwrap()).unwrap();
-        // let rr = out.unwrap();
-        // let o :pb::SharedEchoResponse = prost::Message::decode(out);
-
         println!(">>>>>>>>>> las: {:?} ", o);
 
         // A sample loop
@@ -234,6 +212,5 @@ mod tests {
             let out = us.serve_rpc_request_vec8(vec.clone()).await;
             println!("++++++ {}: {:?} ", i, out.unwrap().len());
         }
-
     }
 }
