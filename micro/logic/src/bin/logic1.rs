@@ -7,17 +7,8 @@ use once_cell::sync::OnceCell;
 use shared;
 use shared::errors::GenErr;
 use shared::new_rpc::{FHttpRequest, FHttpResponse, FIMicroService};
-use shared::pb::{
-    ConfirmCodeParam, ConfirmCodeResponse, EchoParam, EchoResponse, SendConfirmCodeParam,
-    SendConfirmCodeResponse,
-};
+
 use shared::{pb, rpc2};
-use std::collections::{HashMap, HashSet};
-use std::iter::Map;
-use std::ops::{Deref, DerefMut};
-use std::sync::atomic::Ordering;
-use std::sync::{atomic, Arc, Mutex};
-use tokio::sync::mpsc::{channel, Receiver};
 
 // use logic::UserSpaceOld;
 
@@ -41,7 +32,7 @@ impl FIMicroService for LogicMicro {
 
 #[tokio::main]
 async fn main() {
-    println!("Hi logic1 !");
+    println!("Starting logic1 ... ");
 
     let c = LogicMicro {
         //handler: Arc::new(handler),

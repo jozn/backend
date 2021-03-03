@@ -13,7 +13,7 @@ use once_cell::sync::OnceCell;
 use shared;
 use shared::errors::GenErr;
 use shared::new_rpc::{FHttpRequest, FHttpResponse, FIMicroService};
-use shared::pb::{ConfirmCodeParam, ConfirmCodeResponse};
+use shared::pb::*;
 use shared::rpc2::{IPC_CMaster_Handler2, RPC_Auth_Handler2, RPC_Registry};
 use shared::{pb, rpc2};
 use std::borrow::Borrow;
@@ -45,13 +45,13 @@ impl UserSpace {}
 
 #[async_trait]
 impl RPC_Auth_Handler2 for UserSpace {
-    async fn ConfirmCode(&self, param: ConfirmCodeParam) -> Result<ConfirmCodeResponse, GenErr> {
-        println!("inside of ConfrimCode impl for userSpace");
-        Ok(pb::ConfirmCodeResponse {
-            done: true,
-            error_message: "ssdf sdfsdfsd fsd flsa".to_string(),
-        })
-    }
+    // async fn AuthSingUp(&self, param: AuthSingUpParam) -> Result<AuthSingUpResponse, GenErr> {
+    //     println!("inside of ConfrimCode impl for userSpace");
+    //     Ok(pb::AuthSingUpResponse {
+    //         done: true,
+    //         error_message: "ssdf sdfsdfsd fsd flsa".to_string(),
+    //     })
+    // }
 }
 
 #[async_trait]

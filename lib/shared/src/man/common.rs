@@ -71,7 +71,6 @@ pub fn param_to_invoke(param: &impl prost::Message, method_id: u32) -> Result<Ve
 pub struct RpcClient {
     pub endpoint: &'static str,
     pub reqwest_client: reqwest::Client,
-    pub reqwest_client_blocking: reqwest::blocking::Client,
 }
 
 impl RpcClient {
@@ -79,24 +78,11 @@ impl RpcClient {
         RpcClient {
             endpoint: endpoint,
             reqwest_client: reqwest::Client::new(),
-            reqwest_client_blocking: reqwest::blocking::Client::new(),
         }
     }
 
     fn get_next_action_id(&self) -> u64 {
         8
-    }
-
-    pub async fn send_http_request_blocking(&self, body_data: Vec<u8>) -> Result<Vec<u8>, GenErr> {
-        let req = self
-            .reqwest_client_blocking
-            .post(self.endpoint)
-            .body(body_data)
-            .send()?;
-
-        let res_bytes = req.bytes()?;
-        let res_bytes = res_bytes.to_vec();
-        Ok(res_bytes)
     }
 
     pub async fn send_http_request(&self, body_data: Vec<u8>) -> Result<Vec<u8>, GenErr> {
@@ -119,9 +105,9 @@ impl RpcClient {
     ) -> Result<T, GenErr> {
         let invoke_vec = param_to_invoke(param, method_id)?;
 
-        // let res_body_vec = self.send_http_request(invoke_vec).await?;
+        let res_body_vec = self.send_http_request(invoke_vec).await?;
         // todo remove blocking once rqwest support tokio 1
-        let res_body_vec = self.send_http_request_blocking(invoke_vec).await?;
+        // let res_body_vec = self.send_http_request_blocking(invoke_vec).await?;
 
         let pb_res_invoke: pb::InvokeResponse = prost_decode(res_body_vec.as_slice())?;
         let pb_response: T = prost_decode(pb_res_invoke.rpc_data.as_slice())?;

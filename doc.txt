@@ -1,3 +1,4 @@
+Note: ::prost::Message implements Debug attribute > ignore IDE error
 ======
 Direct is DEPRECATED: as ui is now solidified we merge this rpc int each chat, channels and groups when
 they are appropirate > it leads to more rpc and codes but it make things to easer to reason

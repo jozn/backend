@@ -8,7 +8,7 @@ edition = "2018"
 
 [dependencies]
 shared = {path = "../../lib/shared"}
-tokio = { version = "1.0.1", features = ["full"] }
+tokio = { version = "1.2.0", features = ["full"] }
 prost = "0.7.0"
 async-trait = "0.1.42"
 

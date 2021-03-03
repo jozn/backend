@@ -59,13 +59,13 @@ impl FIMicroService for GatewayMicro {
 
     // todo add self
     async fn serve_request(req: FHttpRequest) -> Result<FHttpResponse, GenErr> {
-        // println!(">>serving gateway request {:?}", req);
+        println!(">>serving gateway request {:?}", req);
 
         // Some path checking and validation
         if req.method == http::Method::GET && req.path == "/" {
             return Ok((200, b"This is gateway.".to_vec()));
         }
-        if req.path != "rpc" {
+        if req.path != "/rpc" {
             return Ok((404, b"Only /rpc route is recgonized".to_vec()));
         }
 
