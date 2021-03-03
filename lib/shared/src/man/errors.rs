@@ -38,7 +38,8 @@ impl From<CWError> for GenErr {
     }
 }
 
-/*impl From<Option::None> for GenErr {
+/*impl
+From<Option::None> for GenErr {
     fn from(_: Option::None) -> Self {
         GenErr::NotFound
     }

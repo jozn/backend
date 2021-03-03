@@ -2,7 +2,7 @@ extern crate prost_build;
 // If it must fail > it must panics > no output to concole without panic
 
 fn main() {
-    build_pb();
+    // build_pb();
 
     std::process::Command::new("cargo")
         .arg("fmt")
@@ -24,11 +24,7 @@ fn build_pb() {
     // println!("{:#?}", &vec_protos);
 
     let mut config = prost_build::Config::default();
-    // config.type_attribute(".", "#[derive(Default)]");
     config.out_dir("src/gen/");
-    // config.compile_well_known_types();
-    // config.type_attribute(".", "#[derive(Debug)]");
-    // config.retain_enum_prefix();
     let v = config.compile_protos(&vec_protos, &["src/man/protos/proto".to_string()]);
     println!("{:?}", v);
     v.unwrap();

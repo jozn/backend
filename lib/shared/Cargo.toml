@@ -27,7 +27,7 @@ hyper = { version = "0.14.1", features = ["full"] }
 http = "0.2.1"
 
 bytes = "1.0.0"
-reqwest = { version = "0.10.10",  features = ["blocking", "json"] }
+reqwest = { version = "0.11.1",  features = ["blocking", "json"] }
 image = "0.23.11"
 
 #rocksdb = "0.15.0"

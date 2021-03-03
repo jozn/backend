@@ -17,7 +17,7 @@ static GATEWAY_INSTANCE: OnceCell<Gateway> = OnceCell::new();
 struct Gateway {
     pub endpoint: &'static str,
     pub reqwest_client: reqwest::Client,
-    pub reqwest_client_blocking: reqwest::blocking::Client,
+    // pub reqwest_client_blocking: reqwest::blocking::Client,
 }
 
 impl Gateway {
@@ -25,7 +25,7 @@ impl Gateway {
         Gateway {
             endpoint: endpoint,
             reqwest_client: reqwest::Client::new(),
-            reqwest_client_blocking: reqwest::blocking::Client::new(),
+            // reqwest_client_blocking: reqwest::blocking::Client::new(),
         }
     }
 
@@ -47,7 +47,7 @@ impl Gateway {
         Ok(res_bytes)
     }
 
-    pub async fn send_http_request_blocking(&self, body_data: Vec<u8>) -> Result<Vec<u8>, GenErr> {
+    /*    pub async fn send_http_request_blocking(&self, body_data: Vec<u8>) -> Result<Vec<u8>, GenErr> {
         let req = self
             .reqwest_client_blocking
             .post(self.endpoint)
@@ -57,7 +57,7 @@ impl Gateway {
         let res_bytes = req.bytes()?;
         let res_bytes = res_bytes.to_vec();
         Ok(res_bytes)
-    }
+    }*/
 }
 
 #[derive(Debug)]
@@ -75,7 +75,12 @@ impl FIMicroService for GatewayMicro {
         if req.method == http::Method::GET && req.path == "/" {
             return Ok((200, b"This is gateway.".to_vec()));
         }
-        let invoke: pb::Invoke = prost::Message::decode(req.body.clone())?;
+        let body = req.body.clone();
+        if body.len() == 0 {
+            return Ok((500, b"body is empty.".to_vec()));
+        }
+
+        let invoke: pb::Invoke = prost::Message::decode(body)?;
         let gate = GATEWAY_INSTANCE.get().unwrap();
 
         match invoke.method {
@@ -87,7 +92,7 @@ impl FIMicroService for GatewayMicro {
 
                 // todo remve blokign cod once reqwest support tokio1
                 // let res = gate.send_http_request(req.body.to_vec()).await?;
-                let res = gate.send_http_request_blocking(req.body.to_vec()).await?;
+                let res = gate.send_http_request(req.body.to_vec()).await?;
 
                 return Ok((200, res));
             }
@@ -98,19 +103,19 @@ impl FIMicroService for GatewayMicro {
 
 #[tokio::main]
 async fn main() {
-    println!("Hi gatwway1");
+    println!("Starting gateway1");
 
     let gateway = Gateway {
         endpoint: "http://127.0.0.1:4001/rpc",
         reqwest_client: Default::default(),
-        reqwest_client_blocking: Default::default(),
+        // reqwest_client_blocking: Default::default(),
     };
 
     GATEWAY_INSTANCE.set(gateway).unwrap();
 
-    let c = GatewayMicro{
+    let gateway_micro = GatewayMicro{
         // gateway: gateway,
     };
 
-    c.listen_http_requests().await;
+    gateway_micro.listen_http_requests().await;
 }
