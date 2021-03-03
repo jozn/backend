@@ -17,7 +17,6 @@ static GATEWAY_INSTANCE: OnceCell<Gateway> = OnceCell::new();
 struct Gateway {
     pub endpoint: &'static str,
     pub reqwest_client: reqwest::Client,
-    // pub reqwest_client_blocking: reqwest::blocking::Client,
 }
 
 impl Gateway {
@@ -25,7 +24,6 @@ impl Gateway {
         Gateway {
             endpoint: endpoint,
             reqwest_client: reqwest::Client::new(),
-            // reqwest_client_blocking: reqwest::blocking::Client::new(),
         }
     }
 
@@ -47,17 +45,6 @@ impl Gateway {
         Ok(res_bytes)
     }
 
-    /*    pub async fn send_http_request_blocking(&self, body_data: Vec<u8>) -> Result<Vec<u8>, GenErr> {
-        let req = self
-            .reqwest_client_blocking
-            .post(self.endpoint)
-            .body(body_data)
-            .send()?;
-
-        let res_bytes = req.bytes()?;
-        let res_bytes = res_bytes.to_vec();
-        Ok(res_bytes)
-    }*/
 }
 
 #[derive(Debug)]
@@ -108,7 +95,6 @@ async fn main() {
     let gateway = Gateway {
         endpoint: "http://127.0.0.1:4001/rpc",
         reqwest_client: Default::default(),
-        // reqwest_client_blocking: Default::default(),
     };
 
     GATEWAY_INSTANCE.set(gateway).unwrap();
