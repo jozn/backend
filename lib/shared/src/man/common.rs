@@ -85,7 +85,7 @@ impl RpcClient {
         8
     }
 
-    pub async fn send_http_request(&self, body_data: Vec<u8>) -> Result<Vec<u8>, GenErr> {
+    async fn _send_http_request(&self, body_data: Vec<u8>) -> Result<Vec<u8>, GenErr> {
         let req = self
             .reqwest_client
             .post(self.endpoint)
@@ -105,10 +105,9 @@ impl RpcClient {
     ) -> Result<T, GenErr> {
         let invoke_vec = param_to_invoke(param, method_id)?;
 
-        let res_body_vec = self.send_http_request(invoke_vec).await?;
-        // todo remove blocking once rqwest support tokio 1
-        // let res_body_vec = self.send_http_request_blocking(invoke_vec).await?;
+        let res_body_vec = self._send_http_request(invoke_vec).await?;
 
+        //todo zero len respose should be considerd error
         let pb_res_invoke: pb::InvokeResponse = prost_decode(res_body_vec.as_slice())?;
         let pb_response: T = prost_decode(pb_res_invoke.rpc_data.as_slice())?;
         Ok(pb_response)

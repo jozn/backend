@@ -12,6 +12,8 @@ pub enum GenErr {
     NoRpcRegistry,
 
     NotFound,
+
+    UserSpaceErr,
 }
 
 impl From<reqwest::Error> for GenErr {

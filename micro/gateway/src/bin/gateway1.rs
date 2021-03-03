@@ -76,7 +76,7 @@ impl FIMicroService for GatewayMicro {
         }
 
         let invoke: pb::Invoke = prost::Message::decode(body)?;
-        let gate = FORWARD_INSTANCE.get().unwrap();
+        let forwarder = FORWARD_INSTANCE.get().unwrap();
 
         // Handling rpc requests based on their method types
         match invoke.method {
@@ -90,7 +90,7 @@ impl FIMicroService for GatewayMicro {
             // All other rpc calls handling
             _ => {
                 println!("method {} ", invoke.method);
-                let res = gate.send_http_request(req.body.to_vec()).await?;
+                let res = forwarder.send_http_request(req.body.to_vec()).await?;
                 Ok((200, res))
             }
         }

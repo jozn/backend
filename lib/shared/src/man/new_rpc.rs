@@ -50,6 +50,7 @@ pub trait FIMicroService: Send + 'static {
         println!("There will some sort.");
 
         // let celf = self;
+        // NOT USED
         let serlf_arc = std::sync::Arc::new(self);
         let serlf_arc2 = serlf_arc.clone();
 
@@ -66,13 +67,19 @@ pub trait FIMicroService: Send + 'static {
                     body: bts,
                 };
 
-                // serlf_arc2.clone();
-
-                let respose = Self::serve_request(req).await.unwrap();
-                // let respose = &(self).serve_request2(req).await.unwrap();
-
-                let res = Response::new(Body::from(respose.1));
-                Ok::<_, HyperError>(res)
+                let response_res = Self::serve_request(req).await;
+                match response_res {
+                    Ok(rpc_res) => {
+                        let res = Response::new(Body::from(rpc_res.1));
+                        Ok::<_, HyperError>(res)
+                    }
+                    Err(err) => {
+                        println!("Gateway Err: {:?}", err);
+                        // Return empty body //todo: can send 5xx in here?
+                        let res = Response::new(Body::from(""));
+                        Ok::<_, HyperError>(res)
+                    }
+                }
             }))
         });
 

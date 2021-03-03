@@ -12,6 +12,7 @@ use bytes::Bytes;
 use once_cell::sync::OnceCell;
 use shared;
 use shared::errors::GenErr;
+use shared::gen::rpc2::RPC_Shared_Handler2;
 use shared::new_rpc::{FHttpRequest, FHttpResponse, FIMicroService};
 use shared::pb::*;
 use shared::rpc2::{IPC_CMaster_Handler2, RPC_Auth_Handler2, RPC_Registry};
@@ -24,8 +25,10 @@ use std::panic::RefUnwindSafe;
 use std::sync::atomic::Ordering;
 use std::sync::{atomic, Arc, Mutex};
 use std::thread;
+use tokio::sync::mpsc::error::SendError;
 use tokio::sync::mpsc::{channel, Receiver, Sender};
 use tokio::sync::oneshot;
+use tokio::sync::oneshot::error::RecvError;
 
 #[derive(Debug, Default)]
 pub struct UserSpaceCache {
@@ -36,7 +39,7 @@ pub struct UserSpaceCache {
 // no locking
 #[derive(Debug)]
 pub struct UserSpace {
-    sender: Sender<UserSpaceCmd>,
+    sender: Sender<UserSpaceCmdReq>,
     last_rpc: u64,
     user_id: u64,
     cache: UserSpaceCache,
@@ -44,14 +47,13 @@ pub struct UserSpace {
 impl UserSpace {}
 
 #[async_trait]
-impl RPC_Auth_Handler2 for UserSpace {
-    // async fn AuthSingUp(&self, param: AuthSingUpParam) -> Result<AuthSingUpResponse, GenErr> {
-    //     println!("inside of ConfrimCode impl for userSpace");
-    //     Ok(pb::AuthSingUpResponse {
-    //         done: true,
-    //         error_message: "ssdf sdfsdfsd fsd flsa".to_string(),
-    //     })
-    // }
+impl RPC_Shared_Handler2 for UserSpace {
+    async fn SharedEcho(&self, param: SharedEchoParam) -> Result<SharedEchoResponse, GenErr> {
+        Ok(pb::SharedEchoResponse {
+            done: true,
+            text: format!("Echoing:: {}", param.text),
+        })
+    }
 }
 
 #[async_trait]
@@ -65,19 +67,19 @@ pub enum Commands {
 }
 
 #[derive(Debug)]
-pub struct UserSpaceCmd {
+pub struct UserSpaceCmdReq {
     cmd: Commands,
     invoke_req: pb::Invoke, // needed?
-    result: oneshot::Sender<Vec<u8>>,
+    result_chan: oneshot::Sender<Vec<u8>>,
 }
 
 #[derive(Default, Debug)]
-pub struct UserSpacMapper {
-    mapper: Arc<Mutex<HashMap<u32, Sender<UserSpaceCmd>>>>,
+pub struct UserSpaceMapper {
+    mapper: Arc<Mutex<HashMap<u32, Sender<UserSpaceCmdReq>>>>,
 }
-impl UserSpacMapper {
-    pub fn new() -> UserSpacMapper {
-        UserSpacMapper::default()
+impl UserSpaceMapper {
+    pub fn new() -> UserSpaceMapper {
+        UserSpaceMapper::default()
     }
 
     pub async fn serve_rpc_request_vec8(&mut self, rpc_http: Vec<u8>) -> Result<Vec<u8>, GenErr> {
@@ -88,19 +90,36 @@ impl UserSpacMapper {
         let req_sender_stream = self.get_or_init_userspcace_cmd(user_id);
 
         let (req_sender, mut req_receiver) = oneshot::channel();
-        let us_cmd = UserSpaceCmd {
+        let us_cmd_req = UserSpaceCmdReq {
             cmd: Commands::Invoke(rpc_invoke_enumed),
             invoke_req: invoke,
-            result: req_sender,
+            result_chan: req_sender,
         };
-        req_sender_stream.send(us_cmd).await;
-        let res = req_receiver.try_recv();
-        println!("req recived  {:?}", res);
+        let sending_res = req_sender_stream.send(us_cmd_req).await;
+        match sending_res {
+            Ok(r) => {
+                // println!("+++ send sucess");
+            }
+            Err(er) => {
+                println!("+++ send err {}", er);
+            }
+        }
 
-        Ok(b"".to_vec())
+        match req_receiver.await {
+            Ok(val_bts) => {
+                // println!("req recived {:?}", &val_bts);
+                Ok(val_bts)
+            }
+            Err(e) => Err(GenErr::UserSpaceErr),
+        }
+        // let res = req_receiver.try_recv();
+        // let res = req_receiver.;
+        // println!("req recived {:?}", res);
+
+        // Ok(b"".to_vec())
     }
 
-    fn get_or_init_userspcace_cmd(&mut self, user_id: u32) -> Sender<UserSpaceCmd> {
+    fn get_or_init_userspcace_cmd(&mut self, user_id: u32) -> Sender<UserSpaceCmdReq> {
         let mut lock = self.mapper.lock().unwrap();
         let us_opt = lock.deref_mut().get(&user_id);
 
@@ -115,7 +134,7 @@ impl UserSpacMapper {
         req_sender_stream
     }
 
-    fn dispatch_new_user_space(&self, user_id: u32) -> Sender<UserSpaceCmd> {
+    fn dispatch_new_user_space(&self, user_id: u32) -> Sender<UserSpaceCmdReq> {
         let (req_stream_sender, mut req_stream_receiver) = channel(32);
         let req_stream_sender_cp = req_stream_sender.clone();
 
@@ -127,7 +146,7 @@ impl UserSpacMapper {
                 // commands: receiver,
                 sender: req_stream_sender_cp,
                 last_rpc: 0,
-                user_id: 0,
+                user_id: user_id as u64,
                 cache: Default::default(),
             };
 
@@ -139,22 +158,30 @@ impl UserSpacMapper {
                 };
             }
 
-            let reg = shared::rpc2::RPC_Registry {
-                RPC_Auth: add!(),
+            let rpc_handler_registry = shared::rpc2::RPC_Registry {
+                RPC_Shared: add!(),
                 RPC_Channel: Some(Box::new(arc_us.clone())),
                 ..Default::default()
             };
 
-            while let Some(us_cmd) = req_stream_receiver.recv().await {
-                println!(">>>> insided of UserSpaceCmd matching ");
-                match us_cmd.cmd {
+            while let Some(us_cmd_req) = req_stream_receiver.recv().await {
+                // println!(">>>> inside of UserSpaceCmd matching ");
+                match us_cmd_req.cmd {
                     Commands::InternalRpc => {}
                     Commands::Exit => break,
                     Commands::Invoke(invoke) => {
-                        println!("getting  {:?}", invoke);
-                        let out_res = rpc2::server_rpc(invoke, &reg).await.unwrap();
-                        let res = shared::common::to_invoke_response(out_res, &us_cmd.invoke_req);
-                        let res = us_cmd.result.send(b"sucess".to_vec());
+                        println!("userspace getting invoke: {:?}", invoke);
+                        let out_res = rpc2::server_rpc(invoke, &rpc_handler_registry)
+                            .await
+                            .unwrap();
+                        let res = shared::common::to_invoke_response(
+                            out_res.clone(),
+                            &us_cmd_req.invoke_req,
+                        );
+                        // println!("invoke res: {:?}", &out_res);
+                        let res = us_cmd_req.result_chan.send(out_res); //fixme
+                        // println!("invoke res 22: {:?}", res);
+                        // let res = us_cmd_req.result.send(b"sucess".to_vec());
                     }
                 }
             }
@@ -171,28 +198,42 @@ mod tests {
 
     #[tokio::test]
     async fn rpc_user_space_test1() {
+        let echo = pb::SharedEchoParam {
+            text: "echo me flip".to_string(),
+        };
+        let mut echo_data = vec![];
+        prost::Message::encode(&echo, &mut echo_data).unwrap();
+
         let invoke = pb::Invoke {
             namespace: 0,
-            method: shared::rpc2::method_ids::ConfirmCode,
+            method: shared::rpc2::method_ids::SharedEcho,
             user_id: 3,
             action_id: 0,
             session: vec![],
-            rpc_data: vec![],
+            rpc_data: echo_data,
         };
         let mut vec = vec![];
         prost::Message::encode(&invoke, &mut vec).unwrap();
 
-        let mut us = UserSpacMapper::new();
+        let mut us = UserSpaceMapper::new();
         let out = us.serve_rpc_request_vec8(vec.clone()).await;
         // let out = us.server_rpc_rec_vec8(vec).await;
 
         println!("test user space");
         tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-    }
 
-    #[test]
-    fn it_works() {
-        println!("hwerwe");
-        assert_eq!(2 + 2, 4);
+        println!("res of user space command: {:?} ", out);
+        let o: pb::SharedEchoResponse = shared::common::prost_decode(&out.unwrap()).unwrap();
+        // let rr = out.unwrap();
+        // let o :pb::SharedEchoResponse = prost::Message::decode(out);
+
+        println!(">>>>>>>>>> las: {:?} ", o);
+
+        // A sample loop
+        for i in 1..100 {
+            let out = us.serve_rpc_request_vec8(vec.clone()).await;
+            println!("++++++ {}: {:?} ", i, out.unwrap().len());
+        }
+
     }
 }
