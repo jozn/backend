@@ -12,9 +12,9 @@ use std::sync::Mutex;
 use std::time::Duration;
 use tokio::time::sleep;
 
-use crate::{db, errors::GenErr, tg, types, utils};
+use crate::{db, errors::TelegramGenErr, tg, types, utils};
 
-pub async fn crawl_next_username() -> Result<(), GenErr> {
+pub async fn crawl_next_username() -> Result<(), TelegramGenErr> {
     let mut caller = get_caller().await;
     let username = db::get_next_queue_username()?;
     // let username = "flip_app".to_string();
@@ -54,13 +54,13 @@ pub async fn crawl_next_username() -> Result<(), GenErr> {
         }
 
         Err(e) => match e {
-            GenErr::TgRPC => {
+            TelegramGenErr::TgRPC => {
                 //todo
-/*                if rpc.code == 400 && &rpc.name == "USERNAME_NOT_OCCUPIED" {
+                /*                if rpc.code == 400 && &rpc.name == "USERNAME_NOT_OCCUPIED" {
                     save_free(false);
                 }*/
             }
-            GenErr::TgConverter => {
+            TelegramGenErr::TgConverter => {
                 // This means username is used in other places: personal accounts,...
                 save_free(true);
             }
@@ -87,7 +87,7 @@ pub async fn get_caller() -> types::Caller {
     caller
 }
 
-pub async fn crawl_next_channel_messages() -> Result<(), GenErr> {
+pub async fn crawl_next_channel_messages() -> Result<(), TelegramGenErr> {
     let mut caller = get_caller().await;
     let cd = db::get_random_cached_channel()?;
     if let Some(ci) = cd.channel_info {
@@ -151,23 +151,6 @@ pub async fn crawl_next_channel_messages() -> Result<(), GenErr> {
     }
 
     Ok(())
-}
-
-//////////////////////////// Archive /////////////////////////////
-
-pub async fn crawl_next_channel_dep() {
-    let mut caller = get_caller().await;
-    for i in 0..1 {
-        // let username = get_next_channel_username();
-        sleep(Duration::from_millis(20)).await;
-        let res = tg::get_channel_info(&mut caller, 1072723547, -1615658883512673699).await;
-
-        println!("res >> {:#?}", res);
-    }
-
-    GLOBAL_DATA.lock().unwrap().insert(3, "sdf".to_string());
-
-    println!("res >> {:#?}", GLOBAL_DATA);
 }
 
 static GLOBAL_DATA: Lazy<Mutex<HashMap<i32, String>>> = Lazy::new(|| {

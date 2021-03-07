@@ -1,16 +1,15 @@
-use grammers_client::{ Client, Config};
+use grammers_client::{Client, Config};
 // use grammers_mtproto::errors::RpcError;
 use grammers_mtsender::InvocationError;
 use rusqlite;
 // use serde::export::Formatter;
+use grammers_mtsender::AuthorizationError;
+use serde::__private::Formatter;
 use std::error::Error;
 use std::fmt::Display;
-use serde::__private::Formatter;
-use grammers_mtsender::{AuthorizationError};
-
 
 #[derive(Debug)]
-pub enum GenErr {
+pub enum TelegramGenErr {
     DB(rusqlite::Error),
     Io,
     Download,
@@ -24,8 +23,8 @@ pub enum GenErr {
 
 // impl Error for GenErr {}
 
-impl GenErr {
-/*    pub fn is_tg_not_found(&self) -> bool {
+impl TelegramGenErr {
+    /*    pub fn is_tg_not_found(&self) -> bool {
         match self {
             GenErr::TgRPC(rpc) => {
                 if rpc.code == 400 {
@@ -82,23 +81,23 @@ impl GenErr {
 //     }
 // }
 
-impl From<InvocationError> for GenErr {
-    fn from(inv: InvocationError) -> GenErr {
+impl From<InvocationError> for TelegramGenErr {
+    fn from(inv: InvocationError) -> TelegramGenErr {
         match inv {
-           // InvocationError::RPC => GenErr::TgRPC,//(rpc.clone()),
-            _ => GenErr::TgConnection,
+            // InvocationError::RPC => GenErr::TgRPC,//(rpc.clone()),
+            _ => TelegramGenErr::TgConnection,
         }
     }
 }
 
-impl From<rusqlite::Error> for GenErr {
-    fn from(e: rusqlite::Error) -> GenErr {
-        GenErr::DB(e)
+impl From<rusqlite::Error> for TelegramGenErr {
+    fn from(e: rusqlite::Error) -> TelegramGenErr {
+        TelegramGenErr::DB(e)
     }
 }
 
-impl From<serde_json::Error> for GenErr {
-    fn from(e: serde_json::Error) -> GenErr {
-        GenErr::JSON(e)
+impl From<serde_json::Error> for TelegramGenErr {
+    fn from(e: serde_json::Error) -> TelegramGenErr {
+        TelegramGenErr::JSON(e)
     }
 }

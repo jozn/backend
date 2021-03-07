@@ -1,4 +1,3 @@
-
 use async_std::task;
 use grammers_client::{Client, Config};
 use grammers_mtsender::InvocationError;
@@ -9,14 +8,13 @@ use grammers_tl_types::enums::{Message, MessageEntity};
 use grammers_tl_types::RemoteCall;
 use std::io::Write;
 
-use crate::{types, types::Caller, errors::GenErr, utils};
-use crate::{types::{Media,MediaThumb}};
-
+use crate::types::{Media, MediaThumb};
+use crate::{errors::TelegramGenErr, types, types::Caller, utils};
 
 pub async fn dl_thumb_to_disk_old(
     caller: &mut Caller,
     t: &types::MediaThumb,
-) -> Result<(), GenErr> {
+) -> Result<(), TelegramGenErr> {
     // hack: use Media for dl
     let mut m = types::Media::default();
     m.dep_volume_id = t.dep_volume_id;
@@ -33,7 +31,10 @@ pub async fn dl_thumb_to_disk_old(
     Ok(())
 }
 
-pub async fn dl_media_thumb_to_disk(caller: &mut Caller, m: types::Media) -> Result<(), GenErr> {
+pub async fn dl_media_thumb_to_disk(
+    caller: &mut Caller,
+    m: types::Media,
+) -> Result<(), TelegramGenErr> {
     // let o = *m.video_thumbs_rec;
     if let Some(t) = *m.video_thumbs_rec {
         // println!("++++ Downloading video thumb {}{}", o. );
@@ -46,7 +47,7 @@ pub async fn dl_media_thumb_to_disk(caller: &mut Caller, m: types::Media) -> Res
     Ok(())
 }
 
-pub async fn dl_media(caller: &mut Caller, m: types::Media) -> Result<Vec<u8>, GenErr> {
+pub async fn dl_media(caller: &mut Caller, m: types::Media) -> Result<Vec<u8>, TelegramGenErr> {
     use types::MediaType::*;
     match m.media_type {
         Image => {
@@ -65,11 +66,11 @@ pub async fn dl_media(caller: &mut Caller, m: types::Media) -> Result<Vec<u8>, G
             // let mut f = std::fs::File::create(name).unwrap();
             // f.write(&res);
         }
-        Unknown => Err(GenErr::Download),
+        Unknown => Err(TelegramGenErr::Download),
     }
 }
 
-async fn _dl_image(caller: &mut Caller, m: types::Media) -> Result<Vec<u8>, GenErr> {
+async fn _dl_image(caller: &mut Caller, m: types::Media) -> Result<Vec<u8>, TelegramGenErr> {
     let request = tl::functions::upload::GetFile {
         precise: false,
         cdn_supported: false,
@@ -100,7 +101,7 @@ async fn _dl_image(caller: &mut Caller, m: types::Media) -> Result<Vec<u8>, GenE
     Ok(out)
 }
 
-async fn _dl_file(caller: &mut Caller, m: types::Media) -> Result<Vec<u8>, GenErr> {
+async fn _dl_file(caller: &mut Caller, m: types::Media) -> Result<Vec<u8>, TelegramGenErr> {
     let limit = 524288;
     let mut out_buffer = Vec::with_capacity(limit as usize);
     let mut offset = 0;
@@ -147,7 +148,7 @@ async fn _dl_file(caller: &mut Caller, m: types::Media) -> Result<Vec<u8>, GenEr
     }
 
     if out_buffer.len() == 0 {
-        return Err(GenErr::Download);
+        return Err(TelegramGenErr::Download);
     }
 
     Ok(out_buffer)
@@ -239,7 +240,6 @@ async fn get_file_doc(caller: &mut Caller, req: tl::types::InputDocumentFileLoca
     let mut f = std::fs::File::create(name).unwrap();
     f.write(&out_buffer);
 }
-
 
 async fn send_req<R: RemoteCall>(
     caller: &mut Caller,

@@ -8,9 +8,9 @@ use grammers_tl_types::enums::{Message, MessageEntity};
 use grammers_tl_types::RemoteCall;
 use std::io::Write;
 
-use crate::{types, types::Caller, errors::GenErr, utils};
-use crate::{types::{Media,MediaThumb}};
-use crate::{tg::converter};
+use crate::tg::converter;
+use crate::types::{Media, MediaThumb};
+use crate::{errors::TelegramGenErr, types, types::Caller, utils};
 
 use log::kv::Source;
 
@@ -35,7 +35,7 @@ pub struct MsgHolder {
     pub users: Vec<String>,
 }
 
-pub async fn get_configs(caller: &mut Caller) -> Result<tl::enums::Config, GenErr> {
+pub async fn get_configs(caller: &mut Caller) -> Result<tl::enums::Config, TelegramGenErr> {
     let request = tl::functions::help::GetConfig {};
     let res = caller.client.invoke(&request).await?;
     println!("config {:#?}", res);
@@ -46,7 +46,7 @@ pub async fn get_channel_info(
     caller: &mut Caller,
     channel_id: i32,
     access_hash: i64,
-) -> Result<types::ChannelInfo, GenErr> {
+) -> Result<types::ChannelInfo, TelegramGenErr> {
     let request = tl::functions::channels::GetFullChannel {
         channel: tl::enums::InputChannel::Channel(tl::types::InputChannel {
             channel_id: channel_id,
@@ -96,13 +96,13 @@ pub async fn get_channel_info(
         }
     }
 
-    Err(GenErr::TgConverter)
+    Err(TelegramGenErr::TgConverter)
 }
 
 pub async fn get_channel_by_username(
     caller: &mut Caller,
     username: &str,
-) -> Result<types::ChannelByUsernameResult, GenErr> {
+) -> Result<types::ChannelByUsernameResult, TelegramGenErr> {
     let request = tl::functions::contacts::ResolveUsername {
         username: username.to_string(),
     };
@@ -136,10 +136,13 @@ pub async fn get_channel_by_username(
             }
         }
     }
-    Err(GenErr::TgConverter)
+    Err(TelegramGenErr::TgConverter)
 }
 
-pub async fn get_messages(caller: &mut Caller, req: ReqGetMessages) -> Result<MsgHolder, GenErr> {
+pub async fn get_messages(
+    caller: &mut Caller,
+    req: ReqGetMessages,
+) -> Result<MsgHolder, TelegramGenErr> {
     let request = tl::functions::messages::GetHistory {
         peer: tl::enums::InputPeer::Channel(tl::types::InputPeerChannel {
             channel_id: req.channel_id,
@@ -163,7 +166,7 @@ pub async fn get_messages(caller: &mut Caller, req: ReqGetMessages) -> Result<Ms
 async fn process_channel_msgs(
     caller: &mut Caller,
     mt: tl::enums::messages::Messages,
-) -> Result<MsgHolder, GenErr> {
+) -> Result<MsgHolder, TelegramGenErr> {
     let mut msg_holder = MsgHolder {
         msgs: vec![],
         channels: vec![],

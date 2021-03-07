@@ -1,4 +1,4 @@
-use grammers_client::{ Client, Config};
+use grammers_client::{Client, Config};
 use grammers_tl_types::enums::contacts::ResolvedPeer;
 use grammers_tl_types::Serializable;
 use std::borrow::Borrow;
@@ -15,8 +15,8 @@ use std::sync::{Arc, Mutex};
 pub type Binary = Vec<u8>;
 
 // use crate::client_pool;
-use serde::{Deserialize, Serialize};
 use grammers_session::FileSession;
+use serde::{Deserialize, Serialize};
 
 /*pub struct App {
     pub login: Vec<LoginPhone>,

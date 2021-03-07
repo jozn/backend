@@ -1,6 +1,5 @@
-
 use async_std::task;
-use grammers_client::{ Client, Config};
+use grammers_client::{Client, Config};
 use grammers_mtsender::InvocationError;
 use grammers_session as session;
 use grammers_tl_types as tl;
@@ -9,8 +8,8 @@ use grammers_tl_types::enums::{Message, MessageEntity};
 use grammers_tl_types::RemoteCall;
 use std::io::Write;
 
-use crate::{types, types::Caller, errors::GenErr, utils};
-use crate::{types::{Media,MediaThumb}};
+use crate::types::{Media, MediaThumb};
+use crate::{errors::TelegramGenErr, types, types::Caller, utils};
 
 pub(super) fn process_inline_channel_messages(
     messages: Vec<tl::enums::Message>,
@@ -328,10 +327,10 @@ fn conv_message_to_msg(m: tl::types::Message) -> types::Msg {
         match fw {
             Header(f) => {
                 fwd = Some(types::MsgForwarded {
-                    from_id: 0,//f.from_id.unwrap_or(0), //todo
+                    from_id: 0, //f.from_id.unwrap_or(0), //todo
                     from_name: f.from_name.unwrap_or("".to_string()),
                     date: f.date,
-                    channel_id: 0,//todo
+                    channel_id: 0, //todo
                     channel_post: f.channel_post.unwrap_or(0),
                     post_author: f.post_author.unwrap_or("".to_string()),
                     saved_from_msg_id: f.saved_from_msg_id.unwrap_or(0),
@@ -346,7 +345,7 @@ fn conv_message_to_msg(m: tl::types::Message) -> types::Msg {
         id: m.id,
         from_id: m.id,
         via_bot_id: m.via_bot_id.unwrap_or(0),
-        reply_to_msg_id: 0,// todo m.reply_to_msg_id.unwrap_or(0),
+        reply_to_msg_id: 0, // todo m.reply_to_msg_id.unwrap_or(0),
         date: m.date,
         message: m.message,
         views: m.views.unwrap_or(0),

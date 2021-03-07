@@ -42,7 +42,7 @@ async fn async_main() -> Result {
 
     let api_id = 123259; // env!("TG_ID").parse().expect("TG_ID invalid");
     let api_hash = "e88ec58aa1ce01f5630e194e9571d751".to_string(); //env!("TG_HASH").to_string();
-    let token = "sdf".to_string();//env::args().skip(1).next().expect("token missing");
+    let token = "sdf".to_string(); //env::args().skip(1).next().expect("token missing");
 
     println!("Connecting to Telegram...");
     let mut client = Client::connect(Config {

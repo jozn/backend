@@ -1,5 +1,5 @@
 // use sqlite;
-use crate::{errors::GenErr, types, utils};
+use crate::{errors::TelegramGenErr, types, utils};
 
 use rusqlite::{params, Connection, Result, NO_PARAMS};
 
@@ -34,7 +34,7 @@ pub fn save_queue_username(username: &str) {
     con.execute(q, params![username]).unwrap();
 }
 
-pub fn get_next_queue_username() -> Result<String, GenErr> {
+pub fn get_next_queue_username() -> Result<String, TelegramGenErr> {
     let con = get_conn();
     let mut s = "".to_string();
 
@@ -65,7 +65,7 @@ pub fn save_cached_username(cud: &types::CachedUsernameData) {
 
 pub fn load_all_cached_usernames() {}
 
-pub fn get_random_cached_channel() -> Result<types::CachedUsernameData, GenErr> {
+pub fn get_random_cached_channel() -> Result<types::CachedUsernameData, TelegramGenErr> {
     let con = get_conn();
 
     // let q = "SELECT data FROM cached_username where channel_id != 0 ORDER BY RANDOM() LIMIT 1";
@@ -88,21 +88,4 @@ fn get_conn() -> Connection {
     con.execute("PRAGMA journal_mode = MEMORY", params![]);
     con.execute("PRAGMA temp_store = MEMORY", params![]);
     con
-}
-
-///////////////// Archives ////////////////
-
-pub fn get_next_queue_username_bk() -> Result<String, GenErr> {
-    let con = get_conn();
-    let mut s = "".to_string();
-
-    let q = "SELECT username FROM queue_username ORDER BY RANDOM() LIMIT 1";
-
-    let mut stmt = con.prepare(q)?;
-    let mut rows = stmt.query(NO_PARAMS)?;
-    while let Some(row) = rows.next()? {
-        s = row.get(0)?;
-    }
-
-    Ok(s)
 }
