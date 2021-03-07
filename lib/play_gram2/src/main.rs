@@ -20,7 +20,6 @@ mod types;
 use std::cell::*;
 
 mod con_mgr;
-mod config;
 mod crawl;
 mod db;
 mod errors;

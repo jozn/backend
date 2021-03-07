@@ -11,3 +11,4 @@ micro/logic/src/xc_sys
 /aof*
 *.session
 **.sqlite
+/out
