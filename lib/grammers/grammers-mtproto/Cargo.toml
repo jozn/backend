@@ -1,0 +1,29 @@
+[package]
+name = "grammers-mtproto"
+version = "0.2.0"
+authors = ["Lonami Exo <totufals@hotmail.com>"]
+license = "MIT OR Apache-2.0"
+description = """
+An implementation of the Mobile Transport Protocol.
+"""
+homepage = "https://github.com/Lonami/grammers"
+documentation = "https://docs.rs/grammers-mtproto"
+repository = "https://github.com/Lonami/grammers"
+keywords = ["mtproto", "telegram", "tl"]
+categories = ["network-programming"]
+edition = "2018"
+
+[dependencies]
+crc = "1.8.1"
+getrandom = "0.2.1"
+grammers-crypto = { path = "../grammers-crypto", version = "0.2.0" }
+flate2 = "1.0.19"
+num-bigint = "0.3.1"
+sha1 = "0.6.0"
+bytes = "1.0.0"
+
+[dependencies.grammers-tl-types]
+path = "../grammers-tl-types"
+version = "0.2.0"
+default-features = false
+features = ["tl-mtproto"]

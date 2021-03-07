@@ -11,9 +11,32 @@ members = [
     "dev_play/play",
     "dev_play/tmp",
 
+    "lib/play_gram2",
+
+
+    # grammers
+    "lib/grammers/grammers",
+    "lib/grammers/grammers-client",
+    "lib/grammers/grammers-crypto",
+    "lib/grammers/grammers-mtproto",
+    "lib/grammers/grammers-mtsender",
+    "lib/grammers/grammers-session",
+    "lib/grammers/grammers-tl-gen",
+    "lib/grammers/grammers-tl-parser",
+    "lib/grammers/grammers-tl-types",
+
 ]
 exclude =[
 #    "micro/logic",
     "micro/cmaster",
-
 ]
+
+[patch.crates-io]
+grammers-client = { path = "lib/grammers/grammers-client" }
+grammers-crypto = { path = "lib/grammers/grammers-crypto" }
+grammers-mtproto = { path = "lib/grammers/grammers-mtproto" }
+grammers-mtsender = { path = "lib/grammers/grammers-mtsender" }
+grammers-session = { path = "lib/grammers/grammers-session" }
+grammers-tl-gen = { path = "lib/grammers/grammers-tl-gen" }
+grammers-tl-parser = { path = "lib/grammers/grammers-tl-parser" }
+grammers-tl-types = { path = "lib/grammers/grammers-tl-types" }

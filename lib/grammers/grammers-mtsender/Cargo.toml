@@ -1,0 +1,26 @@
+[package]
+name = "grammers-mtsender"
+version = "0.2.0"
+authors = ["Lonami Exo <totufals@hotmail.com>"]
+license = "MIT OR Apache-2.0"
+description = """
+A sender implementation using the Mobile Transport Protocol.
+"""
+homepage = "https://github.com/Lonami/grammers"
+documentation = "https://docs.rs/grammers-mtsender"
+repository = "https://github.com/Lonami/grammers"
+keywords = ["api", "mtproto", "telegram", "tl"]
+categories = ["api-bindings", "network-programming"]
+edition = "2018"
+
+[dependencies]
+grammers-crypto = { path = "../grammers-crypto", version = "0.2.0" }
+grammers-mtproto = { path = "../grammers-mtproto", version = "0.2.0" }
+grammers-tl-types = { path = "../grammers-tl-types", version = "0.2.0", features = [ "tl-mtproto" ]}
+tokio = { version = "1.0.1", features = ["net", "io-util", "sync", "macros", "time"] }
+bytes = "1.0.0"
+log = "0.4.11"
+
+[dev-dependencies]
+simple_logger = "1.11.0"
+tokio = { version = "1.0.1", features = ["rt"] }
