@@ -1,0 +1,46 @@
+[package]
+name = "play_gram2"
+version = "0.1.0"
+authors = ["Hamid <7atashfeshan@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+async-std = { version = "1.5" }
+grammers-crypto = "0.2.0"
+grammers-mtproto = "0.2.0"
+grammers-mtsender = "0.2.0"
+grammers-client = "0.2.0"
+grammers-session = "0.2.0"
+
+grammers-tl-gen = "0.2.0"
+grammers-tl-parser = "1.0.0"
+grammers-tl-types = "0.2.0"
+
+mysql = "18.2.0"
+threadpool = "1.8.1"
+#tokio = { version = "0.2.21", features = ["full"] }
+crossbeam ="0.7.3"
+lazy_static = "1.4.0"
+tokio = { version = "1.2", features = ["full"] }
+rand = "0.7.3"
+log = "0.4"
+once_cell = "1.4.0"
+cdrs = { version = "2" }
+#sqlite = "0.*"
+#diesel = { version = "1.4.5", features =["sqlite"] }
+
+#sqlx = "0.3.5"
+rusqlite = "0.23.1"
+serde = { version = "1.0.114", features = ["derive"] }
+serde_json = "1.0.56"
+mime-db = "0.1.5"
+
+
+#>>>>>>> step_6
+#grammers-tl-types = { path = "../grammers/lib/grammers-tl-types" }
+#grammers-tl-types = { path = "../grammers/lib/grammers-tl-types", features = ["tl-mtproto"] }
+
+#[patch.crates-io]
+#grammers-tl-types = { path = "../grammers/lib/grammers-tl-types"  , features = ["tl-mtproto"]}
