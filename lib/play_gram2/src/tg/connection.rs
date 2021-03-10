@@ -9,7 +9,7 @@ use grammers_tl_types::RemoteCall;
 use std::io::Write;
 
 use crate::tg::converter;
-use crate::types::{Media, MediaThumb};
+use crate::types::{Media, MediaThumb, TgPool};
 use crate::{errors::TelegramGenErr, types, types::Caller, utils};
 
 use log::kv::Source;
@@ -99,7 +99,7 @@ pub async fn get_channel_info(
     Err(TelegramGenErr::TgConverter)
 }
 
-pub async fn get_channel_by_username(
+pub async fn get_channel_by_username_old(
     caller: &mut Caller,
     username: &str,
 ) -> Result<types::ChannelByUsernameResult, TelegramGenErr> {
@@ -107,7 +107,7 @@ pub async fn get_channel_by_username(
         username: username.to_string(),
     };
     let res = caller.client.invoke(&request).await?;
-    // println!("resolve username:  {:#?}", res);
+    println!("resolve username:  {:#?}", res);
 
     use tl::enums::contacts::ResolvedPeer;
     match res {
@@ -116,19 +116,59 @@ pub async fn get_channel_by_username(
             for chat in peer.chats {
                 match chat {
                     Chat::Channel(channel) => {
-                        let c = channel;
-                        let res = types::ChannelByUsernameResult {
-                            id: c.id,
-                            title: c.title,
-                            username: c.username.unwrap_or("".to_string()),
-                            access_hash: c.access_hash.unwrap_or(0),
-                            date: c.date,
+                        let tg_chan = channel;
+                        let res_channel = types::ChannelByUsernameResult {
+                            id: tg_chan.id,
+                            title: tg_chan.title,
+                            username: tg_chan.username.unwrap_or("".to_string()),
+                            access_hash: tg_chan.access_hash.unwrap_or(0),
+                            date: tg_chan.date,
                             photo: 0,
-                            version: c.version,
-                            restricted: c.restricted,
-                            megagroup: c.megagroup,
+                            version: tg_chan.version,
+                            restricted: tg_chan.restricted,
+                            megagroup: tg_chan.megagroup,
                         };
-                        return (Ok(res));
+                        return (Ok(res_channel));
+                        // println!(">>> channel: #{:#?} ", res);
+                    }
+                    _ => {}
+                }
+            }
+        }
+    }
+    Err(TelegramGenErr::TgConverter)
+}
+
+pub async fn get_channel_by_username(
+    caller: &TgPool,
+    username: &str,
+) -> Result<types::ChannelByUsernameResult, TelegramGenErr> {
+    let request = tl::functions::contacts::ResolveUsername {
+        username: username.to_string(),
+    };
+    let res = caller.invoke(&request).await?;
+    println!("resolve username:  {:#?}", res);
+
+    use tl::enums::contacts::ResolvedPeer;
+    match res {
+        ResolvedPeer::Peer(peer) => {
+            use tl::enums::Chat;
+            for chat in peer.chats {
+                match chat {
+                    Chat::Channel(channel) => {
+                        let tg_chan = channel;
+                        let res_channel = types::ChannelByUsernameResult {
+                            id: tg_chan.id,
+                            title: tg_chan.title,
+                            username: tg_chan.username.unwrap_or("".to_string()),
+                            access_hash: tg_chan.access_hash.unwrap_or(0),
+                            date: tg_chan.date,
+                            photo: 0,
+                            version: tg_chan.version,
+                            restricted: tg_chan.restricted,
+                            megagroup: tg_chan.megagroup,
+                        };
+                        return (Ok(res_channel));
                         // println!(">>> channel: #{:#?} ", res);
                     }
                     _ => {}

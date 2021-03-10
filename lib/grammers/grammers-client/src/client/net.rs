@@ -329,13 +329,22 @@ impl ClientHandle {
         let (response, rx) = oneshot::channel();
 
         // TODO add a test this (using handle with client dropped)
+        let r = self.tx.send(Request::Rpc {
+            request: request.to_bytes(),
+            response,
+        });
+
+        println!(">>>> res {:?}", r.is_err());
+
+/*        // TODO add a test this (using handle with client dropped)
         if let Err(_) = self.tx.send(Request::Rpc {
             request: request.to_bytes(),
             response,
         }) {
             // `Client` was dropped, can no longer send requests
+            println!(">>>>>>>>>> 111111");
             return Err(InvocationError::Dropped);
-        }
+        }*/
 
         // First receive the `oneshot::Receiver` with from the `Client`,
         // then `await` on that to receive the response body for the request.

@@ -1,4 +1,4 @@
-use grammers_client::{Client, Config};
+use grammers_client::{Client, Config, ClientHandle};
 use grammers_tl_types::enums::contacts::ResolvedPeer;
 use grammers_tl_types::Serializable;
 use std::borrow::Borrow;
@@ -17,6 +17,7 @@ pub type Binary = Vec<u8>;
 // use crate::client_pool;
 use grammers_session::FileSession;
 use serde::{Deserialize, Serialize};
+use grammers_mtsender::InvocationError;
 
 /*pub struct App {
     pub login: Vec<LoginPhone>,
@@ -218,8 +219,8 @@ pub struct ChannelByUsernameResult {
     pub date: i32,
     pub photo: u8,
     pub version: i32,
-    pub restricted: bool,
-    pub megagroup: bool,
+    pub restricted: bool, // for p0rn
+    pub megagroup: bool, // true for telegram groups (public groups) - false for channles
 }
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
@@ -233,8 +234,28 @@ pub struct LoginPhone {}
 
 /////////// Tg ///////////
 
+// deprecated
 pub struct Caller {
     pub client: Client<FileSession>,
+}
+
+pub struct TgPool {
+    // pub client: Arc<Mutex<ClientHandle>>,
+    pub client2: ClientHandle,
+}
+
+impl TgPool {
+    pub async fn invoke<R: tl::RemoteCall>(
+        &self,
+        request: &R,
+    ) -> Result<R::Return, InvocationError> {
+        let mut cp = self.client2.clone();
+        cp.invoke(request).await
+        // self.sender.invoke(request).await
+        // let loc = self.client.lock().unwrap();
+        // let mut cp = loc.borrow().clone();
+        // cp.invoke(request).await
+    }
 }
 
 /////////// Sqlite ///////

@@ -15,6 +15,7 @@ pub enum TelegramGenErr {
     Download,
     // TgRPC(RpcError),
     TgRPC,
+    TgInvocation(InvocationError),
     TgConnection,
     TgAuth(AuthorizationError),
     TgConverter,
@@ -36,19 +37,24 @@ impl TelegramGenErr {
             _ => false,
         }
     }
-
+    */
     pub fn is_tg_username_free(&self) -> bool {
-        match self {
-            GenErr::TgRPC(rpc) => {
-                if rpc.code == 400 && &rpc.name == "USERNAME_NOT_OCCUPIED" {
-                    true
-                } else {
-                    false
+        use TelegramGenErr::*;
+        match &self {
+            TgInvocation(invocation) => {
+                match invocation {
+                    InvocationError::Rpc(rpc_err) => {
+                        if rpc_err.code == 400 && rpc_err.name == "USERNAME_NOT_OCCUPIED" {
+                            true
+                        }else {
+                            false }
+                    }
+                    _ => {false}
                 }
-            }
+            },
             _ => false,
         }
-    }*/
+    }
 }
 // impl Display for GenErr {
 //     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
@@ -83,10 +89,11 @@ impl TelegramGenErr {
 
 impl From<InvocationError> for TelegramGenErr {
     fn from(inv: InvocationError) -> TelegramGenErr {
-        match inv {
+        TelegramGenErr::TgInvocation(inv)
+       /* match inv {
             // InvocationError::RPC => GenErr::TgRPC,//(rpc.clone()),
             _ => TelegramGenErr::TgConnection,
-        }
+        }*/
     }
 }
 

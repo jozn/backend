@@ -1,3 +1,4 @@
 todo:
  +flooding play and strategy for avoiding it
  + sessions pool / connectin pools
+ + add avatar to channels type

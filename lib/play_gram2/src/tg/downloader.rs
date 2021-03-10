@@ -31,6 +31,7 @@ pub async fn dl_thumb_to_disk_old(
     Ok(())
 }
 
+// todo: replace video_thumbs_rec > video_thumbs ??
 pub async fn dl_media_thumb_to_disk(
     caller: &mut Caller,
     m: types::Media,

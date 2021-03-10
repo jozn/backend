@@ -26,14 +26,20 @@ mod errors;
 // mod tg_old;
 mod tg;
 mod utils;
+mod new_crawler;
 
 //tasks:
 // flooding tests and policy
 
 #[tokio::main]
 async fn main() {
+
+    new_crawler::crawl_next_username().await;
+
+
+
     // crawl::crawl_next_username().await;
-    crawl::crawl_config().await;
+    // crawl::crawl_config().await;
     // crawl::crawl_next_channel().await;
 
     // tg::get_file()

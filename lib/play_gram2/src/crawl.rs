@@ -19,7 +19,7 @@ pub async fn crawl_next_username() -> Result<(), TelegramGenErr> {
     let username = db::get_next_queue_username()?;
     // let username = "flip_app".to_string();
 
-    let rpc_res = tg::get_channel_by_username(&mut caller, &username).await;
+    let rpc_res = tg::get_channel_by_username_old(&mut caller, &username).await;
 
     println!("res >> {:#?}", rpc_res);
 
