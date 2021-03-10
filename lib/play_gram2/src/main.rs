@@ -33,14 +33,14 @@ mod utils;
 #[tokio::main]
 async fn main() {
     // crawl::crawl_next_username().await;
-    // crawl::crawl_config().await;
+    crawl::crawl_config().await;
     // crawl::crawl_next_channel().await;
 
     // tg::get_file()
-    for i in 0..1 {
+/*    for i in 0..1 {
         println!("{}", 1);
         // crawl::crawl_next_username().await;
         let r = crawl::crawl_next_channel_messages().await;
         println!("{} {:?}", i, r);
-    }
+    }*/
 }

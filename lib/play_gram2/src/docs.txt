@@ -1,0 +1,3 @@
+todo:
+ +flooding play and strategy for avoiding it
+ + sessions pool / connectin pools

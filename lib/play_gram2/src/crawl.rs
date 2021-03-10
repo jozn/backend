@@ -75,7 +75,7 @@ pub async fn crawl_next_username() -> Result<(), TelegramGenErr> {
 pub async fn crawl_config() {
     let mut caller = get_caller().await;
     println!("Getting config ... ");
-    sleep(Duration::from_millis(4000)).await;
+    sleep(Duration::from_millis(1000)).await;
     let res = tg::get_configs(&mut caller).await;
 
     println!("res >> {:#?}", res);
@@ -99,7 +99,7 @@ pub async fn crawl_next_channel_messages() -> Result<(), TelegramGenErr> {
             offset_id: 0,
             offset_date: 0,
             add_offset: 0,
-            limit: 1,
+            limit: 50,
             max_id: 0,
             min_id: 0,
             hash: 0,
@@ -114,40 +114,43 @@ pub async fn crawl_next_channel_messages() -> Result<(), TelegramGenErr> {
         if true {
             for m in r.msgs {
                 // dl media
-                /*if let Some(f) = m.media {
+                if let Some(f) = m.media.clone() {
                     println!("++++ Downloading file {}{}", f.id, f.file_extention);
-                    let t = tg::dl_media_to_disck(&mut caller, &f).await;
+                    let t = tg::dl_media_to_disk(&mut caller, f).await;
                     println!("--- result {:?}", t);
-                }*/
+                }
 
                 // dl humb
-                /*if let Some(f) = m.media {
+                if let Some(f) = m.media.clone() {
                     println!("++++ Downloading thumbs file {}{}", f.id, f.file_extention);
                     let t = tg::dl_media_thumb_to_disk(&mut caller, f).await;
                     println!("--- result {:?}", t);
-                }*/
+                }
 
-                /*// dl video thumb -- old
-                if let Some(f) = m.media {
+                // dl video thumb -- old
+                if let Some(f) = m.media.clone() {
                     if let Some(t) = f.video_thumbs {
                         println!("++++ Downloading video thumb {}{}", f.id, f.file_extention);
                         let t = tg::dl_thumb_to_disk_old(&mut caller, &t).await;
                         println!("--- result {:?}", t);
                     }
-                }*/
+                }
 
-                /*// dl webpage photo
+                // dl webpage photo
                 if let Some(v) = m.webpage {
                     if let Some(f) = v.photo {
-                        println!("++++ Downloading webpage file file {}{}", f.id, f.file_extention);
-                        let t = tg::dl_media_to_disck(&mut caller, &f).await;
+                        println!(
+                            "++++ Downloading webpage file file {}{}",
+                            f.id, f.file_extention
+                        );
+                        let t = tg::dl_media(&mut caller, f).await;
                         println!("--- result {:?}", t);
                     }
-                }*/
+                }
             }
         }
 
-        sleep(Duration::from_millis(5000)).await;
+        sleep(Duration::from_millis(50000)).await;
     }
 
     Ok(())

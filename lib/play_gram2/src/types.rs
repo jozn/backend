@@ -101,8 +101,8 @@ pub struct Media {
     pub dep_local_id: i32,
 
     // pub location: tl::enums::FileLocation,
-    pub w: i32,
-    pub h: i32,
+    pub width: i32,
+    pub height: i32,
     pub size: i32,
 
     // Document
@@ -123,7 +123,7 @@ pub struct Media {
     pub duration: i32,
     // pub video_w: i32,
     // pub video_h: i32,
-    pub video_thumbs_rec: Box<Option<Media>>,
+    pub video_thumbs_rec: Box<Option<Media>>, // todo remove?
     pub video_thumbs: Option<MediaThumb>,
 
     // Audio

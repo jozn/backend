@@ -162,8 +162,8 @@ fn process_inline_media(mm: tl::enums::MessageMedia) -> Option<types::Media> {
                         //todo move to just video + remove rec
                         if p.thumbs.is_some() {
                             m.video_thumbs_rec =
-                                Box::new(conv_vidoe_thumbs_rec(&m, p.thumbs.clone().unwrap()));
-                            m.video_thumbs = conv_vidoe_thumbs(p.thumbs.unwrap());
+                                Box::new(conv_video_thumbs_rec(&m, p.thumbs.clone().unwrap()));
+                            m.video_thumbs = conv_video_thumbs(p.thumbs.unwrap());
                             // println!("+++ vidoe: {:#?} ", doc)
                         }
 
@@ -172,8 +172,8 @@ fn process_inline_media(mm: tl::enums::MessageMedia) -> Option<types::Media> {
                             match atr {
                                 DocumentAttribute::ImageSize(s) => {
                                     m.media_type = MediaType::File;
-                                    m.w = s.w;
-                                    m.h = s.h;
+                                    m.width = s.w;
+                                    m.height = s.h;
                                 }
                                 DocumentAttribute::Animated => {
                                     m.animated = true;
@@ -184,8 +184,8 @@ fn process_inline_media(mm: tl::enums::MessageMedia) -> Option<types::Media> {
                                     m.round_message = s.round_message;
                                     m.supports_streaming = s.supports_streaming;
                                     m.duration = s.duration;
-                                    m.w = s.w;
-                                    m.h = s.h;
+                                    m.width = s.w;
+                                    m.height = s.h;
                                 }
                                 DocumentAttribute::Audio(s) => {
                                     m.media_type = MediaType::Audio;
@@ -402,8 +402,8 @@ fn conv_photo_to_media(photo_enum: tl::enums::Photo) -> Option<types::Media> {
                     PhotoSize::Size(ps) => {
                         if m.size < ps.size {
                             // select the maximum
-                            m.w = ps.w;
-                            m.h = ps.h;
+                            m.width = ps.w;
+                            m.height = ps.h;
                             m.size = ps.size;
                             m.photo_size_type = ps.r#type;
 
@@ -422,7 +422,7 @@ fn conv_photo_to_media(photo_enum: tl::enums::Photo) -> Option<types::Media> {
     None
 }
 
-fn conv_vidoe_thumbs(vts: Vec<tl::enums::PhotoSize>) -> Option<MediaThumb> {
+fn conv_video_thumbs(vts: Vec<tl::enums::PhotoSize>) -> Option<MediaThumb> {
     if vts.len() == 0 {
         return None;
     }
@@ -456,43 +456,38 @@ fn conv_vidoe_thumbs(vts: Vec<tl::enums::PhotoSize>) -> Option<MediaThumb> {
     Some(m)
 }
 
-fn conv_vidoe_thumbs_rec(medid: &types::Media, vts: Vec<tl::enums::PhotoSize>) -> Option<Media> {
-    let mut m = Media::default();
-    m.id = medid.id;
-    m.access_hash = medid.access_hash;
-    m.file_reference = medid.file_reference.clone();
-    m.file_extention = "jpg".to_string();
+fn conv_video_thumbs_rec(med: &types::Media, sizes: Vec<tl::enums::PhotoSize>) -> Option<Media> {
+    let mut media_out = Media {
+        id: med.id,
+        access_hash: med.access_hash,
+        file_reference: med.file_reference.clone(),
+        file_extention: "jpg".to_string(),
+        ..Default::default()
+    };
 
-    for vt in vts {
+    for photo_size in sizes {
         use tl::enums::PhotoSize;
-        match vt {
-            PhotoSize::Size(s) => {
-                // select the maximum one
-                if m.size < s.size {
-                    m.photo_size_type = s.r#type;
-                    m.w = s.w;
-                    m.h = s.h;
-                    m.size = s.size;
+        match photo_size {
+            PhotoSize::Size(size) => {
+                // Select the maximum one
+                if media_out.size < size.size {
+                    media_out.photo_size_type = size.r#type;
+                    media_out.width = size.w;
+                    media_out.height = size.h;
+                    media_out.size = size.size;
 
                     use tl::enums::FileLocation;
-                    match s.location {
-                        FileLocation::ToBeDeprecated(l) => {
-                            m.dep_volume_id = l.volume_id;
-                            m.dep_local_id = l.local_id;
+                    match size.location {
+                        FileLocation::ToBeDeprecated(file_loc) => {
+                            media_out.dep_volume_id = file_loc.volume_id;
+                            media_out.dep_local_id = file_loc.local_id;
                         }
                     }
                 };
-                return Some(m);
+                return Some(media_out);
             }
             _ => {}
         }
     }
     None
-}
-
-fn play_tl() {
-    // let u = tl::types::Dialog{
-    //
-    // };
-    // let c= tl::enums::Message::Message()
 }

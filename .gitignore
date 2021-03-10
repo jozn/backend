@@ -12,3 +12,4 @@ micro/logic/src/xc_sys
 *.session
 **.sqlite
 /out
+_dl_thumb

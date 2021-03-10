@@ -15,7 +15,7 @@ pub async fn get_new_session() -> Result<Client<FileSession>, AuthorizationError
     let api_id = 123259;
     let api_hash = "e88ec58aa1ce01f5630e194e9571d751".to_string();
     let cf = Config {
-        session: FileSession::load_or_create("./s3.session").unwrap(), //session::Session::load_or_create("./s1.session").unwrap(),
+        session: FileSession::load_or_create("./s4.session").unwrap(), //session::Session::load_or_create("./s1.session").unwrap(),
         api_id: api_id,
         api_hash: api_hash.clone(),
         params: Default::default(),
@@ -31,6 +31,7 @@ pub async fn get_new_session() -> Result<Client<FileSession>, AuthorizationError
         println!("Signing in...");
         // let phone = prompt("Enter your phone number (international format): ")?;
         let phone = "79620285396";
+        let phone = "989338828058";
         let token = client
             .request_login_code(&phone, api_id, &api_hash)
             .await

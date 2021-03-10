@@ -38,7 +38,7 @@ pub struct MsgHolder {
 pub async fn get_configs(caller: &mut Caller) -> Result<tl::enums::Config, TelegramGenErr> {
     let request = tl::functions::help::GetConfig {};
     let res = caller.client.invoke(&request).await?;
-    println!("config {:#?}", res);
+    // println!("config {:#?}", res);
     Ok(res)
 }
 
@@ -192,100 +192,3 @@ async fn process_channel_msgs(
     // println!("msgs {:#?} ", msgs);
     // println!("urls {:#?} ", urls);
 }
-
-////////////////////////////////////// Archives ////////////////////////////////////
-
-//// >>>> Commentd in migration
-
-/*
-async fn get_contacts(g: &types::G) {
-    let request = tl::functions::contacts::GetContacts { hash: 23 };
-    let mt: tl::enums::contacts::Contacts = send_req_dep(g, &request).await.unwrap();
-    // println!("contacts {:#?}", mt);
-}
-
-async fn get_dialogs(g: &types::G) {
-    let request = tl::functions::messages::GetDialogs {
-        exclude_pinned: false,
-        folder_id: None,
-        offset_date: 0,
-        offset_id: 0,
-        offset_peer: tl::types::InputPeerEmpty {}.into(),
-        limit: 50,
-        hash: 0,
-    };
-    let mt: tl::enums::messages::Dialogs = send_req_dep(g, &request).await.unwrap();
-    // println!("dilagos {:#?}", mt);
-}
-
-async fn get_chat_id(g: &types::G) {
-    let request = tl::functions::contacts::GetContactIds { hash: 1149267300 };
-    let res = send_req_dep(g, &request).await.unwrap();
-    // println!("get_chat_id:  {:#?}", res);
-}
-
-async fn bench_messages_loading_flood(g: &types::G) {
-    let request = tl::functions::messages::GetHistory {
-        peer: tl::enums::InputPeer::Channel(tl::types::InputPeerChannel {
-            channel_id: 1355843251,
-            access_hash: -6028453276089081451,
-        }),
-        offset_id: 0,
-        offset_date: 0,
-        add_offset: 0,
-        limit: 2,
-        max_id: 0,
-        min_id: 0,
-        hash: 0,
-    };
-
-    let mt: tl::enums::messages::Messages = send_req_dep(g, &request).await.unwrap();
-
-    let mut cnt = 0;
-    for i in 1..500 {
-        // println!("> {} -- ", i);
-        let mt: tl::enums::messages::Messages = send_req_dep(g, &request).await.unwrap();
-
-        match mt {
-            Messages::ChannelMessages(m) => {
-                for m in m.messages {
-                    match m {
-                        Message::Message(m2) => {
-                            cnt += 1;
-                            // println!("{:?}", m2)
-                            println!("{}", cnt)
-                        }
-                        _ => {}
-                    }
-                }
-            }
-            _ => println!("other form of messages!"),
-        }
-    }
-}
-
-async fn send_req<R: RemoteCall>(
-    caller: &mut Caller,
-    request: &R,
-) -> Result<R::Return, InvocationError> {
-    caller.client.invoke(request).await
-}
-
-async fn send_req_dep<R: RemoteCall>(
-    g: &types::G,
-    request: &R,
-) -> Result<R::Return, InvocationError> {
-    let mut m = g.clients.lock().unwrap();
-
-    let mut s = m
-        .get_mut()
-        .get_session()
-        .await
-        .unwrap()
-        .lock()
-        .unwrap()
-        .invoke(request)
-        .await;
-    s
-}
-*/
