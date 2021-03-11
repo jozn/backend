@@ -210,6 +210,8 @@ pub struct ChannelInfo {
     pub full_data: bool,
 }
 
+// In order to build ChannelInfo we need to query telegram with multi rpc > this
+// struct is for the result of resolve channel by username
 #[derive(Clone, Serialize, Deserialize, Default, Debug)]
 pub struct ChannelByUsernameResult {
     pub id: i32,
@@ -219,8 +221,8 @@ pub struct ChannelByUsernameResult {
     pub date: i32,
     pub photo: u8,
     pub version: i32,
-    pub restricted: bool, // for p0rn
-    pub megagroup: bool, // true for telegram groups (public groups) - false for channles
+    pub restricted: bool, // true for porn
+    pub megagroup: bool, // true for telegram groups (public groups) - false for channels
 }
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
@@ -240,8 +242,7 @@ pub struct Caller {
 }
 
 pub struct TgPool {
-    // pub client: Arc<Mutex<ClientHandle>>,
-    pub client2: ClientHandle,
+    pub client: ClientHandle,
 }
 
 impl TgPool {
@@ -249,12 +250,8 @@ impl TgPool {
         &self,
         request: &R,
     ) -> Result<R::Return, InvocationError> {
-        let mut cp = self.client2.clone();
+        let mut cp = self.client.clone();
         cp.invoke(request).await
-        // self.sender.invoke(request).await
-        // let loc = self.client.lock().unwrap();
-        // let mut cp = loc.borrow().clone();
-        // cp.invoke(request).await
     }
 }
 

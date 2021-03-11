@@ -12,7 +12,7 @@ use std::sync::{Mutex, Arc};
 use std::time::Duration;
 use tokio::time::sleep;
 
-use crate::{db, errors::TelegramGenErr, tg, types, utils};
+use crate::{db_dep, errors::TelegramGenErr, tg, types, utils};
 use crate::types::ChannelByUsernameResult;
 
 struct Crawler {
@@ -27,7 +27,7 @@ impl Crawler {
         Crawler{
             caller: types::TgPool {
                 // client: Arc::new(Mutex::new(ch.handle()))
-                client2: handle,
+                client: handle,
             }
         }
     }

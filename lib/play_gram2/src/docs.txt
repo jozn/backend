@@ -2,3 +2,4 @@ todo:
  +flooding play and strategy for avoiding it
  + sessions pool / connectin pools
  + add avatar to channels type
+ + update connectin and downlader to TgPool

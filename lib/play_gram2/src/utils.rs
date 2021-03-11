@@ -43,7 +43,7 @@ pub fn insert_tkanals_into_db() {
     let chs = read_tkanal_channels();
 
     for ch in chs {
-        crate::db::save_queue_username(&ch);
+        crate::db_dep::save_queue_username(&ch);
     }
     println!("Inserted usernames into table.");
 }

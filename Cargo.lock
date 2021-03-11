@@ -2728,6 +2728,7 @@ dependencies = [
  "rusqlite",
  "serde",
  "serde_json",
+ "shared",
  "threadpool",
  "tokio 1.2.0",
 ]
@@ -3485,6 +3486,8 @@ dependencies = [
  "http",
  "hyper 0.14.4",
  "image",
+ "mysql_async",
+ "mysql_common 0.26.0",
  "once_cell",
  "prost 0.7.0",
  "prost-build",

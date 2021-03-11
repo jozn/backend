@@ -21,7 +21,7 @@ use std::cell::*;
 
 mod con_mgr;
 mod crawl;
-mod db;
+mod db_dep;
 mod errors;
 // mod tg_old;
 mod tg;

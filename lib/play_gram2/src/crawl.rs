@@ -12,11 +12,11 @@ use std::sync::Mutex;
 use std::time::Duration;
 use tokio::time::sleep;
 
-use crate::{db, errors::TelegramGenErr, tg, types, utils};
+use crate::{db_dep, errors::TelegramGenErr, tg, types, utils};
 
 pub async fn crawl_next_username() -> Result<(), TelegramGenErr> {
     let mut caller = get_caller().await;
-    let username = db::get_next_queue_username()?;
+    let username = db_dep::get_next_queue_username()?;
     // let username = "flip_app".to_string();
 
     let rpc_res = tg::get_channel_by_username_old(&mut caller, &username).await;
@@ -32,8 +32,8 @@ pub async fn crawl_next_username() -> Result<(), TelegramGenErr> {
             taken: taken,
             last_checked: utils::time_now_sec(),
         };
-        db::save_cached_username(&cud);
-        db::delete_queue_username(&username);
+        db_dep::save_cached_username(&cud);
+        db_dep::delete_queue_username(&username);
     };
 
     let cud = match rpc_res {
@@ -49,8 +49,8 @@ pub async fn crawl_next_username() -> Result<(), TelegramGenErr> {
                 taken: true,
                 last_checked: utils::time_now_sec(),
             };
-            db::save_cached_username(&cud);
-            db::delete_queue_username(&username);
+            db_dep::save_cached_username(&cud);
+            db_dep::delete_queue_username(&username);
         }
 
         Err(e) => match e {
@@ -89,7 +89,7 @@ pub async fn get_caller() -> types::Caller {
 
 pub async fn crawl_next_channel_messages() -> Result<(), TelegramGenErr> {
     let mut caller = get_caller().await;
-    let cd = db::get_random_cached_channel()?;
+    let cd = db_dep::get_random_cached_channel()?;
     if let Some(ci) = cd.channel_info {
         println!("senfing ");
 

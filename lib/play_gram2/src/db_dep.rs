@@ -3,6 +3,17 @@ use crate::{errors::TelegramGenErr, types, utils};
 
 use rusqlite::{params, Connection, Result, NO_PARAMS};
 
+use shared::my;
+
+fn play_my(){
+    let m = my::models::TgChannel{
+        channel_id: 0,
+        username: "".to_string(),
+        data: vec![]
+    };
+    // m.insert();
+}
+
 #[derive(Debug)]
 struct Person {
     id: i32,
