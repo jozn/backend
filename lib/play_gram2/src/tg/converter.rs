@@ -9,7 +9,7 @@ use grammers_tl_types::RemoteCall;
 use std::io::Write;
 
 use crate::types::{Media, MediaThumb};
-use crate::{errors::TelegramGenErr, types, types::Caller, utils};
+use crate::{errors::TelegramGenErr, types, utils};
 
 pub(super) fn process_inline_channel_messages(
     messages: Vec<tl::enums::Message>,
@@ -51,7 +51,7 @@ pub(super) fn process_inline_channel_chats(chats: Vec<tl::enums::Chat>) -> Vec<t
     let mut out = vec![];
 
     for chat in chats {
-        let mut ci = types::ChannelInfo::default();
+        let mut ci = types::ChannelInfo::default(); // todo embed this
 
         use tl::enums::Chat;
         match chat {

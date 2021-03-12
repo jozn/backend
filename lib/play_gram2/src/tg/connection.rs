@@ -10,7 +10,7 @@ use std::io::Write;
 
 use crate::tg::converter;
 use crate::types::{Media, MediaThumb, TgPool};
-use crate::{errors::TelegramGenErr, types, types::Caller, utils};
+use crate::{errors::TelegramGenErr, types, utils};
 
 use log::kv::Source;
 
@@ -55,6 +55,7 @@ pub async fn get_channel_info(
     let res = caller.invoke(&request).await?;
 
     let mut ci = types::ChannelInfo::default();
+    // println!("++++++ {:#?}",&res);
 
     use tl::enums::messages::ChatFull;
     match res {
@@ -63,6 +64,7 @@ pub async fn get_channel_info(
             match full.full_chat {
                 ChatFull::ChannelFull(c) => {
                     ci.id = c.id;
+                    ci.about = c.about;
                     ci.pts = c.pts;
                     ci.read_inbox_max_id = c.read_inbox_max_id;
                     ci.members_count = c.participants_count.unwrap_or(0);
@@ -70,7 +72,9 @@ pub async fn get_channel_info(
                 _ => {}
             }
 
-            if full.chats.len() == 1 {
+            // Note if "Discussion Group" is being set chat.len() will be 2
+            if full.chats.len() >= 1 {
+                // index: 0 channel info - 1 discussion group
                 let chat = full.chats.get(0).unwrap();
 
                 use tl::enums::Chat;
@@ -89,7 +93,7 @@ pub async fn get_channel_info(
                     }
                     _ => {}
                 };
-                println!("channel info {:#?}", ci);
+                // println!("channel info {:#?}", ci);
                 return Ok(ci);
             }
         }
@@ -106,7 +110,7 @@ pub async fn get_channel_by_username(
         username: username.to_string(),
     };
     let res = caller.invoke(&request).await?;
-    println!("resolve username:  {:#?}", res);
+    // println!("resolve username:  {:#?}", res);
 
     use tl::enums::contacts::ResolvedPeer;
     match res {
@@ -138,6 +142,7 @@ pub async fn get_channel_by_username(
     Err(TelegramGenErr::TgConverter)
 }
 
+// Note: this also gets Megagroups messages as well
 pub async fn get_messages(
     caller: &TgPool,
     req: ReqGetMessages,
@@ -177,7 +182,7 @@ async fn process_channel_msgs(
     // let mut urls: Vec<String> = vec![];
     match mt {
         Messages::ChannelMessages(cm) => {
-            println!("messages #{:#?}", cm);
+            // println!("messages #{:#?}", cm);
             msg_holder.channels = converter::process_inline_channel_chats(cm.chats.clone());
             converter::process_inline_channel_users(&cm.users);
 

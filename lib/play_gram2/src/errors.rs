@@ -7,6 +7,7 @@ use grammers_mtsender::AuthorizationError;
 use serde::__private::Formatter;
 use std::error::Error;
 use std::fmt::Display;
+use shared::gen::my::models::MyError;
 
 #[derive(Debug)]
 pub enum TelegramGenErr {
@@ -20,6 +21,7 @@ pub enum TelegramGenErr {
     TgAuth(AuthorizationError),
     TgConverter,
     JSON(serde_json::Error),
+    MySql(MyError)
 }
 
 // impl Error for GenErr {}
@@ -106,5 +108,11 @@ impl From<rusqlite::Error> for TelegramGenErr {
 impl From<serde_json::Error> for TelegramGenErr {
     fn from(e: serde_json::Error) -> TelegramGenErr {
         TelegramGenErr::JSON(e)
+    }
+}
+
+impl From<MyError> for TelegramGenErr {
+    fn from(e: MyError) -> TelegramGenErr {
+        TelegramGenErr::MySql(e)
     }
 }

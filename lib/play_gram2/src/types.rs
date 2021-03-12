@@ -57,7 +57,7 @@ pub struct Msg {
     pub message: String,
     // pub media: Option<crate::enums::MessageMedia>,
     // pub reply_markup: Option<crate::enums::ReplyMarkup>,
-    // pub entities: Option<Vec<crate::enums::MessageEntity>>,
+    // pub entities: Option<Vec<crate::enums::MessageEntity>>,//todo
     pub views: i32,
     pub edit_date: i32,
     // pub post_author: Option<String>,
@@ -125,7 +125,7 @@ pub struct Media {
     // pub video_w: i32,
     // pub video_h: i32,
     pub video_thumbs_rec: Box<Option<Media>>, // todo remove?
-    pub video_thumbs: Option<MediaThumb>,
+    pub video_thumbs: Option<MediaThumb>, // todo with document thumb
 
     // Audio
     pub voice: bool,
@@ -197,17 +197,18 @@ pub struct ChannelInfo {
     pub title: String,
     pub username: String,
     pub about: String,
-    pub link: String,
+    pub link: String, //todo: remove? there is no where in telegram api we can get this > other means must link to chan
     pub members_count: i32,
     pub read_inbox_max_id: i32,
     pub access_hash: i64,
     pub date: i32,
     pub photo: u8,
     pub version: i32,
-    pub pts: i32,
-    pub restricted: bool,
+    // https://core.telegram.org/api/updates for pts
+    pub pts: i32, // "pts indicates the server state after the new channel message events are generated" > not used now > maybe useful is we subscribe to channel
+    pub restricted: bool, // true for porn is accessed with an Iran phone
     pub megagroup: bool,
-    pub full_data: bool,
+    pub full_data: bool, // true if fetched directly - false for inline processing in message. Only if full_data is true it must be saved to database.
 }
 
 // In order to build ChannelInfo we need to query telegram with multi rpc > this
@@ -235,12 +236,6 @@ pub struct Session {}
 pub struct LoginPhone {}
 
 /////////// Tg ///////////
-
-// deprecated
-pub struct Caller {
-    pub client: Client<FileSession>,
-}
-
 pub struct TgPool {
     pub client: ClientHandle,
 }
@@ -255,7 +250,14 @@ impl TgPool {
     }
 }
 
-/////////// Sqlite ///////
+impl Default for MediaType {
+    fn default() -> Self {
+        MediaType::Unknown
+    }
+}
+
+// Storage
+
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct CachedUsernameData {
     pub username: String,
@@ -263,6 +265,19 @@ pub struct CachedUsernameData {
     // pub tg_result: Option<ChannelByUsernameResult>,
     pub channel_info: Option<ChannelInfo>,
     pub taken: bool,
+    pub last_checked: u32,
+}
+
+
+///////////////// Deprecated or Maybe /////////////
+pub struct Caller {
+    pub client: Client<FileSession>,
+}
+
+/////////// Sqlite ///////
+#[derive(Clone, Serialize, Deserialize, Debug)]
+pub struct ChannelData {
+    pub channel_info: ChannelInfo,
     pub last_checked: u32,
 }
 
@@ -300,15 +315,3 @@ pub struct ResResolveUsername {
     pub channel_id: i32,
     pub access_id: i64,
 }
-
-impl Default for MediaType {
-    fn default() -> Self {
-        MediaType::Unknown
-    }
-}
-
-// impl fmt::Debug for Binary {
-//     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-//         write!(f, "--snip Vec<u8> --",)
-//     }
-// }

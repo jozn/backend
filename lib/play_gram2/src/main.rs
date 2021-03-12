@@ -35,7 +35,7 @@ mod crawler_new;
 async fn main() {
 
     // db_dep::play_my().await;
-    crawler_new::crawl_next_username().await;
+    crawler_new::crawl_run().await;
 
 
 

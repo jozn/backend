@@ -40,7 +40,7 @@ impl FromRow for Tweet {
 }
 
 impl Tweet {
-    pub async fn insert(&self, pool: &Pool) -> Result<Tweet,MyError> {
+    pub async fn replace(&self, pool: &Pool) -> Result<Tweet,MyError> {
         let mut conn = pool.get_conn().await?;
 
         let query = r"INSERT INTO twitter.tweet (created_time, text_body) VALUES (?, ?)";
@@ -658,10 +658,10 @@ impl FromRow for TgChannel {
 }
 
 impl TgChannel {
-    pub async fn insert(&self, pool: &Pool) -> Result<TgChannel,MyError> {
+    pub async fn replace(&self, pool: &Pool) -> Result<TgChannel,MyError> {
         let mut conn = pool.get_conn().await?;
 
-        let query = r"INSERT INTO flip_tg.tg_channel (channel_id, username, data) VALUES (?, ?, ?)";
+        let query = r"REPLACE INTO flip_tg.tg_channel (channel_id, username, data) VALUES (?, ?, ?)";
         let p = Params::Positional(vec![self.channel_id.clone().into(), self.username.clone().into(), self.data.clone().into()]);
 
         conn.exec_iter(
@@ -1140,10 +1140,10 @@ impl FromRow for TgChannelMsg {
 }
 
 impl TgChannelMsg {
-    pub async fn insert(&self, pool: &Pool) -> Result<TgChannelMsg,MyError> {
+    pub async fn replace(&self, pool: &Pool) -> Result<TgChannelMsg,MyError> {
         let mut conn = pool.get_conn().await?;
 
-        let query = r"INSERT INTO flip_tg.tg_channel_msg (channel_id, message_id, seq_id, flip_gid, deleted, flip_sync, sync_time, data) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        let query = r"REPLACE INTO flip_tg.tg_channel_msg (channel_id, message_id, seq_id, flip_gid, deleted, flip_sync, sync_time, data) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         let p = Params::Positional(vec![self.channel_id.clone().into(), self.message_id.clone().into(), self.seq_id.clone().into(), self.flip_gid.clone().into(), self.deleted.clone().into(), self.flip_sync.clone().into(), self.sync_time.clone().into(), self.data.clone().into()]);
 
         conn.exec_iter(
@@ -2362,10 +2362,10 @@ impl FromRow for TgLink {
 }
 
 impl TgLink {
-    pub async fn insert(&self, pool: &Pool) -> Result<TgLink,MyError> {
+    pub async fn replace(&self, pool: &Pool) -> Result<TgLink,MyError> {
         let mut conn = pool.get_conn().await?;
 
-        let query = r"INSERT INTO flip_tg.tg_link (hash, channel_id, expired) VALUES (?, ?, ?)";
+        let query = r"REPLACE INTO flip_tg.tg_link (hash, channel_id, expired) VALUES (?, ?, ?)";
         let p = Params::Positional(vec![self.hash.clone().into(), self.channel_id.clone().into(), self.expired.clone().into()]);
 
         conn.exec_iter(
@@ -2981,10 +2981,10 @@ impl FromRow for TgUsername {
 }
 
 impl TgUsername {
-    pub async fn insert(&self, pool: &Pool) -> Result<TgUsername,MyError> {
+    pub async fn replace(&self, pool: &Pool) -> Result<TgUsername,MyError> {
         let mut conn = pool.get_conn().await?;
 
-        let query = r"INSERT INTO flip_tg.tg_username (username, channel_id, user_id, not_occupied) VALUES (?, ?, ?, ?)";
+        let query = r"REPLACE INTO flip_tg.tg_username (username, channel_id, user_id, not_occupied) VALUES (?, ?, ?, ?)";
         let p = Params::Positional(vec![self.username.clone().into(), self.channel_id.clone().into(), self.user_id.clone().into(), self.not_occupied.clone().into()]);
 
         conn.exec_iter(

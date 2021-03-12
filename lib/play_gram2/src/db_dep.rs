@@ -32,8 +32,8 @@ pub async fn play_my(){
     let pool = mysql_async::Pool::from_url(path).unwrap();
     // let pool = mysql_async::Pool::new(&url);
 
-    let vv = m.insert(&pool).await;
-    println!(">>>> database mysql {:?}", vv);
+    // let vv = m.insert(&pool).await;
+    // println!(">>>> database mysql {:?}", vv);
 
     // m.insert();
 }
