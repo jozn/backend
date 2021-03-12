@@ -20,7 +20,7 @@ mod types;
 use std::cell::*;
 
 mod con_mgr;
-mod crawl;
+// mod crawl;
 mod db_dep;
 mod errors;
 // mod tg_old;
