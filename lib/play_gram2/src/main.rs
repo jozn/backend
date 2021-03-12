@@ -26,7 +26,7 @@ mod errors;
 // mod tg_old;
 mod tg;
 mod utils;
-mod new_crawler;
+mod crawler_new;
 
 //tasks:
 // flooding tests and policy
@@ -34,7 +34,8 @@ mod new_crawler;
 #[tokio::main]
 async fn main() {
 
-    new_crawler::crawl_next_username().await;
+    // db_dep::play_my().await;
+    crawler_new::crawl_next_username().await;
 
 
 

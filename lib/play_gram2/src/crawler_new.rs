@@ -32,8 +32,15 @@ impl Crawler {
         }
     }
 
-    async fn crawl_username(&self, username: &str) -> Result<(), TelegramGenErr> {
+    async fn crawl_config(&self) -> Result<(), TelegramGenErr> {
+        println!("Getting config ... ");
+        let res = tg::get_config(&self.caller).await;
+        println!("res Config >> {:#?}", res);
 
+        Ok(())
+    }
+
+    async fn crawl_username(&self, username: &str) -> Result<(), TelegramGenErr> {
         let rpc_res = tg::get_channel_by_username(&self.caller, &username).await;
 
         println!("res >> {:#?}", rpc_res);
@@ -58,6 +65,8 @@ pub async fn crawl_next_username() -> Result<(), TelegramGenErr> {
     crawler.crawl_username("jozn132523789492378").await; // user > free
     crawler.crawl_username("p0rnhub_videos").await; // channel: porn > restricted
     crawler.crawl_username("thezoomit").await; // channel
+
+    crawler.crawl_config().await;
 
     Ok(())
 }

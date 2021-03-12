@@ -2723,6 +2723,7 @@ dependencies = [
  "log",
  "mime-db",
  "mysql",
+ "mysql_async",
  "once_cell",
  "rand 0.7.3",
  "rusqlite",

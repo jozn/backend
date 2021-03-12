@@ -17,7 +17,13 @@ async fn main() -> Result<()> {
         Payment { customer_id: 9, amount: 10, account_name: Some("bar".into()) },
     ];
 
-    let database_url = /* ... */
+    let mut database_url = OptsBuilder::default();
+
+       let db_url = database_url
+               .user(Some("root"))
+               .pass(Some("123456"))
+               .db_name(Some("twitter"))
+              .ip_or_hostname("37.152.187.1");
 
     let pool = mysql_async::Pool::new(database_url);
     let mut conn = pool.get_conn().await?;

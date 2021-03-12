@@ -39,7 +39,7 @@ pub async fn crawl_next_username() -> Result<(), TelegramGenErr> {
     let cud = match rpc_res {
         Ok(chan_res) => {
             let chanel_info =
-                tg::get_channel_info(&mut caller, chan_res.id, chan_res.access_hash).await?;
+                tg::get_channel_info_dep(&mut caller, chan_res.id, chan_res.access_hash).await?;
             let channel_info_clone = chanel_info.clone();
 
             let cud = types::CachedUsernameData {
@@ -76,7 +76,7 @@ pub async fn crawl_config() {
     let mut caller = get_caller().await;
     println!("Getting config ... ");
     sleep(Duration::from_millis(1000)).await;
-    let res = tg::get_configs(&mut caller).await;
+    let res = tg::get_configs_dep(&mut caller).await;
 
     println!("res >> {:#?}", res);
 }
@@ -105,7 +105,7 @@ pub async fn crawl_next_channel_messages() -> Result<(), TelegramGenErr> {
             hash: 0,
         };
 
-        let rpc_res = tg::get_messages(&mut caller, req).await;
+        let rpc_res = tg::get_messages_dep(&mut caller, req).await;
 
         println!("channel: {:#?} \n\n  res >> {:#?}", ci, rpc_res);
 

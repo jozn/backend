@@ -5,7 +5,7 @@ use mysql_common::row::ColumnIndex;
 
 use mysql_common::value::Value;
 
-use crate::xc::CWError;
+//use crate::xc::CWError;
 
 // Every Table Must Have Primary Keys to Be Included In This Output
 // Primiay Keys must be one column (no compostion types yet)
@@ -32,23 +32,23 @@ impl FromRow for Tweet {
         Self: Sized,
     {
         Ok(Tweet  {
-            tweet_id: row.get(0).unwrap(),
-            created_time: row.get(1).unwrap(),
-            text_body: row.get(2).unwrap(),
+            tweet_id: row.get(0).unwrap_or_default(),
+            created_time: row.get(1).unwrap_or_default(),
+            text_body: row.get(2).unwrap_or_default(),
         })
     }
 }
 
 impl Tweet {
-    pub async fn insert(&self, pool: &Pool) -> Result<Tweet,CWError> {
-        let mut conn = pool.get_conn().await.unwrap();
+    pub async fn insert(&self, pool: &Pool) -> Result<Tweet,MyError> {
+        let mut conn = pool.get_conn().await?;
 
         let query = r"INSERT INTO twitter.tweet (created_time, text_body) VALUES (?, ?)";
         let p = Params::Positional(vec![self.created_time.clone().into(), self.text_body.clone().into()]);
 
         let qr = conn.exec_iter(
             query, p
-        ).await.unwrap();
+        ).await?;
 
         let mut cp = self.clone();
         cp.tweet_id = qr.last_insert_id().unwrap() as u64;
@@ -56,27 +56,27 @@ impl Tweet {
        Ok(cp)
     }
 
-    pub async fn update(&self, pool: &Pool) -> Result<(),CWError> {
-        let mut conn = pool.get_conn().await.unwrap();
+    pub async fn update(&self, pool: &Pool) -> Result<(),MyError> {
+        let mut conn = pool.get_conn().await?;
         let query = r"UPDATE twitter.tweet SET created_time = ?, text_body = ? WHERE tweet_id = ? ";
         let p = Params::Positional(vec![self.created_time.clone().into(), self.text_body.clone().into(),  self.tweet_id.clone().into() ]);
 
         let qr = conn.exec_iter(
             query, p
-        ).await.unwrap();
+        ).await?;
 
         Ok(())
     }
 
-    pub async fn delete(&self, pool: &Pool) -> Result<(),CWError> {
-        let mut conn = pool.get_conn().await.unwrap();
+    pub async fn delete(&self, pool: &Pool) -> Result<(),MyError> {
+        let mut conn = pool.get_conn().await?;
 
         let query = r"DELETE FROM twitter.tweet WHERE tweet_id = ? ";
         let p = Params::Positional(vec![self.tweet_id.clone().into()]);
 
         conn.exec_drop(
             query, p
-        ).await.unwrap();
+        ).await?;
 
         Ok(())
     }
@@ -160,8 +160,8 @@ impl TweetSelector {
         (cql_query, where_values)
     }
 
-    pub async fn _get_rows_with_size(&mut self, session: &Pool, size: i64) -> Result<Vec<Tweet>, CWError>   {
-        let mut conn = session.get_conn().await.unwrap();
+    pub async fn _get_rows_with_size(&mut self, session: &Pool, size: i64) -> Result<Vec<Tweet>, MyError>   {
+        let mut conn = session.get_conn().await?;
         let(cql_query, query_values) = self._to_cql();
 
         println!("{} - {:?}", &cql_query, &query_values);
@@ -172,22 +172,22 @@ impl TweetSelector {
             .exec_map(
                 cql_query,p,
                 |obj: Tweet| obj
-            ).await.unwrap();
+            ).await?;
 
         Ok(query_result)
     }
 
-    pub async fn get_rows(&mut self, session: &Pool) -> Result<Vec<Tweet>, CWError>{
+    pub async fn get_rows(&mut self, session: &Pool) -> Result<Vec<Tweet>, MyError>{
         self._get_rows_with_size(session,-1).await
     }
 
-    pub async fn get_row(&mut self, session: &Pool) -> Result<Tweet, CWError>{
+    pub async fn get_row(&mut self, session: &Pool) -> Result<Tweet, MyError>{
         let rows = self._get_rows_with_size(session,1).await?;
 
         let opt = rows.get(0);
         match opt {
             Some(row) => Ok(row.to_owned()),
-            None => Err(CWError::NotFound)
+            None => Err(MyError::NotFound)
         }
     }
 
@@ -650,50 +650,50 @@ impl FromRow for TgChannel {
         Self: Sized,
     {
         Ok(TgChannel  {
-            channel_id: row.get(0).unwrap(),
-            username: row.get(1).unwrap(),
-            data: row.get(2).unwrap(),
+            channel_id: row.get(0).unwrap_or_default(),
+            username: row.get(1).unwrap_or_default(),
+            data: row.get(2).unwrap_or_default(),
         })
     }
 }
 
 impl TgChannel {
-    pub async fn insert(&self, pool: &Pool) -> Result<TgChannel,CWError> {
-        let mut conn = pool.get_conn().await.unwrap();
+    pub async fn insert(&self, pool: &Pool) -> Result<TgChannel,MyError> {
+        let mut conn = pool.get_conn().await?;
 
         let query = r"INSERT INTO flip_tg.tg_channel (channel_id, username, data) VALUES (?, ?, ?)";
         let p = Params::Positional(vec![self.channel_id.clone().into(), self.username.clone().into(), self.data.clone().into()]);
 
         conn.exec_iter(
             query, p
-        ).await.unwrap();
+        ).await?;
 
         let cp = self.clone();
 
        Ok(cp)
     }
 
-    pub async fn update(&self, pool: &Pool) -> Result<(),CWError> {
-        let mut conn = pool.get_conn().await.unwrap();
+    pub async fn update(&self, pool: &Pool) -> Result<(),MyError> {
+        let mut conn = pool.get_conn().await?;
         let query = r"UPDATE flip_tg.tg_channel SET username = ?, data = ? WHERE channel_id = ? ";
         let p = Params::Positional(vec![self.username.clone().into(), self.data.clone().into(),  self.channel_id.clone().into() ]);
 
         let qr = conn.exec_iter(
             query, p
-        ).await.unwrap();
+        ).await?;
 
         Ok(())
     }
 
-    pub async fn delete(&self, pool: &Pool) -> Result<(),CWError> {
-        let mut conn = pool.get_conn().await.unwrap();
+    pub async fn delete(&self, pool: &Pool) -> Result<(),MyError> {
+        let mut conn = pool.get_conn().await?;
 
         let query = r"DELETE FROM flip_tg.tg_channel WHERE channel_id = ? ";
         let p = Params::Positional(vec![self.channel_id.clone().into()]);
 
         conn.exec_drop(
             query, p
-        ).await.unwrap();
+        ).await?;
 
         Ok(())
     }
@@ -777,8 +777,8 @@ impl TgChannelSelector {
         (cql_query, where_values)
     }
 
-    pub async fn _get_rows_with_size(&mut self, session: &Pool, size: i64) -> Result<Vec<TgChannel>, CWError>   {
-        let mut conn = session.get_conn().await.unwrap();
+    pub async fn _get_rows_with_size(&mut self, session: &Pool, size: i64) -> Result<Vec<TgChannel>, MyError>   {
+        let mut conn = session.get_conn().await?;
         let(cql_query, query_values) = self._to_cql();
 
         println!("{} - {:?}", &cql_query, &query_values);
@@ -789,22 +789,22 @@ impl TgChannelSelector {
             .exec_map(
                 cql_query,p,
                 |obj: TgChannel| obj
-            ).await.unwrap();
+            ).await?;
 
         Ok(query_result)
     }
 
-    pub async fn get_rows(&mut self, session: &Pool) -> Result<Vec<TgChannel>, CWError>{
+    pub async fn get_rows(&mut self, session: &Pool) -> Result<Vec<TgChannel>, MyError>{
         self._get_rows_with_size(session,-1).await
     }
 
-    pub async fn get_row(&mut self, session: &Pool) -> Result<TgChannel, CWError>{
+    pub async fn get_row(&mut self, session: &Pool) -> Result<TgChannel, MyError>{
         let rows = self._get_rows_with_size(session,1).await?;
 
         let opt = rows.get(0);
         match opt {
             Some(row) => Ok(row.to_owned()),
-            None => Err(CWError::NotFound)
+            None => Err(MyError::NotFound)
         }
     }
 
@@ -1127,55 +1127,55 @@ impl FromRow for TgChannelMsg {
         Self: Sized,
     {
         Ok(TgChannelMsg  {
-            channel_id: row.get(0).unwrap(),
-            message_id: row.get(1).unwrap(),
-            seq_id: row.get(2).unwrap(),
-            flip_gid: row.get(3).unwrap(),
-            deleted: row.get(4).unwrap(),
-            flip_sync: row.get(5).unwrap(),
-            sync_time: row.get(6).unwrap(),
-            data: row.get(7).unwrap(),
+            channel_id: row.get(0).unwrap_or_default(),
+            message_id: row.get(1).unwrap_or_default(),
+            seq_id: row.get(2).unwrap_or_default(),
+            flip_gid: row.get(3).unwrap_or_default(),
+            deleted: row.get(4).unwrap_or_default(),
+            flip_sync: row.get(5).unwrap_or_default(),
+            sync_time: row.get(6).unwrap_or_default(),
+            data: row.get(7).unwrap_or_default(),
         })
     }
 }
 
 impl TgChannelMsg {
-    pub async fn insert(&self, pool: &Pool) -> Result<TgChannelMsg,CWError> {
-        let mut conn = pool.get_conn().await.unwrap();
+    pub async fn insert(&self, pool: &Pool) -> Result<TgChannelMsg,MyError> {
+        let mut conn = pool.get_conn().await?;
 
         let query = r"INSERT INTO flip_tg.tg_channel_msg (channel_id, message_id, seq_id, flip_gid, deleted, flip_sync, sync_time, data) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         let p = Params::Positional(vec![self.channel_id.clone().into(), self.message_id.clone().into(), self.seq_id.clone().into(), self.flip_gid.clone().into(), self.deleted.clone().into(), self.flip_sync.clone().into(), self.sync_time.clone().into(), self.data.clone().into()]);
 
         conn.exec_iter(
             query, p
-        ).await.unwrap();
+        ).await?;
 
         let cp = self.clone();
 
        Ok(cp)
     }
 
-    pub async fn update(&self, pool: &Pool) -> Result<(),CWError> {
-        let mut conn = pool.get_conn().await.unwrap();
+    pub async fn update(&self, pool: &Pool) -> Result<(),MyError> {
+        let mut conn = pool.get_conn().await?;
         let query = r"UPDATE flip_tg.tg_channel_msg SET message_id = ?, seq_id = ?, flip_gid = ?, deleted = ?, flip_sync = ?, sync_time = ?, data = ? WHERE channel_id = ? ";
         let p = Params::Positional(vec![self.message_id.clone().into(), self.seq_id.clone().into(), self.flip_gid.clone().into(), self.deleted.clone().into(), self.flip_sync.clone().into(), self.sync_time.clone().into(), self.data.clone().into(),  self.channel_id.clone().into() ]);
 
         let qr = conn.exec_iter(
             query, p
-        ).await.unwrap();
+        ).await?;
 
         Ok(())
     }
 
-    pub async fn delete(&self, pool: &Pool) -> Result<(),CWError> {
-        let mut conn = pool.get_conn().await.unwrap();
+    pub async fn delete(&self, pool: &Pool) -> Result<(),MyError> {
+        let mut conn = pool.get_conn().await?;
 
         let query = r"DELETE FROM flip_tg.tg_channel_msg WHERE channel_id = ? ";
         let p = Params::Positional(vec![self.channel_id.clone().into()]);
 
         conn.exec_drop(
             query, p
-        ).await.unwrap();
+        ).await?;
 
         Ok(())
     }
@@ -1284,8 +1284,8 @@ impl TgChannelMsgSelector {
         (cql_query, where_values)
     }
 
-    pub async fn _get_rows_with_size(&mut self, session: &Pool, size: i64) -> Result<Vec<TgChannelMsg>, CWError>   {
-        let mut conn = session.get_conn().await.unwrap();
+    pub async fn _get_rows_with_size(&mut self, session: &Pool, size: i64) -> Result<Vec<TgChannelMsg>, MyError>   {
+        let mut conn = session.get_conn().await?;
         let(cql_query, query_values) = self._to_cql();
 
         println!("{} - {:?}", &cql_query, &query_values);
@@ -1296,22 +1296,22 @@ impl TgChannelMsgSelector {
             .exec_map(
                 cql_query,p,
                 |obj: TgChannelMsg| obj
-            ).await.unwrap();
+            ).await?;
 
         Ok(query_result)
     }
 
-    pub async fn get_rows(&mut self, session: &Pool) -> Result<Vec<TgChannelMsg>, CWError>{
+    pub async fn get_rows(&mut self, session: &Pool) -> Result<Vec<TgChannelMsg>, MyError>{
         self._get_rows_with_size(session,-1).await
     }
 
-    pub async fn get_row(&mut self, session: &Pool) -> Result<TgChannelMsg, CWError>{
+    pub async fn get_row(&mut self, session: &Pool) -> Result<TgChannelMsg, MyError>{
         let rows = self._get_rows_with_size(session,1).await?;
 
         let opt = rows.get(0);
         match opt {
             Some(row) => Ok(row.to_owned()),
-            None => Err(CWError::NotFound)
+            None => Err(MyError::NotFound)
         }
     }
 
@@ -2354,50 +2354,50 @@ impl FromRow for TgLink {
         Self: Sized,
     {
         Ok(TgLink  {
-            hash: row.get(0).unwrap(),
-            channel_id: row.get(1).unwrap(),
-            expired: row.get(2).unwrap(),
+            hash: row.get(0).unwrap_or_default(),
+            channel_id: row.get(1).unwrap_or_default(),
+            expired: row.get(2).unwrap_or_default(),
         })
     }
 }
 
 impl TgLink {
-    pub async fn insert(&self, pool: &Pool) -> Result<TgLink,CWError> {
-        let mut conn = pool.get_conn().await.unwrap();
+    pub async fn insert(&self, pool: &Pool) -> Result<TgLink,MyError> {
+        let mut conn = pool.get_conn().await?;
 
         let query = r"INSERT INTO flip_tg.tg_link (hash, channel_id, expired) VALUES (?, ?, ?)";
         let p = Params::Positional(vec![self.hash.clone().into(), self.channel_id.clone().into(), self.expired.clone().into()]);
 
         conn.exec_iter(
             query, p
-        ).await.unwrap();
+        ).await?;
 
         let cp = self.clone();
 
        Ok(cp)
     }
 
-    pub async fn update(&self, pool: &Pool) -> Result<(),CWError> {
-        let mut conn = pool.get_conn().await.unwrap();
+    pub async fn update(&self, pool: &Pool) -> Result<(),MyError> {
+        let mut conn = pool.get_conn().await?;
         let query = r"UPDATE flip_tg.tg_link SET channel_id = ?, expired = ? WHERE hash = ? ";
         let p = Params::Positional(vec![self.channel_id.clone().into(), self.expired.clone().into(),  self.hash.clone().into() ]);
 
         let qr = conn.exec_iter(
             query, p
-        ).await.unwrap();
+        ).await?;
 
         Ok(())
     }
 
-    pub async fn delete(&self, pool: &Pool) -> Result<(),CWError> {
-        let mut conn = pool.get_conn().await.unwrap();
+    pub async fn delete(&self, pool: &Pool) -> Result<(),MyError> {
+        let mut conn = pool.get_conn().await?;
 
         let query = r"DELETE FROM flip_tg.tg_link WHERE hash = ? ";
         let p = Params::Positional(vec![self.hash.clone().into()]);
 
         conn.exec_drop(
             query, p
-        ).await.unwrap();
+        ).await?;
 
         Ok(())
     }
@@ -2481,8 +2481,8 @@ impl TgLinkSelector {
         (cql_query, where_values)
     }
 
-    pub async fn _get_rows_with_size(&mut self, session: &Pool, size: i64) -> Result<Vec<TgLink>, CWError>   {
-        let mut conn = session.get_conn().await.unwrap();
+    pub async fn _get_rows_with_size(&mut self, session: &Pool, size: i64) -> Result<Vec<TgLink>, MyError>   {
+        let mut conn = session.get_conn().await?;
         let(cql_query, query_values) = self._to_cql();
 
         println!("{} - {:?}", &cql_query, &query_values);
@@ -2493,22 +2493,22 @@ impl TgLinkSelector {
             .exec_map(
                 cql_query,p,
                 |obj: TgLink| obj
-            ).await.unwrap();
+            ).await?;
 
         Ok(query_result)
     }
 
-    pub async fn get_rows(&mut self, session: &Pool) -> Result<Vec<TgLink>, CWError>{
+    pub async fn get_rows(&mut self, session: &Pool) -> Result<Vec<TgLink>, MyError>{
         self._get_rows_with_size(session,-1).await
     }
 
-    pub async fn get_row(&mut self, session: &Pool) -> Result<TgLink, CWError>{
+    pub async fn get_row(&mut self, session: &Pool) -> Result<TgLink, MyError>{
         let rows = self._get_rows_with_size(session,1).await?;
 
         let opt = rows.get(0);
         match opt {
             Some(row) => Ok(row.to_owned()),
-            None => Err(CWError::NotFound)
+            None => Err(MyError::NotFound)
         }
     }
 
@@ -2972,51 +2972,51 @@ impl FromRow for TgUsername {
         Self: Sized,
     {
         Ok(TgUsername  {
-            username: row.get(0).unwrap(),
-            channel_id: row.get(1).unwrap(),
-            user_id: row.get(2).unwrap(),
-            not_occupied: row.get(3).unwrap(),
+            username: row.get(0).unwrap_or_default(),
+            channel_id: row.get(1).unwrap_or_default(),
+            user_id: row.get(2).unwrap_or_default(),
+            not_occupied: row.get(3).unwrap_or_default(),
         })
     }
 }
 
 impl TgUsername {
-    pub async fn insert(&self, pool: &Pool) -> Result<TgUsername,CWError> {
-        let mut conn = pool.get_conn().await.unwrap();
+    pub async fn insert(&self, pool: &Pool) -> Result<TgUsername,MyError> {
+        let mut conn = pool.get_conn().await?;
 
         let query = r"INSERT INTO flip_tg.tg_username (username, channel_id, user_id, not_occupied) VALUES (?, ?, ?, ?)";
         let p = Params::Positional(vec![self.username.clone().into(), self.channel_id.clone().into(), self.user_id.clone().into(), self.not_occupied.clone().into()]);
 
         conn.exec_iter(
             query, p
-        ).await.unwrap();
+        ).await?;
 
         let cp = self.clone();
 
        Ok(cp)
     }
 
-    pub async fn update(&self, pool: &Pool) -> Result<(),CWError> {
-        let mut conn = pool.get_conn().await.unwrap();
+    pub async fn update(&self, pool: &Pool) -> Result<(),MyError> {
+        let mut conn = pool.get_conn().await?;
         let query = r"UPDATE flip_tg.tg_username SET channel_id = ?, user_id = ?, not_occupied = ? WHERE username = ? ";
         let p = Params::Positional(vec![self.channel_id.clone().into(), self.user_id.clone().into(), self.not_occupied.clone().into(),  self.username.clone().into() ]);
 
         let qr = conn.exec_iter(
             query, p
-        ).await.unwrap();
+        ).await?;
 
         Ok(())
     }
 
-    pub async fn delete(&self, pool: &Pool) -> Result<(),CWError> {
-        let mut conn = pool.get_conn().await.unwrap();
+    pub async fn delete(&self, pool: &Pool) -> Result<(),MyError> {
+        let mut conn = pool.get_conn().await?;
 
         let query = r"DELETE FROM flip_tg.tg_username WHERE username = ? ";
         let p = Params::Positional(vec![self.username.clone().into()]);
 
         conn.exec_drop(
             query, p
-        ).await.unwrap();
+        ).await?;
 
         Ok(())
     }
@@ -3105,8 +3105,8 @@ impl TgUsernameSelector {
         (cql_query, where_values)
     }
 
-    pub async fn _get_rows_with_size(&mut self, session: &Pool, size: i64) -> Result<Vec<TgUsername>, CWError>   {
-        let mut conn = session.get_conn().await.unwrap();
+    pub async fn _get_rows_with_size(&mut self, session: &Pool, size: i64) -> Result<Vec<TgUsername>, MyError>   {
+        let mut conn = session.get_conn().await?;
         let(cql_query, query_values) = self._to_cql();
 
         println!("{} - {:?}", &cql_query, &query_values);
@@ -3117,22 +3117,22 @@ impl TgUsernameSelector {
             .exec_map(
                 cql_query,p,
                 |obj: TgUsername| obj
-            ).await.unwrap();
+            ).await?;
 
         Ok(query_result)
     }
 
-    pub async fn get_rows(&mut self, session: &Pool) -> Result<Vec<TgUsername>, CWError>{
+    pub async fn get_rows(&mut self, session: &Pool) -> Result<Vec<TgUsername>, MyError>{
         self._get_rows_with_size(session,-1).await
     }
 
-    pub async fn get_row(&mut self, session: &Pool) -> Result<TgUsername, CWError>{
+    pub async fn get_row(&mut self, session: &Pool) -> Result<TgUsername, MyError>{
         let rows = self._get_rows_with_size(session,1).await?;
 
         let opt = rows.get(0);
         match opt {
             Some(row) => Ok(row.to_owned()),
-            None => Err(CWError::NotFound)
+            None => Err(MyError::NotFound)
         }
     }
 
@@ -3748,3 +3748,16 @@ fn _get_where(wheres: Vec<WhereClause>) ->  (String, Vec<Value>) {
 
     (cql_where, values)
 }
+
+#[derive(Debug)]
+pub enum MyError { // MySQL Error
+    NotFound,
+    MySqlError(mysql_async::Error),
+}
+
+impl From<mysql_async::Error> for MyError{
+    fn from(err: mysql_async::Error) -> Self {
+        MyError::MySqlError(err)
+    }
+}
+

@@ -19,6 +19,7 @@ grammers-tl-parser = "1.0.0"
 grammers-tl-types = "0.2.0"
 
 mysql = "18.2.0"
+mysql_async = "0.27.1"
 threadpool = "1.8.1"
 #tokio = { version = "0.2.21", features = ["full"] }
 crossbeam ="0.7.3"
