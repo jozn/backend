@@ -73,25 +73,6 @@ pub(super) fn process_inline_channel_chats(
                     restricted: ch.restricted,
                     megagroup: ch.megagroup,
                 };
-                /*                let ci = types::ChannelInfo {
-                    id: ch.id,
-                    title: ch.title.clone(),
-                    username: ch.username.clone().unwrap_or("".to_string()),
-                    about: "".to_string(),
-                    link: "".to_string(),
-                    members_count: ch.participants_count.unwrap_or(0),
-                    read_inbox_max_id: 0,
-                    access_hash: ch.access_hash.unwrap_or(0),
-                    date: ch.date,
-                    avatar: None, // No Avatar photo is returend in this
-                    photo: 0,
-                    version: ch.version,
-                    pts: 0,
-                    restricted: ch.restricted,
-                    megagroup: ch.megagroup,
-
-                    full_data: false
-                };*/
                 out.push(ci);
             }
             _ => {}
@@ -117,51 +98,6 @@ fn process_inline_media(mm: tl::enums::MessageMedia) -> Option<types::Media> {
                     return Some(mp);
                 }
             }
-            /*if let Some(pic) = photo.photo {
-                // println!("====== Photo {:#?}", pic);
-
-                use tl::enums::Photo;
-                match pic {
-                    Photo::Photo(photo) => {
-                        let p = photo;
-                        m.has_sticker = p.has_stickers;
-                        m.id = p.id;
-                        m.access_hash = p.access_hash;
-                        m.file_reference = p.file_reference;
-                        m.dc_id = p.dc_id;
-                        m.file_extention = ".jpg".to_string();
-
-                        for s in p.sizes {
-                            use tl::enums::PhotoSize;
-                            match s {
-                                PhotoSize::Size(ps) => {
-                                    if m.size < ps.size {
-                                        // select the maximum one
-                                        m.w = ps.w;
-                                        m.h = ps.h;
-                                        m.size = ps.size;
-                                        m.photo_size_type = ps.r#type;
-
-                                        let fl = conv_file_location(ps.location);
-                                        m.dep_volume_id = fl.0;
-                                        m.dep_local_id = fl.1;
-                                    }
-                                }
-                                _ => {}
-                            }
-                        }
-                        /*let inp = tl::types::InputPhotoFileLocation {
-                            id: p.id,
-                            access_hash: p.access_hash,
-                            file_reference: p.file_reference,
-                            thumb_size: "w".to_string(),
-                        };*/
-                        // get_file_photo(caller, inp).await;
-                    }
-                    Photo::Empty(e) => {}
-                }
-            };*/
-            // return Some(m);
         }
 
         MessageMedia::Document(doc) => {
@@ -229,15 +165,6 @@ fn process_inline_media(mm: tl::enums::MessageMedia) -> Option<types::Media> {
                                 }
                             }
                         }
-
-                        /*let d = doc;
-                        let f = tl::types::InputDocumentFileLocation {
-                            id: d.id,
-                            access_hash: d.access_hash,
-                            file_reference: d.file_reference,
-                            thumb_size: "w".to_string(),
-                        };*/
-                        // get_file_doc(caller, f).await;
                     }
                     Document::Empty(e) => {}
                 }
