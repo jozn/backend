@@ -4,7 +4,7 @@ use grammers_mtsender::InvocationError;
 use grammers_session as session;
 use grammers_tl_types as tl;
 use grammers_tl_types::enums::messages::Messages;
-use grammers_tl_types::enums::{ChatPhoto, FileLocation, Message, MessageEntity, Peer};
+use grammers_tl_types::enums::{ChatPhoto, FileLocation, Message, MessageEntity, Peer, MessageReplyHeader};
 use grammers_tl_types::RemoteCall;
 use std::io::Write;
 
@@ -276,6 +276,7 @@ fn process_inline_markup_urls(ms: tl::enums::ReplyMarkup) -> Option<Vec<types::M
 fn conv_message_to_msg(m: tl::types::Message) -> types::Msg {
     let mut fwd = None;
     println!("+++++++++> Mesage: {:#?}", &m);
+    // m.reply_to
     if let Some(fw) = m.fwd_from {
         use tl::enums::MessageFwdHeader::*;
         match fw {
@@ -303,6 +304,16 @@ fn conv_message_to_msg(m: tl::types::Message) -> types::Msg {
             }
         }
     };
+
+    // Checking replay header
+    let mut replay_to_msgs_id = 0;
+    if m.reply_to.is_some() {
+        match m.reply_to.unwrap() {
+            MessageReplyHeader::Header(h) => {
+                replay_to_msgs_id = h.reply_to_msg_id;
+            }
+        }
+    }
     // println!("forward {:#?} ", fwd);
     types::Msg {
         silent: m.silent,
@@ -310,14 +321,13 @@ fn conv_message_to_msg(m: tl::types::Message) -> types::Msg {
         id: m.id,
         from_id: m.id,
         via_bot_id: m.via_bot_id.unwrap_or(0),
-        reply_to_msg_id: 0, // todo m.reply_to_msg_id.unwrap_or(0),
+        reply_to_msg_id: replay_to_msgs_id,
         date: m.date,
         message: m.message,
         views: m.views.unwrap_or(0),
         edit_date: m.edit_date.unwrap_or(0),
         restricted: m.restriction_reason.is_some(),
         forward: fwd,
-        replay: None,
         media: None,
         webpage: None,
         markup_urls: None,

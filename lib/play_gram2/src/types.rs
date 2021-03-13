@@ -38,9 +38,6 @@ pub struct MsgHolder {
     pub users: Vec<String>,
 }
 
-#[derive(Clone, Serialize, Deserialize, Debug)]
-pub struct MsgReplayTo {}
-
 // Simplified and removed none present fields from tl::types::MessageFwdHeader
 // Note: we did not found any Group Chat being set in tl::types::MessageFwdHeader > if forwarded from group user is being set
 // Note: for forwarded messages their corssponding channel is being set in
@@ -73,7 +70,6 @@ pub struct Msg {
     // pub grouped_id: Option<i64>,
     pub restricted: bool,
     pub forward: Option<MsgForwarded>,
-    pub replay: Option<MsgReplayTo>,
 
     pub media: Option<Media>,
     pub webpage: Option<WebPage>,
