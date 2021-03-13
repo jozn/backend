@@ -4,12 +4,12 @@ use grammers_mtsender::InvocationError;
 use grammers_session as session;
 use grammers_tl_types as tl;
 use grammers_tl_types::enums::messages::Messages;
-use grammers_tl_types::enums::{Message, MessageEntity, ChatPhoto, FileLocation};
+use grammers_tl_types::enums::{ChatPhoto, FileLocation, Message, MessageEntity};
 use grammers_tl_types::RemoteCall;
 use std::io::Write;
 
 use crate::tg::converter;
-use crate::types::{Media, MediaThumb, TgPool, Avatar};
+use crate::types::{Avatar, Media, MediaThumb, MsgHolder, TgPool};
 use crate::{errors::TelegramGenErr, types, utils};
 
 use log::kv::Source;
@@ -25,14 +25,6 @@ pub struct ReqGetMessages {
     pub max_id: i32,
     pub min_id: i32,
     pub hash: i32,
-}
-
-#[derive(Clone, Debug)]
-pub struct MsgHolder {
-    pub msgs: Vec<types::Msg>,
-    pub channels: Vec<types::ChannelInfoCompact>,
-    pub urls: Vec<String>,
-    pub users: Vec<String>,
 }
 
 pub async fn get_config(caller: &TgPool) -> Result<tl::enums::Config, TelegramGenErr> {
@@ -56,7 +48,7 @@ pub async fn get_channel_info(
     let res = caller.invoke(&request).await?;
 
     let mut ci = types::ChannelInfo::default();
-    println!("++++++ {:#?}",&res);
+    // println!("++++++ {:#?}",&res);
 
     use tl::enums::messages::ChatFull;
     match res {
@@ -83,6 +75,8 @@ pub async fn get_channel_info(
                 use tl::enums::Chat;
                 match chat {
                     Chat::Channel(ch) => {
+                        // Note: Avatar exist here too and it's a more compact one `ChatPhoto`
+
                         ci.id = ch.id;
                         ci.title = ch.title.clone();
                         ci.username = ch.username.clone().unwrap_or("".to_string());

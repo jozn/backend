@@ -1,4 +1,4 @@
-use grammers_client::{Client, Config, ClientHandle};
+use grammers_client::{Client, ClientHandle, Config};
 use grammers_tl_types::enums::contacts::ResolvedPeer;
 use grammers_tl_types::Serializable;
 use std::borrow::Borrow;
@@ -15,9 +15,9 @@ use std::sync::{Arc, Mutex};
 pub type Binary = Vec<u8>;
 
 // use crate::client_pool;
+use grammers_mtsender::InvocationError;
 use grammers_session::FileSession;
 use serde::{Deserialize, Serialize};
-use grammers_mtsender::InvocationError;
 
 /*pub struct App {
     pub login: Vec<LoginPhone>,
@@ -28,19 +28,28 @@ use grammers_mtsender::InvocationError;
     pub clients: Mutex<Cell<client_pool::ClientPool>>,
 }*/
 
+// In Tg module MsgHolder is used for processing a channels messages list with all of it's associated
+// channels (from forwarded messages) and other metadata
+#[derive(Clone, Debug)]
+pub struct MsgHolder {
+    pub msgs: Vec<Msg>,
+    pub channels: Vec<ChannelInfoCompact>,
+    pub urls: Vec<String>,
+    pub users: Vec<String>,
+}
+
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct MsgReplayTo {}
 
+// Simplified and removed none present fields from tl::types::MessageFwdHeader
+// Note: we did not found any Group Chat being set in tl::types::MessageFwdHeader > if forwarded from group user is being set
+// Note: for forwarded messages their corssponding channel is being set in
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct MsgForwarded {
-    pub from_id: i32,
-    pub from_name: String,
-    pub date: i32,
-    pub channel_id: i32,
-    pub channel_post: i32,
-    pub post_author: String,
-    // pub saved_from_peer: Option<crate::enums::Peer>,
-    pub saved_from_msg_id: i32,
+    pub date: i32,         // Always set
+    pub user_id: i32, // Set if forwarded from User's message (including bots) - also if message forwarded form a User group message
+    pub channel_id: i32, // Set if forwarded from Channel's message
+    pub channel_post: i32, // Shows the id of channel post
 }
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
@@ -125,7 +134,7 @@ pub struct Media {
     // pub video_w: i32,
     // pub video_h: i32,
     pub video_thumbs_rec: Box<Option<Media>>, // todo remove?
-    pub video_thumbs: Option<MediaThumb>, // todo with document thumb
+    pub video_thumbs: Option<MediaThumb>,     // todo with document thumb
 
     // Audio
     pub voice: bool,
@@ -228,7 +237,7 @@ pub struct ChannelInfoCompact {
     pub photo: u8,
     pub version: i32,
     pub restricted: bool, // true for porn
-    pub megagroup: bool, // true for telegram groups (public groups) - false for channels
+    pub megagroup: bool,  // true for telegram groups (public groups) - false for channels
 }
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
@@ -273,10 +282,10 @@ pub struct CachedUsernameData {
     pub last_checked: u32,
 }
 
-
 ///////////////// Deprecated or Maybe /////////////
 #[derive(Clone, Serialize, Deserialize, Default, Debug)]
-pub struct Avatar { // it's photo_big
+pub struct Avatar {
+    // it's photo_big
     pub is_video: bool,
     pub dep_volume_id: i64,
     pub dep_local_id: i32,

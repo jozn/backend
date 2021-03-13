@@ -16,7 +16,8 @@ COLLATE=utf8mb4_general_ci;
 CREATE TABLE flip_tg.tg_channel (
     channel_id INT NOT NULL PRIMARY KEY,
     username varchar(100),
-    data BLOB
+    data TEXT
+#     data BLOB
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8mb4
@@ -30,7 +31,8 @@ CREATE TABLE flip_tg.tg_channel_msg (
     deleted BOOL,
     flip_sync BOOL,
     sync_time INT,
-    data BLOB
+    data TEXT
+#     data BLOB
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8mb4

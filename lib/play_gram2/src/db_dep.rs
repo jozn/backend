@@ -3,16 +3,16 @@ use crate::{errors::TelegramGenErr, types, utils};
 
 use rusqlite::{params, Connection, Result, NO_PARAMS};
 
-use shared::my;
 use mysql::OptsBuilder;
+use shared::my;
 
-pub async fn play_my(){
-/*    let m = my::models::TgChannel{
+pub async fn play_my() {
+    /*    let m = my::models::TgChannel{
         channel_id: 4,
         username: "asdfsd".to_string(),
         data: b"some23".to_vec()
     };*/
-/*    let mut database_url = OptsBuilder::default();
+    /*    let mut database_url = OptsBuilder::default();
 
     let db_url = database_url
         .user(Some("root"))
@@ -22,13 +22,13 @@ pub async fn play_my(){
 
     // let pool = mysql_async::Pool::(db_url);
 
-/*    let url = OptsBuilder::new()
-        .user(Some("root"))
-        .pass(Some("123456"))
-        .db_name(Some("flip"))
-        .ip_or_hostname(Some("37.152.187.1"));*/
+    /*    let url = OptsBuilder::new()
+    .user(Some("root"))
+    .pass(Some("123456"))
+    .db_name(Some("flip"))
+    .ip_or_hostname(Some("37.152.187.1"));*/
     // let path = "root:123456@tcp(37.152.187.1:3306)/flip_tg?charset=utf8mb4";
-    let path = "mysql://root:123456@37.152.187.1:3306/flip_tg";;
+    let path = "mysql://root:123456@37.152.187.1:3306/flip_tg";
     let pool = mysql_async::Pool::from_url(path).unwrap();
     // let pool = mysql_async::Pool::new(&url);
 

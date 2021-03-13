@@ -336,7 +336,7 @@ impl ClientHandle {
 
         println!(">>>> res {:?}", r.is_err());
 
-/*        // TODO add a test this (using handle with client dropped)
+        /*        // TODO add a test this (using handle with client dropped)
         if let Err(_) = self.tx.send(Request::Rpc {
             request: request.to_bytes(),
             response,

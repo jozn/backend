@@ -24,27 +24,24 @@ mod con_mgr;
 mod db_dep;
 mod errors;
 // mod tg_old;
+mod crawler_new;
 mod tg;
 mod utils;
-mod crawler_new;
 
 //tasks:
 // flooding tests and policy
 
 #[tokio::main]
 async fn main() {
-
     // db_dep::play_my().await;
     crawler_new::crawl_run().await;
-
-
 
     // crawl::crawl_next_username().await;
     // crawl::crawl_config().await;
     // crawl::crawl_next_channel().await;
 
     // tg::get_file()
-/*    for i in 0..1 {
+    /*    for i in 0..1 {
         println!("{}", 1);
         // crawl::crawl_next_username().await;
         let r = crawl::crawl_next_channel_messages().await;

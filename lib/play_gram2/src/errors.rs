@@ -5,9 +5,9 @@ use rusqlite;
 // use serde::export::Formatter;
 use grammers_mtsender::AuthorizationError;
 use serde::__private::Formatter;
+use shared::gen::my::models::MyError;
 use std::error::Error;
 use std::fmt::Display;
-use shared::gen::my::models::MyError;
 
 #[derive(Debug)]
 pub enum TelegramGenErr {
@@ -21,7 +21,7 @@ pub enum TelegramGenErr {
     TgAuth(AuthorizationError),
     TgConverter,
     JSON(serde_json::Error),
-    MySql(MyError)
+    MySql(MyError),
 }
 
 // impl Error for GenErr {}
@@ -43,16 +43,15 @@ impl TelegramGenErr {
     pub fn is_tg_username_free(&self) -> bool {
         use TelegramGenErr::*;
         match &self {
-            TgInvocation(invocation) => {
-                match invocation {
-                    InvocationError::Rpc(rpc_err) => {
-                        if rpc_err.code == 400 && rpc_err.name == "USERNAME_NOT_OCCUPIED" {
-                            true
-                        }else {
-                            false }
+            TgInvocation(invocation) => match invocation {
+                InvocationError::Rpc(rpc_err) => {
+                    if rpc_err.code == 400 && rpc_err.name == "USERNAME_NOT_OCCUPIED" {
+                        true
+                    } else {
+                        false
                     }
-                    _ => {false}
                 }
+                _ => false,
             },
             _ => false,
         }
@@ -92,7 +91,7 @@ impl TelegramGenErr {
 impl From<InvocationError> for TelegramGenErr {
     fn from(inv: InvocationError) -> TelegramGenErr {
         TelegramGenErr::TgInvocation(inv)
-       /* match inv {
+        /* match inv {
             // InvocationError::RPC => GenErr::TgRPC,//(rpc.clone()),
             _ => TelegramGenErr::TgConnection,
         }*/

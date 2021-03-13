@@ -4,11 +4,11 @@ use grammers_mtsender::InvocationError;
 use grammers_session as session;
 use grammers_tl_types as tl;
 use grammers_tl_types::enums::messages::Messages;
-use grammers_tl_types::enums::{Message, MessageEntity, ChatPhoto, FileLocation};
+use grammers_tl_types::enums::{ChatPhoto, FileLocation, Message, MessageEntity, Peer};
 use grammers_tl_types::RemoteCall;
 use std::io::Write;
 
-use crate::types::{Media, MediaThumb, Avatar};
+use crate::types::{Avatar, Media, MediaThumb};
 use crate::{errors::TelegramGenErr, types, utils};
 
 // Convert Telegram Message to types::Msg + list of urls
@@ -50,7 +50,9 @@ pub(super) fn process_inline_channel_messages(
 }
 
 // this extract ChannelInfo from an array of chats
-pub(super) fn process_inline_channel_chats(chats: Vec<tl::enums::Chat>) -> Vec<types::ChannelInfoCompact> {
+pub(super) fn process_inline_channel_chats(
+    chats: Vec<tl::enums::Chat>,
+) -> Vec<types::ChannelInfoCompact> {
     let mut out = vec![];
 
     for chat in chats {
@@ -71,7 +73,7 @@ pub(super) fn process_inline_channel_chats(chats: Vec<tl::enums::Chat>) -> Vec<t
                     restricted: ch.restricted,
                     megagroup: ch.megagroup,
                 };
-/*                let ci = types::ChannelInfo {
+                /*                let ci = types::ChannelInfo {
                     id: ch.id,
                     title: ch.title.clone(),
                     username: ch.username.clone().unwrap_or("".to_string()),
@@ -346,18 +348,30 @@ fn process_inline_markup_urls(ms: tl::enums::ReplyMarkup) -> Option<Vec<types::M
 
 fn conv_message_to_msg(m: tl::types::Message) -> types::Msg {
     let mut fwd = None;
+    println!("+++++++++> Mesage: {:#?}", &m);
     if let Some(fw) = m.fwd_from {
         use tl::enums::MessageFwdHeader::*;
         match fw {
             Header(f) => {
+                let mut channel_id = 0;
+                let mut user_id = 0;
+                if f.from_id.is_some() {
+                    match f.from_id.unwrap() {
+                        tl::enums::Peer::Channel(ch) => {
+                            channel_id = ch.channel_id;
+                        }
+                        tl::enums::Peer::User(u) => {
+                            user_id = u.user_id;
+                        }
+                        tl::enums::Peer::Chat(_) => { /*Legacy?*/ }
+                    }
+                }
+
                 fwd = Some(types::MsgForwarded {
-                    from_id: 0, //f.from_id.unwrap_or(0), //todo
-                    from_name: f.from_name.unwrap_or("".to_string()),
                     date: f.date,
-                    channel_id: 0, //todo
+                    user_id: user_id,
+                    channel_id: channel_id,
                     channel_post: f.channel_post.unwrap_or(0),
-                    post_author: f.post_author.unwrap_or("".to_string()),
-                    saved_from_msg_id: f.saved_from_msg_id.unwrap_or(0),
                 });
             }
         }
