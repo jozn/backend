@@ -154,6 +154,14 @@ pub struct MediaThumb {
     pub size: i32,
     // pub file_extention: String,
 }
+
+#[derive(Clone, Serialize, Deserialize, Default, Debug)]
+pub struct Avatar { // it's photo_big
+    pub is_video: bool,
+    pub dep_volume_id: i64,
+    pub dep_local_id: i32,
+    pub dc_id: i32,
+}
 #[derive(Clone, Serialize, Deserialize, Default, Debug)]
 pub struct MarkupUrl {
     pub row_id: i64,
@@ -202,6 +210,8 @@ pub struct ChannelInfo {
     pub read_inbox_max_id: i32,
     pub access_hash: i64,
     pub date: i32,
+    // pub avatar: Option<Avatar>,
+    pub avatar: Option<Media>,
     pub photo: u8,
     pub version: i32,
     // https://core.telegram.org/api/updates for pts

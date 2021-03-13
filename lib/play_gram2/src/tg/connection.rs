@@ -4,12 +4,12 @@ use grammers_mtsender::InvocationError;
 use grammers_session as session;
 use grammers_tl_types as tl;
 use grammers_tl_types::enums::messages::Messages;
-use grammers_tl_types::enums::{Message, MessageEntity};
+use grammers_tl_types::enums::{Message, MessageEntity, ChatPhoto, FileLocation};
 use grammers_tl_types::RemoteCall;
 use std::io::Write;
 
 use crate::tg::converter;
-use crate::types::{Media, MediaThumb, TgPool};
+use crate::types::{Media, MediaThumb, TgPool, Avatar};
 use crate::{errors::TelegramGenErr, types, utils};
 
 use log::kv::Source;
@@ -55,7 +55,7 @@ pub async fn get_channel_info(
     let res = caller.invoke(&request).await?;
 
     let mut ci = types::ChannelInfo::default();
-    // println!("++++++ {:#?}",&res);
+    println!("++++++ {:#?}",&res);
 
     use tl::enums::messages::ChatFull;
     match res {
@@ -68,6 +68,8 @@ pub async fn get_channel_info(
                     ci.pts = c.pts;
                     ci.read_inbox_max_id = c.read_inbox_max_id;
                     ci.members_count = c.participants_count.unwrap_or(0);
+                    // Extract Avatar form channel photo
+                    ci.avatar = converter::conv_photo_to_media(c.chat_photo);
                 }
                 _ => {}
             }
@@ -110,7 +112,7 @@ pub async fn get_channel_by_username(
         username: username.to_string(),
     };
     let res = caller.invoke(&request).await?;
-    // println!("resolve username:  {:#?}", res);
+    // println!("+++> get_channel_by_username :  {:#?}", res);
 
     use tl::enums::contacts::ResolvedPeer;
     match res {
@@ -190,7 +192,7 @@ async fn process_channel_msgs(
             msg_holder.msgs = res.0;
             msg_holder.urls = res.1;
         }
-        _ => println!("other form of messages!"),
+        _ => println!("Not ChannelMessages, other form of messages!"),
     };
     Ok(msg_holder)
     // println!("msgs {:#?} ", msgs);

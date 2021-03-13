@@ -13,3 +13,5 @@ micro/logic/src/xc_sys
 **.sqlite
 /out
 _dl_thumb
+
+o*.txt

@@ -63,7 +63,7 @@ impl Crawler {
                     last_checked: 1, //todo
                 };
 
-                let data = serde_json::to_vec(&channel_data).unwrap();
+                let data = serde_json::to_string(&channel_data).unwrap();
 
                 let channel_row = shared::my::models::TgChannel{
                     channel_id: i.id as u32,
@@ -89,7 +89,7 @@ impl Crawler {
         let rows = shared::my::models::TgChannelSelector::new().get_rows(&self.mysql_pool).await?;
 
         for row in rows{
-            let chan: types::ChannelData = serde_json::from_slice(&row.data).unwrap();
+            let chan: types::ChannelData = serde_json::from_str(&row.data).unwrap();
             let i = chan.channel_info;
             let req = tg::ReqGetMessages {
                 channel_id: i.id,
@@ -97,7 +97,7 @@ impl Crawler {
                 offset_id: 0,
                 offset_date: 0,
                 add_offset: 0,
-                limit: 2,
+                limit: 1,
                 max_id: 0,
                 min_id: 0,
                 hash: 0,
@@ -115,8 +115,9 @@ impl Crawler {
 
 pub async fn crawl_run() -> Result<(), TelegramGenErr> {
     let crawler = Crawler::new().await;
-    crawler.crawl_username("thezoomit").await;
-    crawler.crawl_username("boursecampaign").await;
+    // crawler.crawl_username("thezoomit").await;
+    // crawler.crawl_username("boursecampaign").await;
+    crawler.crawl_username("flip_app").await;
     crawler.crawl_next_channel_messages().await; // channel: porn > restricted
     // println!("zoomit {:?}",res);
     Ok(())

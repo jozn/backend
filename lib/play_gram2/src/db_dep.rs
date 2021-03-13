@@ -7,11 +7,11 @@ use shared::my;
 use mysql::OptsBuilder;
 
 pub async fn play_my(){
-    let m = my::models::TgChannel{
+/*    let m = my::models::TgChannel{
         channel_id: 4,
         username: "asdfsd".to_string(),
         data: b"some23".to_vec()
-    };
+    };*/
 /*    let mut database_url = OptsBuilder::default();
 
     let db_url = database_url

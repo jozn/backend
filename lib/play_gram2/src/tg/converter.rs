@@ -4,13 +4,14 @@ use grammers_mtsender::InvocationError;
 use grammers_session as session;
 use grammers_tl_types as tl;
 use grammers_tl_types::enums::messages::Messages;
-use grammers_tl_types::enums::{Message, MessageEntity};
+use grammers_tl_types::enums::{Message, MessageEntity, ChatPhoto, FileLocation};
 use grammers_tl_types::RemoteCall;
 use std::io::Write;
 
-use crate::types::{Media, MediaThumb};
+use crate::types::{Media, MediaThumb, Avatar};
 use crate::{errors::TelegramGenErr, types, utils};
 
+// Convert Telegram Message to types::Msg + list of urls
 pub(super) fn process_inline_channel_messages(
     messages: Vec<tl::enums::Message>,
 ) -> (Vec<types::Msg>, Vec<String>) {
@@ -23,6 +24,7 @@ pub(super) fn process_inline_channel_messages(
             Message::Service(service_msg) => {}
             Message::Message(m) => {
                 if m.fwd_from.is_some() {
+                    // todo
                     // println!(">>> msg fwd \n {:#?}", m2);
                 }
 
@@ -38,7 +40,7 @@ pub(super) fn process_inline_channel_messages(
                     msg.markup_urls = process_inline_markup_urls(rm);
                 }
 
-                urls.append(&mut u);
+                urls.append(&mut u); // todo fix?
                 msgs.push(msg);
             }
         }
@@ -47,25 +49,35 @@ pub(super) fn process_inline_channel_messages(
     (msgs, urls)
 }
 
+// this extract ChannelInfo from an array of chats
 pub(super) fn process_inline_channel_chats(chats: Vec<tl::enums::Chat>) -> Vec<types::ChannelInfo> {
     let mut out = vec![];
 
     for chat in chats {
-        let mut ci = types::ChannelInfo::default(); // todo embed this
+        // let mut ci = types::ChannelInfo::default(); // todo embed this
 
         use tl::enums::Chat;
         match chat {
             Chat::Channel(ch) => {
-                ci.id = ch.id;
-                ci.title = ch.title.clone();
-                ci.username = ch.username.clone().unwrap_or("".to_string());
-                ci.access_hash = ch.access_hash.unwrap_or(0);
-                ci.date = ch.date;
-                ci.version = ch.version;
-                // ci.members_count = ch.participants_count.unwrap_or(0); // Note: it is None in here! use 'full_chat'
-                ci.megagroup = ch.megagroup;
-                ci.restricted = ch.restricted;
+                let ci = types::ChannelInfo {
+                    id: ch.id,
+                    title: ch.title.clone(),
+                    username: ch.username.clone().unwrap_or("".to_string()),
+                    about: "".to_string(),
+                    link: "".to_string(),
+                    members_count: ch.participants_count.unwrap_or(0),
+                    read_inbox_max_id: 0,
+                    access_hash: ch.access_hash.unwrap_or(0),
+                    date: ch.date,
+                    avatar: None, // No Avatar photo is returend in this
+                    photo: 0,
+                    version: ch.version,
+                    pts: 0,
+                    restricted: ch.restricted,
+                    megagroup: ch.megagroup,
 
+                    full_data: false
+                };
                 out.push(ci);
             }
             _ => {}
@@ -381,12 +393,14 @@ fn conv_file_location(fl: tl::enums::FileLocation) -> (i64, i32) {
     }
 }
 
-fn conv_photo_to_media(photo_enum: tl::enums::Photo) -> Option<types::Media> {
-    let mut m = types::Media::default();
+// pub is used for avatar extraction
+pub fn conv_photo_to_media(photo_enum: tl::enums::Photo) -> Option<types::Media> {
     use tl::enums::Photo;
     match photo_enum {
         Photo::Photo(photo) => {
             let p = photo;
+            let mut m = types::Media::default();
+
             m.media_type = types::MediaType::Image;
             m.has_sticker = p.has_stickers;
             m.id = p.id;

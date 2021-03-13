@@ -641,7 +641,7 @@ impl TweetSelector {
 pub struct TgChannel  { // tg_channel
     pub channel_id: u32,
     pub username: String,
-    pub data: Vec<u8>,
+    pub data: String,
 }
 
 impl FromRow for TgChannel {
@@ -828,6 +828,16 @@ impl TgChannelSelector {
 
 	pub fn order_by_username_desc(&mut self) -> &mut Self {
 		self.order_by.push("username DESC");
+        self
+    }
+
+    pub fn order_by_data_asc(&mut self) -> &mut Self {
+		self.order_by.push("data ASC");
+        self
+    }
+
+	pub fn order_by_data_desc(&mut self) -> &mut Self {
+		self.order_by.push("data DESC");
         self
     }
 
@@ -1097,6 +1107,141 @@ impl TgChannelSelector {
     pub fn or_username_ge (&mut self, val: &str ) -> &mut Self {
         let w = WhereClause{
             condition: "OR username >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn data_eq (&mut self, val: &str ) -> &mut Self {
+        let w = WhereClause{
+            condition: " data = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn data_lt (&mut self, val: &str ) -> &mut Self {
+        let w = WhereClause{
+            condition: " data < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn data_le (&mut self, val: &str ) -> &mut Self {
+        let w = WhereClause{
+            condition: " data <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn data_gt (&mut self, val: &str ) -> &mut Self {
+        let w = WhereClause{
+            condition: " data > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn data_ge (&mut self, val: &str ) -> &mut Self {
+        let w = WhereClause{
+            condition: " data >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_data_eq (&mut self, val: &str ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND data = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_data_lt (&mut self, val: &str ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND data < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_data_le (&mut self, val: &str ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND data <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_data_gt (&mut self, val: &str ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND data > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_data_ge (&mut self, val: &str ) -> &mut Self {
+        let w = WhereClause{
+            condition: "AND data >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_data_eq (&mut self, val: &str ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR data = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_data_lt (&mut self, val: &str ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR data < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_data_le (&mut self, val: &str ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR data <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_data_gt (&mut self, val: &str ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR data > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_data_ge (&mut self, val: &str ) -> &mut Self {
+        let w = WhereClause{
+            condition: "OR data >= ?".to_string(),
             args: val.into(),
         };
         self.wheres.push(w);
