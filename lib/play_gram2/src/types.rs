@@ -156,13 +156,6 @@ pub struct MediaThumb {
 }
 
 #[derive(Clone, Serialize, Deserialize, Default, Debug)]
-pub struct Avatar { // it's photo_big
-    pub is_video: bool,
-    pub dep_volume_id: i64,
-    pub dep_local_id: i32,
-    pub dc_id: i32,
-}
-#[derive(Clone, Serialize, Deserialize, Default, Debug)]
 pub struct MarkupUrl {
     pub row_id: i64,
     pub text: String,
@@ -221,13 +214,15 @@ pub struct ChannelInfo {
     pub full_data: bool, // true if fetched directly - false for inline processing in message. Only if full_data is true it must be saved to database.
 }
 
-// In order to build ChannelInfo we need to query telegram with multi rpc > this
-// struct is for the result of resolve channel by username
+// In order to build ChannelInfo we need to query telegram with multi rpc. This compact used in two places:
+// 1. struct is for the result of resolve channel by username (get_channel_by_username)
+// 2. used for inline channel info in processing forwarded messages
 #[derive(Clone, Serialize, Deserialize, Default, Debug)]
-pub struct ChannelByUsernameResult {
+pub struct ChannelInfoCompact {
     pub id: i32,
     pub title: String,
     pub username: String,
+    pub members_count: i32,
     pub access_hash: i64,
     pub date: i32,
     pub photo: u8,
@@ -280,6 +275,14 @@ pub struct CachedUsernameData {
 
 
 ///////////////// Deprecated or Maybe /////////////
+#[derive(Clone, Serialize, Deserialize, Default, Debug)]
+pub struct Avatar { // it's photo_big
+    pub is_video: bool,
+    pub dep_volume_id: i64,
+    pub dep_local_id: i32,
+    pub dc_id: i32,
+}
+
 pub struct Caller {
     pub client: Client<FileSession>,
 }

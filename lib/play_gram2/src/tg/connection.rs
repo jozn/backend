@@ -30,7 +30,7 @@ pub struct ReqGetMessages {
 #[derive(Clone, Debug)]
 pub struct MsgHolder {
     pub msgs: Vec<types::Msg>,
-    pub channels: Vec<types::ChannelInfo>,
+    pub channels: Vec<types::ChannelInfoCompact>,
     pub urls: Vec<String>,
     pub users: Vec<String>,
 }
@@ -41,6 +41,7 @@ pub async fn get_config(caller: &TgPool) -> Result<tl::enums::Config, TelegramGe
     // println!("config {:#?}", res);
     Ok(res)
 }
+
 pub async fn get_channel_info(
     caller: &TgPool,
     channel_id: i32,
@@ -107,7 +108,7 @@ pub async fn get_channel_info(
 pub async fn get_channel_by_username(
     caller: &TgPool,
     username: &str,
-) -> Result<types::ChannelByUsernameResult, TelegramGenErr> {
+) -> Result<types::ChannelInfoCompact, TelegramGenErr> {
     let request = tl::functions::contacts::ResolveUsername {
         username: username.to_string(),
     };
@@ -122,10 +123,11 @@ pub async fn get_channel_by_username(
                 match chat {
                     Chat::Channel(channel) => {
                         let tg_chan = channel;
-                        let res_channel = types::ChannelByUsernameResult {
+                        let res_channel = types::ChannelInfoCompact {
                             id: tg_chan.id,
                             title: tg_chan.title,
                             username: tg_chan.username.unwrap_or("".to_string()),
+                            members_count: tg_chan.participants_count.unwrap_or(0),
                             access_hash: tg_chan.access_hash.unwrap_or(0),
                             date: tg_chan.date,
                             photo: 0,

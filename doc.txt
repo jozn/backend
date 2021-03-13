@@ -1,3 +1,5 @@
+probebly limit the size of avatars to 640 (telegram is set 640)
+======
 todo: add MessageAction like telegram to pb > make room for it but not full impl yet
 ======
 Note: ::prost::Message implements Debug attribute > ignore IDE error

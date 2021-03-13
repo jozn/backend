@@ -13,7 +13,7 @@ use std::time::Duration;
 use tokio::time::sleep;
 
 use crate::{db_dep, errors::TelegramGenErr, tg, types, utils};
-use crate::types::ChannelByUsernameResult;
+use crate::types::ChannelInfoCompact;
 
 struct Crawler {
     caller: types::TgPool,
@@ -97,7 +97,7 @@ impl Crawler {
                 offset_id: 0,
                 offset_date: 0,
                 add_offset: 0,
-                limit: 1,
+                limit: 6,
                 max_id: 0,
                 min_id: 0,
                 hash: 0,

@@ -50,7 +50,7 @@ pub(super) fn process_inline_channel_messages(
 }
 
 // this extract ChannelInfo from an array of chats
-pub(super) fn process_inline_channel_chats(chats: Vec<tl::enums::Chat>) -> Vec<types::ChannelInfo> {
+pub(super) fn process_inline_channel_chats(chats: Vec<tl::enums::Chat>) -> Vec<types::ChannelInfoCompact> {
     let mut out = vec![];
 
     for chat in chats {
@@ -59,7 +59,19 @@ pub(super) fn process_inline_channel_chats(chats: Vec<tl::enums::Chat>) -> Vec<t
         use tl::enums::Chat;
         match chat {
             Chat::Channel(ch) => {
-                let ci = types::ChannelInfo {
+                let ci = types::ChannelInfoCompact {
+                    id: ch.id,
+                    title: ch.title.clone(),
+                    username: ch.username.clone().unwrap_or("".to_string()),
+                    members_count: ch.participants_count.unwrap_or(0),
+                    access_hash: ch.access_hash.unwrap_or(0),
+                    date: ch.date,
+                    photo: 0,
+                    version: ch.version,
+                    restricted: ch.restricted,
+                    megagroup: ch.megagroup,
+                };
+/*                let ci = types::ChannelInfo {
                     id: ch.id,
                     title: ch.title.clone(),
                     username: ch.username.clone().unwrap_or("".to_string()),
@@ -77,7 +89,7 @@ pub(super) fn process_inline_channel_chats(chats: Vec<tl::enums::Chat>) -> Vec<t
                     megagroup: ch.megagroup,
 
                     full_data: false
-                };
+                };*/
                 out.push(ci);
             }
             _ => {}
