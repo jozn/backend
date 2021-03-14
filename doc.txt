@@ -1,4 +1,9 @@
-probebly limit the size of avatars to 640 (telegram is set 640)
+Policies:
+ + Separation of concerns is more important than some code reuse. (ex: Media, Photo, Avatar, Thumb, Video,
+  Audio,...) > give things space to grow independently and the scope/boundaries of their functionality be
+   obvious and do not push many different types into one data type.
+======
+Probably limit the size of avatars to 640 (telegram is set 640)
 ======
 todo: add MessageAction like telegram to pb > make room for it but not full impl yet
 ======

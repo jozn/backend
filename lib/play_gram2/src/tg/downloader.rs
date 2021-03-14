@@ -19,13 +19,13 @@ pub async fn dl_thumb_to_disk_old(
     let mut m = types::Media::default();
     m.dep_volume_id = t.dep_volume_id;
     m.dep_local_id = t.dep_local_id;
-    m.width = t.w;
-    m.height = t.h;
+    m.image_width = t.w;
+    m.image_height = t.h;
     m.size = t.size;
     m.media_type = types::MediaType::Image;
     let res = _dl_image(caller, m.clone()).await?;
     std::fs::create_dir_all("./_dl_thumb/").unwrap();
-    let name = format!("./_dl_thumb/{}{}", m.id, m.file_extention);
+    let name = format!("./_dl_thumb/{}{}", m.id, m.file_extension);
     let mut f = std::fs::File::create(name).unwrap();
     f.write(&res);
     Ok(())
@@ -41,7 +41,7 @@ pub async fn dl_media_thumb_to_disk(
         // println!("++++ Downloading video thumb {}{}", o. );
         let res = _dl_file(caller, t.clone()).await?;
         std::fs::create_dir_all("./_dl_thumb/").unwrap();
-        let name = format!("./_dl_thumb/{}.{}", t.id, t.file_extention);
+        let name = format!("./_dl_thumb/{}.{}", t.id, t.file_extension);
         let mut f = std::fs::File::create(name).unwrap();
         f.write(&res);
     };
@@ -52,7 +52,7 @@ pub async fn dl_media_to_disk(caller: &mut Caller, m: types::Media) -> Result<()
     let vec8 = dl_media(caller, m.clone()).await?;
 
     std::fs::create_dir_all("./out/telegram/photo").unwrap();
-    let name = format!("./out/telegram/photo/{}.{}", m.id, m.file_extention);
+    let name = format!("./out/telegram/photo/{}.{}", m.id, m.file_extension);
     let mut f = std::fs::File::create(name).unwrap();
     f.write(&vec8);
     Ok(())

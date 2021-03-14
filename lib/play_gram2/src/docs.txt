@@ -6,5 +6,8 @@ todo:
 
 
 Notes:
-+ it seems in our imple both avatar and video avatar works the same (for video being still frame)
-+ telegram sends system messages (pined, avatar change,...) as a message and we ignore them.
++ it seems in our imple both avatar and video avatar works the same (for video being still frame) > NOT CORRECT
++ telegram sends 'system messages' (pined, avatar change,...) as a message and we ignore them.
++ telegram inline image thumbnail is 184 bytes for those we saw.
++ telegram photo size: "m" width:320 - "x" > 800 - "y" > 1280
++ telegram "y" has increased the size of original photo for the one we saw.

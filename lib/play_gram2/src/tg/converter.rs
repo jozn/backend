@@ -23,21 +23,18 @@ pub(super) fn process_inline_channel_messages(
             Message::Empty(em) => {}
             Message::Service(service_msg) => {}
             Message::Message(m) => {
-                if m.fwd_from.is_some() {
-                    // todo
-                    // println!(">>> msg fwd \n {:#?}", m2);
-                }
-
                 let mut msg = conv_message_to_msg(m.clone());
                 let mut u = extract_urls_from_message_entity(m.entities);
 
+                // Extract Photo, Video, File ...
                 if let Some(mm) = m.media.clone() {
                     msg.media = process_inline_media(mm.clone());
                     msg.webpage = process_inline_webpage(mm);
                 }
 
+                // Extract glassy button urls
                 if let Some(rm) = m.reply_markup {
-                    msg.markup_urls = process_inline_markup_urls(rm);
+                    msg.glassy_urls = process_inline_glassy_urls(rm);
                 }
 
                 urls.append(&mut u); // todo fix?
@@ -84,7 +81,7 @@ pub(super) fn process_inline_channel_chats(
 pub(super) fn process_inline_channel_users(bots: &Vec<tl::enums::User>) {}
 
 fn process_inline_media(mm: tl::enums::MessageMedia) -> Option<types::Media> {
-    let mut m = types::Media::default();
+    // let mut m = types::Media::default();
 
     use tl::enums::MessageMedia;
     use types::MediaType;
@@ -100,32 +97,56 @@ fn process_inline_media(mm: tl::enums::MessageMedia) -> Option<types::Media> {
             }
         }
 
-        MessageMedia::Document(doc) => {
+        MessageMedia::Document(doc1) => {
+
             // println!("============== document {:#?}", doc);
-            m.ttl_seconds = doc.ttl_seconds.unwrap_or(0);
-            if let Some(document) = doc.document {
+            // m.ttl_seconds = doc1.ttl_seconds.unwrap_or(0);
+            if let Some(document) = doc1.document {
                 use tl::enums::Document;
                 match document {
                     Document::Document(doc) => {
+                        // Note: we didnt saw "doc.video_thumbs" being set. > legacy?
                         let p = doc.clone();
-                        m.media_type = MediaType::File;
 
-                        m.id = p.id;
-                        m.access_hash = p.access_hash;
-                        m.file_reference = p.file_reference;
-                        m.date = p.date;
-                        m.mime_type = p.mime_type.clone();
-                        m.size = p.size;
-                        m.dc_id = p.dc_id;
+                        let mut m = types::Media{
+                            media_type: MediaType::File,
+                            // has_stickers: false,
+                            id: p.id,
+                            access_hash: p.access_hash,
+                            file_reference: p.file_reference,
+                            date: p.date,
+                            dc_id: p.dc_id,
+                            photo_size_type: "".to_string(),
+                            dep_volume_id: 0,
+                            dep_local_id: 0,
+                            image_width: 0,
+                            image_height: 0,
+                            size: p.size,
+                            mime_type: p.mime_type.clone(),
+                            animated: false,
+                            video_round_message: false,
+                            video_supports_streaming: false,
+                            video_duration: 0,
+                            video_thumbs_rec: Box::new(None),
+                            video_thumbs: None,
+                            audio_voice: false,
+                            audio_title: "".to_string(),
+                            audio_performer: "".to_string(),
+                            audio_waveform: vec![],
+                            file_name: "".to_string(),
+                            has_sticker: false,
+                            ttl_seconds: doc1.ttl_seconds.unwrap_or(0),
+                            file_extension: utils::get_file_extension_from_mime_type(&p.mime_type),
+                            ..Default::default()
+                        };
 
-                        // m.file_extention = mime_db::extension(&p.mime_type).unwrap_or("").to_string();
-                        m.file_extention = utils::get_file_extension_from_mime_type(&p.mime_type);
 
                         //todo move to just video + remove rec
                         if p.thumbs.is_some() {
-                            m.video_thumbs_rec =
-                                Box::new(conv_video_thumbs_rec(&m, p.thumbs.clone().unwrap()));
-                            m.video_thumbs = conv_video_thumbs(p.thumbs.unwrap());
+                            // m.video_thumbs_rec =
+                            //     Box::new(conv_video_thumbs_rec(&m, p.thumbs.clone().unwrap()));
+                            m.video_thumbs = conv_video_thumbs(p.thumbs.clone().unwrap());
+                            m.image_thumbs = conv_video_thumbs(p.thumbs.unwrap());
                             // println!("+++ vidoe: {:#?} ", doc)
                         }
 
@@ -133,29 +154,31 @@ fn process_inline_media(mm: tl::enums::MessageMedia) -> Option<types::Media> {
                             use tl::enums::DocumentAttribute;
                             match atr {
                                 DocumentAttribute::ImageSize(s) => {
-                                    m.media_type = MediaType::File;
-                                    m.width = s.w;
-                                    m.height = s.h;
+                                    m.media_type = MediaType::ImageFile;
+                                    m.image_width = s.w;
+                                    m.image_height = s.h;
                                 }
                                 DocumentAttribute::Animated => {
-                                    m.animated = true;
+                                    m.animated = true; // What is this?
                                 }
-                                DocumentAttribute::Sticker(s) => {}
+                                DocumentAttribute::Sticker(s) => {
+                                    // We do not support Sticker
+                                }
                                 DocumentAttribute::Video(s) => {
                                     m.media_type = MediaType::Video;
-                                    m.round_message = s.round_message;
-                                    m.supports_streaming = s.supports_streaming;
-                                    m.duration = s.duration;
-                                    m.width = s.w;
-                                    m.height = s.h;
+                                    m.video_round_message = s.round_message;
+                                    m.video_supports_streaming = s.supports_streaming;
+                                    m.video_duration = s.duration;
+                                    m.image_width = s.w;
+                                    m.image_height = s.h;
                                 }
                                 DocumentAttribute::Audio(s) => {
                                     m.media_type = MediaType::Audio;
-                                    m.voice = s.voice;
-                                    m.duration = s.duration;
-                                    m.title = s.title.unwrap_or("".to_string());
-                                    m.performer = s.performer.unwrap_or("".to_string());
-                                    m.waveform = s.waveform.unwrap_or(vec![]);
+                                    m.audio_voice = s.voice;
+                                    m.audio_duration = s.duration;
+                                    m.audio_title = s.title.unwrap_or("".to_string());
+                                    m.audio_performer = s.performer.unwrap_or("".to_string());
+                                    m.audio_waveform = s.waveform.unwrap_or(vec![]);
                                 }
                                 DocumentAttribute::Filename(s) => {
                                     m.file_name = s.file_name;
@@ -165,11 +188,11 @@ fn process_inline_media(mm: tl::enums::MessageMedia) -> Option<types::Media> {
                                 }
                             }
                         }
+                        return Some(m);
                     }
                     Document::Empty(e) => {}
                 }
             };
-            return Some(m);
         }
         MessageMedia::Empty => {}
         MessageMedia::Geo(t) => {}
@@ -230,34 +253,33 @@ fn process_inline_webpage(mm: tl::enums::MessageMedia) -> Option<types::WebPage>
     None
 }
 
-fn process_inline_markup_urls(ms: tl::enums::ReplyMarkup) -> Option<Vec<types::MarkupUrl>> {
+fn process_inline_glassy_urls(reply_markups: tl::enums::ReplyMarkup) -> Option<Vec<types::GlassyUrl>> {
     let mut arr = vec![];
-    use tl::enums::ReplyMarkup;
-    match ms {
-        ReplyMarkup::ReplyInlineMarkup(im) => {
-            let mut m = -1;
-            for row in im.rows {
-                m += 1;
+    match reply_markups {
+        tl::enums::ReplyMarkup::ReplyInlineMarkup(inline_markup) => {
+            let mut current_row_num = -1;
+            for row in inline_markup.rows {
+                current_row_num += 1;
 
-                use tl::enums::KeyboardButtonRow;
                 match row {
-                    KeyboardButtonRow::Row(br) => {
-                        for bts in br.buttons {
-                            use tl::enums::KeyboardButton;
-                            match bts {
-                                KeyboardButton::Url(u) => {
-                                    let r = types::MarkupUrl {
-                                        row_id: m,
-                                        text: u.text,
-                                        url: u.url,
+                    tl::enums::KeyboardButtonRow::Row(button_row) => {
+                        for keyborad_button in button_row.buttons {
+                            match keyborad_button {
+                                tl::enums::KeyboardButton::Url(button_url) => {
+                                    let out_btn = types::GlassyUrl {
+                                        row_id: current_row_num,
+                                        text: button_url.text,
+                                        url: button_url.url,
                                     };
-                                    arr.push(r);
+                                    arr.push(out_btn);
                                 }
 
-                                KeyboardButton::UrlAuth(u) => {
-                                    // this is for things like comments bot
+                                tl::enums::KeyboardButton::UrlAuth(u) => {
+                                    // This is for things like comments bot
                                 }
-                                _ => {}
+                                _ => {
+                                    // Not supported
+                                }
                             }
                         }
                     }
@@ -277,6 +299,7 @@ fn conv_message_to_msg(m: tl::types::Message) -> types::Msg {
     let mut fwd = None;
     println!("+++++++++> Mesage: {:#?}", &m);
     // m.reply_to
+    // Processing forward header
     if let Some(fw) = m.fwd_from {
         use tl::enums::MessageFwdHeader::*;
         match fw {
@@ -305,7 +328,7 @@ fn conv_message_to_msg(m: tl::types::Message) -> types::Msg {
         }
     };
 
-    // Checking replay header
+    // Processing replay header
     let mut replay_to_msgs_id = 0;
     if m.reply_to.is_some() {
         match m.reply_to.unwrap() {
@@ -330,7 +353,7 @@ fn conv_message_to_msg(m: tl::types::Message) -> types::Msg {
         forward: fwd,
         media: None,
         webpage: None,
-        markup_urls: None,
+        glassy_urls: None,
     }
 }
 
@@ -362,7 +385,7 @@ pub fn conv_photo_to_media(photo_enum: tl::enums::Photo) -> Option<types::Media>
     match photo_enum {
         Photo::Photo(photo) => {
             let p = photo;
-            let mut m = types::Media::default();
+            let mut m = types::Media::default(); // TODO inline one
 
             m.media_type = types::MediaType::Image;
             m.has_sticker = p.has_stickers;
@@ -371,7 +394,7 @@ pub fn conv_photo_to_media(photo_enum: tl::enums::Photo) -> Option<types::Media>
             m.file_reference = p.file_reference;
             m.date = p.date;
             m.dc_id = p.dc_id;
-            m.file_extention = ".jpg".to_string();
+            m.file_extension = ".jpg".to_string();
 
             for s in p.sizes {
                 use tl::enums::PhotoSize;
@@ -379,8 +402,8 @@ pub fn conv_photo_to_media(photo_enum: tl::enums::Photo) -> Option<types::Media>
                     PhotoSize::Size(ps) => {
                         if m.size < ps.size {
                             // select the maximum
-                            m.width = ps.w;
-                            m.height = ps.h;
+                            m.image_width = ps.w;
+                            m.image_height = ps.h;
                             m.size = ps.size;
                             m.photo_size_type = ps.r#type;
 
@@ -438,7 +461,7 @@ fn conv_video_thumbs_rec(med: &types::Media, sizes: Vec<tl::enums::PhotoSize>) -
         id: med.id,
         access_hash: med.access_hash,
         file_reference: med.file_reference.clone(),
-        file_extention: "jpg".to_string(),
+        file_extension: "jpg".to_string(),
         ..Default::default()
     };
 
@@ -449,8 +472,8 @@ fn conv_video_thumbs_rec(med: &types::Media, sizes: Vec<tl::enums::PhotoSize>) -
                 // Select the maximum one
                 if media_out.size < size.size {
                     media_out.photo_size_type = size.r#type;
-                    media_out.width = size.w;
-                    media_out.height = size.h;
+                    media_out.image_width = size.w;
+                    media_out.image_height = size.h;
                     media_out.size = size.size;
 
                     use tl::enums::FileLocation;

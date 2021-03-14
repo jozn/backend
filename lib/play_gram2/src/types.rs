@@ -73,24 +73,24 @@ pub struct Msg {
 
     pub media: Option<Media>,
     pub webpage: Option<WebPage>,
-    pub markup_urls: Option<Vec<MarkupUrl>>,
+    pub glassy_urls: Option<Vec<GlassyUrl>>,  // Extracted from telegram ReplyMarkup. used in below of some messages(like: Stock market links)
     // raw: tl::types::Message,
 }
 
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq)]
 pub enum MediaType {
-    Unknown,
-    Image,
-    Video,
-    Audio,
-    File,
-    ImageFile,
+    Unknown, // todo remove
+    Image, // Resized shared image
+    Video, //
+    Audio, // voice, music
+    File, // pdf, docs, apks,..
+    ImageFile, // Unresized image as file. Has thumb for display
 }
 
 // #[derive(Derivative)]
 #[derive(Clone, Serialize, Deserialize, Default, Debug)]
 // #[derive(Clone, Debug, Default)]
-pub struct Media {
+pub struct Media { // todo: extract simple image form media
     pub media_type: MediaType,
     pub has_stickers: bool,
     pub id: i64,
@@ -100,15 +100,18 @@ pub struct Media {
     pub date: i32,
     // pub sizes: Vec<tl::enums::PhotoSize>,
     pub dc_id: i32,
-    pub photo_size_type: String,
+    pub photo_size_type: String, // for Image (Resized shared photos)
 
     // FileLocationToBeDeprecated
-    pub dep_volume_id: i64,
+    pub dep_volume_id: i64, //
     pub dep_local_id: i32,
 
     // pub location: tl::enums::FileLocation,
-    pub width: i32,
-    pub height: i32,
+    pub image_width: i32, // for Image, ImageFile
+    pub image_height: i32, // for Image, ImageFile
+    pub image_thumbs: Option<MediaThumb>,
+
+    // shared among all
     pub size: i32,
 
     // Document
@@ -121,23 +124,23 @@ pub struct Media {
     // pub thumbs: Option<Vec<tl::enums::PhotoSize>>,
     // pub dc_id: i32,
     // pub attributes: Vec<tl::enums::DocumentAttribute>,
-    pub animated: bool,
+    pub animated: bool, // What is this?  gifs?
 
     // Video
-    pub round_message: bool,
-    pub supports_streaming: bool,
-    pub duration: i32,
-    // pub video_w: i32,
-    // pub video_h: i32,
+    pub video_round_message: bool,
+    pub video_supports_streaming: bool,
+    pub video_duration: i32,
+    pub video_width: i32,
+    pub video_height: i32,
     pub video_thumbs_rec: Box<Option<Media>>, // todo remove?
     pub video_thumbs: Option<MediaThumb>,     // todo with document thumb
 
     // Audio
-    pub voice: bool,
-    // pub audio_duration: i32, // merge
-    pub title: String,
-    pub performer: String,
-    pub waveform: Vec<u8>,
+    pub audio_voice: bool,
+    pub audio_duration: i32, // merge
+    pub audio_title: String,
+    pub audio_performer: String,
+    pub audio_waveform: Vec<u8>,
 
     pub file_name: String,
 
@@ -145,7 +148,7 @@ pub struct Media {
     pub ttl_seconds: i32,
 
     // Us
-    pub file_extention: String,
+    pub file_extension: String,
 }
 
 #[derive(Clone, Serialize, Deserialize, Default, Debug)]
@@ -161,7 +164,7 @@ pub struct MediaThumb {
 }
 
 #[derive(Clone, Serialize, Deserialize, Default, Debug)]
-pub struct MarkupUrl {
+pub struct GlassyUrl {
     pub row_id: i64,
     pub text: String,
     pub url: String,
