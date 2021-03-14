@@ -61,6 +61,8 @@ pub struct Msg {
     pub reply_to_msg_id: i32,
     pub date: i32,
     pub message: String,
+
+    pub text_meta: Vec<MsgTextMeta>,
     // pub media: Option<crate::enums::MessageMedia>,
     // pub reply_markup: Option<crate::enums::ReplyMarkup>,
     // pub entities: Option<Vec<crate::enums::MessageEntity>>,//todo
@@ -75,6 +77,34 @@ pub struct Msg {
     pub webpage: Option<WebPage>,
     pub glassy_urls: Option<Vec<GlassyUrl>>,  // Extracted from telegram ReplyMarkup. used in below of some messages(like: Stock market links)
     // raw: tl::types::Message,
+}
+
+#[derive(Clone, Serialize, Deserialize, Debug, PartialEq)]
+pub enum MsgTextMetaType {
+    Unknown,
+    Hashtag,
+    Url,
+    TextUrl, // hyperLink
+
+    Bold,
+    Italic,
+    Underline,
+    Strike,
+    Blockquote,
+    Code, // In telegram client it's called "mono"
+    Pre,
+
+    Phone,
+    Email,
+    // bot command , mention,...
+}
+
+#[derive(Default,Clone, Serialize, Deserialize, Debug, PartialEq)]
+pub struct MsgTextMeta {
+    pub meta_type: MsgTextMetaType,
+    pub offset: i32,
+    pub length: i32,
+    pub url: String,
 }
 
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq)]
@@ -269,6 +299,11 @@ impl Default for MediaType {
     }
 }
 
+impl Default for MsgTextMetaType {
+    fn default() -> Self {
+        MsgTextMetaType::Unknown
+    }
+}
 // Storage
 
 #[derive(Clone, Serialize, Deserialize, Debug)]

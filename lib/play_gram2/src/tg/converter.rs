@@ -8,7 +8,7 @@ use grammers_tl_types::enums::{ChatPhoto, FileLocation, Message, MessageEntity, 
 use grammers_tl_types::RemoteCall;
 use std::io::Write;
 
-use crate::types::{Avatar, Media, MediaThumb};
+use crate::types::{Avatar, Media, MediaThumb, MsgTextMeta, MsgTextMetaType};
 use crate::{errors::TelegramGenErr, types, utils};
 
 // Convert Telegram Message to types::Msg + list of urls
@@ -24,8 +24,9 @@ pub(super) fn process_inline_channel_messages(
             Message::Service(service_msg) => {}
             Message::Message(m) => {
                 let mut msg = conv_message_to_msg(m.clone());
-                let mut u = extract_urls_from_message_entity(m.entities);
+                let mut u = extract_urls_from_message_entity(m.entities.clone());
 
+                msg.text_meta = extract_text_meta_from_message_entity(m.entities);
                 // Extract Photo, Video, File ...
                 if let Some(mm) = m.media.clone() {
                     msg.media = process_inline_media(mm.clone());
@@ -37,7 +38,8 @@ pub(super) fn process_inline_channel_messages(
                     msg.glassy_urls = process_inline_glassy_urls(rm);
                 }
 
-                urls.append(&mut u); // todo fix?
+                u.into_iter().for_each(|v| urls.push(v));
+                // urls.append(&mut u); // todo fix?
                 msgs.push(msg);
             }
         }
@@ -108,6 +110,7 @@ fn process_inline_media(mm: tl::enums::MessageMedia) -> Option<types::Media> {
                         // Note: we didnt saw "doc.video_thumbs" being set. > legacy?
                         let p = doc.clone();
 
+                        // todo
                         let mut m = types::Media{
                             media_type: MediaType::File,
                             // has_stickers: false,
@@ -347,6 +350,7 @@ fn conv_message_to_msg(m: tl::types::Message) -> types::Msg {
         reply_to_msg_id: replay_to_msgs_id,
         date: m.date,
         message: m.message,
+        text_meta: vec![], // set later
         views: m.views.unwrap_or(0),
         edit_date: m.edit_date.unwrap_or(0),
         restricted: m.restriction_reason.is_some(),
@@ -371,6 +375,131 @@ fn extract_urls_from_message_entity(
         }
     };
     urls
+}
+
+fn extract_text_meta_from_message_entity(
+    entities: Option<Vec<tl::enums::MessageEntity>>,
+) -> Vec<MsgTextMeta> {
+    let mut out = vec![];
+    if let Some(ent) = entities {
+        for v in ent {
+            // use tl::enums::MessageEntity::*;
+            use tl::enums::MessageEntity;
+            match v {
+                // tl::enums::MessageEntity::TextUrl(t) => urls.push(t.url),
+                MessageEntity::Unknown(_) => {}
+                MessageEntity::Mention(_) => {}
+                MessageEntity::Hashtag(p) => {
+                    let m = MsgTextMeta {
+                        meta_type: MsgTextMetaType::Hashtag,
+                        offset: p.offset,
+                        length: p.length,
+                        ..Default::default()
+                    };
+                    out.push(m);
+                }
+                MessageEntity::BotCommand(_) => {}
+                MessageEntity::Url(p) => {
+                    let m = MsgTextMeta {
+                        meta_type: MsgTextMetaType::Url,
+                        offset: p.offset,
+                        length: p.length,
+                        ..Default::default()
+                    };
+                    out.push(m);
+                }
+                MessageEntity::Email(p) => {
+                    let m = MsgTextMeta {
+                        meta_type: MsgTextMetaType::Email,
+                        offset: p.offset,
+                        length: p.length,
+                        ..Default::default()
+                    };
+                    out.push(m);
+                }
+                MessageEntity::Bold(p) => {
+                    let m = MsgTextMeta {
+                        meta_type: MsgTextMetaType::Bold,
+                        offset: p.offset,
+                        length: p.length,
+                        ..Default::default()
+                    };
+                    out.push(m);
+                }
+                MessageEntity::Italic(p) => {
+                    let m = MsgTextMeta {
+                        meta_type: MsgTextMetaType::Italic,
+                        offset: p.offset,
+                        length: p.length,
+                        ..Default::default()
+                    };
+                    out.push(m);
+                }
+                MessageEntity::Code(p) => {
+                    let m = MsgTextMeta {
+                        meta_type: MsgTextMetaType::Code,
+                        offset: p.offset,
+                        length: p.length,
+                        ..Default::default()
+                    };
+                    out.push(m);
+                }
+                MessageEntity::Pre(p) => {
+                    let m = MsgTextMeta {
+                        meta_type: MsgTextMetaType::Pre,
+                        offset: p.offset,
+                        length: p.length,
+                        ..Default::default()
+                    };
+                    out.push(m);
+                }
+                MessageEntity::TextUrl(p) => {
+                    let m = MsgTextMeta {
+                        meta_type: MsgTextMetaType::TextUrl,
+                        offset: p.offset,
+                        length: p.length,
+                        url: p.url,
+                    };
+                    out.push(m);
+                }
+                MessageEntity::MentionName(_) => {}
+                MessageEntity::InputMessageEntityMentionName(_) => {}
+                MessageEntity::Phone(_) => {
+                    // Not supported as Telegram output contains error for Phone numbers (many number is parsed as phone number)
+                }
+                MessageEntity::Cashtag(_) => {}
+                MessageEntity::Underline(p) => {
+                    let m = MsgTextMeta {
+                        meta_type: MsgTextMetaType::Underline,
+                        offset: p.offset,
+                        length: p.length,
+                        ..Default::default()
+                    };
+                    out.push(m);
+                }
+                MessageEntity::Strike(p) => {
+                    let m = MsgTextMeta {
+                        meta_type: MsgTextMetaType::Strike,
+                        offset: p.offset,
+                        length: p.length,
+                        ..Default::default()
+                    };
+                    out.push(m);
+                }
+                MessageEntity::Blockquote(p) => {
+                    let m = MsgTextMeta {
+                        meta_type: MsgTextMetaType::Blockquote,
+                        offset: p.offset,
+                        length: p.length,
+                        ..Default::default()
+                    };
+                    out.push(m);
+                }
+                MessageEntity::BankCard(_) => {}
+            }
+        }
+    };
+    out
 }
 
 fn conv_file_location(fl: tl::enums::FileLocation) -> (i64, i32) {

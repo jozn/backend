@@ -92,6 +92,7 @@ pub fn get_file_extension_from_mime_type(mt: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::{types};
 
     #[test]
     fn valid_username() {
@@ -138,5 +139,119 @@ mod tests {
         assert_eq!(mime_db::extension("audio/mpeg").unwrap(), "mpga"); // mp3
         assert_eq!(mime_db::extension("audio/ogg").unwrap(), "oga"); //
         assert_eq!(mime_db::extension("video/quicktime").unwrap(), "qt"); // mov
+    }
+
+    #[test]
+    fn utf_16() {
+        use types::{MsgTextMetaType::*,MsgTextMeta};
+
+        let msg = types::Msg{
+            silent: false,
+            post: true,
+            id: 33,
+            from_id: 33,
+            via_bot_id: 0,
+            reply_to_msg_id: 0,
+            date: 1615726102,
+            message: "utf16 تست👌at strikes bold under  hyperlink 😍 #iraq space ططط hhw@gmail.com dd اا ایتالیک mono  漢字 Google.com".to_string(),
+            text_meta: vec![
+                MsgTextMeta {
+                    meta_type: Strike,
+                    offset: 14,
+                    length: 7,
+                    ..Default::default()
+                },
+                MsgTextMeta {
+                    meta_type: Bold,
+                    offset: 22,
+                    length: 4,
+                    ..Default::default()
+                },
+                MsgTextMeta {
+                    meta_type: Underline,
+                    offset: 27,
+                    length: 5,
+                    ..Default::default()
+                },
+                MsgTextMeta {
+                    meta_type: TextUrl,
+                    offset: 34,
+                    length: 9,
+                    url: "http://flip.ir/".to_string(),
+                },
+                MsgTextMeta {
+                    meta_type: Hashtag,
+                    offset: 47,
+                    length: 5,
+                    ..Default::default()
+                },
+                MsgTextMeta {
+                    meta_type: Email,
+                    offset: 63,
+                    length: 13,
+                    ..Default::default()
+                },
+                MsgTextMeta {
+                    meta_type: Italic,
+                    offset: 83,
+                    length: 7,
+                    ..Default::default()
+                },
+                MsgTextMeta {
+                    meta_type: Code,
+                    offset: 91,
+                    length: 4,
+                    ..Default::default()
+                },
+                MsgTextMeta {
+                    meta_type: Url,
+                    offset: 100,
+                    length: 10,
+                    ..Default::default()
+                },
+            ],
+            views: 1,
+            edit_date: 1615749669,
+            restricted: false,
+            forward: None,
+            media: None,
+            webpage: None,
+            glassy_urls: None,
+        };
+        // msg.message.ra
+        println!("utf16");
+
+
+        let t : Vec<u16>= msg.message.encode_utf16().into_iter().collect();
+        // assert_eq!(t[14..21], "strikes".encode_utf16().collect());
+
+        let chek = |txt,offset, length| {
+            assert_eq!(txt ,String::from_utf16(&t[offset..(offset+length)]).unwrap());
+        };
+        
+        chek("strikes",14,7);
+        chek("bold",22,4);
+        chek("under",27,5);
+        chek("hyperlink",34,9);
+        chek("#iraq",47,5);
+        chek("hhw@gmail.com",63,13);
+        chek("ایتالیک",83,7);
+        chek("mono",91,4);
+        chek("Google.com",100,10);
+
+        // t.get()
+        // txt.into_iter().
+        assert_eq!("strikes",String::from_utf16(&t[14..21]).unwrap());
+        assert_eq!("bold", tuf16_to_string(&t[22..(22+4)]));
+        // assert_eq!("under", tuf16_to_string(&t[27..(22+4)]));
+        // println!("utf16 {:?}", String::from_utf16(&t[14..21]));
+        println!("utf16 slice: {:?}", &t[14..21] );
+        println!("utf16 slice str: {:?}", String::from_utf16(&t[14..21]) );
+        println!("utf16 slice str: {:?}", String::from_utf16(&t[14..21]) );
+
+    }
+
+    fn tuf16_to_string(bts :&[u16]) -> String {
+        String::from_utf16(bts).unwrap()
     }
 }
