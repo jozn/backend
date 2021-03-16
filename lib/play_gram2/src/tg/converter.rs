@@ -202,14 +202,7 @@ fn process_inline_media(mm: tl::enums::MessageMedia) -> Option<types::Media> {
         MessageMedia::Contact(t) => {}
         MessageMedia::Unsupported => {}
         MessageMedia::WebPage(t) => {
-            use tl::enums::WebPage;
-            match t.webpage {
-                WebPage::Empty(v) => {}
-                WebPage::Pending(v) => {}
-                WebPage::Page(v) => {}
-                WebPage::NotModified(v) => {}
-            }
-            // println!("********** webpage {:#?}", t);
+            // We process webpage in: process_inline_webpage()
         }
         MessageMedia::Venue(t) => {}
         MessageMedia::Game(t) => {}

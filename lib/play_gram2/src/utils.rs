@@ -5,11 +5,11 @@ use std::fs::File;
 use std::ops::Index;
 use std::str::FromStr;
 
-// A general username validity check: reletievy relaxed | not suitable for flip
+// A general username validity check: relatively relaxed | not suitable for flip
 // Not checking length: length should be validated at some other places:
 // no start with number but twitter allows
-// Instagram: 1..=30 _. no repeaded dots | allowed __ | allowed _ start | not allowed num start
-// Telgram: 5..=32 _ no ending with _ | allowed __ | no _ start | not allowed num start
+// Instagram: 1..=30 _. no repeated dots | allowed __ | allowed _ start | not allowed num start
+// Telegram: 5..=32 _ no ending with _ | allowed __ | no _ start | not allowed num start
 // Twitter: 1..=15 _ | allowed __ | allowed _ start | allowed num start and total number
 pub fn is_valid_username_pattern(s: &str) -> bool {
     if s.len() == 0 || !s.is_ascii() {
@@ -110,6 +110,7 @@ mod tests {
             T("_abcdef_", true),
             T("_", true),
             T("8abcdef", true),
+
             T("abf45sdef-12", false),
             T("ABC25-tUlM_23t-", false),
             T("abcd ef", false),
@@ -218,37 +219,27 @@ mod tests {
             webpage: None,
             glassy_urls: None,
         };
-        // msg.message.ra
-        println!("utf16");
 
+        let utf_16_txt: Vec<u16>= msg.message.encode_utf16().collect();
 
-        let t : Vec<u16>= msg.message.encode_utf16().into_iter().collect();
-        // assert_eq!(t[14..21], "strikes".encode_utf16().collect());
-
-        let chek = |txt,offset, length| {
-            assert_eq!(txt ,String::from_utf16(&t[offset..(offset+length)]).unwrap());
+        let check = |txt, offset, length| {
+            assert_eq!(txt ,String::from_utf16(&utf_16_txt[offset..(offset+length)]).unwrap());
         };
-        
-        chek("strikes",14,7);
-        chek("bold",22,4);
-        chek("under",27,5);
-        chek("hyperlink",34,9);
-        chek("#iraq",47,5);
-        chek("hhw@gmail.com",63,13);
-        chek("ایتالیک",83,7);
-        chek("mono",91,4);
-        chek("Google.com",100,10);
 
-        // t.get()
-        // txt.into_iter().
-        assert_eq!("strikes",String::from_utf16(&t[14..21]).unwrap());
-        assert_eq!("bold", tuf16_to_string(&t[22..(22+4)]));
-        // assert_eq!("under", tuf16_to_string(&t[27..(22+4)]));
-        // println!("utf16 {:?}", String::from_utf16(&t[14..21]));
-        println!("utf16 slice: {:?}", &t[14..21] );
-        println!("utf16 slice str: {:?}", String::from_utf16(&t[14..21]) );
-        println!("utf16 slice str: {:?}", String::from_utf16(&t[14..21]) );
+        check("strikes", 14, 7);
+        check("bold", 22, 4);
+        check("under", 27, 5);
+        check("hyperlink", 34, 9);
+        check("#iraq", 47, 5);
+        check("hhw@gmail.com", 63, 13);
+        check("ایتالیک", 83, 7);
+        check("mono", 91, 4);
+        check("Google.com", 100, 10);
 
+        println!("utf16 slice: {:?}", &utf_16_txt[14..21] );
+        println!("utf16 slice str: {:?}", String::from_utf16(&utf_16_txt[14..21]) );
+
+        println!("utf16 works correctly");
     }
 
     fn tuf16_to_string(bts :&[u16]) -> String {

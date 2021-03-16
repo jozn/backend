@@ -202,24 +202,24 @@ pub struct GlassyUrl {
 
 #[derive(Clone, Serialize, Deserialize, Default, Debug)]
 // #[derive(Clone, Debug, Default)]
-pub struct WebPage {
+pub struct WebPage { // In Flip site maybe add an lang field for "fa" ,"en"
     pub id: i64,
     pub url: String,         // "https://m.youtube.com/watch?v=fQVhppRP4Wo"
     pub display_url: String, // "youtube.com/watch?v=fQVhppRP4Wo"
     pub hash: i32,           // 0 58695
-    pub page_type: String,   // opt - video photo article
-    pub site_name: String,   // opt
-    pub title: String,       // opt
-    pub description: String, // opt
+    pub page_type: String,   // opt - video photo article || video: YouTube - photo: Telegraph - article: Tabnak
+    pub site_name: String,   // opt - showed in first line
+    pub title: String,       // opt - showed below site name
+    pub description: String, // opt - showed below title
     // pub photo: Option<crate::enums::Photo>,
     pub photo: Option<Media>,
-    // pub embed_url: Option<String>,
-    // pub embed_type: Option<String>,
-    // pub embed_width: Option<i32>,
-    // pub embed_height: Option<i32>,
+    // pub embed_url: Option<String>, // for video (Youtube) is being set - "https://www.youtube.com/embed/TkoYtz3Jm-o" | aparat: "https://hajifirouz1.cdn.asset.aparat.com/aparat-video/963d41be6d46..."
+    // pub embed_type: Option<String>, // YT: "iframe" - Aparat: "video/mp4"
+    // pub embed_width: Option<i32>, // 1280 - 640
+    // pub embed_height: Option<i32>, // 720
     // pub duration: Option<i32>,
     // pub author: Option<String>,
-    // pub document: Option<crate::enums::Document>,
+    // pub document: Option<crate::enums::Document>, // For Aparat is being set to video mp4 file
     // pub cached_page: Option<crate::enums::Page>,
     // pub attributes: Option<Vec<crate::enums::WebPageAttribute>>,*/
 }
