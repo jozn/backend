@@ -215,8 +215,9 @@ mod tests {
             edit_date: 1615749669,
             restricted: false,
             forward: None,
-            media: None,
-            webpage: None,
+            media_old: None,
+            webpage_old: None,
+            medias: vec![],
             glassy_urls: None,
         };
 

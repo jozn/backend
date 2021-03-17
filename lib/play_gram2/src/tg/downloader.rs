@@ -8,7 +8,7 @@ use grammers_tl_types::enums::{Message, MessageEntity};
 use grammers_tl_types::RemoteCall;
 use std::io::Write;
 
-use crate::types::{Media, MediaThumb};
+use crate::types::{MediaOld, MediaThumb};
 use crate::{errors::TelegramGenErr, types, types::Caller, utils};
 
 pub async fn dl_thumb_to_disk_old(
@@ -16,13 +16,13 @@ pub async fn dl_thumb_to_disk_old(
     t: &types::MediaThumb,
 ) -> Result<(), TelegramGenErr> {
     // hack: use Media for dl
-    let mut m = types::Media::default();
+    let mut m = types::MediaOld::default();
     m.dep_volume_id = t.dep_volume_id;
     m.dep_local_id = t.dep_local_id;
     m.image_width = t.w;
     m.image_height = t.h;
     m.size = t.size;
-    m.media_type = types::MediaType::Image;
+    m.media_type = types::MediaTypeOld::Image;
     let res = _dl_image(caller, m.clone()).await?;
     std::fs::create_dir_all("./_dl_thumb/").unwrap();
     let name = format!("./_dl_thumb/{}{}", m.id, m.file_extension);
@@ -34,7 +34,7 @@ pub async fn dl_thumb_to_disk_old(
 // todo: replace video_thumbs_rec > video_thumbs ??
 pub async fn dl_media_thumb_to_disk(
     caller: &mut Caller,
-    m: types::Media,
+    m: types::MediaOld,
 ) -> Result<(), TelegramGenErr> {
     // let o = *m.video_thumbs_rec;
     if let Some(t) = *m.video_thumbs_rec {
@@ -48,7 +48,7 @@ pub async fn dl_media_thumb_to_disk(
     Ok(())
 }
 
-pub async fn dl_media_to_disk(caller: &mut Caller, m: types::Media) -> Result<(), TelegramGenErr> {
+pub async fn dl_media_to_disk(caller: &mut Caller, m: types::MediaOld) -> Result<(), TelegramGenErr> {
     let vec8 = dl_media(caller, m.clone()).await?;
 
     std::fs::create_dir_all("./out/telegram/photo").unwrap();
@@ -58,8 +58,8 @@ pub async fn dl_media_to_disk(caller: &mut Caller, m: types::Media) -> Result<()
     Ok(())
 }
 
-pub async fn dl_media(caller: &mut Caller, m: types::Media) -> Result<Vec<u8>, TelegramGenErr> {
-    use types::MediaType::*;
+pub async fn dl_media(caller: &mut Caller, m: types::MediaOld) -> Result<Vec<u8>, TelegramGenErr> {
+    use types::MediaTypeOld::*;
     match m.media_type {
         Image => {
             _dl_image(caller, m.clone()).await
@@ -81,7 +81,7 @@ pub async fn dl_media(caller: &mut Caller, m: types::Media) -> Result<Vec<u8>, T
     }
 }
 
-async fn _dl_image(caller: &mut Caller, m: types::Media) -> Result<Vec<u8>, TelegramGenErr> {
+async fn _dl_image(caller: &mut Caller, m: types::MediaOld) -> Result<Vec<u8>, TelegramGenErr> {
     let request = tl::functions::upload::GetFile {
         precise: false,
         cdn_supported: false,
@@ -112,7 +112,7 @@ async fn _dl_image(caller: &mut Caller, m: types::Media) -> Result<Vec<u8>, Tele
     Ok(out)
 }
 
-async fn _dl_file(caller: &mut Caller, m: types::Media) -> Result<Vec<u8>, TelegramGenErr> {
+async fn _dl_file(caller: &mut Caller, m: types::MediaOld) -> Result<Vec<u8>, TelegramGenErr> {
     let limit = 524288;
     let mut out_buffer = Vec::with_capacity(limit as usize);
     let mut offset = 0;

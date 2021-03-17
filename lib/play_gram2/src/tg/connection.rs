@@ -9,7 +9,7 @@ use grammers_tl_types::RemoteCall;
 use std::io::Write;
 
 use crate::tg::converter;
-use crate::types::{Avatar, Media, MediaThumb, MsgHolder, TgPool};
+use crate::types::{Avatar, MediaOld, MediaThumb, MsgHolder, TgPool};
 use crate::{errors::TelegramGenErr, types, utils};
 
 use log::kv::Source;

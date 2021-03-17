@@ -1,7 +1,15 @@
 Policies:
- + Separation of concerns is more important than some code reuse. (ex: Media, Photo, Avatar, Thumb, Video,
-  Audio,...) > give things space to grow independently and the scope/boundaries of their functionality be
-   obvious and do not push many different types into one data type.
+    + Separation of concerns is more important than some code reuse. (ex: Media, Photo, Avatar, Thumb, Video,
+      Audio,...) > give things space to grow independently and the scope/boundaries of their functionality be
+       obvious and do not push many different types into one data type.
+    + No Extremely low image thumb like telegram (telegram inline image is sub 200 bytes with removing
+    header > this is overenginering for us as network and data is reletively cheap.
+    telegram images is arond 700-800 bytes jpeg, going this way we are kind of writing in stone how
+    our images should look likes. go for files for images and no embeded inline image. There will be a
+    ton of problems with cashing, db sizes,... . > go with industry standards)
+    + Telegram mime_type: "application/x-tgsticker" is telegram own stikers with ~7KB size. "thumb" is also is set.
+    + Telegarm
+    todo: skip from messages when they are spical document types: stickers,...
 ======
 Probably limit the size of avatars to 640 (telegram is set 640)
 ======

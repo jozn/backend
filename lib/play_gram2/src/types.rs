@@ -73,8 +73,10 @@ pub struct Msg {
     pub restricted: bool,
     pub forward: Option<MsgForwarded>,
 
-    pub media: Option<Media>,
-    pub webpage: Option<WebPage>,
+    pub media_old: Option<MediaOld>,
+    pub webpage_old: Option<WebPage>,
+
+    pub medias: Vec<Media>,
     pub glassy_urls: Option<Vec<GlassyUrl>>,  // Extracted from telegram ReplyMarkup. used in below of some messages(like: Stock market links)
     // raw: tl::types::Message,
 }
@@ -107,8 +109,121 @@ pub struct MsgTextMeta {
     pub url: String,
 }
 
+#[derive(Clone, Serialize, Deserialize, Debug)]
+pub enum Media {
+    Empty,
+    File(File),
+    WebPage(WebPage),
+
+    Poll, // Concept
+    Unsupported, // Concept
+
+    // Image, // Resized shared image
+    // Video, //
+    // Audio, // voice, music
+    // File, // pdf, docs, apks,..
+    // ImageFile, // Unresized image as file. Has thumb for display
+}
+
+#[derive(Clone, Serialize, Deserialize, Debug)]
+pub enum FileMeta {
+    Unknown, // todo remove
+    ImageResizedFile(ImageResizedFile), // Resized shared image
+    ImageFile(ImageFile), // Unresized image as file. Has thumb for display
+    VideoFile(VideoFile), //
+    AudioFile(AudioFile), // voice, music
+    DocumentFile(DocumentFile), // pdf, docs, apks,..
+    GifFile(GifFile),
+    // Concept
+    // Sticker,
+}
+
+#[derive(Clone, Serialize, Deserialize, Default, Debug)]
+pub struct File {
+    pub file_meta: FileMeta,
+
+    pub id: i64,
+    pub access_hash: i64,
+    pub file_reference: Vec<u8>,
+    pub date: i32,
+    pub mime_type: String,
+    pub size: i32,
+    // pub thumbs: Option<Vec<crate::enums::PhotoSize>>,
+    // pub video_thumbs: Option<Vec<crate::enums::VideoSize>>,
+    pub dc_id: i32,
+    // pub attributes: Vec<crate::enums::DocumentAttribute>,
+
+    // If used just for Image > move to Image
+    // FileLocationToBeDeprecated
+    pub dep_volume_id: i64, //
+    pub dep_local_id: i32,
+
+    pub filename: String,
+    // Us
+    pub file_extension: String,
+}
+
+#[derive(Clone, Serialize, Deserialize, Default, Debug)]
+pub struct ImageResizedFile {
+    pub has_stickers: bool,
+    pub w: i32,
+    pub h: i32,
+    // pub id: i64,
+    // pub access_hash: i64,
+    // pub file_reference: Vec<u8>,
+    // pub date: i32,
+    // pub sizes: Vec<crate::enums::PhotoSize>,
+    // pub video_sizes: Option<Vec<crate::enums::VideoSize>>,
+    // pub dc_id: i32,
+}
+
+#[derive(Clone, Serialize, Deserialize, Default, Debug)]
+pub struct ImageFile {
+    pub w: i32,
+    pub h: i32,
+
+    pub cover: Box<File>,
+}
+
+#[derive(Clone, Serialize, Deserialize, Default, Debug)]
+pub struct VideoFile {
+    pub round_message: bool,
+    pub supports_streaming: bool,
+    pub duration: i32,
+    pub w: i32,
+    pub h: i32,
+
+    pub cover: Box<File>,
+}
+
+#[derive(Clone, Serialize, Deserialize, Default, Debug)]
+pub struct AudioFile {
+    pub voice: bool,
+    pub duration: i32,
+    pub title: String,
+    pub performer: String,
+    pub waveform: Vec<u8>,
+
+    pub cover: Box<File>,
+}
+
+#[derive(Clone, Serialize, Deserialize, Default, Debug)]
+pub struct DocumentFile {
+    pub cover:  Box<File>,
+}
+
+#[derive(Clone, Serialize, Deserialize, Default, Debug)]
+pub struct GifFile {
+    pub duration: i32,
+    pub w: i32,
+    pub h: i32,
+
+    pub cover:  Box<File>,
+}
+
+////////// Older Media //////////
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq)]
-pub enum MediaType {
+pub enum MediaTypeOld {
     Unknown, // todo remove
     Image, // Resized shared image
     Video, //
@@ -120,8 +235,8 @@ pub enum MediaType {
 // #[derive(Derivative)]
 #[derive(Clone, Serialize, Deserialize, Default, Debug)]
 // #[derive(Clone, Debug, Default)]
-pub struct Media { // todo: extract simple image form media
-    pub media_type: MediaType,
+pub struct MediaOld { // todo: extract simple image form media
+    pub media_type: MediaTypeOld,
     pub has_stickers: bool,
     pub id: i64,
     pub access_hash: i64,
@@ -162,7 +277,7 @@ pub struct Media { // todo: extract simple image form media
     pub video_duration: i32,
     pub video_width: i32,
     pub video_height: i32,
-    pub video_thumbs_rec: Box<Option<Media>>, // todo remove?
+    pub video_thumbs_rec: Box<Option<MediaOld>>, // todo remove?
     pub video_thumbs: Option<MediaThumb>,     // todo with document thumb
 
     // Audio
@@ -212,7 +327,7 @@ pub struct WebPage { // In Flip site maybe add an lang field for "fa" ,"en"
     pub title: String,       // opt - showed below site name
     pub description: String, // opt - showed below title
     // pub photo: Option<crate::enums::Photo>,
-    pub photo: Option<Media>,
+    pub photo: Option<MediaOld>,
     // pub embed_url: Option<String>, // for video (Youtube) is being set - "https://www.youtube.com/embed/TkoYtz3Jm-o" | aparat: "https://hajifirouz1.cdn.asset.aparat.com/aparat-video/963d41be6d46..."
     // pub embed_type: Option<String>, // YT: "iframe" - Aparat: "video/mp4"
     // pub embed_width: Option<i32>, // 1280 - 640
@@ -242,7 +357,7 @@ pub struct ChannelInfo {
     pub access_hash: i64,
     pub date: i32,
     // pub avatar: Option<Avatar>,
-    pub avatar: Option<Media>,
+    pub avatar: Option<MediaOld>,
     pub photo: u8,
     pub version: i32,
     // https://core.telegram.org/api/updates for pts
@@ -293,15 +408,21 @@ impl TgPool {
     }
 }
 
-impl Default for MediaType {
+impl Default for MediaTypeOld {
     fn default() -> Self {
-        MediaType::Unknown
+        MediaTypeOld::Unknown
     }
 }
 
 impl Default for MsgTextMetaType {
     fn default() -> Self {
         MsgTextMetaType::Unknown
+    }
+}
+
+impl Default for FileMeta {
+    fn default() -> Self {
+        FileMeta::Unknown
     }
 }
 // Storage

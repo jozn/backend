@@ -98,7 +98,7 @@ impl Crawler {
                 offset_id: 0,
                 offset_date: 0,
                 add_offset: 0,
-                limit: 1,
+                limit: 5,
                 max_id: 0,
                 min_id: 0,
                 hash: 0,

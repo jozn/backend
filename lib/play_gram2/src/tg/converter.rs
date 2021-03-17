@@ -8,8 +8,22 @@ use grammers_tl_types::enums::{ChatPhoto, FileLocation, Message, MessageEntity, 
 use grammers_tl_types::RemoteCall;
 use std::io::Write;
 
-use crate::types::{Avatar, Media, MediaThumb, MsgTextMeta, MsgTextMetaType};
+use crate::types::{Avatar, MediaOld, MediaThumb, MsgTextMeta, MsgTextMetaType};
 use crate::{errors::TelegramGenErr, types, utils};
+// Notes:
+// Telegram mime_type: "application/x-tgsticker" is telegram own stikers with ~7KB size. "thumb" is also is set.
+// thumb in Document is for inline images: being set in gifs, stickers,...
+// gifs: if document is animated it's gif (could mp4 gif > hence it set video attributes)
+// in documents ttl_seconds is not being set even if auto delete message being set.
+// have whitelist filtering not a black list: mpt, ogg, mp3, pdf, docs,...
+// if audio is set to voice:true it will not have save to my music
+// is audio is set to voice:true it will have waveform otherwise not.
+// audio: performer and title is being set just for music not voice,
+// filename is being set for music (but not voice), animated (gif) mostly "mp4.mp4",
+// image doc: thumb is ~250-320px and ~10-12px, filename as it's being set - thumb is "i" and "m" (inline+ medium")
+// filename is not being set for Photo > good for privacy (actualay photo has not the filename attribute anyway)
+// .forwards is the number of forwards of a message > if Some(num) it shows it a user message post if None it's a some systems posts.
+// .grouped_id in message means the messages are bundles (multi photo, files,...). The order is reversed (recent message is shown last in the bundle view)
 
 // Convert Telegram Message to types::Msg + list of urls
 pub(super) fn process_inline_channel_messages(
@@ -23,14 +37,23 @@ pub(super) fn process_inline_channel_messages(
             Message::Empty(em) => {}
             Message::Service(service_msg) => {}
             Message::Message(m) => {
+
+                // Hack: Some system messages is being sent as normal real messages (ex: "Messages were set to
+                // automatically delete ..." in this case Telegram sets views and forwards to null.
+                // Not suer about how this act about those old telegram messages who do not have a
+                // view fields (did those messages eventually got a views filed?)
+                if m.views.is_none() && m.forwards.is_none() {
+                    continue
+                }
+
                 let mut msg = conv_message_to_msg(m.clone());
                 let mut u = extract_urls_from_message_entity(m.entities.clone());
 
                 msg.text_meta = extract_text_meta_from_message_entity(m.entities);
                 // Extract Photo, Video, File ...
                 if let Some(mm) = m.media.clone() {
-                    msg.media = process_inline_media(mm.clone());
-                    msg.webpage = process_inline_webpage(mm);
+                    msg.media_old = process_inline_media(mm.clone());
+                    msg.webpage_old = process_inline_webpage(mm);
                 }
 
                 // Extract glassy button urls
@@ -82,11 +105,11 @@ pub(super) fn process_inline_channel_chats(
 
 pub(super) fn process_inline_channel_users(bots: &Vec<tl::enums::User>) {}
 
-fn process_inline_media(mm: tl::enums::MessageMedia) -> Option<types::Media> {
+fn process_inline_media(mm: tl::enums::MessageMedia) -> Option<types::MediaOld> {
     // let mut m = types::Media::default();
 
     use tl::enums::MessageMedia;
-    use types::MediaType;
+    use types::MediaTypeOld;
     match mm {
         MessageMedia::Photo(photo) => {
             if let Some(pic) = photo.photo {
@@ -111,8 +134,8 @@ fn process_inline_media(mm: tl::enums::MessageMedia) -> Option<types::Media> {
                         let p = doc.clone();
 
                         // todo
-                        let mut m = types::Media{
-                            media_type: MediaType::File,
+                        let mut m = types::MediaOld {
+                            media_type: MediaTypeOld::File,
                             // has_stickers: false,
                             id: p.id,
                             access_hash: p.access_hash,
@@ -157,7 +180,7 @@ fn process_inline_media(mm: tl::enums::MessageMedia) -> Option<types::Media> {
                             use tl::enums::DocumentAttribute;
                             match atr {
                                 DocumentAttribute::ImageSize(s) => {
-                                    m.media_type = MediaType::ImageFile;
+                                    m.media_type = MediaTypeOld::ImageFile;
                                     m.image_width = s.w;
                                     m.image_height = s.h;
                                 }
@@ -168,7 +191,7 @@ fn process_inline_media(mm: tl::enums::MessageMedia) -> Option<types::Media> {
                                     // We do not support Sticker
                                 }
                                 DocumentAttribute::Video(s) => {
-                                    m.media_type = MediaType::Video;
+                                    m.media_type = MediaTypeOld::Video;
                                     m.video_round_message = s.round_message;
                                     m.video_supports_streaming = s.supports_streaming;
                                     m.video_duration = s.duration;
@@ -176,7 +199,7 @@ fn process_inline_media(mm: tl::enums::MessageMedia) -> Option<types::Media> {
                                     m.image_height = s.h;
                                 }
                                 DocumentAttribute::Audio(s) => {
-                                    m.media_type = MediaType::Audio;
+                                    m.media_type = MediaTypeOld::Audio;
                                     m.audio_voice = s.voice;
                                     m.audio_duration = s.duration;
                                     m.audio_title = s.title.unwrap_or("".to_string());
@@ -348,8 +371,9 @@ fn conv_message_to_msg(m: tl::types::Message) -> types::Msg {
         edit_date: m.edit_date.unwrap_or(0),
         restricted: m.restriction_reason.is_some(),
         forward: fwd,
-        media: None,
-        webpage: None,
+        media_old: None,
+        webpage_old: None,
+        medias: vec![],
         glassy_urls: None,
     }
 }
@@ -502,14 +526,14 @@ fn conv_file_location(fl: tl::enums::FileLocation) -> (i64, i32) {
 }
 
 // pub is used for avatar extraction
-pub fn conv_photo_to_media(photo_enum: tl::enums::Photo) -> Option<types::Media> {
+pub fn conv_photo_to_media(photo_enum: tl::enums::Photo) -> Option<types::MediaOld> {
     use tl::enums::Photo;
     match photo_enum {
         Photo::Photo(photo) => {
             let p = photo;
-            let mut m = types::Media::default(); // TODO inline one
+            let mut m = types::MediaOld::default(); // TODO inline one
 
-            m.media_type = types::MediaType::Image;
+            m.media_type = types::MediaTypeOld::Image;
             m.has_sticker = p.has_stickers;
             m.id = p.id;
             m.access_hash = p.access_hash;
@@ -578,8 +602,8 @@ fn conv_video_thumbs(vts: Vec<tl::enums::PhotoSize>) -> Option<MediaThumb> {
     Some(m)
 }
 
-fn conv_video_thumbs_rec(med: &types::Media, sizes: Vec<tl::enums::PhotoSize>) -> Option<Media> {
-    let mut media_out = Media {
+fn conv_video_thumbs_rec(med: &types::MediaOld, sizes: Vec<tl::enums::PhotoSize>) -> Option<MediaOld> {
+    let mut media_out = MediaOld {
         id: med.id,
         access_hash: med.access_hash,
         file_reference: med.file_reference.clone(),
@@ -613,3 +637,6 @@ fn conv_video_thumbs_rec(med: &types::Media, sizes: Vec<tl::enums::PhotoSize>) -
     }
     None
 }
+
+
+////////////////// Archive of old Media ///////////////////
