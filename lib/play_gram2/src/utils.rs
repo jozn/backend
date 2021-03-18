@@ -92,7 +92,7 @@ pub fn get_file_extension_from_mime_type(mt: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{types};
+    use crate::types;
 
     #[test]
     fn valid_username() {
@@ -110,7 +110,6 @@ mod tests {
             T("_abcdef_", true),
             T("_", true),
             T("8abcdef", true),
-
             T("abf45sdef-12", false),
             T("ABC25-tUlM_23t-", false),
             T("abcd ef", false),
@@ -144,7 +143,7 @@ mod tests {
 
     #[test]
     fn utf_16() {
-        use types::{MsgTextMetaType::*,MsgTextMeta};
+        use types::{MsgTextMeta, MsgTextMetaType::*};
 
         let msg = types::Msg{
             silent: false,
@@ -221,10 +220,13 @@ mod tests {
             glassy_urls: None,
         };
 
-        let utf_16_txt: Vec<u16>= msg.message.encode_utf16().collect();
+        let utf_16_txt: Vec<u16> = msg.message.encode_utf16().collect();
 
         let check = |txt, offset, length| {
-            assert_eq!(txt ,String::from_utf16(&utf_16_txt[offset..(offset+length)]).unwrap());
+            assert_eq!(
+                txt,
+                String::from_utf16(&utf_16_txt[offset..(offset + length)]).unwrap()
+            );
         };
 
         check("strikes", 14, 7);
@@ -237,13 +239,16 @@ mod tests {
         check("mono", 91, 4);
         check("Google.com", 100, 10);
 
-        println!("utf16 slice: {:?}", &utf_16_txt[14..21] );
-        println!("utf16 slice str: {:?}", String::from_utf16(&utf_16_txt[14..21]) );
+        println!("utf16 slice: {:?}", &utf_16_txt[14..21]);
+        println!(
+            "utf16 slice str: {:?}",
+            String::from_utf16(&utf_16_txt[14..21])
+        );
 
         println!("utf16 works correctly");
     }
 
-    fn tuf16_to_string(bts :&[u16]) -> String {
+    fn tuf16_to_string(bts: &[u16]) -> String {
         String::from_utf16(bts).unwrap()
     }
 }

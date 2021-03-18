@@ -73,14 +73,13 @@ pub struct Msg {
     pub restricted: bool,
     pub forward: Option<MsgForwarded>,
 
-    pub media_old: Option<MediaOld>,
-    pub webpage_old: Option<WebPage>,
-
+    // pub media_old: Option<MediaOld>,
+    // pub webpage_old: Option<WebPage>,
     pub medias: Vec<Media>,
-    pub glassy_urls: Option<Vec<GlassyUrl>>,  // Extracted from telegram ReplyMarkup. used in below of some messages(like: Stock market links)
-    // raw: tl::types::Message,
+    pub glassy_urls: Option<Vec<GlassyUrl>>, // Extracted from telegram ReplyMarkup. used in below of some messages(like: Stock market links)
+                                             // raw: tl::types::Message,
 }
-
+//////////// Text Meta /////////////
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq)]
 pub enum MsgTextMetaType {
     Unknown,
@@ -101,7 +100,7 @@ pub enum MsgTextMetaType {
     // bot command , mention,...
 }
 
-#[derive(Default,Clone, Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Default, Clone, Serialize, Deserialize, Debug, PartialEq)]
 pub struct MsgTextMeta {
     pub meta_type: MsgTextMetaType,
     pub offset: i32,
@@ -109,38 +108,40 @@ pub struct MsgTextMeta {
     pub url: String,
 }
 
+///////////// Media ///////////////
+
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub enum Media {
     Empty,
-    File(File),
-    WebPage(WebPage),
+    File(FileMedia),
+    WebPage(WebPageMedia),
 
     Poll, // Concept
     Unsupported, // Concept
 
-    // Image, // Resized shared image
-    // Video, //
-    // Audio, // voice, music
-    // File, // pdf, docs, apks,..
-    // ImageFile, // Unresized image as file. Has thumb for display
+          // Image, // Resized shared image
+          // Video, //
+          // Audio, // voice, music
+          // File, // pdf, docs, apks,..
+          // ImageFile, // Unresized image as file. Has thumb for display
 }
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
-pub enum FileMeta {
-    Unknown, // todo remove
+pub enum FileMetaInfo {
+    Unknown,                            // todo remove
     ImageResizedFile(ImageResizedFile), // Resized shared image
-    ImageFile(ImageFile), // Unresized image as file. Has thumb for display
-    VideoFile(VideoFile), //
-    AudioFile(AudioFile), // voice, music
-    DocumentFile(DocumentFile), // pdf, docs, apks,..
+    ImageFile(ImageFile),               // Unresized image as file. Has thumb for display
+    VideoFile(VideoFile),               //
+    AudioFile(AudioFile),               // voice, music
+    DocumentFile(DocumentFile),         // pdf, docs, apks,..
     GifFile(GifFile),
     // Concept
     // Sticker,
 }
 
 #[derive(Clone, Serialize, Deserialize, Default, Debug)]
-pub struct File {
-    pub file_meta: FileMeta,
+pub struct FileMedia {
+    pub file_meta: FileMetaInfo,
 
     pub id: i64,
     pub access_hash: i64,
@@ -152,13 +153,7 @@ pub struct File {
     // pub video_thumbs: Option<Vec<crate::enums::VideoSize>>,
     pub dc_id: i32,
     // pub attributes: Vec<crate::enums::DocumentAttribute>,
-
-    // If used just for Image > move to Image
-    // FileLocationToBeDeprecated
-    pub dep_volume_id: i64, //
-    pub dep_local_id: i32,
-
-    pub filename: String,
+    pub file_name: String,
     // Us
     pub file_extension: String,
 }
@@ -168,6 +163,14 @@ pub struct ImageResizedFile {
     pub has_stickers: bool,
     pub w: i32,
     pub h: i32,
+    pub size_type: String,
+
+    // FileLocationToBeDeprecated
+    pub dep_volume_id: i64, //
+    pub dep_local_id: i32,
+
+    // Redundent > used in avatar, and thumbnails
+    pub size: i32,
     // pub id: i64,
     // pub access_hash: i64,
     // pub file_reference: Vec<u8>,
@@ -182,7 +185,7 @@ pub struct ImageFile {
     pub w: i32,
     pub h: i32,
 
-    pub cover: Box<File>,
+    pub cover: Option<ImageResizedFile>,
 }
 
 #[derive(Clone, Serialize, Deserialize, Default, Debug)]
@@ -193,7 +196,7 @@ pub struct VideoFile {
     pub w: i32,
     pub h: i32,
 
-    pub cover: Box<File>,
+    pub cover: Option<ImageResizedFile>,
 }
 
 #[derive(Clone, Serialize, Deserialize, Default, Debug)]
@@ -204,12 +207,12 @@ pub struct AudioFile {
     pub performer: String,
     pub waveform: Vec<u8>,
 
-    pub cover: Box<File>,
+    pub cover: Option<ImageResizedFile>,
 }
 
 #[derive(Clone, Serialize, Deserialize, Default, Debug)]
 pub struct DocumentFile {
-    pub cover:  Box<File>,
+    pub cover: Option<ImageResizedFile>,
 }
 
 #[derive(Clone, Serialize, Deserialize, Default, Debug)]
@@ -218,9 +221,190 @@ pub struct GifFile {
     pub w: i32,
     pub h: i32,
 
-    pub cover:  Box<File>,
+    pub cover: Option<ImageResizedFile>,
 }
 
+#[derive(Clone, Serialize, Deserialize, Default, Debug)]
+pub struct GlassyUrl {
+    pub row_id: i64,
+    pub text: String,
+    pub url: String,
+}
+
+#[derive(Clone, Serialize, Deserialize, Default, Debug)]
+// #[derive(Clone, Debug, Default)]
+pub struct WebPageMedia {
+    // In Flip site maybe add an lang field for "fa" ,"en"
+    pub id: i64,
+    pub url: String,         // "https://m.youtube.com/watch?v=fQVhppRP4Wo"
+    pub display_url: String, // "youtube.com/watch?v=fQVhppRP4Wo"
+    pub hash: i32,           // 0 58695
+    pub page_type: String, // opt - video photo article || video: YouTube - photo: Telegraph - article: Tabnak
+    pub site_name: String, // opt - showed in first line
+    pub title: String,     // opt - showed below site name
+    pub description: String, // opt - showed below title
+    // pub photo: Option<crate::enums::Photo>,
+    pub photo: Option<FileMedia>,
+    // pub embed_url: Option<String>, // for video (Youtube) is being set - "https://www.youtube.com/embed/TkoYtz3Jm-o" | aparat: "https://hajifirouz1.cdn.asset.aparat.com/aparat-video/963d41be6d46..."
+    // pub embed_type: Option<String>, // YT: "iframe" - Aparat: "video/mp4"
+    // pub embed_width: Option<i32>, // 1280 - 640
+    // pub embed_height: Option<i32>, // 720
+    // pub duration: Option<i32>,
+    // pub author: Option<String>,
+    // pub document: Option<crate::enums::Document>, // For Aparat is being set to video mp4 file
+    // pub cached_page: Option<crate::enums::Page>,
+    // pub attributes: Option<Vec<crate::enums::WebPageAttribute>>,*/
+}
+
+//////////////// End of Media ///////////////
+
+#[derive(Clone, Serialize, Deserialize, Debug)]
+pub struct ChannelSpace {
+    pub info: ChannelInfo,
+    pub msgs: HashMap<u32, Msg>,
+}
+
+#[derive(Clone, Serialize, Deserialize, Default, Debug)]
+pub struct ChannelInfo {
+    pub id: i32,
+    pub title: String,
+    pub username: String,
+    pub about: String,
+    pub link: String, //todo: remove? there is no where in telegram api we can get this > other means must link to chan
+    pub members_count: i32,
+    pub read_inbox_max_id: i32,
+    pub access_hash: i64,
+    pub date: i32,
+    // pub avatar: Option<Avatar>,
+    // pub avatar: Option<Box<Media>>,
+    // pub avatar: Option<FileMedia>,
+    pub avatar: Option<FileMedia>,
+    pub photo: u8,
+    pub version: i32,
+    // https://core.telegram.org/api/updates for pts
+    pub pts: i32, // "pts indicates the server state after the new channel message events are generated" > not used now > maybe useful is we subscribe to channel
+    pub restricted: bool, // true for porn is accessed with an Iran phone
+    pub megagroup: bool,
+    pub full_data: bool, // true if fetched directly - false for inline processing in message. Only if full_data is true it must be saved to database.
+}
+
+// In order to build ChannelInfo we need to query telegram with multi rpc. This compact used in two places:
+// 1. struct is for the result of resolve channel by username (get_channel_by_username)
+// 2. used for inline channel info in processing forwarded messages
+#[derive(Clone, Serialize, Deserialize, Default, Debug)]
+pub struct ChannelInfoCompact {
+    pub id: i32,
+    pub title: String,
+    pub username: String,
+    pub members_count: i32,
+    pub access_hash: i64,
+    pub date: i32,
+    pub photo: u8,
+    pub version: i32,
+    pub restricted: bool, // true for porn
+    pub megagroup: bool,  // true for telegram groups (public groups) - false for channels
+}
+
+#[derive(Clone, Serialize, Deserialize, Debug)]
+pub struct DC {}
+
+#[derive(Clone, Serialize, Deserialize, Debug)]
+pub struct Session {}
+
+#[derive(Clone, Serialize, Deserialize, Debug)]
+pub struct LoginPhone {}
+
+/////////// Tg ///////////
+pub struct TgPool {
+    pub client: ClientHandle,
+}
+
+impl TgPool {
+    pub async fn invoke<R: tl::RemoteCall>(
+        &self,
+        request: &R,
+    ) -> Result<R::Return, InvocationError> {
+        let mut cp = self.client.clone();
+        cp.invoke(request).await
+    }
+}
+
+/*impl Default for MediaTypeOld {
+    fn default() -> Self {
+        MediaTypeOld::Unknown
+    }
+}
+*/
+impl Default for MsgTextMetaType {
+    fn default() -> Self {
+        MsgTextMetaType::Unknown
+    }
+}
+
+impl Default for FileMetaInfo {
+    fn default() -> Self {
+        FileMetaInfo::Unknown
+    }
+}
+// Storage
+
+#[derive(Clone, Serialize, Deserialize, Debug)]
+pub struct CachedUsernameData {
+    pub username: String,
+    pub channel_id: i32, // we do not care about others: super groups, users,...
+    // pub tg_result: Option<ChannelByUsernameResult>,
+    pub channel_info: Option<ChannelInfo>,
+    pub taken: bool,
+    pub last_checked: u32,
+}
+
+pub struct Caller {
+    pub client: Client<FileSession>,
+}
+
+/////////// Sqlite ///////
+#[derive(Clone, Serialize, Deserialize, Debug)]
+pub struct ChannelData {
+    pub channel_info: ChannelInfo,
+    pub last_checked: u32,
+}
+
+///////////////////////////
+#[derive(Clone, Serialize, Deserialize, Debug)]
+pub struct ReqSyncChannel {
+    pub channel_id: i32,
+}
+
+#[derive(Clone, Serialize, Deserialize, Debug)]
+pub struct ResSyncChannel {
+    pub channel_info: ChannelInfo,
+}
+
+#[derive(Clone, Serialize, Deserialize, Debug)]
+pub struct ReqSyncMessages {
+    pub channel_id: i32,
+    pub access_id: i64,
+    pub from_message_id: i64,
+}
+
+#[derive(Clone, Serialize, Deserialize, Debug)]
+pub struct ResSyncMessages {
+    pub req: ReqSyncMessages,
+    pub messages: Vec<Msg>,
+}
+
+#[derive(Clone, Serialize, Deserialize, Debug)]
+pub struct ReqResolveUsername {
+    pub username: String,
+}
+
+#[derive(Clone, Serialize, Deserialize, Debug)]
+pub struct ResResolveUsername {
+    pub channel_id: i32,
+    pub access_id: i64,
+}
+
+/*
 ////////// Older Media //////////
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq)]
 pub enum MediaTypeOld {
@@ -236,7 +420,7 @@ pub enum MediaTypeOld {
 #[derive(Clone, Serialize, Deserialize, Default, Debug)]
 // #[derive(Clone, Debug, Default)]
 pub struct MediaOld { // todo: extract simple image form media
-    pub media_type: MediaTypeOld,
+pub media_type: MediaTypeOld,
     pub has_stickers: bool,
     pub id: i64,
     pub access_hash: i64,
@@ -308,136 +492,8 @@ pub struct MediaThumb {
     // pub file_extention: String,
 }
 
-#[derive(Clone, Serialize, Deserialize, Default, Debug)]
-pub struct GlassyUrl {
-    pub row_id: i64,
-    pub text: String,
-    pub url: String,
-}
 
-#[derive(Clone, Serialize, Deserialize, Default, Debug)]
-// #[derive(Clone, Debug, Default)]
-pub struct WebPage { // In Flip site maybe add an lang field for "fa" ,"en"
-    pub id: i64,
-    pub url: String,         // "https://m.youtube.com/watch?v=fQVhppRP4Wo"
-    pub display_url: String, // "youtube.com/watch?v=fQVhppRP4Wo"
-    pub hash: i32,           // 0 58695
-    pub page_type: String,   // opt - video photo article || video: YouTube - photo: Telegraph - article: Tabnak
-    pub site_name: String,   // opt - showed in first line
-    pub title: String,       // opt - showed below site name
-    pub description: String, // opt - showed below title
-    // pub photo: Option<crate::enums::Photo>,
-    pub photo: Option<MediaOld>,
-    // pub embed_url: Option<String>, // for video (Youtube) is being set - "https://www.youtube.com/embed/TkoYtz3Jm-o" | aparat: "https://hajifirouz1.cdn.asset.aparat.com/aparat-video/963d41be6d46..."
-    // pub embed_type: Option<String>, // YT: "iframe" - Aparat: "video/mp4"
-    // pub embed_width: Option<i32>, // 1280 - 640
-    // pub embed_height: Option<i32>, // 720
-    // pub duration: Option<i32>,
-    // pub author: Option<String>,
-    // pub document: Option<crate::enums::Document>, // For Aparat is being set to video mp4 file
-    // pub cached_page: Option<crate::enums::Page>,
-    // pub attributes: Option<Vec<crate::enums::WebPageAttribute>>,*/
-}
-
-#[derive(Clone, Serialize, Deserialize, Debug)]
-pub struct ChannelSpace {
-    pub info: ChannelInfo,
-    pub msgs: HashMap<u32, Msg>,
-}
-
-#[derive(Clone, Serialize, Deserialize, Default, Debug)]
-pub struct ChannelInfo {
-    pub id: i32,
-    pub title: String,
-    pub username: String,
-    pub about: String,
-    pub link: String, //todo: remove? there is no where in telegram api we can get this > other means must link to chan
-    pub members_count: i32,
-    pub read_inbox_max_id: i32,
-    pub access_hash: i64,
-    pub date: i32,
-    // pub avatar: Option<Avatar>,
-    pub avatar: Option<MediaOld>,
-    pub photo: u8,
-    pub version: i32,
-    // https://core.telegram.org/api/updates for pts
-    pub pts: i32, // "pts indicates the server state after the new channel message events are generated" > not used now > maybe useful is we subscribe to channel
-    pub restricted: bool, // true for porn is accessed with an Iran phone
-    pub megagroup: bool,
-    pub full_data: bool, // true if fetched directly - false for inline processing in message. Only if full_data is true it must be saved to database.
-}
-
-// In order to build ChannelInfo we need to query telegram with multi rpc. This compact used in two places:
-// 1. struct is for the result of resolve channel by username (get_channel_by_username)
-// 2. used for inline channel info in processing forwarded messages
-#[derive(Clone, Serialize, Deserialize, Default, Debug)]
-pub struct ChannelInfoCompact {
-    pub id: i32,
-    pub title: String,
-    pub username: String,
-    pub members_count: i32,
-    pub access_hash: i64,
-    pub date: i32,
-    pub photo: u8,
-    pub version: i32,
-    pub restricted: bool, // true for porn
-    pub megagroup: bool,  // true for telegram groups (public groups) - false for channels
-}
-
-#[derive(Clone, Serialize, Deserialize, Debug)]
-pub struct DC {}
-
-#[derive(Clone, Serialize, Deserialize, Debug)]
-pub struct Session {}
-
-#[derive(Clone, Serialize, Deserialize, Debug)]
-pub struct LoginPhone {}
-
-/////////// Tg ///////////
-pub struct TgPool {
-    pub client: ClientHandle,
-}
-
-impl TgPool {
-    pub async fn invoke<R: tl::RemoteCall>(
-        &self,
-        request: &R,
-    ) -> Result<R::Return, InvocationError> {
-        let mut cp = self.client.clone();
-        cp.invoke(request).await
-    }
-}
-
-impl Default for MediaTypeOld {
-    fn default() -> Self {
-        MediaTypeOld::Unknown
-    }
-}
-
-impl Default for MsgTextMetaType {
-    fn default() -> Self {
-        MsgTextMetaType::Unknown
-    }
-}
-
-impl Default for FileMeta {
-    fn default() -> Self {
-        FileMeta::Unknown
-    }
-}
-// Storage
-
-#[derive(Clone, Serialize, Deserialize, Debug)]
-pub struct CachedUsernameData {
-    pub username: String,
-    pub channel_id: i32, // we do not care about others: super groups, users,...
-    // pub tg_result: Option<ChannelByUsernameResult>,
-    pub channel_info: Option<ChannelInfo>,
-    pub taken: bool,
-    pub last_checked: u32,
-}
-
-///////////////// Deprecated or Maybe /////////////
+///////////////// Deprecated  /////////////
 #[derive(Clone, Serialize, Deserialize, Default, Debug)]
 pub struct Avatar {
     // it's photo_big
@@ -446,49 +502,4 @@ pub struct Avatar {
     pub dep_local_id: i32,
     pub dc_id: i32,
 }
-
-pub struct Caller {
-    pub client: Client<FileSession>,
-}
-
-/////////// Sqlite ///////
-#[derive(Clone, Serialize, Deserialize, Debug)]
-pub struct ChannelData {
-    pub channel_info: ChannelInfo,
-    pub last_checked: u32,
-}
-
-///////////////////////////
-#[derive(Clone, Serialize, Deserialize, Debug)]
-pub struct ReqSyncChannel {
-    pub channel_id: i32,
-}
-
-#[derive(Clone, Serialize, Deserialize, Debug)]
-pub struct ResSyncChannel {
-    pub channel_info: ChannelInfo,
-}
-
-#[derive(Clone, Serialize, Deserialize, Debug)]
-pub struct ReqSyncMessages {
-    pub channel_id: i32,
-    pub access_id: i64,
-    pub from_message_id: i64,
-}
-
-#[derive(Clone, Serialize, Deserialize, Debug)]
-pub struct ResSyncMessages {
-    pub req: ReqSyncMessages,
-    pub messages: Vec<Msg>,
-}
-
-#[derive(Clone, Serialize, Deserialize, Debug)]
-pub struct ReqResolveUsername {
-    pub username: String,
-}
-
-#[derive(Clone, Serialize, Deserialize, Debug)]
-pub struct ResResolveUsername {
-    pub channel_id: i32,
-    pub access_id: i64,
-}
+*/

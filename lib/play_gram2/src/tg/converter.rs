@@ -4,12 +4,15 @@ use grammers_mtsender::InvocationError;
 use grammers_session as session;
 use grammers_tl_types as tl;
 use grammers_tl_types::enums::messages::Messages;
-use grammers_tl_types::enums::{ChatPhoto, FileLocation, Message, MessageEntity, Peer, MessageReplyHeader};
+use grammers_tl_types::enums::{
+    ChatPhoto, FileLocation, Message, MessageEntity, MessageReplyHeader, Peer,
+};
 use grammers_tl_types::RemoteCall;
 use std::io::Write;
 
-use crate::types::{Avatar, MediaOld, MediaThumb, MsgTextMeta, MsgTextMetaType};
 use crate::{errors::TelegramGenErr, types, utils};
+use types::*;
+
 // Notes:
 // Telegram mime_type: "application/x-tgsticker" is telegram own stikers with ~7KB size. "thumb" is also is set.
 // thumb in Document is for inline images: being set in gifs, stickers,...
@@ -37,13 +40,12 @@ pub(super) fn process_inline_channel_messages(
             Message::Empty(em) => {}
             Message::Service(service_msg) => {}
             Message::Message(m) => {
-
                 // Hack: Some system messages is being sent as normal real messages (ex: "Messages were set to
                 // automatically delete ..." in this case Telegram sets views and forwards to null.
                 // Not suer about how this act about those old telegram messages who do not have a
                 // view fields (did those messages eventually got a views filed?)
                 if m.views.is_none() && m.forwards.is_none() {
-                    continue
+                    continue;
                 }
 
                 let mut msg = conv_message_to_msg(m.clone());
@@ -52,8 +54,17 @@ pub(super) fn process_inline_channel_messages(
                 msg.text_meta = extract_text_meta_from_message_entity(m.entities);
                 // Extract Photo, Video, File ...
                 if let Some(mm) = m.media.clone() {
-                    msg.media_old = process_inline_media(mm.clone());
-                    msg.webpage_old = process_inline_webpage(mm);
+                    // File Media
+                    let fm_opt = process_inline_file_media(mm.clone());
+                    if fm_opt.is_some() {
+                        msg.medias.push(types::Media::File(fm_opt.unwrap()));
+                    }
+
+                    // Webpage
+                    let wm_opt = process_inline_webpage(mm.clone());
+                    if wm_opt.is_some() {
+                        msg.medias.push(types::Media::WebPage(wm_opt.unwrap()));
+                    }
                 }
 
                 // Extract glassy button urls
@@ -105,30 +116,124 @@ pub(super) fn process_inline_channel_chats(
 
 pub(super) fn process_inline_channel_users(bots: &Vec<tl::enums::User>) {}
 
-fn process_inline_media(mm: tl::enums::MessageMedia) -> Option<types::MediaOld> {
+fn process_inline_file_media(mm: tl::enums::MessageMedia) -> Option<types::FileMedia> {
     // let mut m = types::Media::default();
 
     use tl::enums::MessageMedia;
-    use types::MediaTypeOld;
     match mm {
         MessageMedia::Photo(photo) => {
             if let Some(pic) = photo.photo {
-                let mp = conv_photo_to_media(pic);
+                let mp = conv_photo_to_file_media(pic);
                 if let Some(mut mp) = mp {
                     // mp.media_type = MediaType::Image;
-                    mp.ttl_seconds = photo.ttl_seconds.unwrap_or(0);
+                    // mp.ttl_seconds = photo.ttl_seconds.unwrap_or(0);
                     return Some(mp);
                 }
             }
         }
 
         MessageMedia::Document(doc1) => {
-
             // println!("============== document {:#?}", doc);
             // m.ttl_seconds = doc1.ttl_seconds.unwrap_or(0);
             if let Some(document) = doc1.document {
                 use tl::enums::Document;
                 match document {
+                    Document::Document(doc) => {
+                        // Note: we didnt saw "doc.video_thumbs" being set. > legacy?
+                        let p = doc.clone();
+
+                        let mut j = types::FileMedia {
+                            file_meta: Default::default(), // set later
+                            id: p.id,
+                            access_hash: p.access_hash,
+                            file_reference: p.file_reference,
+                            date: p.date,
+                            mime_type: p.mime_type.clone(),
+                            size: p.size,
+                            dc_id: p.dc_id,
+                            file_name: "".to_string(), // set later
+                            file_extension: utils::get_file_extension_from_mime_type(&p.mime_type),
+                        };
+
+                        let mut is_animated = false; //todo gif
+
+                        for atr in p.attributes {
+                            use tl::enums::DocumentAttribute;
+                            match atr {
+                                DocumentAttribute::ImageSize(s) => {
+                                    let k = types::ImageFile {
+                                        w: s.w,
+                                        h: s.h,
+                                        cover: conv_thumb_cover(p.thumbs.clone().unwrap()),
+                                    };
+                                    j.file_meta = types::FileMetaInfo::ImageFile(k);
+                                    // m.media_type = MediaTypeOld::ImageFile;
+                                    // m.image_width = s.w;
+                                    // m.image_height = s.h;
+                                }
+                                DocumentAttribute::Animated => {
+                                    is_animated = true; // What is this?
+                                }
+                                DocumentAttribute::Sticker(s) => {
+                                    // We do not support Sticker
+                                }
+                                DocumentAttribute::Video(s) => {
+                                    let k = types::VideoFile {
+                                        round_message: s.round_message,
+                                        supports_streaming: s.supports_streaming,
+                                        duration: s.duration,
+                                        w: s.w,
+                                        h: s.h,
+                                        cover: conv_thumb_cover(p.thumbs.clone().unwrap()),
+                                    };
+                                    j.file_meta = types::FileMetaInfo::VideoFile(k);
+                                    // m.media_type = MediaTypeOld::Video;
+                                    // m.video_round_message = s.round_message;
+                                    // m.video_supports_streaming = s.supports_streaming;
+                                    // m.video_duration = s.duration;
+                                    // m.image_width = s.w;
+                                    // m.image_height = s.h;
+                                }
+                                DocumentAttribute::Audio(s) => {
+                                    let k = types::AudioFile {
+                                        voice: s.voice,
+                                        duration: s.duration,
+                                        title: s.title.unwrap_or("".to_string()),
+                                        performer: s.performer.unwrap_or("".to_string()),
+                                        waveform: s.waveform.unwrap_or(vec![]),
+                                        cover: conv_thumb_cover(p.thumbs.clone().unwrap()),
+                                    };
+                                    j.file_meta = types::FileMetaInfo::AudioFile(k);
+                                    // m.media_type = MediaTypeOld::Audio;
+                                    // m.audio_voice = s.voice;
+                                    // m.audio_duration = s.duration;
+                                    // m.audio_title = s.title.unwrap_or("".to_string());
+                                    // m.audio_performer = s.performer.unwrap_or("".to_string());
+                                    // m.audio_waveform = s.waveform.unwrap_or(vec![]);
+                                }
+                                DocumentAttribute::Filename(s) => {
+                                    j.file_name = s.file_name;
+                                }
+                                DocumentAttribute::HasStickers => {
+                                    //m.has_stickers = true;
+                                }
+                            }
+                        }
+
+                        //tod move to just video + remove rec
+                        /*                        if p.thumbs.is_some() {
+                            // m.video_thumbs_rec =
+                            //     Box::new(conv_video_thumbs_rec(&m, p.thumbs.clone().unwrap()));
+                            m.video_thumbs = conv_thumb_cover(p.thumbs.clone().unwrap());
+                            m.image_thumbs = conv_thumb_cover(p.thumbs.unwrap());
+                            // println!("+++ vidoe: {:#?} ", doc)
+                        }*/
+
+                        return Some(j);
+                    }
+                    Document::Empty(e) => {}
+                }
+                /* match document {
                     Document::Document(doc) => {
                         // Note: we didnt saw "doc.video_thumbs" being set. > legacy?
                         let p = doc.clone();
@@ -217,7 +322,7 @@ fn process_inline_media(mm: tl::enums::MessageMedia) -> Option<types::MediaOld> 
                         return Some(m);
                     }
                     Document::Empty(e) => {}
-                }
+                }*/
             };
         }
         MessageMedia::Empty => {}
@@ -237,7 +342,7 @@ fn process_inline_media(mm: tl::enums::MessageMedia) -> Option<types::MediaOld> 
     None
 }
 
-fn process_inline_webpage(mm: tl::enums::MessageMedia) -> Option<types::WebPage> {
+fn process_inline_webpage(mm: tl::enums::MessageMedia) -> Option<types::WebPageMedia> {
     use tl::enums::MessageMedia;
     match mm {
         MessageMedia::WebPage(t) => {
@@ -246,7 +351,7 @@ fn process_inline_webpage(mm: tl::enums::MessageMedia) -> Option<types::WebPage>
                 WebPage::Empty(v) => {}
                 WebPage::Pending(v) => {}
                 WebPage::Page(v) => {
-                    let mut w = types::WebPage {
+                    let mut w = types::WebPageMedia {
                         id: v.id,
                         url: v.url,
                         display_url: v.display_url,
@@ -259,7 +364,7 @@ fn process_inline_webpage(mm: tl::enums::MessageMedia) -> Option<types::WebPage>
                     };
 
                     if v.photo.is_some() {
-                        w.photo = conv_photo_to_media(v.photo.unwrap())
+                        w.photo = conv_photo_to_file_media(v.photo.unwrap())
                     }
 
                     return Some(w);
@@ -272,7 +377,9 @@ fn process_inline_webpage(mm: tl::enums::MessageMedia) -> Option<types::WebPage>
     None
 }
 
-fn process_inline_glassy_urls(reply_markups: tl::enums::ReplyMarkup) -> Option<Vec<types::GlassyUrl>> {
+fn process_inline_glassy_urls(
+    reply_markups: tl::enums::ReplyMarkup,
+) -> Option<Vec<types::GlassyUrl>> {
     let mut arr = vec![];
     match reply_markups {
         tl::enums::ReplyMarkup::ReplyInlineMarkup(inline_markup) => {
@@ -371,8 +478,8 @@ fn conv_message_to_msg(m: tl::types::Message) -> types::Msg {
         edit_date: m.edit_date.unwrap_or(0),
         restricted: m.restriction_reason.is_some(),
         forward: fwd,
-        media_old: None,
-        webpage_old: None,
+        // media_old: None,
+        // webpage_old: None,
         medias: vec![],
         glassy_urls: None,
     }
@@ -526,47 +633,138 @@ fn conv_file_location(fl: tl::enums::FileLocation) -> (i64, i32) {
 }
 
 // pub is used for avatar extraction
-pub fn conv_photo_to_media(photo_enum: tl::enums::Photo) -> Option<types::MediaOld> {
+pub fn conv_photo_to_file_media(photo_enum: tl::enums::Photo) -> Option<types::FileMedia> {
     use tl::enums::Photo;
     match photo_enum {
         Photo::Photo(photo) => {
             let p = photo;
-            let mut m = types::MediaOld::default(); // TODO inline one
 
-            m.media_type = types::MediaTypeOld::Image;
-            m.has_sticker = p.has_stickers;
-            m.id = p.id;
-            m.access_hash = p.access_hash;
-            m.file_reference = p.file_reference;
-            m.date = p.date;
-            m.dc_id = p.dc_id;
-            m.file_extension = ".jpg".to_string();
+            let mut j = types::FileMedia {
+                file_meta: Default::default(), // set later
+                id: p.id,
+                access_hash: p.access_hash,
+                file_reference: p.file_reference,
+                date: p.date,
+                mime_type: "".to_string(), // Photo does not have mime type: seems all Photo are jpeg (todo verify this for png, and webp)
+                size: 0,                   // set later
+                dc_id: p.dc_id,
+                file_name: "".to_string(),      // None for Photo
+                file_extension: "".to_string(), // None for Photo
+            };
+
+            let mut k = types::ImageResizedFile {
+                has_stickers: p.has_stickers,
+                w: 0,
+                h: 0,
+                size_type: "".to_string(),
+                dep_volume_id: 0,
+                dep_local_id: 0,
+                size: 0,
+            };
 
             for s in p.sizes {
                 use tl::enums::PhotoSize;
                 match s {
                     PhotoSize::Size(ps) => {
-                        if m.size < ps.size {
-                            // select the maximum
-                            m.image_width = ps.w;
-                            m.image_height = ps.h;
-                            m.size = ps.size;
-                            m.photo_size_type = ps.r#type;
+                        if j.size < ps.size {
+                            // select the highest resolution
+                            k.w = ps.w;
+                            k.h = ps.h;
+                            k.size_type = ps.r#type;
+
+                            j.size = ps.size;
+                            k.size = ps.size;
 
                             let fl = conv_file_location(ps.location);
-                            m.dep_volume_id = fl.0;
-                            m.dep_local_id = fl.1;
+                            k.dep_volume_id = fl.0; //todo k?
+                            k.dep_local_id = fl.1;
+
+                            j.file_meta = types::FileMetaInfo::ImageResizedFile(k.clone())
                         }
                     }
                     _ => {}
                 }
             }
-            return Some(m);
+            return Some(j);
+
+            /*
+            let mut m = types::MediaOld::default(); // TODO inline one
+
+                        m.media_type = types::MediaTypeOld::Image;
+                        m.has_sticker = p.has_stickers;
+                        m.id = p.id;
+                        m.access_hash = p.access_hash;
+                        m.file_reference = p.file_reference;
+                        m.date = p.date;
+                        m.dc_id = p.dc_id;
+                        m.file_extension = ".jpg".to_string();
+
+                        for s in p.sizes {
+                            use tl::enums::PhotoSize;
+                            match s {
+                                PhotoSize::Size(ps) => {
+                                    if m.size < ps.size {
+                                        // select the maximum
+                                        m.image_width = ps.w;
+                                        m.image_height = ps.h;
+                                        m.size = ps.size;
+                                        m.photo_size_type = ps.r#type;
+
+                                        let fl = conv_file_location(ps.location);
+                                        m.dep_volume_id = fl.0;
+                                        m.dep_local_id = fl.1;
+                                    }
+                                }
+                                _ => {}
+                            }
+                        }*/
         }
         Photo::Empty(e) => {}
     };
     None
 }
+
+fn conv_thumb_cover(vts: Vec<tl::enums::PhotoSize>) -> Option<ImageResizedFile> {
+    if vts.len() == 0 {
+        return None;
+    }
+
+    let mut m = types::ImageResizedFile::default();
+    let mut has_set = false;
+    for vt in vts {
+        use tl::enums::PhotoSize;
+        match vt {
+            PhotoSize::Size(s) => {
+                // select the maximum one
+                if m.size < s.size {
+                    has_set = true;
+                    m.size_type = s.r#type;
+                    m.w = s.w;
+                    m.h = s.h;
+                    m.size = s.size;
+
+                    use tl::enums::FileLocation;
+                    match s.location {
+                        FileLocation::ToBeDeprecated(l) => {
+                            m.dep_volume_id = l.volume_id;
+                            m.dep_local_id = l.local_id;
+                        }
+                    }
+                }
+            }
+            _ => {}
+        }
+    }
+
+    if has_set {
+        Some(m)
+    } else {
+        None // should never reach
+    }
+}
+
+////////////////// Archive of old Media ///////////////////
+/*
 
 fn conv_video_thumbs(vts: Vec<tl::enums::PhotoSize>) -> Option<MediaThumb> {
     if vts.len() == 0 {
@@ -637,6 +835,4 @@ fn conv_video_thumbs_rec(med: &types::MediaOld, sizes: Vec<tl::enums::PhotoSize>
     }
     None
 }
-
-
-////////////////// Archive of old Media ///////////////////
+*/
