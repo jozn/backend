@@ -1,20 +1,16 @@
 use grammers_client::{Client, ClientHandle, Config};
+use grammers_tl_types as tl;
 use grammers_tl_types::enums::contacts::ResolvedPeer;
 use grammers_tl_types::Serializable;
 use std::borrow::Borrow;
-use std::collections::HashMap;
-use std::io::Write;
-// use futures::AsyncWriteExt;
-use grammers_tl_types as tl;
 use std::cell::Cell;
+use std::collections::HashMap;
 use std::fmt;
+use std::io::Write;
 use std::sync::{Arc, Mutex};
 
-// pub type G = Arc<Mutex<App>>;
-// pub type G = Arc<App>;
 pub type Binary = Vec<u8>;
 
-// use crate::client_pool;
 use grammers_mtsender::InvocationError;
 use grammers_session::FileSession;
 use serde::{Deserialize, Serialize};

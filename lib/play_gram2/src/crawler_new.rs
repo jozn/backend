@@ -85,7 +85,6 @@ impl Crawler {
             }
         }
 
-
         Ok(())
     }
 
@@ -127,7 +126,6 @@ impl Crawler {
                             _ => {}
                         }
                     }
-
                 }
             }
         }

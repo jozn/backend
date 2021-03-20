@@ -171,9 +171,6 @@ fn process_inline_file_media(mm: tl::enums::MessageMedia) -> Option<types::FileM
                                         k.cover = conv_thumb_cover(p.thumbs.clone().unwrap())
                                     }
                                     j.file_meta = types::FileMetaInfo::ImageFile(k);
-                                    // m.media_type = MediaTypeOld::ImageFile;
-                                    // m.image_width = s.w;
-                                    // m.image_height = s.h;
                                 }
                                 DocumentAttribute::Animated => {
                                     is_animated = true; // What is this?
@@ -194,12 +191,6 @@ fn process_inline_file_media(mm: tl::enums::MessageMedia) -> Option<types::FileM
                                         k.cover = conv_thumb_cover(p.thumbs.clone().unwrap())
                                     }
                                     j.file_meta = types::FileMetaInfo::VideoFile(k);
-                                    // m.media_type = MediaTypeOld::Video;
-                                    // m.video_round_message = s.round_message;
-                                    // m.video_supports_streaming = s.supports_streaming;
-                                    // m.video_duration = s.duration;
-                                    // m.image_width = s.w;
-                                    // m.image_height = s.h;
                                 }
                                 DocumentAttribute::Audio(s) => {
                                     let mut k = types::AudioFile {
@@ -210,16 +201,10 @@ fn process_inline_file_media(mm: tl::enums::MessageMedia) -> Option<types::FileM
                                         waveform: s.waveform.unwrap_or(vec![]),
                                         cover: None, // set laer
                                     };
-                                    if p.thumbs.is_some()  {
+                                    if p.thumbs.is_some() {
                                         k.cover = conv_thumb_cover(p.thumbs.clone().unwrap())
                                     }
                                     j.file_meta = types::FileMetaInfo::AudioFile(k);
-                                    // m.media_type = MediaTypeOld::Audio;
-                                    // m.audio_voice = s.voice;
-                                    // m.audio_duration = s.duration;
-                                    // m.audio_title = s.title.unwrap_or("".to_string());
-                                    // m.audio_performer = s.performer.unwrap_or("".to_string());
-                                    // m.audio_waveform = s.waveform.unwrap_or(vec![]);
                                 }
                                 DocumentAttribute::Filename(s) => {
                                     j.file_name = s.file_name;
@@ -230,110 +215,10 @@ fn process_inline_file_media(mm: tl::enums::MessageMedia) -> Option<types::FileM
                             }
                         }
                         // todo fix cover for docs
-
-                        //tod move to just video + remove rec
-                        /*                        if p.thumbs.is_some() {
-                            // m.video_thumbs_rec =
-                            //     Box::new(conv_video_thumbs_rec(&m, p.thumbs.clone().unwrap()));
-                            m.video_thumbs = conv_thumb_cover(p.thumbs.clone().unwrap());
-                            m.image_thumbs = conv_thumb_cover(p.thumbs.unwrap());
-                            // println!("+++ vidoe: {:#?} ", doc)
-                        }*/
-
                         return Some(j);
                     }
                     Document::Empty(e) => {}
                 }
-                /* match document {
-                    Document::Document(doc) => {
-                        // Note: we didnt saw "doc.video_thumbs" being set. > legacy?
-                        let p = doc.clone();
-
-                        // todo
-                        let mut m = types::MediaOld {
-                            media_type: MediaTypeOld::File,
-                            // has_stickers: false,
-                            id: p.id,
-                            access_hash: p.access_hash,
-                            file_reference: p.file_reference,
-                            date: p.date,
-                            dc_id: p.dc_id,
-                            photo_size_type: "".to_string(),
-                            dep_volume_id: 0,
-                            dep_local_id: 0,
-                            image_width: 0,
-                            image_height: 0,
-                            size: p.size,
-                            mime_type: p.mime_type.clone(),
-                            animated: false,
-                            video_round_message: false,
-                            video_supports_streaming: false,
-                            video_duration: 0,
-                            video_thumbs_rec: Box::new(None),
-                            video_thumbs: None,
-                            audio_voice: false,
-                            audio_title: "".to_string(),
-                            audio_performer: "".to_string(),
-                            audio_waveform: vec![],
-                            file_name: "".to_string(),
-                            has_sticker: false,
-                            ttl_seconds: doc1.ttl_seconds.unwrap_or(0),
-                            file_extension: utils::get_file_extension_from_mime_type(&p.mime_type),
-                            ..Default::default()
-                        };
-
-
-                        //todo move to just video + remove rec
-                        if p.thumbs.is_some() {
-                            // m.video_thumbs_rec =
-                            //     Box::new(conv_video_thumbs_rec(&m, p.thumbs.clone().unwrap()));
-                            m.video_thumbs = conv_video_thumbs(p.thumbs.clone().unwrap());
-                            m.image_thumbs = conv_video_thumbs(p.thumbs.unwrap());
-                            // println!("+++ vidoe: {:#?} ", doc)
-                        }
-
-                        for atr in p.attributes {
-                            use tl::enums::DocumentAttribute;
-                            match atr {
-                                DocumentAttribute::ImageSize(s) => {
-                                    m.media_type = MediaTypeOld::ImageFile;
-                                    m.image_width = s.w;
-                                    m.image_height = s.h;
-                                }
-                                DocumentAttribute::Animated => {
-                                    m.animated = true; // What is this?
-                                }
-                                DocumentAttribute::Sticker(s) => {
-                                    // We do not support Sticker
-                                }
-                                DocumentAttribute::Video(s) => {
-                                    m.media_type = MediaTypeOld::Video;
-                                    m.video_round_message = s.round_message;
-                                    m.video_supports_streaming = s.supports_streaming;
-                                    m.video_duration = s.duration;
-                                    m.image_width = s.w;
-                                    m.image_height = s.h;
-                                }
-                                DocumentAttribute::Audio(s) => {
-                                    m.media_type = MediaTypeOld::Audio;
-                                    m.audio_voice = s.voice;
-                                    m.audio_duration = s.duration;
-                                    m.audio_title = s.title.unwrap_or("".to_string());
-                                    m.audio_performer = s.performer.unwrap_or("".to_string());
-                                    m.audio_waveform = s.waveform.unwrap_or(vec![]);
-                                }
-                                DocumentAttribute::Filename(s) => {
-                                    m.file_name = s.file_name;
-                                }
-                                DocumentAttribute::HasStickers => {
-                                    m.has_stickers = true;
-                                }
-                            }
-                        }
-                        return Some(m);
-                    }
-                    Document::Empty(e) => {}
-                }*/
             };
         }
         MessageMedia::Empty => {}
@@ -659,7 +544,7 @@ pub fn conv_photo_to_file_media(photo_enum: tl::enums::Photo) -> Option<types::F
                 mime_type: "".to_string(), // Photo does not have mime type: seems all Photo are jpeg (todo verify this for png, and webp)
                 size: 0,                   // set later
                 dc_id: p.dc_id,
-                file_name: "".to_string(),      // None for Photo
+                file_name: "".to_string(),          // None for Photo
                 file_extension: ".jpg".to_string(), // None for Photo
             };
 
@@ -697,38 +582,6 @@ pub fn conv_photo_to_file_media(photo_enum: tl::enums::Photo) -> Option<types::F
                 }
             }
             return Some(j);
-
-            /*
-            let mut m = types::MediaOld::default(); // TODO inline one
-
-                        m.media_type = types::MediaTypeOld::Image;
-                        m.has_sticker = p.has_stickers;
-                        m.id = p.id;
-                        m.access_hash = p.access_hash;
-                        m.file_reference = p.file_reference;
-                        m.date = p.date;
-                        m.dc_id = p.dc_id;
-                        m.file_extension = ".jpg".to_string();
-
-                        for s in p.sizes {
-                            use tl::enums::PhotoSize;
-                            match s {
-                                PhotoSize::Size(ps) => {
-                                    if m.size < ps.size {
-                                        // select the maximum
-                                        m.image_width = ps.w;
-                                        m.image_height = ps.h;
-                                        m.size = ps.size;
-                                        m.photo_size_type = ps.r#type;
-
-                                        let fl = conv_file_location(ps.location);
-                                        m.dep_volume_id = fl.0;
-                                        m.dep_local_id = fl.1;
-                                    }
-                                }
-                                _ => {}
-                            }
-                        }*/
         }
         Photo::Empty(e) => {}
     };
@@ -773,77 +626,3 @@ fn conv_thumb_cover(vts: Vec<tl::enums::PhotoSize>) -> Option<ImageResizedFile> 
         None // should never reach
     }
 }
-
-////////////////// Archive of old Media ///////////////////
-/*
-
-fn conv_video_thumbs(vts: Vec<tl::enums::PhotoSize>) -> Option<MediaThumb> {
-    if vts.len() == 0 {
-        return None;
-    }
-
-    let mut m = types::MediaThumb::default();
-
-    for vt in vts {
-        use tl::enums::PhotoSize;
-        match vt {
-            PhotoSize::Size(s) => {
-                // select the maximum one
-                if m.size < s.size {
-                    m.size_type = s.r#type;
-                    m.w = s.w;
-                    m.h = s.h;
-                    m.size = s.size;
-
-                    use tl::enums::FileLocation;
-                    match s.location {
-                        FileLocation::ToBeDeprecated(l) => {
-                            m.dep_volume_id = l.volume_id;
-                            m.dep_local_id = l.local_id;
-                        }
-                    }
-                }
-            }
-            _ => {}
-        }
-    }
-
-    Some(m)
-}
-
-fn conv_video_thumbs_rec(med: &types::MediaOld, sizes: Vec<tl::enums::PhotoSize>) -> Option<MediaOld> {
-    let mut media_out = MediaOld {
-        id: med.id,
-        access_hash: med.access_hash,
-        file_reference: med.file_reference.clone(),
-        file_extension: "jpg".to_string(),
-        ..Default::default()
-    };
-
-    for photo_size in sizes {
-        use tl::enums::PhotoSize;
-        match photo_size {
-            PhotoSize::Size(size) => {
-                // Select the maximum one
-                if media_out.size < size.size {
-                    media_out.photo_size_type = size.r#type;
-                    media_out.image_width = size.w;
-                    media_out.image_height = size.h;
-                    media_out.size = size.size;
-
-                    use tl::enums::FileLocation;
-                    match size.location {
-                        FileLocation::ToBeDeprecated(file_loc) => {
-                            media_out.dep_volume_id = file_loc.volume_id;
-                            media_out.dep_local_id = file_loc.local_id;
-                        }
-                    }
-                };
-                return Some(media_out);
-            }
-            _ => {}
-        }
-    }
-    None
-}
-*/

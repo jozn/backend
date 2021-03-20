@@ -33,18 +33,5 @@ mod utils;
 
 #[tokio::main]
 async fn main() {
-    // db_dep::play_my().await;
     crawler_new::crawl_run().await;
-
-    // crawl::crawl_next_username().await;
-    // crawl::crawl_config().await;
-    // crawl::crawl_next_channel().await;
-
-    // tg::get_file()
-    /*    for i in 0..1 {
-        println!("{}", 1);
-        // crawl::crawl_next_username().await;
-        let r = crawl::crawl_next_channel_messages().await;
-        println!("{} {:?}", i, r);
-    }*/
 }
