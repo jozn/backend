@@ -161,11 +161,14 @@ fn process_inline_file_media(mm: tl::enums::MessageMedia) -> Option<types::FileM
                             use tl::enums::DocumentAttribute;
                             match atr {
                                 DocumentAttribute::ImageSize(s) => {
-                                    let k = types::ImageFile {
+                                    let mut k = types::ImageFile {
                                         w: s.w,
                                         h: s.h,
-                                        cover: conv_thumb_cover(p.thumbs.clone().unwrap()),
+                                        cover: None,
                                     };
+                                    if p.thumbs.is_some() {
+                                        k.cover = conv_thumb_cover(p.thumbs.clone().unwrap())
+                                    }
                                     j.file_meta = types::FileMetaInfo::ImageFile(k);
                                     // m.media_type = MediaTypeOld::ImageFile;
                                     // m.image_width = s.w;
@@ -178,14 +181,17 @@ fn process_inline_file_media(mm: tl::enums::MessageMedia) -> Option<types::FileM
                                     // We do not support Sticker
                                 }
                                 DocumentAttribute::Video(s) => {
-                                    let k = types::VideoFile {
+                                    let mut k = types::VideoFile {
                                         round_message: s.round_message,
                                         supports_streaming: s.supports_streaming,
                                         duration: s.duration,
                                         w: s.w,
                                         h: s.h,
-                                        cover: conv_thumb_cover(p.thumbs.clone().unwrap()),
+                                        cover: None,
                                     };
+                                    if p.thumbs.is_some() {
+                                        k.cover = conv_thumb_cover(p.thumbs.clone().unwrap())
+                                    }
                                     j.file_meta = types::FileMetaInfo::VideoFile(k);
                                     // m.media_type = MediaTypeOld::Video;
                                     // m.video_round_message = s.round_message;
@@ -195,14 +201,17 @@ fn process_inline_file_media(mm: tl::enums::MessageMedia) -> Option<types::FileM
                                     // m.image_height = s.h;
                                 }
                                 DocumentAttribute::Audio(s) => {
-                                    let k = types::AudioFile {
+                                    let mut k = types::AudioFile {
                                         voice: s.voice,
                                         duration: s.duration,
                                         title: s.title.unwrap_or("".to_string()),
                                         performer: s.performer.unwrap_or("".to_string()),
                                         waveform: s.waveform.unwrap_or(vec![]),
-                                        cover: conv_thumb_cover(p.thumbs.clone().unwrap()),
+                                        cover: None, // set laer
                                     };
+                                    if p.thumbs.is_some()  {
+                                        k.cover = conv_thumb_cover(p.thumbs.clone().unwrap())
+                                    }
                                     j.file_meta = types::FileMetaInfo::AudioFile(k);
                                     // m.media_type = MediaTypeOld::Audio;
                                     // m.audio_voice = s.voice;
@@ -649,7 +658,7 @@ pub fn conv_photo_to_file_media(photo_enum: tl::enums::Photo) -> Option<types::F
                 size: 0,                   // set later
                 dc_id: p.dc_id,
                 file_name: "".to_string(),      // None for Photo
-                file_extension: "".to_string(), // None for Photo
+                file_extension: ".jpg".to_string(), // None for Photo
             };
 
             let mut k = types::ImageResizedFile {

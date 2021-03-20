@@ -22,6 +22,8 @@ pub enum TelegramGenErr {
     TgConverter,
     JSON(serde_json::Error),
     MySql(MyError),
+
+    BadParam,
 }
 
 // impl Error for GenErr {}

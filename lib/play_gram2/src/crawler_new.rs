@@ -12,7 +12,7 @@ use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use tokio::time::sleep;
 
-use crate::types::ChannelInfoCompact;
+use crate::types::{ChannelInfoCompact, Media};
 use crate::{db_dep, errors::TelegramGenErr, tg, types, utils};
 
 struct Crawler {
@@ -73,12 +73,18 @@ impl Crawler {
 
                 channel_row.replace(&self.mysql_pool).await?;
                 println!("+> crawl_username '@{}' was successful.", &username);
+
+                // Download Avatar
+                if i.avatar.is_some() {
+                    tg::dl_media_to_disk(&self.caller, i.avatar.unwrap()).await;
+                }
             }
             Err(e) => {
                 println!("is free username: {}", e.is_tg_username_free());
                 return Err(e);
             }
         }
+
 
         Ok(())
     }
@@ -98,7 +104,7 @@ impl Crawler {
                 offset_id: 0,
                 offset_date: 0,
                 add_offset: 0,
-                limit: 5,
+                limit: 1,
                 max_id: 0,
                 min_id: 0,
                 hash: 0,
@@ -106,6 +112,23 @@ impl Crawler {
 
             let rpc_res = tg::get_messages(&self.caller, req).await;
             println!("channel: {:#?} \n\n  res >> {:#?}", i, rpc_res);
+
+            if rpc_res.is_ok() {
+                let res = rpc_res.unwrap();
+                println!("***************** #1 ");
+                for m in res.msgs {
+                    for d in m.medias {
+                        match d {
+                            Media::File(f) => {
+                                println!("***************** #2 ");
+                                tg::dl_media_to_disk(&self.caller, f).await;
+                            }
+                            _ => {}
+                        }
+                    }
+
+                }
+            }
         }
 
         Ok(())
@@ -118,7 +141,7 @@ pub async fn crawl_run() -> Result<(), TelegramGenErr> {
     // crawler.crawl_username("boursecampaign").await;
     // crawler.crawl_username("flip_app").await;
     crawler.crawl_username("flip_info").await;
-    crawler.crawl_next_channel_messages().await; // channel: porn > restricted
+    // crawler.crawl_next_channel_messages().await; // channel: porn > restricted
                                                  // println!("zoomit {:?}",res);
     Ok(())
 }
