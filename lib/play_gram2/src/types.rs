@@ -1,14 +1,11 @@
-use std::borrow::Borrow;
 use std::cell::Cell;
 use std::collections::HashMap;
-use std::fmt;
-use std::io::Write;
 use std::sync::{Arc, Mutex};
 
-use grammers_client::{Client, ClientHandle, Config};
-use grammers_tl_types as tl;
+use grammers_client::{Client, ClientHandle};
 use grammers_mtsender::InvocationError;
 use grammers_session::FileSession;
+use grammers_tl_types as tl;
 use serde::{Deserialize, Serialize};
 
 /*pub struct App {
@@ -106,7 +103,7 @@ pub enum Media {
     File(FileMedia),
     WebPage(WebPageMedia),
 
-    Poll, // Concept
+    Poll,        // Concept
     Unsupported, // Concept
 }
 

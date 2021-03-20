@@ -1,9 +1,7 @@
 use rand;
 use rand::Rng;
 use std::fs;
-use std::fs::File;
 use std::ops::Index;
-use std::str::FromStr;
 
 // A general username validity check: relatively relaxed | not suitable for flip
 // Not checking length: length should be validated at some other places:

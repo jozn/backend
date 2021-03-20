@@ -1,18 +1,6 @@
-use async_std::task;
-use grammers_client::{Client, Config};
-use grammers_mtsender::InvocationError;
-use grammers_session as session;
-use grammers_tl_types as tl;
-use grammers_tl_types::enums::messages::Messages;
-use grammers_tl_types::enums::{
-    ChatPhoto, FileLocation, Message, MessageEntity, MessageReplyHeader, Peer,
-};
-use grammers_tl_types::RemoteCall;
-use std::io::Write;
-
 use crate::{errors::TelegramGenErr, types, utils};
+use grammers_tl_types as tl;
 use types::*;
-// use std::default::default;
 
 // Notes:
 // Telegram mime_type: "application/x-tgsticker" is telegram own stikers with ~7KB size. "thumb" is also is set.
@@ -38,9 +26,9 @@ pub(super) fn process_inline_channel_messages(
 
     for msg_enum in messages {
         match msg_enum {
-            Message::Empty(em) => {}
-            Message::Service(service_msg) => {}
-            Message::Message(m) => {
+            tl::enums::Message::Empty(em) => {}
+            tl::enums::Message::Service(service_msg) => {}
+            tl::enums::Message::Message(m) => {
                 // Hack: Some system messages is being sent as normal real messages (ex: "Messages were set to
                 // automatically delete ..." in this case Telegram sets views and forwards to null.
                 // Not suer about how this act about those old telegram messages who do not have a
@@ -354,7 +342,7 @@ fn conv_message_to_msg(m: tl::types::Message) -> types::Msg {
     let mut replay_to_msgs_id = 0;
     if m.reply_to.is_some() {
         match m.reply_to.unwrap() {
-            MessageReplyHeader::Header(h) => {
+            tl::enums::MessageReplyHeader::Header(h) => {
                 replay_to_msgs_id = h.reply_to_msg_id;
             }
         }

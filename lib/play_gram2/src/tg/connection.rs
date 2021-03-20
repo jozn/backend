@@ -1,18 +1,6 @@
-use async_std::task;
-use grammers_client::{Client, Config};
-use grammers_mtsender::InvocationError;
-use grammers_session as session;
-use grammers_tl_types as tl;
-use grammers_tl_types::enums::messages::Messages;
-use grammers_tl_types::enums::{ChatPhoto, FileLocation, Message, MessageEntity};
-use grammers_tl_types::RemoteCall;
-use std::io::Write;
-
 use crate::tg::converter;
-// use crate::types::{Avatar, MediaOld, MediaThumb, MsgHolder, TgPool};
 use crate::{errors::TelegramGenErr, types, utils};
-
-use log::kv::Source;
+use grammers_tl_types as tl;
 
 #[derive(Clone, Debug)]
 pub struct ReqGetMessages {
@@ -179,7 +167,7 @@ async fn process_channel_msgs(
     // let mut msgs = vec![];
     // let mut urls: Vec<String> = vec![];
     match mt {
-        Messages::ChannelMessages(cm) => {
+        tl::enums::messages::Messages::ChannelMessages(cm) => {
             // println!("messages #{:#?}", cm);
             msg_holder.channels = converter::process_inline_channel_chats(cm.chats.clone());
             converter::process_inline_channel_users(&cm.users);

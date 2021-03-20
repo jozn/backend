@@ -1,17 +1,6 @@
-use async_std::task;
-use grammers_client::{Client, Config};
-use grammers_mtsender::InvocationError;
-use grammers_session as session;
+use crate::{errors::TelegramGenErr, types, utils};
 use grammers_tl_types as tl;
-use grammers_tl_types::enums::messages::Messages;
-use grammers_tl_types::enums::{Message, MessageEntity};
-use grammers_tl_types::RemoteCall;
 use std::io::Write;
-
-// use crate::types::{MediaOld, MediaThumb, FileMetaInfo};
-use super::connection;
-use crate::{errors::TelegramGenErr, types, types::Caller, utils};
-use types::FileMetaInfo;
 
 pub async fn dl_media_to_disk(
     caller: &types::TgPool,
@@ -41,7 +30,7 @@ pub async fn dl_media(
 
     // Set thumb for image types
     match &m.file_meta {
-        FileMetaInfo::ImageResizedFile(p) => {
+        types::FileMetaInfo::ImageResizedFile(p) => {
             loc.thumb_size = p.size_type.clone();
         }
         _ => {}

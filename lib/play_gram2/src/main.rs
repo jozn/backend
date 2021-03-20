@@ -4,32 +4,13 @@
 #![allow(warnings)]
 #![allow(soft_unstable)]
 
-#[macro_use]
-extern crate lazy_static;
-
-use async_std::task;
-use grammers_client::{Client, Config};
-use grammers_session as session;
-use grammers_tl_types as tl;
-use grammers_tl_types::enums::messages::Messages;
-use grammers_tl_types::enums::{Message, MessageEntity};
-
-// mod client_pool;
-mod types;
-
-use std::cell::*;
-
 mod con_mgr;
-// mod crawl;
+mod crawler_new;
 mod db_dep;
 mod errors;
-// mod tg_old;
-mod crawler_new;
 mod tg;
+mod types;
 mod utils;
-
-//tasks:
-// flooding tests and policy
 
 #[tokio::main]
 async fn main() {

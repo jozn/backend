@@ -1,7 +1,6 @@
-use grammers_client::{Client, Config};
 use grammers_mtsender::AuthorizationError;
 use grammers_mtsender::InvocationError;
-use rusqlite;
+use rusqlite; //todo remove
 use serde::__private::Formatter;
 use shared::gen::my::models::MyError;
 use std::error::Error;

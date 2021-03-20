@@ -1,11 +1,8 @@
-use async_std::task;
 use grammers_client::{Client, Config, SignInError};
 use grammers_mtsender::AuthorizationError;
 use grammers_session as session;
 use grammers_session::FileSession;
 use grammers_tl_types as tl;
-use grammers_tl_types::enums::messages::Messages;
-use grammers_tl_types::enums::{Message, MessageEntity};
 use std::io;
 use std::io::{BufRead, Write};
 use std::sync::{Arc, Mutex};

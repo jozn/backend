@@ -3,7 +3,7 @@ todo:
  + sessions pool / connectin pools
  + add avatar to channels type
  + update connectin and downlader to TgPool
-
+ + flooding tests and policy
 
 Notes:
 + it seems in our imple both avatar and video avatar works the same (for video being still frame) > NOT CORRECT
