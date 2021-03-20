@@ -121,7 +121,8 @@ impl Crawler {
                         match d {
                             Media::File(f) => {
                                 println!("***************** #2 ");
-                                tg::dl_media_to_disk(&self.caller, f).await;
+                                let rs = tg::dl_media_to_disk(&self.caller, f).await;
+                                println!("/////////>>>>>>>>>> dl res: {:?}", rs)
                             }
                             _ => {}
                         }
@@ -140,8 +141,8 @@ pub async fn crawl_run() -> Result<(), TelegramGenErr> {
     // crawler.crawl_username("thezoomit").await;
     // crawler.crawl_username("boursecampaign").await;
     // crawler.crawl_username("flip_app").await;
-    crawler.crawl_username("flip_info").await;
-    // crawler.crawl_next_channel_messages().await; // channel: porn > restricted
+    // crawler.crawl_username("flip_info").await;
+    crawler.crawl_next_channel_messages().await; // channel: porn > restricted
                                                  // println!("zoomit {:?}",res);
     Ok(())
 }

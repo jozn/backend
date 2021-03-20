@@ -12,47 +12,6 @@ use std::io::Write;
 use crate::{errors::TelegramGenErr, types, types::Caller, utils};
 use types::{FileMetaInfo};
 use super::connection;
-/*
-pub async fn dl_thumb_to_disk_old(
-    caller: &mut Caller,
-    t: &types::MediaThumb,
-) -> Result<(), TelegramGenErr> {
-    // hack: use Media for dl
-    let mut m = types::MediaOld::default();
-    m.dep_volume_id = t.dep_volume_id;
-    m.dep_local_id = t.dep_local_id;
-    m.image_width = t.w;
-    m.image_height = t.h;
-    m.size = t.size;
-    m.media_type = types::MediaTypeOld::Image;
-    let res = _dl_image(caller, m.clone()).await?;
-    std::fs::create_dir_all("./_dl_thumb/").unwrap();
-    let name = format!("./_dl_thumb/{}{}", m.id, m.file_extension);
-    let mut f = std::fs::File::create(name).unwrap();
-    f.write(&res);
-    Ok(())
-}
-*/
-
-/*
-// todo: replace video_thumbs_rec > video_thumbs ??
-pub async fn dl_media_thumb_to_disk(
-    caller: &mut Caller,
-    m: types::MediaOld,
-) -> Result<(), TelegramGenErr> {
-    // let o = *m.video_thumbs_rec;
-    if let Some(t) = *m.video_thumbs_rec {
-        // println!("++++ Downloading video thumb {}{}", o. );
-        let res = _dl_file(caller, t.clone()).await?;
-        std::fs::create_dir_all("./_dl_thumb/").unwrap();
-        let name = format!("./_dl_thumb/{}.{}", t.id, t.file_extension);
-        let mut f = std::fs::File::create(name).unwrap();
-        f.write(&res);
-    };
-    Ok(())
-}
-*/
-
 
 pub async fn dl_media_to_disk(caller: &types::TgPool, m: types::FileMedia) -> Result<(), TelegramGenErr> {
 
@@ -84,26 +43,8 @@ pub async fn dl_media(caller: &types::TgPool, m: types::FileMedia) -> Result<Vec
         _ => {}
     }
 
-    // use types::MediaTypeOld::*;
     use types::FileMetaInfo::*;
     match m.file_meta {
-/*        Image => {
-            // _dl_image(caller, m.clone()).await
-            // let res = _dl_image(caller,m.clone()).await.unwrap();
-            // std::fs::create_dir_all("./_dl/").unwrap();
-            // let name = format!("./_dl/{}{}", m.id,m.file_extention);
-            // let mut f = std::fs::File::create(name).unwrap();
-            // f.write(&res);
-        }
-        Video | Audio | File | ImageFile => {
-            // _dl_file(caller, m.clone()).await
-            // let res = _dl_file(caller,m.clone()).await.unwrap();
-            // std::fs::create_dir_all("./_dl/").unwrap();
-            // let name = format!("./_dl/{}{}", m.id,m.file_extention);
-            // let mut f = std::fs::File::create(name).unwrap();
-            // f.write(&res);
-        }
-        Unknown => Err(TelegramGenErr::Download),*/
         Unknown => {
             Err(TelegramGenErr::BadParam)
         }
@@ -113,10 +54,6 @@ pub async fn dl_media(caller: &types::TgPool, m: types::FileMedia) -> Result<Vec
         ImageFile(_) | VideoFile(_) | AudioFile(_) | DocumentFile(_) | GifFile(_) => {
             _dl_tg_shared(caller,_TgFileLocation::Document, loc).await
         }
-        // VideoFile(_) => {}
-        // AudioFile(_) => {}
-        // DocumentFile(_) => {}
-        // GifFile(_) => {}
     }
 }
 
@@ -206,7 +143,7 @@ async fn _dl_tg_shared(caller: &types::TgPool,file_type: _TgFileLocation, m: _Fi
 
     Ok(out_buffer)
 }
-
+/*
 async fn _dl_file(caller: &types::TgPool, m: types::FileMedia) -> Result<Vec<u8>, TelegramGenErr> {
     let limit = 524288;
     let mut out_buffer = Vec::with_capacity(limit as usize);
@@ -303,7 +240,7 @@ async fn _dl_image_old(caller: &types::TgPool, m: types::FileMedia) -> Result<Ve
     };
     Ok(out)
 }
-
+*/
 /*async fn send_req<R: RemoteCall>(
     caller: &mut Caller,
     request: &R,

@@ -12,6 +12,7 @@ use std::io::Write;
 
 use crate::{errors::TelegramGenErr, types, utils};
 use types::*;
+// use std::default::default;
 
 // Notes:
 // Telegram mime_type: "application/x-tgsticker" is telegram own stikers with ~7KB size. "thumb" is also is set.
@@ -143,7 +144,7 @@ fn process_inline_file_media(mm: tl::enums::MessageMedia) -> Option<types::FileM
                         let p = doc.clone();
 
                         let mut j = types::FileMedia {
-                            file_meta: Default::default(), // set later
+                            file_meta: FileMetaInfo::DocumentFile(DocumentFile::default()), // It should be to docs as pdf, zip,.. do not set any especial attribute later
                             id: p.id,
                             access_hash: p.access_hash,
                             file_reference: p.file_reference,
@@ -228,6 +229,7 @@ fn process_inline_file_media(mm: tl::enums::MessageMedia) -> Option<types::FileM
                                 }
                             }
                         }
+                        // todo fix cover for docs
 
                         //tod move to just video + remove rec
                         /*                        if p.thumbs.is_some() {
