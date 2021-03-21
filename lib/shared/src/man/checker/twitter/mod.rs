@@ -23,7 +23,7 @@ fn run() {
     println!("{:#?}", followers);
     // let res = api.GetTweets(790728);
     let res = api.get_tweets_by_username("assassinscreed");
-    println!("{:#?}", res);
+    println!("{:#?}", res.unwrap());
 
     /*
     println!("getusers ============");

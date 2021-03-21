@@ -1,0 +1,519 @@
+[
+    Tweet {
+        created_at: "Sat Mar 20 02:22:54 +0000 2021",
+        id: 1373097688502317059,
+        id_str: "1373097688502317059",
+        full_text: "We’re deploying a server-side hotfix to address a rise in crashing near Ravensthorpe. Settlement decorations will be temporarily removed and Ostara Festival quests involving decorations will not be completable. Thanks for your patience as our team releases a permanent fix soon! https://t.co/gYG7O8dvF3",
+        truncated: false,
+        entities: Entities {
+            urls: [],
+            media: Some(
+                [
+                    Media {
+                        id: 1373097678515671000.0,
+                        id_str: "1373097678515671041",
+                        indices: [
+                            279,
+                            302,
+                        ],
+                        media_url: "http://pbs.twimg.com/media/Ew45EEnXEAEL0K_.jpg",
+                        media_url_https: "https://pbs.twimg.com/media/Ew45EEnXEAEL0K_.jpg",
+                        url: "https://t.co/gYG7O8dvF3",
+                        display_url: "pic.twitter.com/gYG7O8dvF3",
+                        expanded_url: "https://twitter.com/assassinscreed/status/1373097688502317059/photo/1",
+                        media_type: "photo",
+                        sizes: Sizes {
+                            medium: Large {
+                                w: 1080,
+                                h: 1080,
+                                resize: "fit",
+                            },
+                            thumb: Large {
+                                w: 150,
+                                h: 150,
+                                resize: "crop",
+                            },
+                            small: Large {
+                                w: 680,
+                                h: 680,
+                                resize: "fit",
+                            },
+                            large: Large {
+                                w: 1080,
+                                h: 1080,
+                                resize: "fit",
+                            },
+                        },
+                        video_info: None,
+                    },
+                ],
+            ),
+        },
+        in_reply_to_status_id: None,
+        in_reply_to_user_id: None,
+        user: User {
+            id: 38232487,
+            name: "Assassin\'s Creed",
+            screen_name: "assassinscreed",
+            description: Some(
+                "Welcome to the official Assassin\'s Creed Twitter.  \nESRB: MATURE 17+ \n\nJoin the discussion on https://t.co/Lbu9xcHasE",
+            ),
+            url: Some(
+                "http://t.co/UzPdL5yvDX",
+            ),
+            protected: false,
+            followers_count: 4332831,
+            friends_count: 305,
+            listed_count: 4141,
+            created_at: "Wed May 06 17:41:04 +0000 2009",
+            favourites_count: 18851,
+            verified: true,
+            statuses_count: 21338,
+            profile_image_url: Some(
+                "http://pbs.twimg.com/profile_images/1317132239176683525/t-2XKXiA_normal.jpg",
+            ),
+            profile_image_url_https: Some(
+                "https://pbs.twimg.com/profile_images/1317132239176683525/t-2XKXiA_normal.jpg",
+            ),
+            profile_banner_url: Some(
+                "https://pbs.twimg.com/profile_banners/38232487/1606314803",
+            ),
+            default_profile_image: false,
+        },
+        is_quote_status: false,
+        retweet_count: 131,
+        favorite_count: 1551,
+        favorited: false,
+        retweeted: false,
+        lang: "en",
+        extended_entities: Some(
+            ExtendedEntities {
+                media: [
+                    Media {
+                        id: 1373097678515671000.0,
+                        id_str: "1373097678515671041",
+                        indices: [
+                            279,
+                            302,
+                        ],
+                        media_url: "http://pbs.twimg.com/media/Ew45EEnXEAEL0K_.jpg",
+                        media_url_https: "https://pbs.twimg.com/media/Ew45EEnXEAEL0K_.jpg",
+                        url: "https://t.co/gYG7O8dvF3",
+                        display_url: "pic.twitter.com/gYG7O8dvF3",
+                        expanded_url: "https://twitter.com/assassinscreed/status/1373097688502317059/photo/1",
+                        media_type: "photo",
+                        sizes: Sizes {
+                            medium: Large {
+                                w: 1080,
+                                h: 1080,
+                                resize: "fit",
+                            },
+                            thumb: Large {
+                                w: 150,
+                                h: 150,
+                                resize: "crop",
+                            },
+                            small: Large {
+                                w: 680,
+                                h: 680,
+                                resize: "fit",
+                            },
+                            large: Large {
+                                w: 1080,
+                                h: 1080,
+                                resize: "fit",
+                            },
+                        },
+                        video_info: None,
+                    },
+                ],
+            },
+        ),
+        possibly_sensitive: Some(
+            false,
+        ),
+    },
+    Tweet {
+        created_at: "Fri Mar 19 18:06:25 +0000 2021",
+        id: 1372972743365423110,
+        id_str: "1372972743365423110",
+        full_text: "We\'re aware of increased instances of crashes in and around Ravensthorpe since the release of Title Update 1.2.0. \nOur team is working on a solution that should be ready sometime next week. We thank you for your patience in the meantime.",
+        truncated: false,
+        entities: Entities {
+            urls: [],
+            media: None,
+        },
+        in_reply_to_status_id: None,
+        in_reply_to_user_id: None,
+        user: User {
+            id: 38232487,
+            name: "Assassin\'s Creed",
+            screen_name: "assassinscreed",
+            description: Some(
+                "Welcome to the official Assassin\'s Creed Twitter.  \nESRB: MATURE 17+ \n\nJoin the discussion on https://t.co/Lbu9xcHasE",
+            ),
+            url: Some(
+                "http://t.co/UzPdL5yvDX",
+            ),
+            protected: false,
+            followers_count: 4332831,
+            friends_count: 305,
+            listed_count: 4141,
+            created_at: "Wed May 06 17:41:04 +0000 2009",
+            favourites_count: 18851,
+            verified: true,
+            statuses_count: 21338,
+            profile_image_url: Some(
+                "http://pbs.twimg.com/profile_images/1317132239176683525/t-2XKXiA_normal.jpg",
+            ),
+            profile_image_url_https: Some(
+                "https://pbs.twimg.com/profile_images/1317132239176683525/t-2XKXiA_normal.jpg",
+            ),
+            profile_banner_url: Some(
+                "https://pbs.twimg.com/profile_banners/38232487/1606314803",
+            ),
+            default_profile_image: false,
+        },
+        is_quote_status: false,
+        retweet_count: 135,
+        favorite_count: 2012,
+        favorited: false,
+        retweeted: false,
+        lang: "en",
+        extended_entities: None,
+        possibly_sensitive: None,
+    },
+    Tweet {
+        created_at: "Fri Mar 19 16:55:00 +0000 2021",
+        id: 1372954771225776132,
+        id_str: "1372954771225776132",
+        full_text: "Come watch the Ubisoft News team as they explore Assassin’s Creed Valhalla’s Season 2. \n\nThe Ostara Season is here and it brings a new Easter-themed festival with new skills, activities, and quests!",
+        truncated: false,
+        entities: Entities {
+            urls: [],
+            media: None,
+        },
+        in_reply_to_status_id: None,
+        in_reply_to_user_id: None,
+        user: User {
+            id: 38232487,
+            name: "Assassin\'s Creed",
+            screen_name: "assassinscreed",
+            description: Some(
+                "Welcome to the official Assassin\'s Creed Twitter.  \nESRB: MATURE 17+ \n\nJoin the discussion on https://t.co/Lbu9xcHasE",
+            ),
+            url: Some(
+                "http://t.co/UzPdL5yvDX",
+            ),
+            protected: false,
+            followers_count: 4332831,
+            friends_count: 305,
+            listed_count: 4141,
+            created_at: "Wed May 06 17:41:04 +0000 2009",
+            favourites_count: 18851,
+            verified: true,
+            statuses_count: 21338,
+            profile_image_url: Some(
+                "http://pbs.twimg.com/profile_images/1317132239176683525/t-2XKXiA_normal.jpg",
+            ),
+            profile_image_url_https: Some(
+                "https://pbs.twimg.com/profile_images/1317132239176683525/t-2XKXiA_normal.jpg",
+            ),
+            profile_banner_url: Some(
+                "https://pbs.twimg.com/profile_banners/38232487/1606314803",
+            ),
+            default_profile_image: false,
+        },
+        is_quote_status: false,
+        retweet_count: 48,
+        favorite_count: 840,
+        favorited: false,
+        retweeted: false,
+        lang: "en",
+        extended_entities: None,
+        possibly_sensitive: None,
+    },
+    Tweet {
+        created_at: "Thu Mar 18 20:01:31 +0000 2021",
+        id: 1372639322764152833,
+        id_str: "1372639322764152833",
+        full_text: "Our list of common issues has been updated - including Ostara Festival-related information.",
+        truncated: false,
+        entities: Entities {
+            urls: [],
+            media: None,
+        },
+        in_reply_to_status_id: None,
+        in_reply_to_user_id: None,
+        user: User {
+            id: 38232487,
+            name: "Assassin\'s Creed",
+            screen_name: "assassinscreed",
+            description: Some(
+                "Welcome to the official Assassin\'s Creed Twitter.  \nESRB: MATURE 17+ \n\nJoin the discussion on https://t.co/Lbu9xcHasE",
+            ),
+            url: Some(
+                "http://t.co/UzPdL5yvDX",
+            ),
+            protected: false,
+            followers_count: 4332831,
+            friends_count: 305,
+            listed_count: 4141,
+            created_at: "Wed May 06 17:41:04 +0000 2009",
+            favourites_count: 18851,
+            verified: true,
+            statuses_count: 21338,
+            profile_image_url: Some(
+                "http://pbs.twimg.com/profile_images/1317132239176683525/t-2XKXiA_normal.jpg",
+            ),
+            profile_image_url_https: Some(
+                "https://pbs.twimg.com/profile_images/1317132239176683525/t-2XKXiA_normal.jpg",
+            ),
+            profile_banner_url: Some(
+                "https://pbs.twimg.com/profile_banners/38232487/1606314803",
+            ),
+            default_profile_image: false,
+        },
+        is_quote_status: false,
+        retweet_count: 88,
+        favorite_count: 1265,
+        favorited: false,
+        retweeted: false,
+        lang: "en",
+        extended_entities: None,
+        possibly_sensitive: None,
+    },
+    Tweet {
+        created_at: "Thu Mar 18 16:27:21 +0000 2021",
+        id: 1372585424300953604,
+        id_str: "1372585424300953604",
+        full_text: "The Ostara Festival is available now through April 8! Learn more about the Festival, Transmog, the free Godly Reward, and what’s next in Assassin’s Creed Valhalla! \n\nhttps://t.co/iBWRUfJc54 https://t.co/7rc38XNeye",
+        truncated: false,
+        entities: Entities {
+            urls: [
+                Url {
+                    url: "https://t.co/iBWRUfJc54",
+                    expanded_url: "http://assassinscreed.com/ostaraseason",
+                    display_url: "assassinscreed.com/ostaraseason",
+                    indices: [
+                        166,
+                        189,
+                    ],
+                },
+            ],
+            media: Some(
+                [
+                    Media {
+                        id: 1372575760783933400.0,
+                        id_str: "1372575760783933449",
+                        indices: [
+                            190,
+                            213,
+                        ],
+                        media_url: "http://pbs.twimg.com/amplify_video_thumb/1372575760783933449/img/LKc_5DnYyyXlfK_p.jpg",
+                        media_url_https: "https://pbs.twimg.com/amplify_video_thumb/1372575760783933449/img/LKc_5DnYyyXlfK_p.jpg",
+                        url: "https://t.co/7rc38XNeye",
+                        display_url: "pic.twitter.com/7rc38XNeye",
+                        expanded_url: "https://twitter.com/assassinscreed/status/1372585424300953604/video/1",
+                        media_type: "photo",
+                        sizes: Sizes {
+                            medium: Large {
+                                w: 1200,
+                                h: 675,
+                                resize: "fit",
+                            },
+                            thumb: Large {
+                                w: 150,
+                                h: 150,
+                                resize: "crop",
+                            },
+                            small: Large {
+                                w: 680,
+                                h: 383,
+                                resize: "fit",
+                            },
+                            large: Large {
+                                w: 1280,
+                                h: 720,
+                                resize: "fit",
+                            },
+                        },
+                        video_info: None,
+                    },
+                ],
+            ),
+        },
+        in_reply_to_status_id: None,
+        in_reply_to_user_id: None,
+        user: User {
+            id: 38232487,
+            name: "Assassin\'s Creed",
+            screen_name: "assassinscreed",
+            description: Some(
+                "Welcome to the official Assassin\'s Creed Twitter.  \nESRB: MATURE 17+ \n\nJoin the discussion on https://t.co/Lbu9xcHasE",
+            ),
+            url: Some(
+                "http://t.co/UzPdL5yvDX",
+            ),
+            protected: false,
+            followers_count: 4332831,
+            friends_count: 305,
+            listed_count: 4141,
+            created_at: "Wed May 06 17:41:04 +0000 2009",
+            favourites_count: 18851,
+            verified: true,
+            statuses_count: 21338,
+            profile_image_url: Some(
+                "http://pbs.twimg.com/profile_images/1317132239176683525/t-2XKXiA_normal.jpg",
+            ),
+            profile_image_url_https: Some(
+                "https://pbs.twimg.com/profile_images/1317132239176683525/t-2XKXiA_normal.jpg",
+            ),
+            profile_banner_url: Some(
+                "https://pbs.twimg.com/profile_banners/38232487/1606314803",
+            ),
+            default_profile_image: false,
+        },
+        is_quote_status: false,
+        retweet_count: 285,
+        favorite_count: 2115,
+        favorited: false,
+        retweeted: false,
+        lang: "en",
+        extended_entities: Some(
+            ExtendedEntities {
+                media: [
+                    Media {
+                        id: 1372575760783933400.0,
+                        id_str: "1372575760783933449",
+                        indices: [
+                            190,
+                            213,
+                        ],
+                        media_url: "http://pbs.twimg.com/amplify_video_thumb/1372575760783933449/img/LKc_5DnYyyXlfK_p.jpg",
+                        media_url_https: "https://pbs.twimg.com/amplify_video_thumb/1372575760783933449/img/LKc_5DnYyyXlfK_p.jpg",
+                        url: "https://t.co/7rc38XNeye",
+                        display_url: "pic.twitter.com/7rc38XNeye",
+                        expanded_url: "https://twitter.com/assassinscreed/status/1372585424300953604/video/1",
+                        media_type: "video",
+                        sizes: Sizes {
+                            medium: Large {
+                                w: 1200,
+                                h: 675,
+                                resize: "fit",
+                            },
+                            thumb: Large {
+                                w: 150,
+                                h: 150,
+                                resize: "crop",
+                            },
+                            small: Large {
+                                w: 680,
+                                h: 383,
+                                resize: "fit",
+                            },
+                            large: Large {
+                                w: 1280,
+                                h: 720,
+                                resize: "fit",
+                            },
+                        },
+                        video_info: Some(
+                            VideoInfo {
+                                aspect_ratio: [
+                                    16,
+                                    9,
+                                ],
+                                duration_millis: Some(
+                                    58433,
+                                ),
+                                variants: [
+                                    Variant {
+                                        bitrate: None,
+                                        content_type: "application/x-mpegURL",
+                                        url: "https://video.twimg.com/amplify_video/1372575760783933449/pl/M8biNcQgWbbOpA3f.m3u8?tag=14",
+                                    },
+                                    Variant {
+                                        bitrate: Some(
+                                            832000,
+                                        ),
+                                        content_type: "video/mp4",
+                                        url: "https://video.twimg.com/amplify_video/1372575760783933449/vid/640x360/8oORoS5beRcIXG25.mp4?tag=14",
+                                    },
+                                    Variant {
+                                        bitrate: Some(
+                                            2176000,
+                                        ),
+                                        content_type: "video/mp4",
+                                        url: "https://video.twimg.com/amplify_video/1372575760783933449/vid/1280x720/hY4PTpBO7ov4eVVe.mp4?tag=14",
+                                    },
+                                    Variant {
+                                        bitrate: Some(
+                                            288000,
+                                        ),
+                                        content_type: "video/mp4",
+                                        url: "https://video.twimg.com/amplify_video/1372575760783933449/vid/480x270/5WDF8G-6sy9hBK0k.mp4?tag=14",
+                                    },
+                                ],
+                            },
+                        ),
+                    },
+                ],
+            },
+        ),
+        possibly_sensitive: Some(
+            false,
+        ),
+    },
+    Tweet {
+        created_at: "Wed Mar 17 15:23:52 +0000 2021",
+        id: 1372207060566294528,
+        id_str: "1372207060566294528",
+        full_text: "We deployed a hotfix today addressing an issue that prevented players who do not own any Helix Credits from claiming the Godly Reward. \n\nWe are continuing to investigate other situations that may prevent or cause other complications when claiming the reward.",
+        truncated: false,
+        entities: Entities {
+            urls: [],
+            media: None,
+        },
+        in_reply_to_status_id: None,
+        in_reply_to_user_id: None,
+        user: User {
+            id: 38232487,
+            name: "Assassin\'s Creed",
+            screen_name: "assassinscreed",
+            description: Some(
+                "Welcome to the official Assassin\'s Creed Twitter.  \nESRB: MATURE 17+ \n\nJoin the discussion on https://t.co/Lbu9xcHasE",
+            ),
+            url: Some(
+                "http://t.co/UzPdL5yvDX",
+            ),
+            protected: false,
+            followers_count: 4332831,
+            friends_count: 305,
+            listed_count: 4141,
+            created_at: "Wed May 06 17:41:04 +0000 2009",
+            favourites_count: 18851,
+            verified: true,
+            statuses_count: 21338,
+            profile_image_url: Some(
+                "http://pbs.twimg.com/profile_images/1317132239176683525/t-2XKXiA_normal.jpg",
+            ),
+            profile_image_url_https: Some(
+                "https://pbs.twimg.com/profile_images/1317132239176683525/t-2XKXiA_normal.jpg",
+            ),
+            profile_banner_url: Some(
+                "https://pbs.twimg.com/profile_banners/38232487/1606314803",
+            ),
+            default_profile_image: false,
+        },
+        is_quote_status: false,
+        retweet_count: 141,
+        favorite_count: 1635,
+        favorited: false,
+        retweeted: false,
+        lang: "en",
+        extended_entities: None,
+        possibly_sensitive: None,
+    },
+]
+
