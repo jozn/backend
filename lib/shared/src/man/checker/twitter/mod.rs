@@ -39,94 +39,7 @@ fn run() {
         //  api.GetMedia(t);
     }
 
-    let g = Grabber {
-        api: api,
-        db: Mem {},
-        harvesting: false,
-        stopping: false,
-    };
-    // g.db.save_tweet(&g);
-    // g.db.save_tweet(&g);
-    g.db.get_tweet();
-
-    // Grabber::sa\\
-
     thread::sleep(std::time::Duration::from_secs(10))
-}
-
-struct Grabber {
-    api: API,
-    db: Mem,
-    harvesting: bool, // if we run in harvest mod
-    stopping: bool,   // signal stop harvesting
-}
-
-impl Grabber {
-    fn run_production_harvest(&self) {}
-
-    fn try_username(&self, username: &str) {}
-
-    fn is_username_free(&self, username: &str) -> bool {
-        false
-    }
-
-    fn run_sample_harvest(&self) {}
-}
-
-struct Mem {}
-struct UserState {
-    user_id: u64,
-    username: String,
-    last_fetched: u32,
-    lang: &'static str,
-    blocked: bool,
-}
-
-// maybe better not to have this
-struct GlobalState {
-    total_users: u64,
-}
-
-impl DB for Mem {
-    fn save_tweet(&self, t: twtypes::Tweet) {
-        println!("y9999");
-    }
-}
-
-trait DB {
-    fn save_tweet(&self, t: twtypes::Tweet) {
-        println!("yes");
-    }
-
-    fn get_tweet(&self) -> Option<twtypes::Tweet> {
-        println!("1");
-        None
-    }
-    fn save_user_state(&self, m: &UserState) {
-        println!("ok");
-    }
-
-    fn get_user_state(&self, uid: u64) -> Option<UserState> {
-        println!("ok");
-        None
-    }
-
-    fn get_user_state_by_username(&self, username: &str) -> Option<UserState> {
-        println!("ok");
-        None
-    }
-    fn save_global_state(&self, gs: &GlobalState) {
-        println!("ok");
-    }
-
-    fn get_global_state(&self) -> Option<GlobalState> {
-        println!("ok");
-        None
-    }
-    // use this for debuging -- maybe not suited for realworld app
-    fn on_grabbed_tweets(&self, _: Vec<twtypes::Tweet>) {}
-    fn on_grabbed_users(&self, _: Vec<twtypes::User>) {}
-    fn on_grabbed_media(&self, _: Vec<twtypes::Media>) {}
 }
 
 //type Error8 = std::io::Error;
@@ -139,6 +52,11 @@ type TweetsResponse = Result<Vec<twtypes::Tweet>, Error8>;
 struct API {}
 
 impl API {
+    // todo
+    fn is_username_free(&self, username: &str) -> bool {
+        false
+    }
+
     pub fn GetTweets(&self, user_id: u64) -> TweetsResponse {
         let url = API_URl::getTimelineTweetsUserId(user_id);
         self.GetTweetsAction(url.as_str())
