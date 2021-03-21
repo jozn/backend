@@ -22,8 +22,7 @@ fn run() {
     let followers = api.get_followers(1373700793874911241);
     println!("{:#?}", followers);
     // let res = api.GetTweets(790728);
-    let res = api.get_tweets_by_username("assassinscreed"); // bbcpersian assassinscreed
-
+    let res = api.get_tweets_by_username("assassinscreed");
     println!("{:#?}", res);
 
     /*
@@ -123,6 +122,7 @@ impl TwitterClient {
         Ok(users)
     }
 
+    // This func is commented in integration from old repo into Flip.
     pub fn get_media(&mut self, tweet: twtypes::Tweet) {
         // let hanlder = thread::spawn(move || {
         match &tweet.extended_entities {
