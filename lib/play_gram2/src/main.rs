@@ -5,7 +5,7 @@
 #![allow(soft_unstable)]
 
 mod con_mgr;
-mod crawler_new;
+mod crawler;
 mod db_dep;
 mod errors;
 mod tg;
@@ -14,5 +14,5 @@ mod utils;
 
 #[tokio::main]
 async fn main() {
-    crawler_new::crawl_run().await;
+    crawler::crawl_run().await;
 }
