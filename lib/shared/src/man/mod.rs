@@ -11,3 +11,5 @@ pub mod sms_sender;
 pub mod utils;
 
 pub mod aof;
+
+pub mod checker;
