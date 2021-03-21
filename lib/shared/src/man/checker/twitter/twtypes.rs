@@ -20,6 +20,11 @@ use std::collections::HashMap;
 pub type Welcome = Vec<Tweet>;
 
 #[derive(Debug, Serialize, Deserialize)]
+pub struct Errors {
+    errors: Vec<Error>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Error {
     pub code: i64,
     pub message: String,

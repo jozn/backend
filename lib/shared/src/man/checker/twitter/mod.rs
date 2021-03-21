@@ -8,6 +8,7 @@ use std::collections::HashMap;
 use std::io::Write;
 use std::ops::Add;
 
+use crate::man::checker::twitter::twtypes::Tweet;
 use serde_json::Error;
 use tokio::task;
 
@@ -18,6 +19,12 @@ pub fn main1() {
 }
 
 fn run() {
+    let api = TwitterClient::default();
+    api.is_username_free("assassinscreed234");
+    api.is_username_free("assassinscreed");
+}
+
+fn run2() {
     let mut api = TwitterClient::default();
     let followers = api.get_followers(1373700793874911241);
     println!("{:#?}", followers);
@@ -49,12 +56,20 @@ fn run() {
 #[derive(Debug)]
 enum TwitterError {
     SerdeJson(serde_json::Error),
+    NotFound, // page 404
 }
 
 impl From<serde_json::Error> for TwitterError {
     fn from(e: serde_json::Error) -> Self {
         Self::SerdeJson(e)
     }
+}
+
+pub struct UsernameAvailability {
+    pub is_registered: bool,
+    pub followers_count: i64,
+    pub texts: String,
+    pub lang: String,
 }
 
 #[derive(Default)]
@@ -67,8 +82,48 @@ impl TwitterClient {
         TwitterClient::default()
     }
 
+    pub fn check_username(&self, username: &str) -> Result<UsernameAvailability, TwitterError> {
+        let res = self.get_tweets_by_username(username);
+        println!("+++++++>>>> is_username_free >>> {:#?}", res);
+        match res {
+            Ok(tweets) => {
+                let mut txt = "".to_string();
+                let mut followers_count = 0;
+
+                let user = self.get_user_by_username(username);
+                if user.is_ok() {
+                    let user = user.unwrap();
+                    txt.push_str(&user.description.unwrap_or("".to_string()));
+                    followers_count = user.followers_count;
+                }
+
+                for t in tweets {
+                    txt.push_str(&t.full_text);
+                }
+
+                Ok(UsernameAvailability {
+                    is_registered: true,
+                    followers_count: followers_count,
+                    texts: txt,
+                    lang: "".to_string(), // todo
+                })
+            }
+            Err(e) => match e {
+                TwitterError::NotFound => Ok(UsernameAvailability {
+                    is_registered: false,
+                    followers_count: -1,
+                    texts: "".to_string(),
+                    lang: "".to_string(),
+                }),
+                _ => Err(e),
+            },
+        }
+    }
+
     // todo
-    fn is_username_free(&self, username: &str) -> bool {
+    pub fn is_username_free(&self, username: &str) -> bool {
+        let res = self.get_tweets_by_username(username);
+        println!("+++++++>>>> is_username_free >>> {:#?}", res);
         false
     }
 
@@ -87,8 +142,26 @@ impl TwitterClient {
 
     fn _get_tweets_action(&self, url: &str) -> Result<Vec<twtypes::Tweet>, TwitterError> {
         let body_str = self._get_body(url)?;
-        let tweets = serde_json::from_str::<Vec<twtypes::Tweet>>(body_str.as_str())?;
-        Ok(tweets)
+        println!("{:?}", &body_str);
+        let tweets_res = serde_json::from_str::<Vec<twtypes::Tweet>>(body_str.as_str());
+        if tweets_res.is_err() {
+            println!("))))))))))))))))))");
+            let err_res = serde_json::from_str::<twtypes::Errors>(body_str.as_str())?;
+            // Simplified logic: if body string return is Errors then consider it "Not Found" username > buggy but enough
+            Err(TwitterError::NotFound)
+        } else {
+            Ok(tweets_res.unwrap())
+        }
+    }
+
+    pub fn get_user_by_username(&self, username: &str) -> Result<twtypes::User, TwitterError> {
+        let url = format!(
+            "https://api.twitter.com/1.1/users/show.json?screen_name={}",
+            username
+        );
+        let body_str = self._get_body(url.as_str())?;
+        let user = serde_json::from_str::<twtypes::User>(&body_str)?;
+        Ok(user)
     }
 
     pub fn get_followers(&self, user_id: u64) -> Result<Vec<u64>, TwitterError> {
