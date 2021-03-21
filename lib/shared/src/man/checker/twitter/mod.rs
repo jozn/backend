@@ -1,29 +1,19 @@
 use std::fs::File;
 use std::thread;
 use std::thread::Thread;
-use time;
-use ureq;
 
 use serde_json;
 use std::collections::HashMap;
-use std::time::Instant;
 
-extern crate chrono;
-use chrono::format::ParseError;
-use chrono::{DateTime, NaiveDate, NaiveDateTime, NaiveTime};
 use std::io::Write;
 use std::ops::Add;
 
-use async_std::task;
-use std::borrow::Borrow;
-use surf;
-use time::NumericalStdDurationShort;
+use tokio::task;
 
 mod twtypes;
 
 pub fn main1() {
     run();
-    // twitter_crawler::main1();
 }
 
 fn run() {
@@ -61,7 +51,7 @@ fn run() {
 
     // Grabber::sa\\
 
-    thread::sleep(10000.seconds())
+    thread::sleep(std::time::Duration::from_secs(10))
 }
 
 struct Grabber {
@@ -222,17 +212,19 @@ impl API {
         }
     }
 
-    fn GetMedia(&mut self, tweet: twtypes::Tweet) {
-        let hanlder = thread::spawn(move || {
+    async fn GetMedia(&mut self, tweet: twtypes::Tweet) {
+        // let hanlder = thread::spawn(move || {
             match &tweet.extended_entities {
                 Some(et) => {
-                    for m in et.media.clone() {
+                    /*for m in et.media.clone() {
                         let media = m.clone();
-                        let t = task::block_on(async {
+                        // let t = task::block_on(async {
+                        let m2 = m.clone();
+                        let t = tokio::task::spawn(async {
                             print!("dl: {}", m.media_url);
-                            let name = format!("./out/{}.jpg", m.id);
+                            let name = format!("./out/{}.jpg", m2.id);
                             let mut file = File::create(name).unwrap();
-                            let mut res = surf::get(&m.media_url).await;
+                            let mut res = surf::get(&m2.media_url).await;
                             match res {
                                 Ok(mut res) => {
                                     let body = res.body_bytes().await.unwrap();
@@ -243,10 +235,11 @@ impl API {
                                     println!("Err in Res: {}", err);
                                 }
                             }
-                        });
+                        }).await;
 
                         if let Some(vi) = m.video_info.clone() {
-                            let t = task::block_on(async {
+                            // let t = task::block_on(async {
+                            let t = tokio::task::spawn(async {
                                 for vid in &vi.variants {
                                     if vid.content_type == "video/mp4" {
                                         // print!("dl: {}", m.video_info);
@@ -265,13 +258,13 @@ impl API {
                                         }
                                     }
                                 }
-                            });
+                            }).await;
                         }
-                    }
+                    }*/
                 }
                 None => {}
-            }
-        });
+            };
+        // });
     }
 }
 
@@ -280,22 +273,13 @@ const TWITTER_API_TIMELINE_USERNAME: &str = "https://api.twitter.com/1.1/user_ti
 const TWITTER_API_TIMELINE_USER_ID: &'static str = "https://api.twitter.com/1.1/user_timeline.json?user_id={}&count=1000&tweet_mode=extended&exclude_replies=true&include_rts=false";
 
 fn getBody(url: &str) -> std::io::Result<String> {
-    // let agent = getAgent();
+    let client = reqwest::blocking::Client::new();
+    let res = client.get(url)
+        .header("authorization", "Bearer AAAAAAAAAAAAAAAAAAAAAIu%2FDQEAAAAAaYGRj89RCMH7kC9qN2xTzEHHUaQ%3D7QgRJxwUHILsAeX3dvistI0K5BrdKQUs7t1CNFkbsldJrtPYla")
+        .send();
 
-    let mut agent = ureq::agent();
-    agent.set("authorization", "Bearer AAAAAAAAAAAAAAAAAAAAAIu%2FDQEAAAAAaYGRj89RCMH7kC9qN2xTzEHHUaQ%3D7QgRJxwUHILsAeX3dvistI0K5BrdKQUs7t1CNFkbsldJrtPYla");
-
-    let mut req = agent.get(url);
-    let body = req.call().into_string();
-    // println!("{} \n{:?}",url,body);
-
-    body
-}
-
-fn getAgent() -> ureq::Agent {
-    let mut agent = ureq::agent();
-    agent.set("authorization", "Bearer AAAAAAAAAAAAAAAAAAAAAIu%2FDQEAAAAAaYGRj89RCMH7kC9qN2xTzEHHUaQ%3D7QgRJxwUHILsAeX3dvistI0K5BrdKQUs7t1CNFkbsldJrtPYla");
-    agent
+    // todo
+    Ok(res.unwrap().text().unwrap())
 }
 
 mod API_URl {
@@ -305,111 +289,65 @@ mod API_URl {
     }
 
     pub fn getTimelineTweetsUserName(username: &str) -> String {
-        format!("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name={}&count=1000&tweet_mode=extended&exclude_replies=true&include_rts=false"
+        format!("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name={}&count=10&tweet_mode=extended&exclude_replies=true&include_rts=false"
                 ,username )
     }
 }
 
-fn getSampleTweet() -> twtypes::Tweet {
-    let t = twtypes::Tweet {
-        created_at: "".to_string(),
-        id: 0,
-        id_str: "".to_string(),
-        full_text: "".to_string(),
-        truncated: false,
-        entities: twtypes::Entities {
-            urls: vec![],
-            media: None,
-        },
-        in_reply_to_status_id: None,
-        in_reply_to_user_id: None,
-        user: twtypes::User {
-            id: 0,
-            name: "".to_string(),
-            screen_name: "".to_string(),
-            description: None,
-            url: None,
-            protected: false,
-            followers_count: 0,
-            friends_count: 0,
-            listed_count: 0,
+
+
+#[cfg(test)]
+mod tests {
+    use super::twtypes;
+
+    // This function is quick showcase for how a Tweet looks like. It's not used anywhere.
+    fn sample_tweet() -> twtypes::Tweet {
+        let t = twtypes::Tweet {
             created_at: "".to_string(),
-            favourites_count: 0,
-            verified: false,
-            statuses_count: 0,
-            profile_image_url: None,
-            profile_image_url_https: None,
-            profile_banner_url: None,
-            default_profile_image: false,
-        },
-        is_quote_status: false,
-        retweet_count: 0,
-        favorite_count: 0,
-        favorited: false,
-        retweeted: false,
-        lang: "".to_string(),
-        extended_entities: None,
-        possibly_sensitive: None,
-    };
-    t
+            id: 0,
+            id_str: "".to_string(),
+            full_text: "".to_string(),
+            truncated: false,
+            entities: twtypes::Entities {
+                urls: vec![],
+                media: None,
+            },
+            in_reply_to_status_id: None,
+            in_reply_to_user_id: None,
+            user: twtypes::User {
+                id: 0,
+                name: "".to_string(),
+                screen_name: "".to_string(),
+                description: None,
+                url: None,
+                protected: false,
+                followers_count: 0,
+                friends_count: 0,
+                listed_count: 0,
+                created_at: "".to_string(),
+                favourites_count: 0,
+                verified: false,
+                statuses_count: 0,
+                profile_image_url: None,
+                profile_image_url_https: None,
+                profile_banner_url: None,
+                default_profile_image: false,
+            },
+            is_quote_status: false,
+            retweet_count: 0,
+            favorite_count: 0,
+            favorited: false,
+            retweeted: false,
+            lang: "".to_string(),
+            extended_entities: None,
+            possibly_sensitive: None,
+        };
+        t
+    }
+
+    #[test]
+    fn test1() {
+        println!("running twitter tests ...")
+    }
+
 }
-/*
-fn GetTweets(self, user_id: u64) -> Result<twtypes::Tweet, Error8> {
-        let url = "https://api.twitter.com/1.1/statuses/user_timeline\
-        .json?screen_name=ladygaga&count=1000&tweet_mode=extended&exclude_replies=true&include_rts\
-        =false";
-
-        task::block_on(async {
-            let res = surf::get(url).await;
-            match res {
-                Ok(res2) => {
-
-
-                    let t = twtypes::Tweet{
-                        created_at: "".to_string(),
-                        id: 0,
-                        id_str: "".to_string(),
-                        full_text: "".to_string(),
-                        truncated: false,
-                        entities: twtypes::Entities { urls: vec![], media: None },
-                        in_reply_to_status_id: None,
-                        in_reply_to_user_id: None,
-                        user: twtypes::User{
-                            id: 0,
-                            name: "".to_string(),
-                            screen_name: "".to_string(),
-                            description: None,
-                            url: None,
-                            protected: false,
-                            followers_count: 0,
-                            friends_count: 0,
-                            listed_count: 0,
-                            created_at: "".to_string(),
-                            favourites_count: 0,
-                            verified: false,
-                            statuses_count: 0,
-                            profile_image_url: None,
-                            profile_image_url_https: None,
-                            profile_banner_url: None,
-                            default_profile_image: false
-                        },
-                        is_quote_status: false,
-                        retweet_count: 0,
-                        favorite_count: 0,
-                        favorited: false,
-                        retweeted: false,
-                        lang: "".to_string(),
-                        extended_entities: None,
-                        possibly_sensitive: None
-                    };
-
-                    Ok(t);
-                },
-                Err(res2) => {
-                    Result::Err(Error8::default());
-                },
-            }
-        })
-
-
-*/
