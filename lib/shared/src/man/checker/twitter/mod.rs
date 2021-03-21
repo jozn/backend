@@ -8,6 +8,7 @@ use std::collections::HashMap;
 use std::io::Write;
 use std::ops::Add;
 
+use serde_json::Error;
 use tokio::task;
 
 mod twtypes;
@@ -17,20 +18,23 @@ pub fn main1() {
 }
 
 fn run() {
-    let mut api = API::default();
+    let mut api = TwitterClient::default();
+    let followers = api.get_followers(1373700793874911241);
+    println!("{:#?}", followers);
     // let res = api.GetTweets(790728);
-    let res = api.GetTweetsByUsername("assassinscreed"); // bbcpersian assassinscreed
+    let res = api.get_tweets_by_username("assassinscreed"); // bbcpersian assassinscreed
 
-    println!("{:?}", res);
+    println!("{:#?}", res);
 
+    /*
     println!("getusers ============");
     // let tweet = res.unwrap().get(0).clone().unwrap();
     let tweets = res.unwrap();
     let tweet = tweets.get(0).unwrap().clone();
-    let folloers = api.GetFollowers(tweet.user.id);
+    let folloers = api.get_followers(tweet.user.id);
     println!("followers {:?} ", folloers);
 
-    let users = api.GetUsers(&folloers.unwrap());
+    let users = api.get_users(&folloers.unwrap());
     println!("getusers {:#?}", users);
 
     println!("Get Media");
@@ -40,67 +44,65 @@ fn run() {
     }
 
     thread::sleep(std::time::Duration::from_secs(10))
+    */
 }
 
-//type Error8 = std::io::Error;
-#[derive(Default, Debug)]
-struct Error8 {}
+#[derive(Debug)]
+enum TwitterError {
+    SerdeJson(serde_json::Error),
+}
 
-type TweetsResponse = Result<Vec<twtypes::Tweet>, Error8>;
+impl From<serde_json::Error> for TwitterError {
+    fn from(e: serde_json::Error) -> Self {
+        Self::SerdeJson(e)
+    }
+}
 
 #[derive(Default)]
-struct API {}
+struct TwitterClient {
+    _reqwest_client: reqwest::blocking::Client,
+}
 
-impl API {
+impl TwitterClient {
+    pub fn new() -> Self {
+        TwitterClient::default()
+    }
+
     // todo
     fn is_username_free(&self, username: &str) -> bool {
         false
     }
 
-    pub fn GetTweets(&self, user_id: u64) -> TweetsResponse {
-        let url = API_URl::getTimelineTweetsUserId(user_id);
-        self.GetTweetsAction(url.as_str())
+    pub fn get_tweets(&self, user_id: u64) -> Result<Vec<twtypes::Tweet>, TwitterError> {
+        let url = api_url::get_timeline_tweets_user_id(user_id);
+        self._get_tweets_action(url.as_str())
     }
 
-    pub fn GetTweetsByUsername(&self, username: &str) -> Result<Vec<twtypes::Tweet>, Error8> {
-        let url = API_URl::getTimelineTweetsUserName(username);
-        self.GetTweetsAction(url.as_str())
+    pub fn get_tweets_by_username(
+        &self,
+        username: &str,
+    ) -> Result<Vec<twtypes::Tweet>, TwitterError> {
+        let url = api_url::get_timeline_tweets_username(username);
+        self._get_tweets_action(url.as_str())
     }
 
-    fn GetTweetsAction(&self, url: &str) -> Result<Vec<twtypes::Tweet>, Error8> {
-        let body = getBody(url);
-        match body {
-            Ok(body_str) => {
-                let tweets_resu = serde_json::from_str::<Vec<twtypes::Tweet>>(body_str.as_str());
-                match tweets_resu {
-                    Ok(tweets) => Ok(tweets),
-                    Err(err) => Err(Error8::default()),
-                }
-            }
-            Err(err) => Err(Error8::default()),
-        }
+    fn _get_tweets_action(&self, url: &str) -> Result<Vec<twtypes::Tweet>, TwitterError> {
+        let body_str = self._get_body(url)?;
+        let tweets = serde_json::from_str::<Vec<twtypes::Tweet>>(body_str.as_str())?;
+        Ok(tweets)
     }
 
-    fn GetFollowers(&self, user_id: u64) -> Result<Vec<u64>, Error8> {
+    pub fn get_followers(&self, user_id: u64) -> Result<Vec<u64>, TwitterError> {
         let url = format!(
             "https://api.twitter.com/1.1/followers/ids.json?user_id={}&count=250",
             user_id
         );
-        let body_resu = getBody(url.as_str());
-
-        match body_resu {
-            Ok(body_str) => {
-                let follow_res = serde_json::from_str::<twtypes::Followers>(&body_str);
-                match follow_res {
-                    Ok(followers) => Ok(followers.ids.clone()),
-                    Err(err) => Err(Error8::default()),
-                }
-            }
-            Err(err) => Err(Error8::default()),
-        }
+        let body_str = self._get_body(url.as_str())?;
+        let followers = serde_json::from_str::<twtypes::Followers>(&body_str)?;
+        Ok(followers.ids.clone())
     }
 
-    pub fn GetUsers(&self, user_ids: &Vec<u64>) -> Result<Vec<twtypes::User>, Error8> {
+    pub fn get_users(&self, user_ids: &Vec<u64>) -> Result<Vec<twtypes::User>, TwitterError> {
         let mut arr_str = String::from("");
         let mut cnt = 0;
         for i in user_ids {
@@ -116,103 +118,88 @@ impl API {
             "https://api.twitter.com/1.1/users/lookup.json?user_id={}",
             arr_trimed
         );
-        let body_resu = getBody(url_req.as_str());
-
-        match body_resu {
-            Ok(body_str) => {
-                let users_resu = serde_json::from_str::<Vec<twtypes::User>>(body_str.as_str());
-                match users_resu {
-                    Ok(users) => Ok(users),
-                    Err(err) => Err(Error8::default()),
-                }
-            }
-            Err(err) => Err(Error8::default()),
-        }
+        let body_str = self._get_body(url_req.as_str())?;
+        let users = serde_json::from_str::<Vec<twtypes::User>>(body_str.as_str())?;
+        Ok(users)
     }
 
-    async fn GetMedia(&mut self, tweet: twtypes::Tweet) {
+    pub fn get_media(&mut self, tweet: twtypes::Tweet) {
         // let hanlder = thread::spawn(move || {
-            match &tweet.extended_entities {
-                Some(et) => {
-                    /*for m in et.media.clone() {
-                        let media = m.clone();
-                        // let t = task::block_on(async {
-                        let m2 = m.clone();
-                        let t = tokio::task::spawn(async {
-                            print!("dl: {}", m.media_url);
-                            let name = format!("./out/{}.jpg", m2.id);
-                            let mut file = File::create(name).unwrap();
-                            let mut res = surf::get(&m2.media_url).await;
-                            match res {
-                                Ok(mut res) => {
-                                    let body = res.body_bytes().await.unwrap();
-                                    println!(" == size : {}", body.len());
-                                    file.write_all(&body);
-                                }
-                                Err(err) => {
-                                    println!("Err in Res: {}", err);
-                                }
+        match &tweet.extended_entities {
+            Some(et) => {
+                /*for m in et.media.clone() {
+                    let media = m.clone();
+                    // let t = task::block_on(async {
+                    let m2 = m.clone();
+                    let t = tokio::task::spawn(async {
+                        print!("dl: {}", m.media_url);
+                        let name = format!("./out/{}.jpg", m2.id);
+                        let mut file = File::create(name).unwrap();
+                        let mut res = surf::get(&m2.media_url).await;
+                        match res {
+                            Ok(mut res) => {
+                                let body = res.body_bytes().await.unwrap();
+                                println!(" == size : {}", body.len());
+                                file.write_all(&body);
                             }
-                        }).await;
+                            Err(err) => {
+                                println!("Err in Res: {}", err);
+                            }
+                        }
+                    }).await;
 
-                        if let Some(vi) = m.video_info.clone() {
-                            // let t = task::block_on(async {
-                            let t = tokio::task::spawn(async {
-                                for vid in &vi.variants {
-                                    if vid.content_type == "video/mp4" {
-                                        // print!("dl: {}", m.video_info);
-                                        let name = format!("./out/{}.mp4", m.id);
-                                        let mut file = File::create(name).unwrap();
-                                        let mut res = surf::get(&vid.url).await;
-                                        match res {
-                                            Ok(mut res) => {
-                                                let body = res.body_bytes().await.unwrap();
-                                                println!(" MP4 == size : {}", body.len());
-                                                file.write_all(&body);
-                                            }
-                                            Err(err) => {
-                                                println!("Err in MP4 Res: {}", err);
-                                            }
+                    if let Some(vi) = m.video_info.clone() {
+                        // let t = task::block_on(async {
+                        let t = tokio::task::spawn(async {
+                            for vid in &vi.variants {
+                                if vid.content_type == "video/mp4" {
+                                    // print!("dl: {}", m.video_info);
+                                    let name = format!("./out/{}.mp4", m.id);
+                                    let mut file = File::create(name).unwrap();
+                                    let mut res = surf::get(&vid.url).await;
+                                    match res {
+                                        Ok(mut res) => {
+                                            let body = res.body_bytes().await.unwrap();
+                                            println!(" MP4 == size : {}", body.len());
+                                            file.write_all(&body);
+                                        }
+                                        Err(err) => {
+                                            println!("Err in MP4 Res: {}", err);
                                         }
                                     }
                                 }
-                            }).await;
-                        }
-                    }*/
-                }
-                None => {}
-            };
+                            }
+                        }).await;
+                    }
+                }*/
+            }
+            None => {}
+        };
         // });
+    }
+
+    fn _get_body(&self, url: &str) -> Result<String, TwitterError> {
+        let client = &self._reqwest_client; //reqwest::blocking::Client::new();
+        let res = client.get(url)
+            .header("authorization", "Bearer AAAAAAAAAAAAAAAAAAAAAIu%2FDQEAAAAAaYGRj89RCMH7kC9qN2xTzEHHUaQ%3D7QgRJxwUHILsAeX3dvistI0K5BrdKQUs7t1CNFkbsldJrtPYla")
+            .send();
+
+        // todo
+        Ok(res.unwrap().text().unwrap())
     }
 }
 
-const TWITTER_API_BASE: &str = "https://api.twitter.com/1.1/";
-const TWITTER_API_TIMELINE_USERNAME: &str = "https://api.twitter.com/1.1/user_timeline.json?screen_name=sugandiiii&count=1000&tweet_mode=extended&exclude_replies=true&include_rts=false";
-const TWITTER_API_TIMELINE_USER_ID: &'static str = "https://api.twitter.com/1.1/user_timeline.json?user_id={}&count=1000&tweet_mode=extended&exclude_replies=true&include_rts=false";
-
-fn getBody(url: &str) -> std::io::Result<String> {
-    let client = reqwest::blocking::Client::new();
-    let res = client.get(url)
-        .header("authorization", "Bearer AAAAAAAAAAAAAAAAAAAAAIu%2FDQEAAAAAaYGRj89RCMH7kC9qN2xTzEHHUaQ%3D7QgRJxwUHILsAeX3dvistI0K5BrdKQUs7t1CNFkbsldJrtPYla")
-        .send();
-
-    // todo
-    Ok(res.unwrap().text().unwrap())
-}
-
-mod API_URl {
-    pub fn getTimelineTweetsUserId(user_id: u64) -> String {
-        format!("https://api.twitter.com/1.1/statuses/user_timeline.json?user_id={}&count=1000&tweet_mode=extended&exclude_replies=true&include_rts=false"
+mod api_url {
+    pub fn get_timeline_tweets_user_id(user_id: u64) -> String {
+        format!("https://api.twitter.com/1.1/statuses/user_timeline.json?user_id={}&count=10&tweet_mode=extended&exclude_replies=true&include_rts=false"
                 ,user_id )
     }
 
-    pub fn getTimelineTweetsUserName(username: &str) -> String {
+    pub fn get_timeline_tweets_username(username: &str) -> String {
         format!("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name={}&count=10&tweet_mode=extended&exclude_replies=true&include_rts=false"
                 ,username )
     }
 }
-
-
 
 #[cfg(test)]
 mod tests {
@@ -267,5 +254,4 @@ mod tests {
     fn test1() {
         println!("running twitter tests ...")
     }
-
 }
