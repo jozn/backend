@@ -20,8 +20,10 @@ pub fn main1() {
 
 fn run() {
     let api = TwitterClient::default();
-    api.is_username_free("assassinscreed234");
-    api.is_username_free("assassinscreed");
+    let t = api.check_username("assassinscreed");
+    println!("-------------------------------  {:#?}", t);
+    let t = api.check_username("assassinscreed55");
+    println!("-------------------------------  {:#?}", t);
 }
 
 fn run2() {
@@ -65,6 +67,7 @@ impl From<serde_json::Error> for TwitterError {
     }
 }
 
+#[derive(Debug)]
 pub struct UsernameAvailability {
     pub is_registered: bool,
     pub followers_count: i64,
@@ -84,7 +87,7 @@ impl TwitterClient {
 
     pub fn check_username(&self, username: &str) -> Result<UsernameAvailability, TwitterError> {
         let res = self.get_tweets_by_username(username);
-        println!("+++++++>>>> is_username_free >>> {:#?}", res);
+        // println!("+++++++>>>> is_username_free >>> {:#?}", res);
         match res {
             Ok(tweets) => {
                 let mut txt = "".to_string();
@@ -142,10 +145,10 @@ impl TwitterClient {
 
     fn _get_tweets_action(&self, url: &str) -> Result<Vec<twtypes::Tweet>, TwitterError> {
         let body_str = self._get_body(url)?;
-        println!("{:?}", &body_str);
+        // println!("{:?}", &body_str);
         let tweets_res = serde_json::from_str::<Vec<twtypes::Tweet>>(body_str.as_str());
         if tweets_res.is_err() {
-            println!("))))))))))))))))))");
+            // println!("))))))))))))))))))");
             let err_res = serde_json::from_str::<twtypes::Errors>(body_str.as_str())?;
             // Simplified logic: if body string return is Errors then consider it "Not Found" username > buggy but enough
             Err(TwitterError::NotFound)
@@ -257,7 +260,7 @@ impl TwitterClient {
             .header("authorization", "Bearer AAAAAAAAAAAAAAAAAAAAAIu%2FDQEAAAAAaYGRj89RCMH7kC9qN2xTzEHHUaQ%3D7QgRJxwUHILsAeX3dvistI0K5BrdKQUs7t1CNFkbsldJrtPYla")
             .send();
 
-        // todo
+        // todo fix
         Ok(res.unwrap().text().unwrap())
     }
 }
