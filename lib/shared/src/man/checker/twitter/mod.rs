@@ -58,12 +58,19 @@ fn run2() {
 #[derive(Debug)]
 enum TwitterError {
     SerdeJson(serde_json::Error),
+    Reqwest(reqwest::Error),
     NotFound, // page 404
 }
 
 impl From<serde_json::Error> for TwitterError {
     fn from(e: serde_json::Error) -> Self {
         Self::SerdeJson(e)
+    }
+}
+
+impl From<reqwest::Error> for TwitterError {
+    fn from(e: reqwest::Error) -> Self {
+        Self::Reqwest(e)
     }
 }
 
@@ -258,10 +265,9 @@ impl TwitterClient {
         let client = &self._reqwest_client; //reqwest::blocking::Client::new();
         let res = client.get(url)
             .header("authorization", "Bearer AAAAAAAAAAAAAAAAAAAAAIu%2FDQEAAAAAaYGRj89RCMH7kC9qN2xTzEHHUaQ%3D7QgRJxwUHILsAeX3dvistI0K5BrdKQUs7t1CNFkbsldJrtPYla")
-            .send();
+            .send()?;
 
-        // todo fix
-        Ok(res.unwrap().text().unwrap())
+        Ok(res.text().unwrap_or_default())
     }
 }
 
