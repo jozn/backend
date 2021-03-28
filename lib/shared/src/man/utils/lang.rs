@@ -1,6 +1,6 @@
 // Notes about Arabic, Persian characters:
 // + Arabic (Farsi) characters (ex: ز) is represented once in unicode code points, all other form
-//      of representation in word is handled by fonts,... . Arabic Presentation range is used for
+//      of representation in word is handled by fonts,... . "Arabic Presentation" range is used for
 //      compatibility with older device (like ms-doc), it's not used in our samples.
 // + Farsi numbers and Arabic is different slightly and have two separate code range.
 // + Farsi unique characters (گچپژ) is also represented in base arabic code range (0x0600-0x6ff).
