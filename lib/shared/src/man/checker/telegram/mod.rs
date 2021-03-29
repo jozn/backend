@@ -12,6 +12,10 @@ use std::ops::Add;
 use serde_json::Error;
 use tokio::task;
 
+// Notes:
+// + This module does not panics as .unwrap() is called on determined css selectors.
+// + Telegram returns the same html for registered user usernames as well not registered ones.
+
 #[derive(Debug)]
 pub enum TelgError {
     Reqwest(reqwest::Error),
@@ -25,18 +29,6 @@ impl From<reqwest::Error> for TelgError {
     }
 }
 
-/*impl From<cssparser::parser::ParseError<'_, selectors::parser::SelectorParseErrorKind<'_>>> for TelgError{
-    fn from(_: cssparser::parser::ParseError<'_, selectors::parser::SelectorParseErrorKind<'_>>) -> Self {
-       TelgError::HtmlParsing
-    }
-}
-*/
-/*impl From<cssparser::parser::ParseError<E>> for TelgError {
-    fn from(_: cssparser::parser::ParseError<E>) -> Self {
-        TelgError::HtmlParsing
-    }
-}*/
-
 #[derive(Debug, Default)]
 pub struct UsernameAvailability {
     pub is_registered: bool,
@@ -44,15 +36,6 @@ pub struct UsernameAvailability {
     pub fullname: String,
     pub about: String,
     pub texts: String,
-}
-
-#[derive(Debug, Default)]
-struct TelgHtmResult {
-    is_supergroup: bool,
-    followers_count: i64,
-    fullname: String,
-    about: String,
-    texts: String,
 }
 
 #[derive(Default)]
@@ -65,24 +48,15 @@ impl TelgClient {
         TelgClient::default()
     }
 
-    pub fn check_username2(&self, username: &str) -> Result<UsernameAvailability, TelgError> {
-        let res = self.check_username(username);
-        // println!("+++++++>>>> check_username >>> {:#?}", res);
-        match res {
-            Ok(root) => {
-                Ok(root)
-            }
-            Err(e) => match e {
-                TelgError::NotFound => Ok(UsernameAvailability {
-                    is_registered: false,
-                    ..Default::default()
-                }),
-                _ => Err(e),
-            },
+    pub fn check_username(&self, username: &str) -> Result<UsernameAvailability, TelgError> {
+        // Not valid telegram username
+        if username.len() < 5 {
+            return Ok(UsernameAvailability {
+                is_registered: false,
+                ..Default::default()
+            });
         }
-    }
 
-    fn check_username(&self, username: &str) -> Result<UsernameAvailability, TelgError> {
         // def of needed param to extract
         let mut html_extra_text = "";
         let mut fullname = "";
@@ -92,6 +66,8 @@ impl TelgClient {
 
         let url = format!("https://t.me/{}/", username);
         let body_str = self._get_http_body(url.as_str())?;
+
+        // println!("{:?}", body_str);
 
         // Safeguarding
         if body_str.len() < 200 {
@@ -147,12 +123,6 @@ impl TelgClient {
             }
         }
 
-        // println!("{:?}", body_str);
-        println!("about >> {:?}", description);
-        println!("name >> {:?}", fullname);
-        println!("follower >> {:?}", members_count);
-        println!("msgs >> {:?}", channel_html_msgs_text);
-
         if members_count > 5 {
             Ok(UsernameAvailability {
                 is_registered: true,
@@ -179,8 +149,8 @@ impl TelgClient {
     }
 }
 
-// #[cfg(test)]
-pub mod tests {
+#[cfg(test)]
+mod tests {
     use super::*;
 
     #[test]
@@ -195,13 +165,10 @@ pub mod tests {
 
     pub fn run() {
         let api = TelgClient::default();
-        // let t = api.get_user_by_username("farsna");
-        // println!("-------------------------------  {:#?}", t);
-        // let t = api.get_user_by_username("pugloulou");
-        // let t = api.check_username("instagram_459034759");
-        // let t = api.check_username("raika.com._");
-        let t = api.check_username("mailproxy30");
-        let t = api.check_username("flip_net");
+        let t = api.check_username("farsna"); // a channel
+                                              // let t = api.check_username("mailproxy_notfound"); // not exists
+                                              // let t = api.check_username("flip_net"); // user
+                                              // let t = api.check_username("ff"); // invalid
         println!("-------------------------------  {:#?}", t);
     }
 }
