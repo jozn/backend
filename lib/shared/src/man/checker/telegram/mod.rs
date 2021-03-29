@@ -39,7 +39,7 @@ pub struct UsernameAvailability {
 }
 
 #[derive(Default)]
-struct TelgClient {
+pub struct TelgClient {
     _reqwest_client: reqwest::blocking::Client,
 }
 

@@ -14,49 +14,12 @@ use tokio::task;
 
 mod twtypes;
 
-pub fn main1() {
-    run();
-}
-
-fn run() {
-    let api = TwitterClient::default();
-    let t = api.check_username("assassinscreed");
-    println!("-------------------------------  {:#?}", t);
-    let t = api.check_username("assassinscreed55");
-    println!("-------------------------------  {:#?}", t);
-}
-
-fn run2() {
-    let mut api = TwitterClient::default();
-    let followers = api.get_followers(1373700793874911241);
-    println!("{:#?}", followers);
-    // let res = api.GetTweets(790728);
-    let res = api.get_tweets_by_username("assassinscreed");
-    println!("{:#?}", res.unwrap());
-
-    /*
-    println!("getusers ============");
-    // let tweet = res.unwrap().get(0).clone().unwrap();
-    let tweets = res.unwrap();
-    let tweet = tweets.get(0).unwrap().clone();
-    let folloers = api.get_followers(tweet.user.id);
-    println!("followers {:?} ", folloers);
-
-    let users = api.get_users(&folloers.unwrap());
-    println!("getusers {:#?}", users);
-
-    println!("Get Media");
-
-    for t in tweets {
-        //  api.GetMedia(t);
-    }
-
-    thread::sleep(std::time::Duration::from_secs(10))
-    */
-}
+// Notes:
+// + This module is a copy of old project and it does more than username checking
+// + Twitter returns normal html with http 200 for not existed usernames
 
 #[derive(Debug)]
-enum TwitterError {
+pub enum TwitterError {
     SerdeJson(serde_json::Error),
     Reqwest(reqwest::Error),
     NotFound, // page 404
@@ -74,16 +37,17 @@ impl From<reqwest::Error> for TwitterError {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct UsernameAvailability {
     pub is_registered: bool,
     pub followers_count: i64,
+    pub fullname: String,
+    pub about: String,
     pub texts: String,
-    pub lang: String,
 }
 
 #[derive(Default)]
-struct TwitterClient {
+pub struct TwitterClient {
     _reqwest_client: reqwest::blocking::Client,
 }
 
@@ -99,11 +63,14 @@ impl TwitterClient {
             Ok(tweets) => {
                 let mut txt = "".to_string();
                 let mut followers_count = 0;
+                let mut description = "".to_string();
+                let mut fullname = "".to_string();
 
                 let user = self.get_user_by_username(username);
                 if user.is_ok() {
                     let user = user.unwrap();
-                    txt.push_str(&user.description.unwrap_or("".to_string()));
+                    fullname = user.name;
+                    description = user.description.unwrap_or("".to_string());
                     followers_count = user.followers_count;
                 }
 
@@ -114,27 +81,19 @@ impl TwitterClient {
                 Ok(UsernameAvailability {
                     is_registered: true,
                     followers_count: followers_count,
+                    fullname,
+                    about: description,
                     texts: txt,
-                    lang: "".to_string(), // todo
                 })
             }
             Err(e) => match e {
                 TwitterError::NotFound => Ok(UsernameAvailability {
-                    is_registered: false,
-                    followers_count: -1,
-                    texts: "".to_string(),
-                    lang: "".to_string(),
+                    is_registered: false, // Explicit
+                    ..Default::default()
                 }),
                 _ => Err(e),
             },
         }
-    }
-
-    // todo
-    pub fn is_username_free(&self, username: &str) -> bool {
-        let res = self.get_tweets_by_username(username);
-        println!("+++++++>>>> is_username_free >>> {:#?}", res);
-        false
     }
 
     pub fn get_tweets(&self, user_id: u64) -> Result<Vec<twtypes::Tweet>, TwitterError> {
@@ -152,10 +111,8 @@ impl TwitterClient {
 
     fn _get_tweets_action(&self, url: &str) -> Result<Vec<twtypes::Tweet>, TwitterError> {
         let body_str = self._get_body(url)?;
-        // println!("{:?}", &body_str);
         let tweets_res = serde_json::from_str::<Vec<twtypes::Tweet>>(body_str.as_str());
         if tweets_res.is_err() {
-            // println!("))))))))))))))))))");
             let err_res = serde_json::from_str::<twtypes::Errors>(body_str.as_str())?;
             // Simplified logic: if body string return is Errors then consider it "Not Found" username > buggy but enough
             Err(TwitterError::NotFound)
@@ -206,6 +163,102 @@ impl TwitterClient {
     }
 
     // This func is commented in integration from old repo into Flip.
+    pub fn get_media(&mut self, tweet: twtypes::Tweet) {}
+
+    fn _get_body(&self, url: &str) -> Result<String, TwitterError> {
+        let client = &self._reqwest_client;
+        let res = client.get(url)
+            .header("authorization", "Bearer AAAAAAAAAAAAAAAAAAAAAIu%2FDQEAAAAAaYGRj89RCMH7kC9qN2xTzEHHUaQ%3D7QgRJxwUHILsAeX3dvistI0K5BrdKQUs7t1CNFkbsldJrtPYla")
+            .send()?;
+
+        Ok(res.text().unwrap_or_default())
+    }
+}
+
+mod api_url {
+    pub fn get_timeline_tweets_user_id(user_id: u64) -> String {
+        format!("https://api.twitter.com/1.1/statuses/user_timeline.json?user_id={}&count=10&tweet_mode=extended&exclude_replies=true&include_rts=false"
+                ,user_id )
+    }
+
+    pub fn get_timeline_tweets_username(username: &str) -> String {
+        format!("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name={}&count=10&tweet_mode=extended&exclude_replies=true&include_rts=false"
+                ,username )
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // This function is quick showcase for how a Tweet looks like. It's not used anywhere.
+    fn sample_tweet() -> twtypes::Tweet {
+        let t = twtypes::Tweet {
+            created_at: "".to_string(),
+            id: 0,
+            id_str: "".to_string(),
+            full_text: "".to_string(),
+            truncated: false,
+            entities: twtypes::Entities {
+                urls: vec![],
+                media: None,
+            },
+            in_reply_to_status_id: None,
+            in_reply_to_user_id: None,
+            user: twtypes::User {
+                id: 0,
+                name: "".to_string(),
+                screen_name: "".to_string(),
+                description: None,
+                url: None,
+                protected: false,
+                followers_count: 0,
+                friends_count: 0,
+                listed_count: 0,
+                created_at: "".to_string(),
+                favourites_count: 0,
+                verified: false,
+                statuses_count: 0,
+                profile_image_url: None,
+                profile_image_url_https: None,
+                profile_banner_url: None,
+                default_profile_image: false,
+            },
+            is_quote_status: false,
+            retweet_count: 0,
+            favorite_count: 0,
+            favorited: false,
+            retweeted: false,
+            lang: "".to_string(),
+            extended_entities: None,
+            possibly_sensitive: None,
+        };
+        t
+    }
+
+    #[test]
+    fn test1() {
+        println!("running twitter tests ...")
+    }
+
+    // #[test]
+    pub fn play_main() {
+        run()
+    }
+
+    fn run() {
+        let api = TwitterClient::default();
+        let t = api.check_username("assassinscreed");
+        println!("-------------------------------  {:#?}", t);
+        let t = api.check_username("assassinscreed55");
+        println!("-------------------------------  {:#?}", t);
+    }
+}
+
+// Archive
+// Old dl media codes
+/*
+// This func is commented in integration from old repo into Flip.
     pub fn get_media(&mut self, tweet: twtypes::Tweet) {
         // let hanlder = thread::spawn(move || {
         match &tweet.extended_entities {
@@ -258,82 +311,4 @@ impl TwitterClient {
             }
             None => {}
         };
-        // });
-    }
-
-    fn _get_body(&self, url: &str) -> Result<String, TwitterError> {
-        let client = &self._reqwest_client; //reqwest::blocking::Client::new();
-        let res = client.get(url)
-            .header("authorization", "Bearer AAAAAAAAAAAAAAAAAAAAAIu%2FDQEAAAAAaYGRj89RCMH7kC9qN2xTzEHHUaQ%3D7QgRJxwUHILsAeX3dvistI0K5BrdKQUs7t1CNFkbsldJrtPYla")
-            .send()?;
-
-        Ok(res.text().unwrap_or_default())
-    }
-}
-
-mod api_url {
-    pub fn get_timeline_tweets_user_id(user_id: u64) -> String {
-        format!("https://api.twitter.com/1.1/statuses/user_timeline.json?user_id={}&count=10&tweet_mode=extended&exclude_replies=true&include_rts=false"
-                ,user_id )
-    }
-
-    pub fn get_timeline_tweets_username(username: &str) -> String {
-        format!("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name={}&count=10&tweet_mode=extended&exclude_replies=true&include_rts=false"
-                ,username )
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::twtypes;
-
-    // This function is quick showcase for how a Tweet looks like. It's not used anywhere.
-    fn sample_tweet() -> twtypes::Tweet {
-        let t = twtypes::Tweet {
-            created_at: "".to_string(),
-            id: 0,
-            id_str: "".to_string(),
-            full_text: "".to_string(),
-            truncated: false,
-            entities: twtypes::Entities {
-                urls: vec![],
-                media: None,
-            },
-            in_reply_to_status_id: None,
-            in_reply_to_user_id: None,
-            user: twtypes::User {
-                id: 0,
-                name: "".to_string(),
-                screen_name: "".to_string(),
-                description: None,
-                url: None,
-                protected: false,
-                followers_count: 0,
-                friends_count: 0,
-                listed_count: 0,
-                created_at: "".to_string(),
-                favourites_count: 0,
-                verified: false,
-                statuses_count: 0,
-                profile_image_url: None,
-                profile_image_url_https: None,
-                profile_banner_url: None,
-                default_profile_image: false,
-            },
-            is_quote_status: false,
-            retweet_count: 0,
-            favorite_count: 0,
-            favorited: false,
-            retweeted: false,
-            lang: "".to_string(),
-            extended_entities: None,
-            possibly_sensitive: None,
-        };
-        t
-    }
-
-    #[test]
-    fn test1() {
-        println!("running twitter tests ...")
-    }
-}
+*/

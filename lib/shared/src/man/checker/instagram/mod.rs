@@ -42,7 +42,7 @@ pub struct UsernameAvailability {
 }
 
 #[derive(Default)]
-struct InstaClient {
+pub struct InstaClient {
     _reqwest_client: reqwest::blocking::Client,
 }
 
