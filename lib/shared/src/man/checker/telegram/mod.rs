@@ -1,4 +1,5 @@
 use std::fs::File;
+use std::io::Read;
 use std::thread;
 use std::thread::Thread;
 
@@ -14,6 +15,7 @@ use tokio::task;
 #[derive(Debug)]
 pub enum TelgError {
     Reqwest(reqwest::Error),
+    HtmlParsing,
     NotFound, // page 404
 }
 
@@ -22,6 +24,18 @@ impl From<reqwest::Error> for TelgError {
         Self::Reqwest(e)
     }
 }
+
+/*impl From<cssparser::parser::ParseError<'_, selectors::parser::SelectorParseErrorKind<'_>>> for TelgError{
+    fn from(_: cssparser::parser::ParseError<'_, selectors::parser::SelectorParseErrorKind<'_>>) -> Self {
+       TelgError::HtmlParsing
+    }
+}
+*/
+/*impl From<cssparser::parser::ParseError<E>> for TelgError {
+    fn from(_: cssparser::parser::ParseError<E>) -> Self {
+        TelgError::HtmlParsing
+    }
+}*/
 
 #[derive(Debug, Default)]
 pub struct UsernameAvailability {
@@ -51,51 +65,41 @@ impl TelgClient {
         TelgClient::default()
     }
 
-    pub fn check_username(&self, username: &str) -> Result<UsernameAvailability, TelgError> {
-        let res = self.get_user_by_username(username);
+    pub fn check_username2(&self, username: &str) -> Result<UsernameAvailability, TelgError> {
+        let res = self.check_username(username);
         // println!("+++++++>>>> check_username >>> {:#?}", res);
-        /*        match res {
+        match res {
             Ok(root) => {
-                let mut txt = "".to_string();
-
-                let followers_count = root.graphql.user.edge_followed_by.count;
-                let about = root.graphql.user.biography;
-                let fullname = root.graphql.user.full_name;
-
-                for ed in root.graphql.user.edge_owner_to_timeline_media.edges {
-                    for ed2 in ed.node.edge_media_to_caption.edges {
-                        txt.push_str(&ed2.node.text);
-                    }
-                }
-
-                Ok(UsernameAvailability {
-                    is_registered: true,
-                    followers_count: followers_count,
-                    fullname,
-                    about,
-                    texts: txt,
-                })
+                Ok(root)
             }
             Err(e) => match e {
-                InstaError::NotFound => Ok(UsernameAvailability {
+                TelgError::NotFound => Ok(UsernameAvailability {
                     is_registered: false,
-                    followers_count: -1,
                     ..Default::default()
                 }),
                 _ => Err(e),
             },
-        }*/
-        Err(TelgError::NotFound)
+        }
     }
 
-    fn get_user_by_username(&self, username: &str) -> Result<bool, TelgError> {
+    fn check_username(&self, username: &str) -> Result<UsernameAvailability, TelgError> {
         // def of needed param to extract
         let mut html_extra_text = "";
-        let mut about = "";
-        let mut mem_num = -1_i32;
+        let mut fullname = "";
+        let mut description = "";
+        let mut channel_html_msgs_text = "".to_string(); // Channels messages texts (a simple collection of all html text tags)
+        let mut members_count = -1_i64;
 
         let url = format!("https://t.me/{}/", username);
         let body_str = self._get_http_body(url.as_str())?;
+
+        // Safeguarding
+        if body_str.len() < 200 {
+            return Ok(UsernameAvailability {
+                is_registered: false,
+                ..Default::default()
+            });
+        }
 
         let html_doc = scraper::Html::parse_document(&body_str);
 
@@ -110,36 +114,59 @@ impl TelgClient {
             html_extra_text = el.text().next().unwrap_or_default();
         }
 
-        println!(">> html txt: {:?}", html_extra_text);
-
-
-        if html_extra_text.contains("members") { // if true means this is channel/supergroup page
-            println!(">> xxxxxxxxxxx html txt: {:?}", html_extra_text);
+        if html_extra_text.contains("members") {
+            // if true means this is channel/supergroup page
             let mem_str = html_extra_text.replace("members", "").replace(" ", "");
-            println!(">> bbbb: {:?}", mem_str);
-            mem_num = mem_str.parse().unwrap_or(-1);
-            if mem_num > 1 {
-                // select about
-                let s = scraper::Selector::parse(r#"meta[name="twitter:description"]"#).unwrap();
-                let re = html_doc.select(&s);
+            members_count = mem_str.parse().unwrap_or(-1);
+            if members_count > 1 {
+                // Select description
+                let selector2 =
+                    scraper::Selector::parse(r#"meta[name="twitter:description"]"#).unwrap();
+                let select2 = html_doc.select(&selector2);
 
-                for el in re {
-                    about = &el.value().attr("content").unwrap_or_default();
+                for el in select2 {
+                    description = &el.value().attr("content").unwrap_or_default();
+                }
+
+                // Select channel name
+                let selector3 = scraper::Selector::parse(r#"meta[property="og:title"]"#).unwrap();
+                let select3 = html_doc.select(&selector3);
+
+                for el in select3 {
+                    fullname = &el.value().attr("content").unwrap_or_default();
                 }
             }
         }
 
-        println!("{:?}", body_str);
-        println!("about >> {:?}", about);
-        println!("follower >> {:?}", mem_num);
-
-        // If no such username exists body will be "{}"; for safeguarding we consider anything
-        // than 100 to be not registered as correct Json body is bigger than that
-        if body_str.len() < 200 {
-            return Err(TelgError::NotFound);
+        if members_count > 5 {
+            let url = format!("https://t.me/s/{}/", username);
+            let body_str = self._get_http_body(url.as_str());
+            if body_str.is_ok() {
+                let body_str = body_str.unwrap();
+                channel_html_msgs_text = html2text::from_read(body_str.as_bytes(), body_str.len());
+            }
         }
 
-        Ok(true)
+        // println!("{:?}", body_str);
+        println!("about >> {:?}", description);
+        println!("name >> {:?}", fullname);
+        println!("follower >> {:?}", members_count);
+        println!("msgs >> {:?}", channel_html_msgs_text);
+
+        if members_count > 5 {
+            Ok(UsernameAvailability {
+                is_registered: true,
+                followers_count: members_count,
+                fullname: fullname.to_string(),
+                about: description.to_string(),
+                texts: channel_html_msgs_text,
+            })
+        } else {
+            Ok(UsernameAvailability {
+                is_registered: false,
+                ..Default::default()
+            })
+        }
     }
 
     // Notes:
@@ -168,12 +195,13 @@ pub mod tests {
 
     pub fn run() {
         let api = TelgClient::default();
-        let t = api.get_user_by_username("farsna");
+        // let t = api.get_user_by_username("farsna");
         // println!("-------------------------------  {:#?}", t);
         // let t = api.get_user_by_username("pugloulou");
         // let t = api.check_username("instagram_459034759");
         // let t = api.check_username("raika.com._");
-        // let t = api.check_username("mailproxy30");
+        let t = api.check_username("mailproxy30");
+        let t = api.check_username("flip_net");
         println!("-------------------------------  {:#?}", t);
     }
 }
