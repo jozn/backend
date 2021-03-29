@@ -3,7 +3,10 @@ extern crate prost_build;
 
 fn main() {
     // build_pb();
+    // format_codes();
+}
 
+fn format_codes() {
     std::process::Command::new("cargo")
         .arg("fmt")
         .arg("-all")

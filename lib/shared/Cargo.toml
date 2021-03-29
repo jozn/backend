@@ -36,8 +36,11 @@ cdrs = "2.3.3"
 mysql_async = "0.27.1"
 mysql_common = "0.26.0"
 
+# used for chrome driver
 #color-eyre = "0.5.10"
 thirtyfour = "0.23.0"
+
+scraper = "0.12.0"
 
 [build-dependencies]
 prost-build = { version ="0.6.1" }

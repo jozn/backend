@@ -9,5 +9,6 @@ async fn main() {
 fn main() {
     println!("Hi there!");
     // shared::checker::twitter::main1();
-    shared::checker::instagram::main1();
+    shared::checker::telegram::tests::run();
+    // shared::checker::instagram::main1();
 }

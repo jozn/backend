@@ -11,22 +11,13 @@ use std::ops::Add;
 use serde_json::Error;
 use tokio::task;
 
-mod insta_types;
-
 #[derive(Debug)]
-pub enum InstaError {
-    SerdeJson(serde_json::Error),
+pub enum TelgError {
     Reqwest(reqwest::Error),
     NotFound, // page 404
 }
 
-impl From<serde_json::Error> for InstaError {
-    fn from(e: serde_json::Error) -> Self {
-        Self::SerdeJson(e)
-    }
-}
-
-impl From<reqwest::Error> for InstaError {
+impl From<reqwest::Error> for TelgError {
     fn from(e: reqwest::Error) -> Self {
         Self::Reqwest(e)
     }
@@ -41,20 +32,29 @@ pub struct UsernameAvailability {
     pub texts: String,
 }
 
+#[derive(Debug, Default)]
+struct TelgHtmResult {
+    is_supergroup: bool,
+    followers_count: i64,
+    fullname: String,
+    about: String,
+    texts: String,
+}
+
 #[derive(Default)]
-struct InstaClient {
+struct TelgClient {
     _reqwest_client: reqwest::blocking::Client,
 }
 
-impl InstaClient {
+impl TelgClient {
     pub fn new() -> Self {
-        InstaClient::default()
+        TelgClient::default()
     }
 
-    pub fn check_username(&self, username: &str) -> Result<UsernameAvailability, InstaError> {
+    pub fn check_username(&self, username: &str) -> Result<UsernameAvailability, TelgError> {
         let res = self.get_user_by_username(username);
         // println!("+++++++>>>> check_username >>> {:#?}", res);
-        match res {
+        /*        match res {
             Ok(root) => {
                 let mut txt = "".to_string();
 
@@ -84,41 +84,76 @@ impl InstaClient {
                 }),
                 _ => Err(e),
             },
-        }
+        }*/
+        Err(TelgError::NotFound)
     }
 
-    fn get_user_by_username(&self, username: &str) -> Result<insta_types::Root, InstaError> {
-        let url = format!("https://www.instagram.com/{}/?__a=1", username);
-        let body_str = self._get_insta_body(url.as_str())?;
+    fn get_user_by_username(&self, username: &str) -> Result<bool, TelgError> {
+        // def of needed param to extract
+        let mut html_extra_text = "";
+        let mut about = "";
+        let mut mem_num = -1_i32;
+
+        let url = format!("https://t.me/{}/", username);
+        let body_str = self._get_http_body(url.as_str())?;
+
+        let html_doc = scraper::Html::parse_document(&body_str);
+
+        // This html div contains the number of members of a channel; if this class is present
+        //  it means this is channels/supergroup page otherwise it's not. In the second case we
+        //  simply return "it's not registered".
+        // selecting: <div class="tgme_page_extra">1 035 427 members</div>
+        let selector = scraper::Selector::parse("div.tgme_page_extra").unwrap();
+        let select = html_doc.select(&selector);
+
+        for el in select {
+            html_extra_text = el.text().next().unwrap_or_default();
+        }
+
+        println!(">> html txt: {:?}", html_extra_text);
+
+
+        if html_extra_text.contains("members") { // if true means this is channel/supergroup page
+            println!(">> xxxxxxxxxxx html txt: {:?}", html_extra_text);
+            let mem_str = html_extra_text.replace("members", "").replace(" ", "");
+            println!(">> bbbb: {:?}", mem_str);
+            mem_num = mem_str.parse().unwrap_or(-1);
+            if mem_num > 1 {
+                // select about
+                let s = scraper::Selector::parse(r#"meta[name="twitter:description"]"#).unwrap();
+                let re = html_doc.select(&s);
+
+                for el in re {
+                    about = &el.value().attr("content").unwrap_or_default();
+                }
+            }
+        }
+
+        println!("{:?}", body_str);
+        println!("about >> {:?}", about);
+        println!("follower >> {:?}", mem_num);
 
         // If no such username exists body will be "{}"; for safeguarding we consider anything
         // than 100 to be not registered as correct Json body is bigger than that
         if body_str.len() < 200 {
-            return Err(InstaError::NotFound);
+            return Err(TelgError::NotFound);
         }
-        // println!("+++++++ body +++++>>>> {} ", &body_str);
-        let user = serde_json::from_str::<insta_types::Root>(&body_str)?;
-        Ok(user)
+
+        Ok(true)
     }
 
     // Notes:
     // + With our code right now Instagram only requires cookie header > other header is just set optionally
-    fn _get_insta_body(&self, url: &str) -> Result<String, InstaError> {
+    fn _get_http_body(&self, url: &str) -> Result<String, TelgError> {
         let client = &self._reqwest_client; //reqwest::blocking::Client::new();
-        let res = client.get(url)
-            .header("accept","*/*")
-            .header("accept-language", "en-US")
-            .header("sec-ch-ua","\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\"")
-            .header("x-requested-with", "XMLHttpRequest")
-            .header("cookie", "ig_cb=2; mid=YGCk_QAEAAGfPE6uNlrJ3qQXneEU; ig_did=C8F0F2FD-9331-48BF-94F0-C6D9A3FD166C; csrftoken=LkJq1a2Zc7XwFCUWSOECMxnIBNkG1Wst; ds_user_id=9211030766; sessionid=9211030766%3ATiAq00e1RHkUZ0%3A24; rur=RVA")
-            .send()?;
+        let res = client.get(url).send()?;
 
         Ok(res.text().unwrap_or_default())
     }
 }
 
-#[cfg(test)]
-mod tests {
+// #[cfg(test)]
+pub mod tests {
     use super::*;
 
     #[test]
@@ -132,8 +167,8 @@ mod tests {
     }
 
     pub fn run() {
-        let api = InstaClient::default();
-        let t = api.check_username("assassinscreed");
+        let api = TelgClient::default();
+        let t = api.get_user_by_username("farsna");
         // println!("-------------------------------  {:#?}", t);
         // let t = api.get_user_by_username("pugloulou");
         // let t = api.check_username("instagram_459034759");
