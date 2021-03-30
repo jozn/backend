@@ -6,9 +6,10 @@ async fn main() {
     shared::checker::twitter::main1();
 }*/
 
-fn main() {
+#[tokio::main]
+async fn main() {
     println!("Hi there!");
-    shared::checker::tests::run();
+    shared::checker::tests::play_main().await;
     // shared::checker::telegram::tests::run();
     // shared::checker::instagram::main1();
 }

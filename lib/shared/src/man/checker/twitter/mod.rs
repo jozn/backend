@@ -48,7 +48,7 @@ pub struct UsernameAvailability {
 
 #[derive(Default)]
 pub struct TwitterClient {
-    _reqwest_client: reqwest::blocking::Client,
+    _reqwest_client: reqwest::Client,
 }
 
 impl TwitterClient {
@@ -56,8 +56,8 @@ impl TwitterClient {
         TwitterClient::default()
     }
 
-    pub fn check_username(&self, username: &str) -> Result<UsernameAvailability, TwitterError> {
-        let res = self.get_tweets_by_username(username);
+    pub async fn check_username(&self, username: &str) -> Result<UsernameAvailability, TwitterError> {
+        let res = self.get_tweets_by_username(username).await;
         // println!("+++++++>>>> is_username_free >>> {:#?}", res);
         match res {
             Ok(tweets) => {
@@ -66,7 +66,7 @@ impl TwitterClient {
                 let mut description = "".to_string();
                 let mut fullname = "".to_string();
 
-                let user = self.get_user_by_username(username);
+                let user = self.get_user_by_username(username).await;
                 if user.is_ok() {
                     let user = user.unwrap();
                     fullname = user.name;
@@ -96,21 +96,21 @@ impl TwitterClient {
         }
     }
 
-    pub fn get_tweets(&self, user_id: u64) -> Result<Vec<twtypes::Tweet>, TwitterError> {
+    pub async fn get_tweets(&self, user_id: u64) -> Result<Vec<twtypes::Tweet>, TwitterError> {
         let url = api_url::get_timeline_tweets_user_id(user_id);
-        self._get_tweets_action(url.as_str())
+        self._get_tweets_action(url.as_str()).await
     }
 
-    pub fn get_tweets_by_username(
+    pub async fn get_tweets_by_username(
         &self,
         username: &str,
     ) -> Result<Vec<twtypes::Tweet>, TwitterError> {
         let url = api_url::get_timeline_tweets_username(username);
-        self._get_tweets_action(url.as_str())
+        self._get_tweets_action(url.as_str()).await
     }
 
-    fn _get_tweets_action(&self, url: &str) -> Result<Vec<twtypes::Tweet>, TwitterError> {
-        let body_str = self._get_body(url)?;
+    async fn _get_tweets_action(&self, url: &str) -> Result<Vec<twtypes::Tweet>, TwitterError> {
+        let body_str = self._get_body(url).await?;
         let tweets_res = serde_json::from_str::<Vec<twtypes::Tweet>>(body_str.as_str());
         if tweets_res.is_err() {
             let err_res = serde_json::from_str::<twtypes::Errors>(body_str.as_str())?;
@@ -121,27 +121,27 @@ impl TwitterClient {
         }
     }
 
-    pub fn get_user_by_username(&self, username: &str) -> Result<twtypes::User, TwitterError> {
+    pub async fn get_user_by_username(&self, username: &str) -> Result<twtypes::User, TwitterError> {
         let url = format!(
             "https://api.twitter.com/1.1/users/show.json?screen_name={}",
             username
         );
-        let body_str = self._get_body(url.as_str())?;
+        let body_str = self._get_body(url.as_str()).await?;
         let user = serde_json::from_str::<twtypes::User>(&body_str)?;
         Ok(user)
     }
 
-    pub fn get_followers(&self, user_id: u64) -> Result<Vec<u64>, TwitterError> {
+    pub async fn get_followers(&self, user_id: u64) -> Result<Vec<u64>, TwitterError> {
         let url = format!(
             "https://api.twitter.com/1.1/followers/ids.json?user_id={}&count=250",
             user_id
         );
-        let body_str = self._get_body(url.as_str())?;
+        let body_str = self._get_body(url.as_str()).await?;
         let followers = serde_json::from_str::<twtypes::Followers>(&body_str)?;
         Ok(followers.ids.clone())
     }
 
-    pub fn get_users(&self, user_ids: &Vec<u64>) -> Result<Vec<twtypes::User>, TwitterError> {
+    pub async fn get_users(&self, user_ids: &Vec<u64>) -> Result<Vec<twtypes::User>, TwitterError> {
         let mut arr_str = String::from("");
         let mut cnt = 0;
         for i in user_ids {
@@ -157,7 +157,7 @@ impl TwitterClient {
             "https://api.twitter.com/1.1/users/lookup.json?user_id={}",
             arr_trimed
         );
-        let body_str = self._get_body(url_req.as_str())?;
+        let body_str = self._get_body(url_req.as_str()).await?;
         let users = serde_json::from_str::<Vec<twtypes::User>>(body_str.as_str())?;
         Ok(users)
     }
@@ -165,13 +165,13 @@ impl TwitterClient {
     // This func is commented in integration from old repo into Flip.
     pub fn get_media(&mut self, tweet: twtypes::Tweet) {}
 
-    fn _get_body(&self, url: &str) -> Result<String, TwitterError> {
+    async fn _get_body(&self, url: &str) -> Result<String, TwitterError> {
         let client = &self._reqwest_client;
         let res = client.get(url)
             .header("authorization", "Bearer AAAAAAAAAAAAAAAAAAAAAIu%2FDQEAAAAAaYGRj89RCMH7kC9qN2xTzEHHUaQ%3D7QgRJxwUHILsAeX3dvistI0K5BrdKQUs7t1CNFkbsldJrtPYla")
-            .send()?;
+            .send().await?;
 
-        Ok(res.text().unwrap_or_default())
+        Ok(res.text().await.unwrap_or_default())
     }
 }
 
@@ -242,15 +242,15 @@ mod tests {
     }
 
     // #[test]
-    pub fn play_main() {
-        run()
+    pub async fn play_main() {
+        run().await;
     }
 
-    fn run() {
+    async fn run() {
         let api = TwitterClient::default();
-        let t = api.check_username("assassinscreed");
+        let t = api.check_username("assassinscreed").await;
         println!("-------------------------------  {:#?}", t);
-        let t = api.check_username("assassinscreed55");
+        let t = api.check_username("assassinscreed55").await;
         println!("-------------------------------  {:#?}", t);
     }
 }

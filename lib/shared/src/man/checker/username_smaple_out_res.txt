@@ -1,0 +1,360 @@
+farsna => CheckResult {
+    registered: [
+        PlatformRes {
+            platform: Telegram,
+            followers: 1029863,
+            farsi: true,
+            fullname: "کانال خبرگزاری فارس",
+        },
+    ],
+}
+
+youtube => CheckResult {
+    registered: [
+        PlatformRes {
+            platform: Instagram,
+            followers: 27373888,
+            farsi: false,
+            fullname: "YouTube",
+        },
+        PlatformRes {
+            platform: Twitter,
+            followers: 73161691,
+            farsi: false,
+            fullname: "YouTube",
+        },
+    ],
+}
+
+mardomsara => CheckResult {
+    registered: [],
+}
+
+flip => CheckResult {
+    registered: [
+        PlatformRes {
+            platform: Instagram,
+            followers: 6757,
+            farsi: false,
+            fullname: "FLIP",
+        },
+    ],
+}
+
+telegram => CheckResult {
+    registered: [
+        PlatformRes {
+            platform: Telegram,
+            followers: 5568465,
+            farsi: false,
+            fullname: "Telegram News",
+        },
+        PlatformRes {
+            platform: Instagram,
+            followers: 4403,
+            farsi: false,
+            fullname: "Telegram",
+        },
+        PlatformRes {
+            platform: Twitter,
+            followers: 963050,
+            farsi: false,
+            fullname: "Telegram Messenger",
+        },
+    ],
+}
+
+tabnak => CheckResult {
+    registered: [
+        PlatformRes {
+            platform: Telegram,
+            followers: 769,
+            farsi: true,
+            fullname: "تابناک",
+        },
+        PlatformRes {
+            platform: Twitter,
+            followers: 635,
+            farsi: true,
+            fullname: "tabnak",
+        },
+    ],
+}
+
+iran_news => CheckResult {
+    registered: [
+        PlatformRes {
+            platform: Instagram,
+            followers: 304,
+            farsi: true,
+            fullname: "Iran news in instagram",
+        },
+        PlatformRes {
+            platform: Twitter,
+            followers: 29492,
+            farsi: false,
+            fullname: "Payvand",
+        },
+    ],
+}
+
+aparat => CheckResult {
+    registered: [
+        PlatformRes {
+            platform: Telegram,
+            followers: 1235,
+            farsi: true,
+            fullname: "ᴀᴘᴀʀᴀᴛ",
+        },
+    ],
+}
+
+digikala => CheckResult {
+    registered: [
+        PlatformRes {
+            platform: Telegram,
+            followers: 108031,
+            farsi: true,
+            fullname: "Digikala | دیجی\u{200c}کالا",
+        },
+        PlatformRes {
+            platform: Twitter,
+            followers: 433,
+            farsi: true,
+            fullname: "دیجی کالا",
+        },
+    ],
+}
+
+snapp => CheckResult {
+    registered: [
+        PlatformRes {
+            platform: Telegram,
+            followers: 4078,
+            farsi: true,
+            fullname: "Snapp",
+        },
+    ],
+}
+
+tapsi => CheckResult {
+    registered: [],
+}
+
+komodaa => CheckResult {
+    registered: [
+        PlatformRes {
+            platform: Telegram,
+            followers: 1172,
+            farsi: true,
+            fullname: "Komodaa",
+        },
+        PlatformRes {
+            platform: Instagram,
+            followers: 404730,
+            farsi: true,
+            fullname: "Komodaa | ک\u{64f}م\u{64f}دا",
+        },
+    ],
+}
+
+khamenei_ir => CheckResult {
+    registered: [
+        PlatformRes {
+            platform: Telegram,
+            followers: 165792,
+            farsi: true,
+            fullname: "KHAMENEI.IR",
+        },
+        PlatformRes {
+            platform: Instagram,
+            followers: 4249262,
+            farsi: true,
+            fullname: "Ayatollah Seyed Ali Khamenei",
+        },
+        PlatformRes {
+            platform: Twitter,
+            followers: 886974,
+            farsi: false,
+            fullname: "Khamenei.ir",
+        },
+    ],
+}
+
+raisi_org => CheckResult {
+    registered: [
+        PlatformRes {
+            platform: Telegram,
+            followers: 18827,
+            farsi: true,
+            fullname: "سید ابراهیم رئیسی",
+        },
+        PlatformRes {
+            platform: Instagram,
+            followers: 1716896,
+            farsi: true,
+            fullname: "سید ابراهیم رئیسی",
+        },
+    ],
+}
+
+iran_shop => CheckResult {
+    registered: [],
+}
+
+varzesh3 => CheckResult {
+    registered: [
+        PlatformRes {
+            platform: Telegram,
+            followers: 1024110,
+            farsi: true,
+            fullname: "ورزش سه",
+        },
+        PlatformRes {
+            platform: Instagram,
+            followers: 3186376,
+            farsi: true,
+            fullname: "Varzesh3 ورزش\u{200c}سه",
+        },
+        PlatformRes {
+            platform: Twitter,
+            followers: 17641,
+            farsi: true,
+            fullname: "Varzesh3 - ورزش سه 😷",
+        },
+    ],
+}
+
+bbcpersian => CheckResult {
+    registered: [
+        PlatformRes {
+            platform: Telegram,
+            followers: 941818,
+            farsi: true,
+            fullname: "BBCPersian",
+        },
+        PlatformRes {
+            platform: Instagram,
+            followers: 11868301,
+            farsi: true,
+            fullname: "BBC NEWS فارسی",
+        },
+        PlatformRes {
+            platform: Twitter,
+            followers: 1582707,
+            farsi: true,
+            fullname: "BBC NEWS فارسی",
+        },
+    ],
+}
+
+blogfa => CheckResult {
+    registered: [],
+}
+
+tehran => CheckResult {
+    registered: [
+        PlatformRes {
+            platform: Telegram,
+            followers: 4777,
+            farsi: true,
+            fullname: "تهران",
+        },
+        PlatformRes {
+            platform: Instagram,
+            followers: 117513,
+            farsi: true,
+            fullname: "TEHRAN |  تهران",
+        },
+        PlatformRes {
+            platform: Twitter,
+            followers: 6569,
+            farsi: true,
+            fullname: "Shahram Sharif",
+        },
+    ],
+}
+
+iran => CheckResult {
+    registered: [
+        PlatformRes {
+            platform: Instagram,
+            followers: 48922,
+            farsi: true,
+            fullname: "Iran",
+        },
+        PlatformRes {
+            platform: Twitter,
+            followers: 163667,
+            farsi: false,
+            fullname: "Iran",
+        },
+    ],
+}
+
+tvplus => CheckResult {
+    registered: [
+        PlatformRes {
+            platform: Instagram,
+            followers: 107668,
+            farsi: false,
+            fullname: "TV+",
+        },
+        PlatformRes {
+            platform: Twitter,
+            followers: 22673,
+            farsi: false,
+            fullname: "tvplus Magazine",
+        },
+    ],
+}
+
+digikala_lifestyle => CheckResult {
+    registered: [
+        PlatformRes {
+            platform: Instagram,
+            followers: 99046,
+            farsi: true,
+            fullname: "مجله لایف\u{200c}استایل دیجی\u{200c}کالا",
+        },
+    ],
+}
+
+digikala.fresh => CheckResult {
+    registered: [
+        PlatformRes {
+            platform: Instagram,
+            followers: 141817,
+            farsi: true,
+            fullname: "سوپرماركت ا\u{653}نلاين دیجی\u{200c}کالا",
+        },
+    ],
+}
+
+digikalacom => CheckResult {
+    registered: [
+        PlatformRes {
+            platform: Instagram,
+            followers: 1446513,
+            farsi: true,
+            fullname: "Digikala | دیجی\u{200c}کالا",
+        },
+        PlatformRes {
+            platform: Twitter,
+            followers: 20744,
+            farsi: true,
+            fullname: "دیجی\u{200c}کالا | Digikala",
+        },
+    ],
+}
+
+anten.ir => CheckResult {
+    registered: [
+        PlatformRes {
+            platform: Instagram,
+            followers: 114174,
+            farsi: true,
+            fullname: "آنتن",
+        },
+    ],
+}

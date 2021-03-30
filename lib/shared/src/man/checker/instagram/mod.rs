@@ -13,11 +13,18 @@ use tokio::task;
 
 mod insta_types;
 
+// Notes:
+// + Some observation about requesting "https://www.instagram.com/{username}/?__a=1":
+//  + Instagram will redirect us to an html page if session is invalid.
+//  + After working fine for some periods, Insta returned html "Fill Your Birthday".
+//  + Having some mechanism about monitoring if api working correctly is unavoidable.
+
 #[derive(Debug)]
 pub enum InstaError {
     SerdeJson(serde_json::Error),
     Reqwest(reqwest::Error),
     NotFound, // page 404
+    ApiMisBehave,
 }
 
 impl From<serde_json::Error> for InstaError {
@@ -43,7 +50,7 @@ pub struct UsernameAvailability {
 
 #[derive(Default)]
 pub struct InstaClient {
-    _reqwest_client: reqwest::blocking::Client,
+    _reqwest_client: reqwest::Client,
 }
 
 impl InstaClient {
@@ -51,8 +58,8 @@ impl InstaClient {
         InstaClient::default()
     }
 
-    pub fn check_username(&self, username: &str) -> Result<UsernameAvailability, InstaError> {
-        let res = self.get_user_by_username(username);
+    pub async fn check_username(&self, username: &str) -> Result<UsernameAvailability, InstaError> {
+        let res = self.get_user_by_username(username).await;
         // println!("+++++++>>>> check_username >>> {:#?}", res);
         match res {
             Ok(root) => {
@@ -87,23 +94,35 @@ impl InstaClient {
         }
     }
 
-    fn get_user_by_username(&self, username: &str) -> Result<insta_types::Root, InstaError> {
+    async fn get_user_by_username(&self, username: &str) -> Result<insta_types::Root, InstaError> {
         let url = format!("https://www.instagram.com/{}/?__a=1", username);
-        let body_str = self._get_insta_body(url.as_str())?;
+        let body_str = self._get_insta_body(url.as_str()).await?;
+
+        println!("+++++++ body +++++>>>> {} ", &body_str);
 
         // If no such username exists body will be "{}"; for safeguarding we consider anything
         // than 100 to be not registered as correct Json body is bigger than that
         if body_str.len() < 200 {
             return Err(InstaError::NotFound);
         }
-        // println!("+++++++ body +++++>>>> {} ", &body_str);
-        let user = serde_json::from_str::<insta_types::Root>(&body_str)?;
-        Ok(user)
+
+        // Note: not found usernames has already returned (body "{}")
+        if body_str.starts_with(r#"{""#) { // If is json string
+            let user = serde_json::from_str::<insta_types::Root>(&body_str)?;
+            Ok(user)
+        } else {
+            // Checking whether Insta is sending us an html page
+            if body_str.starts_with("<!DOCTYPE html>") {
+                // todo: some alerting Admins
+            }
+
+            Err(InstaError::ApiMisBehave)
+        }
     }
 
     // Notes:
     // + With our code right now Instagram only requires cookie header > other header is just set optionally
-    fn _get_insta_body(&self, url: &str) -> Result<String, InstaError> {
+    async fn _get_insta_body(&self, url: &str) -> Result<String, InstaError> {
         let client = &self._reqwest_client; //reqwest::blocking::Client::new();
         let res = client.get(url)
             .header("accept","*/*")
@@ -111,9 +130,9 @@ impl InstaClient {
             .header("sec-ch-ua","\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\"")
             .header("x-requested-with", "XMLHttpRequest")
             .header("cookie", "ig_cb=2; mid=YGCk_QAEAAGfPE6uNlrJ3qQXneEU; ig_did=C8F0F2FD-9331-48BF-94F0-C6D9A3FD166C; csrftoken=LkJq1a2Zc7XwFCUWSOECMxnIBNkG1Wst; ds_user_id=9211030766; sessionid=9211030766%3ATiAq00e1RHkUZ0%3A24; rur=RVA")
-            .send()?;
+            .send().await?;
 
-        Ok(res.text().unwrap_or_default())
+        Ok(res.text().await.unwrap_or_default())
     }
 }
 
@@ -127,13 +146,13 @@ mod tests {
     }
 
     #[test]
-    pub fn play_main() {
-        run();
+    pub async fn play_main() {
+        run().await;
     }
 
-    pub fn run() {
+    pub async fn run() {
         let api = InstaClient::default();
-        let t = api.check_username("assassinscreed");
+        let t = api.check_username("assassinscreed").await;
         // println!("-------------------------------  {:#?}", t);
         // let t = api.get_user_by_username("pugloulou");
         // let t = api.check_username("instagram_459034759");

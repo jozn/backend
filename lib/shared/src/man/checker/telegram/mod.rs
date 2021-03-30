@@ -40,7 +40,7 @@ pub struct UsernameAvailability {
 
 #[derive(Default)]
 pub struct TelgClient {
-    _reqwest_client: reqwest::blocking::Client,
+    _reqwest_client: reqwest::Client,
 }
 
 impl TelgClient {
@@ -48,7 +48,7 @@ impl TelgClient {
         TelgClient::default()
     }
 
-    pub fn check_username(&self, username: &str) -> Result<UsernameAvailability, TelgError> {
+    pub async fn check_username(&self, username: &str) -> Result<UsernameAvailability, TelgError> {
         // Not valid telegram username
         if username.len() < 5 {
             return Ok(UsernameAvailability {
@@ -65,7 +65,7 @@ impl TelgClient {
         let mut members_count = -1_i64;
 
         let url = format!("https://t.me/{}/", username);
-        let body_str = self._get_http_body(url.as_str())?;
+        let body_str = self._get_http_body(url.as_str()).await?;
 
         // println!("{:?}", body_str);
 
@@ -116,7 +116,7 @@ impl TelgClient {
 
         if members_count > 5 {
             let url = format!("https://t.me/s/{}/", username);
-            let body_str = self._get_http_body(url.as_str());
+            let body_str = self._get_http_body(url.as_str()).await;
             if body_str.is_ok() {
                 let body_str = body_str.unwrap();
                 channel_html_msgs_text = html2text::from_read(body_str.as_bytes(), body_str.len());
@@ -141,11 +141,11 @@ impl TelgClient {
 
     // Notes:
     // + With our code right now Instagram only requires cookie header > other header is just set optionally
-    fn _get_http_body(&self, url: &str) -> Result<String, TelgError> {
+    async fn _get_http_body(&self, url: &str) -> Result<String, TelgError> {
         let client = &self._reqwest_client; //reqwest::blocking::Client::new();
-        let res = client.get(url).send()?;
+        let res = client.get(url).send().await?;
 
-        Ok(res.text().unwrap_or_default())
+        Ok(res.text().await.unwrap_or_default())
     }
 }
 
@@ -154,18 +154,18 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test1() {
+    async fn test1() {
         println!("running instagram username checker tests ...")
     }
 
     #[test]
-    pub fn play_main() {
+    pub async fn play_main() {
         run();
     }
 
-    pub fn run() {
+    pub async fn run() {
         let api = TelgClient::default();
-        let t = api.check_username("farsna"); // a channel
+        let t = api.check_username("farsna").await; // a channel
                                               // let t = api.check_username("mailproxy_notfound"); // not exists
                                               // let t = api.check_username("flip_net"); // user
                                               // let t = api.check_username("ff"); // invalid

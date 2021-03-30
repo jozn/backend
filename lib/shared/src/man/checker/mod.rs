@@ -39,13 +39,13 @@ impl Checker {
         Self::default()
     }
 
-    pub fn check_username(&self, username: &str) -> CheckResult {
+    pub async fn check_username(&self, username: &str) -> CheckResult {
         let mut check_out_res = CheckResult::default();
 
         use utils::lang::is_farsi_text;
 
         // Check Telegram
-        let res = self.telegram.check_username(username);
+        let res = self.telegram.check_username(username).await;
         match res {
             Ok(ua) => {
                 if ua.is_registered && ua.followers_count > 100 {
@@ -70,7 +70,8 @@ impl Checker {
         }
 
         // Check Instagram
-        let res = self.instagram.check_username(username);
+        let res = self.instagram.check_username(username).await;
+        println!("inst >> {:?}", &res);
         match res {
             Ok(ua) => {
                 if ua.is_registered && ua.followers_count > 100 {
@@ -95,7 +96,7 @@ impl Checker {
         }
 
         // Check Twitter
-        let res = self.twitter.check_username(username);
+        let res = self.twitter.check_username(username).await;
         match res {
             Ok(ua) => {
                 if ua.is_registered && ua.followers_count > 100 {
@@ -132,12 +133,11 @@ pub mod tests {
         println!("running instagram username checker tests ...")
     }
 
-    #[test]
-    pub fn play_main() {
-        run();
+    pub async fn play_main() {
+        run_few().await;
     }
 
-    pub fn run() {
+    async fn run() {
         let api = Checker::default();
         let us = vec![
             "farsna",
@@ -167,7 +167,20 @@ pub mod tests {
             "anten.ir",
         ];
         for u in us {
-            let t = api.check_username(u);
+            let t = api.check_username(u).await;
+            println!("{:} => {:#?} \n", u, t);
+        }
+    }
+
+    async fn run_few() {
+        let api = Checker::default();
+        let us = vec![
+            "farsna",
+            "telegram",
+            "oisdlj9753490534590_not_found"
+        ];
+        for u in us {
+            let t = api.check_username(u).await;
             println!("{:} => {:#?} \n", u, t);
         }
     }
