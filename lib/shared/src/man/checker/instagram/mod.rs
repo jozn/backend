@@ -98,7 +98,7 @@ impl InstaClient {
         let url = format!("https://www.instagram.com/{}/?__a=1", username);
         let body_str = self._get_insta_body(url.as_str()).await?;
 
-        println!("+++++++ body +++++>>>> {} ", &body_str);
+        // println!("+++++++ body +++++>>>> {} ", &body_str);
 
         // If no such username exists body will be "{}"; for safeguarding we consider anything
         // than 100 to be not registered as correct Json body is bigger than that

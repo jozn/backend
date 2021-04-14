@@ -57,6 +57,7 @@ impl TwitterClient {
     }
 
     pub async fn check_username(&self, username: &str) -> Result<UsernameAvailability, TwitterError> {
+        // We check user tweets first as api limits for tweets is lower.
         let res = self.get_tweets_by_username(username).await;
         // println!("+++++++>>>> is_username_free >>> {:#?}", res);
         match res {

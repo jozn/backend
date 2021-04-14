@@ -71,7 +71,7 @@ impl Checker {
 
         // Check Instagram
         let res = self.instagram.check_username(username).await;
-        println!("inst >> {:?}", &res);
+        // println!("inst >> {:?}", &res);
         match res {
             Ok(ua) => {
                 if ua.is_registered && ua.followers_count > 100 {
