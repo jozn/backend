@@ -56,7 +56,10 @@ impl TwitterClient {
         TwitterClient::default()
     }
 
-    pub async fn check_username(&self, username: &str) -> Result<UsernameAvailability, TwitterError> {
+    pub async fn check_username(
+        &self,
+        username: &str,
+    ) -> Result<UsernameAvailability, TwitterError> {
         // We check user tweets first as api limits for tweets is lower.
         let res = self.get_tweets_by_username(username).await;
         // println!("+++++++>>>> is_username_free >>> {:#?}", res);
@@ -122,7 +125,10 @@ impl TwitterClient {
         }
     }
 
-    pub async fn get_user_by_username(&self, username: &str) -> Result<twtypes::User, TwitterError> {
+    pub async fn get_user_by_username(
+        &self,
+        username: &str,
+    ) -> Result<twtypes::User, TwitterError> {
         let url = format!(
             "https://api.twitter.com/1.1/users/show.json?screen_name={}",
             username

@@ -174,11 +174,7 @@ pub mod tests {
 
     async fn run_few() {
         let api = Checker::default();
-        let us = vec![
-            "farsna",
-            "telegram",
-            "oisdlj9753490534590_not_found"
-        ];
+        let us = vec!["farsna", "telegram", "oisdlj9753490534590_not_found"];
         for u in us {
             let t = api.check_username(u).await;
             println!("{:} => {:#?} \n", u, t);

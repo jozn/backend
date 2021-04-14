@@ -107,7 +107,8 @@ impl InstaClient {
         }
 
         // Note: not found usernames has already returned (body "{}")
-        if body_str.starts_with(r#"{""#) { // If is json string
+        if body_str.starts_with(r#"{""#) {
+            // If is json string
             let user = serde_json::from_str::<insta_types::Root>(&body_str)?;
             Ok(user)
         } else {

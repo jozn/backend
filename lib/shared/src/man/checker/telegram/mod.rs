@@ -166,9 +166,9 @@ mod tests {
     pub async fn run() {
         let api = TelgClient::default();
         let t = api.check_username("farsna").await; // a channel
-                                              // let t = api.check_username("mailproxy_notfound"); // not exists
-                                              // let t = api.check_username("flip_net"); // user
-                                              // let t = api.check_username("ff"); // invalid
+                                                    // let t = api.check_username("mailproxy_notfound"); // not exists
+                                                    // let t = api.check_username("flip_net"); // user
+                                                    // let t = api.check_username("ff"); // invalid
         println!("-------------------------------  {:#?}", t);
     }
 }

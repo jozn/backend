@@ -5,30 +5,16 @@
 #![allow(warnings)]
 #![allow(soft_unstable)]
 
-use async_trait::async_trait;
-use byteorder::ReadBytesExt;
-use byteorder::WriteBytesExt;
 use bytes::Bytes;
 use once_cell::sync::OnceCell;
 use shared;
 use shared::errors::GenErr;
-use shared::gen::rpc2::RPC_Shared_Handler2;
-use shared::new_rpc::{FHttpRequest, FHttpResponse, FIMicroService};
-use shared::pb::*;
-use shared::rpc2::{IPC_CMaster_Handler2, RPC_Auth_Handler2, RPC_Registry};
 use shared::{pb, rpc2};
-use std::borrow::Borrow;
 use std::collections::{HashMap, HashSet};
-use std::iter::Map;
 use std::ops::{Deref, DerefMut};
-use std::panic::RefUnwindSafe;
-use std::sync::atomic::Ordering;
-use std::sync::{atomic, Arc, Mutex};
-use std::thread;
-use tokio::sync::mpsc::error::SendError;
-use tokio::sync::mpsc::{channel, Receiver, Sender};
-use tokio::sync::oneshot;
-use tokio::sync::oneshot::error::RecvError;
+use std::sync::{Arc, Mutex};
+
+mod user_space;
 
 #[derive(Debug, Default)]
 pub struct UserSpaceCache {
@@ -39,25 +25,11 @@ pub struct UserSpaceCache {
 // No locking
 #[derive(Debug)]
 pub struct UserSpace {
-    sender: Sender<UserSpaceCmdReq>,
+    sender: tokio::sync::mpsc::Sender<UserSpaceCmdReq>,
     last_rpc: u64,
     user_id: u64,
     cache: UserSpaceCache,
 }
-impl UserSpace {}
-
-#[async_trait]
-impl RPC_Shared_Handler2 for UserSpace {
-    async fn SharedEcho(&self, param: SharedEchoParam) -> Result<SharedEchoResponse, GenErr> {
-        Ok(pb::SharedEchoResponse {
-            done: true,
-            text: format!("Echoing:: {}", param.text),
-        })
-    }
-}
-
-#[async_trait]
-impl rpc2::RPC_Channel_Handler2 for UserSpace {}
 
 #[derive(Debug)]
 pub enum Commands {
@@ -70,26 +42,31 @@ pub enum Commands {
 pub struct UserSpaceCmdReq {
     cmd: Commands,
     invoke_req: pb::Invoke, // needed?
-    result_chan: oneshot::Sender<Vec<u8>>,
+    result_chan: tokio::sync::oneshot::Sender<Vec<u8>>,
 }
 
 #[derive(Default, Debug)]
 pub struct UserSpaceMapper {
-    mapper: Arc<Mutex<HashMap<u32, Sender<UserSpaceCmdReq>>>>,
+    mapper: Arc<Mutex<HashMap<u32, tokio::sync::mpsc::Sender<UserSpaceCmdReq>>>>,
 }
 impl UserSpaceMapper {
     pub fn new() -> UserSpaceMapper {
         UserSpaceMapper::default()
     }
 
+    // rpc_http: pb::Invoke
     pub async fn serve_rpc_request_vec8(&mut self, rpc_http: Vec<u8>) -> Result<Vec<u8>, GenErr> {
         let invoke: pb::Invoke = prost::Message::decode(rpc_http.as_slice())?;
         let rpc_invoke_enumed = rpc2::invoke_to_parsed(&invoke)?;
         let user_id = invoke.user_id;
 
+        if user_id == 0 {
+            // err
+        }
+
         let req_sender_stream = self.get_or_init_userspcace_cmd(user_id);
 
-        let (req_sender, mut req_receiver) = oneshot::channel();
+        let (req_sender, mut req_receiver) = tokio::sync::oneshot::channel();
         let us_cmd_req = UserSpaceCmdReq {
             cmd: Commands::Invoke(rpc_invoke_enumed),
             invoke_req: invoke,
@@ -109,7 +86,10 @@ impl UserSpaceMapper {
         }
     }
 
-    fn get_or_init_userspcace_cmd(&mut self, user_id: u32) -> Sender<UserSpaceCmdReq> {
+    fn get_or_init_userspcace_cmd(
+        &mut self,
+        user_id: u32,
+    ) -> tokio::sync::mpsc::Sender<UserSpaceCmdReq> {
         let mut lock = self.mapper.lock().unwrap();
         let us_opt = lock.deref_mut().get(&user_id);
 
@@ -124,8 +104,8 @@ impl UserSpaceMapper {
         req_sender_stream
     }
 
-    fn dispatch_new_user_space(&self, user_id: u32) -> Sender<UserSpaceCmdReq> {
-        let (req_stream_sender, mut req_stream_receiver) = channel(32);
+    fn dispatch_new_user_space(&self, user_id: u32) -> tokio::sync::mpsc::Sender<UserSpaceCmdReq> {
+        let (req_stream_sender, mut req_stream_receiver) = tokio::sync::mpsc::channel(32);
         let req_stream_sender_cp = req_stream_sender.clone();
 
         // reciver

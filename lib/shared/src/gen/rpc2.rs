@@ -1753,12 +1753,14 @@ pub trait RPC_User_Handler2: Send + Sync {
     ) -> Result<pb::UserDeleteSendCodeResponse, GenErr> {
         Ok(pb::UserDeleteSendCodeResponse::default())
     }
+
     async fn UserDeleteConfirmCode(
         &self,
         param: pb::UserDeleteConfirmCodeParam,
     ) -> Result<pb::UserDeleteConfirmCodeResponse, GenErr> {
         Ok(pb::UserDeleteConfirmCodeResponse::default())
     }
+
     async fn UserDeleteUser(
         &self,
         param: pb::UserDeleteUserParam,
