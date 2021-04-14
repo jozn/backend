@@ -6,7 +6,6 @@
 #![allow(soft_unstable)]
 
 use bytes::Bytes;
-use once_cell::sync::OnceCell;
 use shared;
 use shared::errors::GenErr;
 use shared::{pb, rpc2};
@@ -16,21 +15,26 @@ use std::sync::{Arc, Mutex};
 
 mod user_space;
 
+// This is holder of user own data cache in memory.
 #[derive(Debug, Default)]
 pub struct UserSpaceCache {
     contacts: HashSet<String>,
     liked_posts: HashSet<String>,
 }
 
-// No locking
+// This is holder of one user data cache and it's rpc processing functionality. For each user one
+//  of this is instanced and in separate async loop waits for UserSpaceCmdReq who passed through
+//  channel and then the result send back in oneshot channel.
+// Notes: No locking.
 #[derive(Debug)]
 pub struct UserSpace {
-    sender: tokio::sync::mpsc::Sender<UserSpaceCmdReq>,
+    sender: tokio::sync::mpsc::Sender<UserSpaceCmdReq>, // one receiver, many senders(thread safe)
     last_rpc: u64,
     user_id: u64,
     cache: UserSpaceCache,
 }
 
+// This is Command that UserSpace async task process sequentially.
 #[derive(Debug)]
 pub enum Commands {
     InternalRpc,
@@ -38,6 +42,8 @@ pub enum Commands {
     Invoke(shared::rpc2::RpcInvoke),
 }
 
+// This holds rpc command data and oneshot channel data.
+// Notes: new intance for each rpc request.
 #[derive(Debug)]
 pub struct UserSpaceCmdReq {
     cmd: Commands,
@@ -45,6 +51,8 @@ pub struct UserSpaceCmdReq {
     result_chan: tokio::sync::oneshot::Sender<Vec<u8>>,
 }
 
+// This holds a map of user_id to a stream sender channel of UserSpaceCmdReq. Each rpc request will
+// be a UserSpaceCmdReq which then passed to this channel and then the result will be handled.
 #[derive(Default, Debug)]
 pub struct UserSpaceMapper {
     mapper: Arc<Mutex<HashMap<u32, tokio::sync::mpsc::Sender<UserSpaceCmdReq>>>>,
@@ -54,8 +62,50 @@ impl UserSpaceMapper {
         UserSpaceMapper::default()
     }
 
-    // rpc_http: pb::Invoke
-    pub async fn serve_rpc_request_vec8(&mut self, rpc_http: Vec<u8>) -> Result<Vec<u8>, GenErr> {
+    pub async fn serve_rpc_request(
+        &self,
+        invoke: pb::Invoke,
+    ) -> Result<pb::InvokeResponse, GenErr> {
+        let rpc_invoke_enumed = rpc2::invoke_to_parsed(&invoke)?;
+        let user_id = invoke.user_id;
+
+        if user_id == 0 {
+            // err
+        }
+
+        let req_sender_stream = self.get_or_init_userspcace_cmd(user_id);
+
+        let (req_sender, mut req_receiver) = tokio::sync::oneshot::channel();
+        let us_cmd_req = UserSpaceCmdReq {
+            cmd: Commands::Invoke(rpc_invoke_enumed),
+            invoke_req: invoke.clone(),
+            result_chan: req_sender,
+        };
+        let sending_res = req_sender_stream.send(us_cmd_req).await;
+        match sending_res {
+            Ok(r) => {}
+            Err(er) => {
+                println!("+++ send err {}", er);
+            }
+        }
+
+        match req_receiver.await {
+            Ok(val_bts) => {
+                let rres = pb::InvokeResponse {
+                    namespace: invoke.namespace,
+                    method: invoke.user_id,
+                    user_id: invoke.user_id,
+                    action_id: invoke.action_id,
+                    rpc_data: val_bts,
+                };
+                Ok(rres)
+            }
+            Err(e) => Err(GenErr::UserSpaceErr),
+        }
+    }
+
+    // deprecated
+    pub async fn serve_rpc_request_vec8_dep(&self, rpc_http: Vec<u8>) -> Result<Vec<u8>, GenErr> {
         let invoke: pb::Invoke = prost::Message::decode(rpc_http.as_slice())?;
         let rpc_invoke_enumed = rpc2::invoke_to_parsed(&invoke)?;
         let user_id = invoke.user_id;
@@ -86,8 +136,10 @@ impl UserSpaceMapper {
         }
     }
 
+    // This lockup mapper for the channel of stream of user_id, if not exist then dispatches new
+    //  task for user id.
     fn get_or_init_userspcace_cmd(
-        &mut self,
+        &self,
         user_id: u32,
     ) -> tokio::sync::mpsc::Sender<UserSpaceCmdReq> {
         let mut lock = self.mapper.lock().unwrap();
@@ -104,16 +156,19 @@ impl UserSpaceMapper {
         req_sender_stream
     }
 
+    // This spawn a new async task for UserSpace of user_id. Commands will handled sequentially in
+    // user own async task.
+    // Notes: Not blocking threads. Each user have one async task. UserSpace is used here. rpc registry
+    //  is used in here.
     fn dispatch_new_user_space(&self, user_id: u32) -> tokio::sync::mpsc::Sender<UserSpaceCmdReq> {
         let (req_stream_sender, mut req_stream_receiver) = tokio::sync::mpsc::channel(32);
         let req_stream_sender_cp = req_stream_sender.clone();
 
-        // reciver
+        // receiver
         tokio::spawn(async move {
             println!("user space start");
 
             let mut user_space = UserSpace {
-                // commands: receiver,
                 sender: req_stream_sender_cp,
                 last_rpc: 0,
                 user_id: user_id as u64,
@@ -130,7 +185,7 @@ impl UserSpaceMapper {
 
             let rpc_handler_registry = shared::rpc2::RPC_Registry {
                 RPC_Shared: add!(),
-                RPC_Channel: Some(Box::new(arc_us.clone())),
+                RPC_Channel: Some(Box::new(arc_us.clone())), // Explict
                 ..Default::default()
             };
 
@@ -182,14 +237,14 @@ mod tests {
         prost::Message::encode(&invoke, &mut vec).unwrap();
 
         let mut us = UserSpaceMapper::new();
-        let out = us.serve_rpc_request_vec8(vec.clone()).await;
+        let out = us.serve_rpc_request_vec8_dep(vec.clone()).await;
 
         let o: pb::SharedEchoResponse = shared::common::prost_decode(&out.unwrap()).unwrap();
         println!(">>>>>>>>>> las: {:?} ", o);
 
         // A sample loop
         for i in 1..100 {
-            let out = us.serve_rpc_request_vec8(vec.clone()).await;
+            let out = us.serve_rpc_request_vec8_dep(vec.clone()).await;
             println!("++++++ {}: {:?} ", i, out.unwrap().len());
         }
     }

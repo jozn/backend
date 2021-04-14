@@ -21,14 +21,22 @@ impl FIMicroService for LogicMicro {
     }
 
     async fn serve_request(req: FHttpRequest) -> Result<FHttpResponse, GenErr> {
-        println!("thread {:#?}", std::thread::current().id());
-        tokio::spawn(async {
-            tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-            println!(">>>>>thread {:#?}", std::thread::current());
-        });
-        Ok((200, b"sdfsd".to_vec()))
+        // println!("thread {:#?}", std::thread::current().id());
+
+        let invoke: pb::Invoke = prost::Message::decode(req.body)?;
+
+        let m = INSTANCE.get_or_init(|| logic::UserSpaceMapper::new());
+        // let mut m = logic::UserSpaceMapper::new();
+        let res_v8 = m.serve_rpc_request(invoke).await?;
+
+        let mut vec = vec![];
+        prost::Message::encode(&res_v8, &mut vec)?;
+
+        Ok((200, vec))
     }
 }
+
+static INSTANCE: OnceCell<logic::UserSpaceMapper> = OnceCell::new();
 
 #[tokio::main]
 async fn main() {
