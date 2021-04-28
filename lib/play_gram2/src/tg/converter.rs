@@ -13,8 +13,8 @@ use types::*;
 // audio: performer and title is being set just for music not voice,
 // filename is being set for music (but not voice), animated (gif) mostly "mp4.mp4",
 // image doc: thumb is ~250-320px and ~10-12px, filename as it's being set - thumb is "i" and "m" (inline+ medium")
-// filename is not being set for Photo > good for privacy (actualay photo has not the filename attribute anyway)
-// .forwards is the number of forwards of a message > if Some(num) it shows it a user message post if None it's a some systems posts.
+// filename is not being set for Photo > good for privacy (actually photo has not the filename attribute anyway)
+// .forwards is the number of forwards of the message > if Some(num) it shows it a user message post if None it's a some systems posts.
 // .grouped_id in message means the messages are bundles (multi photo, files,...). The order is reversed (recent message is shown last in the bundle view)
 
 // Convert Telegram Message to types::Msg + list of urls

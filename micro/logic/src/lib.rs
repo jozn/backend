@@ -55,7 +55,7 @@ pub struct UserSpaceCmdReq {
 // be a UserSpaceCmdReq which then passed to this channel and then the result will be handled.
 #[derive(Default, Debug)]
 pub struct UserSpaceMapper {
-    mapper: Arc<Mutex<HashMap<u32, tokio::sync::mpsc::Sender<UserSpaceCmdReq>>>>,
+    us_cmd_req: Arc<Mutex<HashMap<u32, tokio::sync::mpsc::Sender<UserSpaceCmdReq>>>>,
 }
 impl UserSpaceMapper {
     pub fn new() -> UserSpaceMapper {
@@ -142,7 +142,7 @@ impl UserSpaceMapper {
         &self,
         user_id: u32,
     ) -> tokio::sync::mpsc::Sender<UserSpaceCmdReq> {
-        let mut lock = self.mapper.lock().unwrap();
+        let mut lock = self.us_cmd_req.lock().unwrap();
         let us_opt = lock.deref_mut().get(&user_id);
 
         let req_sender_stream = match us_opt {
@@ -192,7 +192,10 @@ impl UserSpaceMapper {
             while let Some(us_cmd_req) = req_stream_receiver.recv().await {
                 match us_cmd_req.cmd {
                     Commands::InternalRpc => {}
-                    Commands::Exit => break,
+                    Commands::Exit => {
+                        println!("Exiting user space of: {:}",user_id);
+                        break;
+                    },
                     Commands::Invoke(invoke) => {
                         println!("userspace getting invoke: {:?}", invoke);
                         let out_res = rpc2::server_rpc(invoke, &rpc_handler_registry)

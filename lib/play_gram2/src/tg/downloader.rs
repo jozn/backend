@@ -60,8 +60,8 @@ enum _TgFileLocation {
     Document,
 }
 
-// This is shared methods for downloading both Image (typical resized size[incding Avatar], and Document),
-// as telegram api needs to different construction for calling Image and Document this function
+// This is shared methods for downloading both Image (typical resized size[including Avatar], and Document),
+// as telegram api needs two different construction for calling Image and Document, this function
 // builds appropriate request. The reason those two api is shared is to handle buffering and other
 // things in just one place (DRY).
 async fn _dl_tg_shared(
@@ -69,8 +69,8 @@ async fn _dl_tg_shared(
     file_type: _TgFileLocation,
     m: _FileLocation,
 ) -> Result<Vec<u8>, TelegramGenErr> {
-    let limit = 524288;
-    let mut out_buffer = Vec::with_capacity(limit as usize);
+    const LIMIT: i32 = 524288;
+    let mut out_buffer = Vec::with_capacity(LIMIT as usize);
     let mut offset = 0;
 
     loop {
@@ -87,7 +87,7 @@ async fn _dl_tg_shared(
                 },
             ),
             offset: offset,
-            limit: limit,
+            limit: LIMIT,
         };
 
         // if it's Image set proper .location property
@@ -111,8 +111,8 @@ async fn _dl_tg_shared(
                     File::File(tfile) => {
                         let len = tfile.bytes.len() as i32;
                         out_buffer.write(&tfile.bytes);
-                        if len == limit {
-                            offset = offset + limit;
+                        if len == LIMIT {
+                            offset = offset + LIMIT;
                         } else {
                             break;
                         }

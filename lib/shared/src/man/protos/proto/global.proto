@@ -49,6 +49,7 @@ enum ProfileLevelEnum {
 }
 
 /////////////////////////// Common Types ////////////////////
+// Invoke is send from user mobile client app.
 message Invoke { // imut all
   uint32 namespace = 6; // imut
   uint32 method = 1; // imut
@@ -58,6 +59,7 @@ message Invoke { // imut all
   bytes rpc_data = 4; // imut
 }
 
+// InvokeResponse is returned from server in response of Invoke.
 message InvokeResponse { // imut all
   uint32 namespace = 6; // imut
   uint32 method = 1; // imut
@@ -77,6 +79,7 @@ message Contact {
   uint32 created_time = 13;
 }
 
+// Notes: User should only be returned for user own api calls, it's contain user's private data.
 message User {
   // Info 0-10
   uint32 user_cid = 1;
