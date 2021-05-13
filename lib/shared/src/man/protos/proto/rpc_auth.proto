@@ -24,6 +24,7 @@ message AuthSendCodeResponse {
     bool phone_registered = 2; // if ture then LogIn otherwise use:create rpc
 }
 
+
 message AuthLogInParam {
     string hash_code = 1;
     string phone_number = 2; // 9015132134 , not needed just for rechecking

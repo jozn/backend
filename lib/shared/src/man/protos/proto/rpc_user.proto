@@ -41,8 +41,11 @@ message UserRegisterUserParam {
     uint32 user_cid = 1;
     string first_name = 2;
     string last_name = 3;
-    string phone = 15;
+    string phone_number = 15;
     uint32 created_time = 5;
+
+    string hash_code = 10;
+    string confirm_code = 30;
 }
 
 message UserRegisterUserResponse {

@@ -17,7 +17,7 @@ impl rpc2::RPC_Auth_Handler2 for UserSpace {
             .await
             .unwrap();
 
-        let hash_code = shared::utils::rand::rand_string(20);
+        let hash_code = shared::utils::rand::rand_string(15);
 
         let sms_pb = pb::Sms {
             gid: 0,
