@@ -45,6 +45,7 @@ pub mod sample_message {
     }
 }
 //////////////////////////// Common Types ////////////////////
+/// Invoke is send from user mobile client app.
 ///
 /// imut all
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -68,6 +69,8 @@ pub struct Invoke {
     #[prost(bytes, tag = "4")]
     pub rpc_data: std::vec::Vec<u8>,
 }
+/// InvokeResponse is returned from server in response of Invoke.
+///
 /// imut all
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct InvokeResponse {
@@ -108,6 +111,7 @@ pub struct Contact {
     #[prost(uint32, tag = "13")]
     pub created_time: u32,
 }
+/// Notes: User should only be returned for user own api calls, it's contain user's private data.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct User {
     /// Info 0-10
@@ -746,9 +750,13 @@ pub struct Sms {
     #[prost(string, tag = "3")]
     pub install_uuid: std::string::String,
     #[prost(string, tag = "4")]
-    pub to_phone: std::string::String,
+    pub phone_number: std::string::String,
+    #[prost(string, tag = "32")]
+    pub country_code: std::string::String,
     #[prost(bool, tag = "103")]
-    pub for_confirm: bool,
+    pub for_login: bool,
+    #[prost(string, tag = "107")]
+    pub hash_code: std::string::String,
     #[prost(string, tag = "5")]
     pub confirm_code: std::string::String,
     #[prost(string, tag = "6")]
@@ -1559,87 +1567,42 @@ pub struct GetNextIdResponse {
     pub error: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AuthSendConfirmCodeParam {
-    #[prost(string, tag = "1")]
-    pub hash: std::string::String,
-    /// 98... 989015132328
+pub struct AuthSendCodeParam {
+    /// 9015132134
     #[prost(string, tag = "2")]
-    pub phone: std::string::String,
+    pub phone_number: std::string::String,
+    /// 98
     #[prost(string, tag = "3")]
     pub country_code: std::string::String,
     #[prost(bool, tag = "4")]
     pub resend: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AuthSendConfirmCodeResponse {
-    #[prost(bool, tag = "1")]
-    pub done: bool,
-    #[prost(string, tag = "2")]
-    pub error_message: std::string::String,
-    #[prost(bool, tag = "3")]
-    pub just_email_register: bool,
-    #[prost(string, repeated, tag = "4")]
-    pub sms_numbers: ::std::vec::Vec<std::string::String>,
-    #[prost(bool, tag = "5")]
-    pub is_login: bool,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AuthConfirmCodeParam {
+pub struct AuthSendCodeResponse {
+    /// a unique code like a session for duration of login or register
     #[prost(string, tag = "1")]
-    pub hash: std::string::String,
-    /// 98... 989015132328
-    #[prost(string, tag = "2")]
-    pub phone: std::string::String,
-    ///4 digit 4215
-    #[prost(int32, tag = "3")]
-    pub code: i32,
+    pub hash_code: std::string::String,
+    /// if ture then LogIn otherwise use:create rpc
+    #[prost(bool, tag = "2")]
+    pub phone_registered: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AuthConfirmCodeResponse {
-    #[prost(bool, tag = "1")]
-    pub done: bool,
-    ///    SelfUserView SelfUserView = 3; //if it is login
-    #[prost(string, tag = "2")]
-    pub error_message: std::string::String,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AuthSingUpParam {
+pub struct AuthLogInParam {
     #[prost(string, tag = "1")]
-    pub hash: std::string::String,
+    pub hash_code: std::string::String,
+    /// 9015132134 , not needed just for rechecking
     #[prost(string, tag = "2")]
-    pub first_name: std::string::String,
+    pub phone_number: std::string::String,
     #[prost(string, tag = "3")]
-    pub last_name: std::string::String,
-    #[prost(string, tag = "4")]
-    pub user_name: std::string::String,
-    #[prost(string, tag = "5")]
-    pub phone: std::string::String,
-    #[prost(string, tag = "6")]
-    pub email: std::string::String,
+    pub confirm_code: std::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AuthSingUpResponse {
-    #[prost(bool, tag = "1")]
-    pub done: bool,
-    ///    SelfUserView SelfUserView = 3;
-    #[prost(string, tag = "2")]
-    pub error_message: std::string::String,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AuthSingInParam {
-    #[prost(string, tag = "4")]
-    pub user_name_phone_email: std::string::String,
-    /// 98... 989015132328
-    #[prost(string, tag = "5")]
-    pub password: std::string::String,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AuthSingInResponse {
-    #[prost(bool, tag = "1")]
-    pub done: bool,
-    ///    SelfUserView SelfUserView = 3;
-    #[prost(string, tag = "2")]
-    pub error_message: std::string::String,
+pub struct AuthLogInResponse {
+    #[prost(message, optional, tag = "1")]
+    pub user: ::std::option::Option<User>,
+    /// A new session for this log in
+    #[prost(message, optional, tag = "2")]
+    pub session: ::std::option::Option<Session>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AuthLogOutParam {}
@@ -1647,14 +1610,6 @@ pub struct AuthLogOutParam {}
 pub struct AuthLogOutResponse {
     #[prost(bool, tag = "1")]
     pub done: bool,
-    #[prost(string, tag = "2")]
-    pub error_message: std::string::String,
-}
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum SendConfirmCodeTypeEnum {
-    SendCodeOk = 0,
-    SendCodeEmail = 1,
 }
 /// CrDU
 #[derive(Clone, PartialEq, ::prost::Message)]

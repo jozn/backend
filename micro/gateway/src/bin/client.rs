@@ -35,10 +35,9 @@ async fn client_sample_loop() {
 async fn auth_sample() {
     let crpc = shared::common::RpcClient::new("http://127.0.0.1:4000/rpc");
     let res = crpc
-        .AuthSendConfirmCode(pb::AuthSendConfirmCodeParam {
-            hash: "1234hash".to_string(),
-            phone: "9015132328".to_string(),
-            country_code: "".to_string(),
+        .AuthSendCode(pb::AuthSendCodeParam {
+            phone_number: "9015132328".to_string(),
+            country_code: "98".to_string(),
             resend: false,
         })
         .await;

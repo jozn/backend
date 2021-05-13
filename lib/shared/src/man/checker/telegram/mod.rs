@@ -154,11 +154,10 @@ mod tests {
     use super::*;
 
     #[test]
-    async fn test1() {
+    fn test1() {
         println!("running instagram username checker tests ...")
     }
 
-    #[test]
     pub async fn play_main() {
         run();
     }

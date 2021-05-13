@@ -6,86 +6,39 @@ import "global.proto";
 
 
 service RPC_Auth {
-//    rpc CheckPhone (UserParam_CheckUserName2) returns (UserResponse_CheckUserName2);
-//    rpc AuthSendConfirmCode (AuthSendConfirmCodeParam) returns (AuthSendConfirmCodeResponse);
     rpc AuthSendCode (AuthSendCodeParam) returns (AuthSendCodeResponse);
-    rpc AuthConfirmCode (AuthConfirmCodeParam) returns (AuthConfirmCodeResponse);
-    rpc AuthSingUp (AuthSingUpParam) returns (AuthSingUpResponse);
-//    rpc AuthSingIn (AuthSingInParam) returns (AuthSingInResponse);
     rpc AuthLogIn (AuthLogInParam) returns (AuthLogInResponse);
+    // Do not impl this yet
     rpc AuthLogOut (AuthLogOutParam) returns (AuthLogOutResponse);
 }
 
 
 message AuthSendCodeParam {
-    string Hash = 1;
-    string Phone = 2; // 98... 989015132328
-    string CountryCode = 3;
-    bool Resend = 4;
-}
-
-enum SendConfirmCodeTypeEnum {
-    SEND_CODE_OK = 0;
-    SEND_CODE_EMAIL = 1;
+    string phone_number = 2; // 9015132134
+    string country_code = 3; // 98
+    bool resend = 4;
 }
 
 message AuthSendCodeResponse {
-//    bool Done =1;
-    string PhoneCodeHash = 6;
-    bool PhoneRegistered = 8;
-//    string ErrorMessage =2;
-//    bool JustEmailRegister = 3 ;
-//    repeated string SmsNumbers = 4;
-//    bool IsLogin = 5;
+    string hash_code = 1; // a unique code like a session for duration of login or register
+    bool phone_registered = 2; // if ture then LogIn otherwise use:create rpc
 }
-
-
-message AuthConfirmCodeParam {
-    string Hash = 1;
-    string Phone = 2; // 98... 989015132328
-    int32 Code = 3; //4 digit 4215
-}
-
-message AuthConfirmCodeResponse {
-    bool Done =1;
-//    string ErrorMessage = 2;
-    //    SelfUserView SelfUserView = 3; //if it is login
-}
-
-
-message AuthSingUpParam {
-    string Hash = 1;
-    string FirstName = 2;
-    string LastName = 3;
-    string UserName = 4;
-    string Phone = 5;
-    string Email = 6;
-}
-
-message AuthSingUpResponse {
-    bool Done =1;
-//    string ErrorMessage = 2;
-    //    SelfUserView SelfUserView = 3;
-}
-
 
 message AuthLogInParam {
-    string UserNamePhoneEmail = 4;
-    string Password = 5; // 98... 989015132328
+    string hash_code = 1;
+    string phone_number = 2; // 9015132134 , not needed just for rechecking
+    string confirm_code = 3;
 }
 
 message AuthLogInResponse {
-    bool Done =1;
-//    string ErrorMessage = 2;
-    //    SelfUserView SelfUserView = 3;
+    User user = 1;
+    Session session = 2; // A new session for this log in
 }
 
 
 message AuthLogOutParam {
-
 }
 
 message AuthLogOutResponse {
-    bool Done =1;
-//    string ErrorMessage =2;
+    bool Done = 1;
 }

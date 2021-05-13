@@ -32,6 +32,7 @@ pub struct UserSpace {
     last_rpc: u64,
     user_id: u64,
     cache: UserSpaceCache,
+    mysql_pool: Arc<mysql_async::Pool>,
 }
 
 // This is Command that UserSpace async task process sequentially.
@@ -53,13 +54,20 @@ pub struct UserSpaceCmdReq {
 
 // This holds a map of user_id to a stream sender channel of UserSpaceCmdReq. Each rpc request will
 // be a UserSpaceCmdReq which then passed to this channel and then the result will be handled.
-#[derive(Default, Debug)]
+#[derive(Debug)]
 pub struct UserSpaceMapper {
     us_cmd_req: Arc<Mutex<HashMap<u32, tokio::sync::mpsc::Sender<UserSpaceCmdReq>>>>,
+    mysql_pool: Arc<mysql_async::Pool>,
 }
 impl UserSpaceMapper {
     pub fn new() -> UserSpaceMapper {
-        UserSpaceMapper::default()
+        let database_url = "mysql://flipper:12345678@192.168.193.115:3306/flip_my";
+        let pool = mysql_async::Pool::new(database_url);
+
+        UserSpaceMapper {
+            us_cmd_req: Arc::new(Mutex::new(Default::default())),
+            mysql_pool: Arc::new(pool),
+        }
     }
 
     pub async fn serve_rpc_request(
@@ -164,6 +172,7 @@ impl UserSpaceMapper {
         let (req_stream_sender, mut req_stream_receiver) = tokio::sync::mpsc::channel(32);
         let req_stream_sender_cp = req_stream_sender.clone();
 
+        let mysql_arc = self.mysql_pool.clone();
         // receiver
         tokio::spawn(async move {
             println!("user space start");
@@ -173,6 +182,7 @@ impl UserSpaceMapper {
                 last_rpc: 0,
                 user_id: user_id as u64,
                 cache: Default::default(),
+                mysql_pool: mysql_arc,
             };
 
             let arc_us = Arc::new(user_space);

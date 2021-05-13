@@ -4,8 +4,6 @@ use mysql_async::{FromRowError, OptsBuilder, Params, Pool, Row};
 use mysql_common::row::ColumnIndex;
 
 use mysql_common::value::Value;
-// use mysql::prelude::Queryable;
-// use mysql::prelude::Queryable;
 
 //use crate::xc::CWError;
 
@@ -8311,6 +8309,8 @@ impl ProfileSubscriberSelector {
 pub struct Sms {
     // sms
     pub sms_id: u64,
+    pub phone_number: String,
+    pub hash_code: String,
     pub result_code: u32,
     pub pd_data: Vec<u8>,
     pub json_data: String,
@@ -8323,37 +8323,23 @@ impl FromRow for Sms {
     {
         Ok(Sms {
             sms_id: row.get(0).unwrap_or_default(),
-            result_code: row.get(1).unwrap_or_default(),
-            pd_data: row.get(2).unwrap_or_default(),
-            json_data: row.get(3).unwrap_or_default(),
+            phone_number: row.get(1).unwrap_or_default(),
+            hash_code: row.get(2).unwrap_or_default(),
+            result_code: row.get(3).unwrap_or_default(),
+            pd_data: row.get(4).unwrap_or_default(),
+            json_data: row.get(5).unwrap_or_default(),
         })
     }
 }
 
 impl Sms {
-    /*    pub async fn insert_sync(&self, con: mysql::Pool) -> Result<Sms,MyError> {
-        use mysql::prelude::Queryable;
-
-        // let mut conn = pool.get_conn().await?;
-        let mut conn =con.get_conn().unwrap();
-
-        let query = r"INSERT INTO flip_my.sms (result_code, pd_data, json_data) VALUES (?, ?, ?)";
-        let p = Params::Positional(vec![self.result_code.clone().into(), self.pd_data.clone().into(), self.json_data.clone().into()]);
-
-         conn.query(
-            query
-        ).unwrap();
-
-        let mut cp = self.clone();
-        // cp.sms_id = qr.last_insert_id().unwrap() as u64;
-        Ok(cp)
-    }*/
-
     pub async fn insert(&self, pool: &Pool) -> Result<Sms, MyError> {
         let mut conn = pool.get_conn().await?;
 
-        let query = r"INSERT INTO flip_my.sms (result_code, pd_data, json_data) VALUES (?, ?, ?)";
+        let query = r"INSERT INTO flip_my.sms (phone_number, hash_code, result_code, pd_data, json_data) VALUES (?, ?, ?, ?, ?)";
         let p = Params::Positional(vec![
+            self.phone_number.clone().into(),
+            self.hash_code.clone().into(),
             self.result_code.clone().into(),
             self.pd_data.clone().into(),
             self.json_data.clone().into(),
@@ -8369,8 +8355,10 @@ impl Sms {
     pub async fn replace_dep(&self, pool: &Pool) -> Result<Sms, MyError> {
         let mut conn = pool.get_conn().await?;
 
-        let query = r"INSERT INTO flip_my.sms (result_code, pd_data, json_data) VALUES (?, ?, ?)";
+        let query = r"INSERT INTO flip_my.sms (phone_number, hash_code, result_code, pd_data, json_data) VALUES (?, ?, ?, ?, ?)";
         let p = Params::Positional(vec![
+            self.phone_number.clone().into(),
+            self.hash_code.clone().into(),
             self.result_code.clone().into(),
             self.pd_data.clone().into(),
             self.json_data.clone().into(),
@@ -8386,9 +8374,10 @@ impl Sms {
 
     pub async fn update(&self, pool: &Pool) -> Result<(), MyError> {
         let mut conn = pool.get_conn().await?;
-        let query =
-            r"UPDATE flip_my.sms SET result_code = ?, pd_data = ?, json_data = ? WHERE sms_id = ? ";
+        let query = r"UPDATE flip_my.sms SET phone_number = ?, hash_code = ?, result_code = ?, pd_data = ?, json_data = ? WHERE sms_id = ? ";
         let p = Params::Positional(vec![
+            self.phone_number.clone().into(),
+            self.hash_code.clone().into(),
             self.result_code.clone().into(),
             self.pd_data.clone().into(),
             self.json_data.clone().into(),
@@ -8444,6 +8433,16 @@ impl SmsSelector {
     //each column select
     pub fn select_sms_id(&mut self) -> &mut Self {
         self.select_cols.push("sms_id");
+        self
+    }
+
+    pub fn select_phone_number(&mut self) -> &mut Self {
+        self.select_cols.push("phone_number");
+        self
+    }
+
+    pub fn select_hash_code(&mut self) -> &mut Self {
+        self.select_cols.push("hash_code");
         self
     }
 
@@ -8533,6 +8532,26 @@ impl SmsSelector {
 
     pub fn order_by_sms_id_desc(&mut self) -> &mut Self {
         self.order_by.push("sms_id DESC");
+        self
+    }
+
+    pub fn order_by_phone_number_asc(&mut self) -> &mut Self {
+        self.order_by.push("phone_number ASC");
+        self
+    }
+
+    pub fn order_by_phone_number_desc(&mut self) -> &mut Self {
+        self.order_by.push("phone_number DESC");
+        self
+    }
+
+    pub fn order_by_hash_code_asc(&mut self) -> &mut Self {
+        self.order_by.push("hash_code ASC");
+        self
+    }
+
+    pub fn order_by_hash_code_desc(&mut self) -> &mut Self {
+        self.order_by.push("hash_code DESC");
         self
     }
 
@@ -8685,6 +8704,276 @@ impl SmsSelector {
     pub fn or_sms_id_ge(&mut self, val: u64) -> &mut Self {
         let w = WhereClause {
             condition: "OR sms_id >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn phone_number_eq(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: " phone_number = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn phone_number_lt(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: " phone_number < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn phone_number_le(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: " phone_number <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn phone_number_gt(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: " phone_number > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn phone_number_ge(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: " phone_number >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_phone_number_eq(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: "AND phone_number = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_phone_number_lt(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: "AND phone_number < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_phone_number_le(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: "AND phone_number <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_phone_number_gt(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: "AND phone_number > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_phone_number_ge(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: "AND phone_number >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_phone_number_eq(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: "OR phone_number = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_phone_number_lt(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: "OR phone_number < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_phone_number_le(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: "OR phone_number <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_phone_number_gt(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: "OR phone_number > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_phone_number_ge(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: "OR phone_number >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn hash_code_eq(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: " hash_code = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn hash_code_lt(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: " hash_code < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn hash_code_le(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: " hash_code <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn hash_code_gt(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: " hash_code > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn hash_code_ge(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: " hash_code >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_hash_code_eq(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: "AND hash_code = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_hash_code_lt(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: "AND hash_code < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_hash_code_le(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: "AND hash_code <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_hash_code_gt(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: "AND hash_code > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn and_hash_code_ge(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: "AND hash_code >= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_hash_code_eq(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: "OR hash_code = ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_hash_code_lt(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: "OR hash_code < ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_hash_code_le(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: "OR hash_code <= ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_hash_code_gt(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: "OR hash_code > ?".to_string(),
+            args: val.into(),
+        };
+        self.wheres.push(w);
+        self
+    }
+
+    pub fn or_hash_code_ge(&mut self, val: &str) -> &mut Self {
+        let w = WhereClause {
+            condition: "OR hash_code >= ?".to_string(),
             args: val.into(),
         };
         self.wheres.push(w);

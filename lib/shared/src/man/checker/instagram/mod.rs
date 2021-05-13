@@ -146,7 +146,6 @@ mod tests {
         println!("running instagram username checker tests ...")
     }
 
-    #[test]
     pub async fn play_main() {
         run().await;
     }

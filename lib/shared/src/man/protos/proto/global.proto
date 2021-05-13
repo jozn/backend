@@ -556,8 +556,10 @@ message Session {//todo
 message Sms {//todo
   fixed64 gid = 1;
   string install_uuid = 3;
-  string to_phone = 4;
-  bool for_confirm = 103;
+  string phone_number = 4;
+  string country_code = 32;
+  bool for_login = 103;
+  string hash_code = 107;
   string confirm_code = 5;
   string gateway_number = 6;
   string text_body = 101;

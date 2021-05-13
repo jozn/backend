@@ -38,10 +38,8 @@ pub enum IPC_CMaster_MethodData {
 }
 #[derive(Debug)]
 pub enum RPC_Auth_MethodData {
-    AuthSendConfirmCode(pb::AuthSendConfirmCodeParam),
-    AuthConfirmCode(pb::AuthConfirmCodeParam),
-    AuthSingUp(pb::AuthSingUpParam),
-    AuthSingIn(pb::AuthSingInParam),
+    AuthSendCode(pb::AuthSendCodeParam),
+    AuthLogIn(pb::AuthLogInParam),
     AuthLogOut(pb::AuthLogOutParam),
 }
 #[derive(Debug)]
@@ -216,29 +214,17 @@ pub trait IPC_CMaster_Handler {
 }
 #[async_trait]
 pub trait RPC_Auth_Handler {
-    async fn AuthSendConfirmCode(
+    async fn AuthSendCode(
         up: &UserParam,
-        param: pb::AuthSendConfirmCodeParam,
-    ) -> Result<pb::AuthSendConfirmCodeResponse, GenErr> {
-        Ok(pb::AuthSendConfirmCodeResponse::default())
+        param: pb::AuthSendCodeParam,
+    ) -> Result<pb::AuthSendCodeResponse, GenErr> {
+        Ok(pb::AuthSendCodeResponse::default())
     }
-    async fn AuthConfirmCode(
+    async fn AuthLogIn(
         up: &UserParam,
-        param: pb::AuthConfirmCodeParam,
-    ) -> Result<pb::AuthConfirmCodeResponse, GenErr> {
-        Ok(pb::AuthConfirmCodeResponse::default())
-    }
-    async fn AuthSingUp(
-        up: &UserParam,
-        param: pb::AuthSingUpParam,
-    ) -> Result<pb::AuthSingUpResponse, GenErr> {
-        Ok(pb::AuthSingUpResponse::default())
-    }
-    async fn AuthSingIn(
-        up: &UserParam,
-        param: pb::AuthSingInParam,
-    ) -> Result<pb::AuthSingInResponse, GenErr> {
-        Ok(pb::AuthSingInResponse::default())
+        param: pb::AuthLogInParam,
+    ) -> Result<pb::AuthLogInResponse, GenErr> {
+        Ok(pb::AuthLogInResponse::default())
     }
     async fn AuthLogOut(
         up: &UserParam,
@@ -1021,29 +1007,14 @@ pub trait IPC_CMaster_Handler2: Send + Sync {
 }
 #[async_trait]
 pub trait RPC_Auth_Handler2: Send + Sync {
-    async fn AuthSendConfirmCode(
+    async fn AuthSendCode(
         &self,
-        param: pb::AuthSendConfirmCodeParam,
-    ) -> Result<pb::AuthSendConfirmCodeResponse, GenErr> {
-        Ok(pb::AuthSendConfirmCodeResponse::default())
+        param: pb::AuthSendCodeParam,
+    ) -> Result<pb::AuthSendCodeResponse, GenErr> {
+        Ok(pb::AuthSendCodeResponse::default())
     }
-    async fn AuthConfirmCode(
-        &self,
-        param: pb::AuthConfirmCodeParam,
-    ) -> Result<pb::AuthConfirmCodeResponse, GenErr> {
-        Ok(pb::AuthConfirmCodeResponse::default())
-    }
-    async fn AuthSingUp(
-        &self,
-        param: pb::AuthSingUpParam,
-    ) -> Result<pb::AuthSingUpResponse, GenErr> {
-        Ok(pb::AuthSingUpResponse::default())
-    }
-    async fn AuthSingIn(
-        &self,
-        param: pb::AuthSingInParam,
-    ) -> Result<pb::AuthSingInResponse, GenErr> {
-        Ok(pb::AuthSingInResponse::default())
+    async fn AuthLogIn(&self, param: pb::AuthLogInParam) -> Result<pb::AuthLogInResponse, GenErr> {
+        Ok(pb::AuthLogInResponse::default())
     }
     async fn AuthLogOut(
         &self,
@@ -1753,14 +1724,12 @@ pub trait RPC_User_Handler2: Send + Sync {
     ) -> Result<pb::UserDeleteSendCodeResponse, GenErr> {
         Ok(pb::UserDeleteSendCodeResponse::default())
     }
-
     async fn UserDeleteConfirmCode(
         &self,
         param: pb::UserDeleteConfirmCodeParam,
     ) -> Result<pb::UserDeleteConfirmCodeResponse, GenErr> {
         Ok(pb::UserDeleteConfirmCodeResponse::default())
     }
-
     async fn UserDeleteUser(
         &self,
         param: pb::UserDeleteUserParam,
@@ -1820,10 +1789,8 @@ pub mod method_ids {
     pub const GetNextId: u32 = 929964228;
 
     // Service: RPC_Auth
-    pub const AuthSendConfirmCode: u32 = 2008549258;
-    pub const AuthConfirmCode: u32 = 536667693;
-    pub const AuthSingUp: u32 = 1188731761;
-    pub const AuthSingIn: u32 = 145780334;
+    pub const AuthSendCode: u32 = 331194686;
+    pub const AuthLogIn: u32 = 1175605097;
     pub const AuthLogOut: u32 = 370097782;
 
     // Service: RPC_Channel
@@ -1986,10 +1953,8 @@ pub enum MethodIds {
     GetNextId = 929964228,
 
     // Service: RPC_Auth
-    AuthSendConfirmCode = 2008549258,
-    AuthConfirmCode = 536667693,
-    AuthSingUp = 1188731761,
-    AuthSingIn = 145780334,
+    AuthSendCode = 331194686,
+    AuthLogIn = 1175605097,
     AuthLogOut = 370097782,
 
     // Service: RPC_Channel
@@ -2157,39 +2122,20 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
         }
 
         // RPC_Auth
-        method_ids::AuthSendConfirmCode => {
-            let rpc_param: pb::AuthSendConfirmCodeParam =
+        method_ids::AuthSendCode => {
+            let rpc_param: pb::AuthSendCodeParam =
                 prost::Message::decode(invoke.rpc_data.as_slice())?;
             RpcInvoke {
-                method_id: 2008549258 as i64,
-                rpc_service: RPC_Auth(RPC_Auth_MethodData::AuthSendConfirmCode(rpc_param)),
+                method_id: 331194686 as i64,
+                rpc_service: RPC_Auth(RPC_Auth_MethodData::AuthSendCode(rpc_param)),
             }
         }
 
-        method_ids::AuthConfirmCode => {
-            let rpc_param: pb::AuthConfirmCodeParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
+        method_ids::AuthLogIn => {
+            let rpc_param: pb::AuthLogInParam = prost::Message::decode(invoke.rpc_data.as_slice())?;
             RpcInvoke {
-                method_id: 536667693 as i64,
-                rpc_service: RPC_Auth(RPC_Auth_MethodData::AuthConfirmCode(rpc_param)),
-            }
-        }
-
-        method_ids::AuthSingUp => {
-            let rpc_param: pb::AuthSingUpParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 1188731761 as i64,
-                rpc_service: RPC_Auth(RPC_Auth_MethodData::AuthSingUp(rpc_param)),
-            }
-        }
-
-        method_ids::AuthSingIn => {
-            let rpc_param: pb::AuthSingInParam =
-                prost::Message::decode(invoke.rpc_data.as_slice())?;
-            RpcInvoke {
-                method_id: 145780334 as i64,
-                rpc_service: RPC_Auth(RPC_Auth_MethodData::AuthSingIn(rpc_param)),
+                method_id: 1175605097 as i64,
+                rpc_service: RPC_Auth(RPC_Auth_MethodData::AuthLogIn(rpc_param)),
             }
         }
 
@@ -3391,7 +3337,9 @@ pub fn invoke_to_parsed(invoke: &pb::Invoke) -> Result<RpcInvoke, GenErr> {
             }
         }
 
-        _ => panic!("sdf"),
+        _ => {
+            panic!("sdf")
+        }
     };
     Ok(rpc)
 }
@@ -3408,30 +3356,16 @@ pub async fn server_rpc(act: RpcInvoke, reg: &RPC_Registry) -> Result<Vec<u8>, G
         },
 
         RpcServiceData::RPC_Auth(method) => match method {
-            RPC_Auth_MethodData::AuthSendConfirmCode(param) => {
+            RPC_Auth_MethodData::AuthSendCode(param) => {
                 let handler = eror(&reg.RPC_Auth)?;
-                let response = handler.AuthSendConfirmCode(param).await?;
+                let response = handler.AuthSendCode(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
 
-            RPC_Auth_MethodData::AuthConfirmCode(param) => {
+            RPC_Auth_MethodData::AuthLogIn(param) => {
                 let handler = eror(&reg.RPC_Auth)?;
-                let response = handler.AuthConfirmCode(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Auth_MethodData::AuthSingUp(param) => {
-                let handler = eror(&reg.RPC_Auth)?;
-                let response = handler.AuthSingUp(param).await?;
-                let v8 = to_vev8(&response)?;
-                v8
-            }
-
-            RPC_Auth_MethodData::AuthSingIn(param) => {
-                let handler = eror(&reg.RPC_Auth)?;
-                let response = handler.AuthSingIn(param).await?;
+                let response = handler.AuthLogIn(param).await?;
                 let v8 = to_vev8(&response)?;
                 v8
             }
@@ -4459,37 +4393,19 @@ impl common::RpcClient {
     }
 
     // service: RPC_Auth
-    pub async fn AuthSendConfirmCode(
+    pub async fn AuthSendCode(
         &self,
-        param: pb::AuthSendConfirmCodeParam,
-    ) -> Result<pb::AuthSendConfirmCodeResponse, GenErr> {
-        let pb_res = self
-            .rpc_invoke(&param, method_ids::AuthSendConfirmCode)
-            .await?;
+        param: pb::AuthSendCodeParam,
+    ) -> Result<pb::AuthSendCodeResponse, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::AuthSendCode).await?;
         Ok(pb_res)
     }
 
-    pub async fn AuthConfirmCode(
+    pub async fn AuthLogIn(
         &self,
-        param: pb::AuthConfirmCodeParam,
-    ) -> Result<pb::AuthConfirmCodeResponse, GenErr> {
-        let pb_res = self.rpc_invoke(&param, method_ids::AuthConfirmCode).await?;
-        Ok(pb_res)
-    }
-
-    pub async fn AuthSingUp(
-        &self,
-        param: pb::AuthSingUpParam,
-    ) -> Result<pb::AuthSingUpResponse, GenErr> {
-        let pb_res = self.rpc_invoke(&param, method_ids::AuthSingUp).await?;
-        Ok(pb_res)
-    }
-
-    pub async fn AuthSingIn(
-        &self,
-        param: pb::AuthSingInParam,
-    ) -> Result<pb::AuthSingInResponse, GenErr> {
-        let pb_res = self.rpc_invoke(&param, method_ids::AuthSingIn).await?;
+        param: pb::AuthLogInParam,
+    ) -> Result<pb::AuthLogInResponse, GenErr> {
+        let pb_res = self.rpc_invoke(&param, method_ids::AuthLogIn).await?;
         Ok(pb_res)
     }
 
@@ -5694,33 +5610,16 @@ impl IPC_CMaster_Handler2 for _RRR_ {
 }
 #[async_trait]
 impl RPC_Auth_Handler2 for _RRR_ {
-    async fn AuthSendConfirmCode(
+    async fn AuthSendCode(
         &self,
-        param: pb::AuthSendConfirmCodeParam,
-    ) -> Result<pb::AuthSendConfirmCodeResponse, GenErr> {
-        println!("called AuthSendConfirmCode in the impl code.");
-        Ok(pb::AuthSendConfirmCodeResponse::default())
+        param: pb::AuthSendCodeParam,
+    ) -> Result<pb::AuthSendCodeResponse, GenErr> {
+        println!("called AuthSendCode in the impl code.");
+        Ok(pb::AuthSendCodeResponse::default())
     }
-    async fn AuthConfirmCode(
-        &self,
-        param: pb::AuthConfirmCodeParam,
-    ) -> Result<pb::AuthConfirmCodeResponse, GenErr> {
-        println!("called AuthConfirmCode in the impl code.");
-        Ok(pb::AuthConfirmCodeResponse::default())
-    }
-    async fn AuthSingUp(
-        &self,
-        param: pb::AuthSingUpParam,
-    ) -> Result<pb::AuthSingUpResponse, GenErr> {
-        println!("called AuthSingUp in the impl code.");
-        Ok(pb::AuthSingUpResponse::default())
-    }
-    async fn AuthSingIn(
-        &self,
-        param: pb::AuthSingInParam,
-    ) -> Result<pb::AuthSingInResponse, GenErr> {
-        println!("called AuthSingIn in the impl code.");
-        Ok(pb::AuthSingInResponse::default())
+    async fn AuthLogIn(&self, param: pb::AuthLogInParam) -> Result<pb::AuthLogInResponse, GenErr> {
+        println!("called AuthLogIn in the impl code.");
+        Ok(pb::AuthLogInResponse::default())
     }
     async fn AuthLogOut(
         &self,

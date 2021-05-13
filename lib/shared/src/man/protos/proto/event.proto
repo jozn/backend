@@ -134,9 +134,9 @@ message ChatCommand {
       uint64 chat_gid = 2;
   }
   message QSendMessage {
-    uint64 profile_cid = 1;
-    uint64 chat_gid = 2;
-    NewMessageInput message_input = 3;
+      uint64 profile_cid = 1;
+      uint64 chat_gid = 2;
+      NewMessageInput message_input = 3;
   }
   message QEditMessage {
       uint64 chat_gid = 2;

@@ -11,10 +11,12 @@ rqwerljk"#,
     )
 }
 
-pub async fn send_confirm_sms(to_phone: &str, code_len: u32) -> Result<(), GenErr> {
+pub async fn send_login_code_sms(to_phone: &str, code_len: u32) -> Result<String, GenErr> {
     let code: u32 = rand::thread_rng().gen_range(10_u32.pow(code_len - 1), 10_u32.pow(code_len));
     let msg = get_confirm_msg(code);
-    send_sms(to_phone, &msg).await
+    send_sms(to_phone, &msg).await?;
+    let code_str = format!("{}", code);
+    Ok(code_str)
 }
 
 async fn send_sms(to_phone: &str, message: &str) -> Result<(), GenErr> {
