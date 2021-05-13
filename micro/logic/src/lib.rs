@@ -196,6 +196,7 @@ impl UserSpaceMapper {
             let rpc_handler_registry = shared::rpc2::RPC_Registry {
                 RPC_Auth: add!(),
                 RPC_Shared: add!(),
+                RPC_User: add!(),
                 RPC_Channel: Some(Box::new(arc_us.clone())), // Explict
                 ..Default::default()
             };

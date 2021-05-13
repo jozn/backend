@@ -1,3 +1,4 @@
+use crate::gen::my::MyError;
 use crate::xc::CWError;
 
 #[derive(Debug)]
@@ -7,6 +8,7 @@ pub enum GenErr {
     HttpClientErr(reqwest::Error),
     ProstDecode(::prost::DecodeError),
     ProstEncode(::prost::EncodeError),
+    MySQL(MyError),
 
     CassadraError,
     NoRpcRegistry,
@@ -40,6 +42,11 @@ impl From<CWError> for GenErr {
     }
 }
 
+impl From<MyError> for GenErr {
+    fn from(err: MyError) -> Self {
+        GenErr::MySQL(err)
+    }
+}
 /*impl
 From<Option::None> for GenErr {
     fn from(_: Option::None) -> Self {

@@ -46,7 +46,7 @@ service RPC_Channel {
     rpc ChannelLikeMessage (ChannelLikeMessageParam) returns (ChannelLikeMessageResponse); // qevent_id_200
     rpc ChannelUnLikeMessage (ChannelUnLikeMessageParam) returns (ChannelUnLikeMessageResponse); // qevent
 
-    // Repost
+    // Repost > deprecated
     rpc ChannelReShareMessage (ChannelReShareMessageParam) returns (ChannelReShareMessageResponse); // qevent_id_300
     rpc ChannelUnReShareMessage (ChannelUnReShareMessageParam) returns (ChannelUnReShareMessageResponse); // qevent
 

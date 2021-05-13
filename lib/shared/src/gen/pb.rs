@@ -2451,9 +2451,13 @@ pub struct UserRegisterUserParam {
     #[prost(string, tag = "3")]
     pub last_name: std::string::String,
     #[prost(string, tag = "15")]
-    pub phone: std::string::String,
+    pub phone_number: std::string::String,
     #[prost(uint32, tag = "5")]
     pub created_time: u32,
+    #[prost(string, tag = "10")]
+    pub hash_code: std::string::String,
+    #[prost(string, tag = "30")]
+    pub confirm_code: std::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserRegisterUserResponse {
