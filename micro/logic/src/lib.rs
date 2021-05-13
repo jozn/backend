@@ -184,6 +184,7 @@ impl UserSpaceMapper {
             }
 
             let rpc_handler_registry = shared::rpc2::RPC_Registry {
+                RPC_Auth: add!(),
                 RPC_Shared: add!(),
                 RPC_Channel: Some(Box::new(arc_us.clone())), // Explict
                 ..Default::default()
@@ -193,9 +194,9 @@ impl UserSpaceMapper {
                 match us_cmd_req.cmd {
                     Commands::InternalRpc => {}
                     Commands::Exit => {
-                        println!("Exiting user space of: {:}",user_id);
+                        println!("Exiting user space of: {:}", user_id);
                         break;
-                    },
+                    }
                     Commands::Invoke(invoke) => {
                         println!("userspace getting invoke: {:?}", invoke);
                         let out_res = rpc2::server_rpc(invoke, &rpc_handler_registry)

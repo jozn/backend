@@ -1,3 +1,3 @@
 fn main() {
-    println!("run gateway1");
+    println!("Note: run gateway1");
 }

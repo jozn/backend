@@ -35,6 +35,7 @@ byteorder = "1"
 cdrs = "2.3.3"
 mysql_async = "0.27.1"
 mysql_common = "0.26.0"
+mysql = "20.1.0"
 
 # used for chrome driver
 #color-eyre = "0.5.10"

@@ -28,5 +28,9 @@ byteorder = "1"
 
 #tikv-client = { git = "https://github.com/tikv/client-rust.git" }
 
+mysql_async = "0.27.1"
+mysql_common = "0.26.0"
+mysql = "20.1.0"
+
 cdrs = "3.0.0-beta.2"
 #bindgen = "0.55.0"

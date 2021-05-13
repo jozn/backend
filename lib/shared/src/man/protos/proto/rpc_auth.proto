@@ -7,15 +7,17 @@ import "global.proto";
 
 service RPC_Auth {
 //    rpc CheckPhone (UserParam_CheckUserName2) returns (UserResponse_CheckUserName2);
-    rpc AuthSendConfirmCode (AuthSendConfirmCodeParam) returns (AuthSendConfirmCodeResponse);
+//    rpc AuthSendConfirmCode (AuthSendConfirmCodeParam) returns (AuthSendConfirmCodeResponse);
+    rpc AuthSendCode (AuthSendCodeParam) returns (AuthSendCodeResponse);
     rpc AuthConfirmCode (AuthConfirmCodeParam) returns (AuthConfirmCodeResponse);
     rpc AuthSingUp (AuthSingUpParam) returns (AuthSingUpResponse);
-    rpc AuthSingIn (AuthSingInParam) returns (AuthSingInResponse);
+//    rpc AuthSingIn (AuthSingInParam) returns (AuthSingInResponse);
+    rpc AuthLogIn (AuthLogInParam) returns (AuthLogInResponse);
     rpc AuthLogOut (AuthLogOutParam) returns (AuthLogOutResponse);
 }
 
 
-message AuthSendConfirmCodeParam {
+message AuthSendCodeParam {
     string Hash = 1;
     string Phone = 2; // 98... 989015132328
     string CountryCode = 3;
@@ -27,12 +29,14 @@ enum SendConfirmCodeTypeEnum {
     SEND_CODE_EMAIL = 1;
 }
 
-message AuthSendConfirmCodeResponse {
-    bool Done =1;
-    string ErrorMessage =2;
-    bool JustEmailRegister = 3 ;
-    repeated string SmsNumbers = 4;
-    bool IsLogin = 5;
+message AuthSendCodeResponse {
+//    bool Done =1;
+    string PhoneCodeHash = 6;
+    bool PhoneRegistered = 8;
+//    string ErrorMessage =2;
+//    bool JustEmailRegister = 3 ;
+//    repeated string SmsNumbers = 4;
+//    bool IsLogin = 5;
 }
 
 
@@ -44,7 +48,7 @@ message AuthConfirmCodeParam {
 
 message AuthConfirmCodeResponse {
     bool Done =1;
-    string ErrorMessage = 2;
+//    string ErrorMessage = 2;
     //    SelfUserView SelfUserView = 3; //if it is login
 }
 
@@ -60,19 +64,19 @@ message AuthSingUpParam {
 
 message AuthSingUpResponse {
     bool Done =1;
-    string ErrorMessage = 2;
+//    string ErrorMessage = 2;
     //    SelfUserView SelfUserView = 3;
 }
 
 
-message AuthSingInParam {
+message AuthLogInParam {
     string UserNamePhoneEmail = 4;
     string Password = 5; // 98... 989015132328
 }
 
-message AuthSingInResponse {
+message AuthLogInResponse {
     bool Done =1;
-    string ErrorMessage = 2;
+//    string ErrorMessage = 2;
     //    SelfUserView SelfUserView = 3;
 }
 
@@ -83,5 +87,5 @@ message AuthLogOutParam {
 
 message AuthLogOutResponse {
     bool Done =1;
-    string ErrorMessage =2;
+//    string ErrorMessage =2;
 }
