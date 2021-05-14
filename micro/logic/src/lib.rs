@@ -75,7 +75,7 @@ impl UserSpaceMapper {
         invoke: pb::Invoke,
     ) -> Result<pb::InvokeResponse, GenErr> {
         let rpc_invoke_enumed = rpc2::invoke_to_parsed(&invoke)?;
-        let user_id = invoke.user_id;
+        let user_id = invoke.user_cid;
 
         if user_id == 0 {
             // err
@@ -101,9 +101,9 @@ impl UserSpaceMapper {
             Ok(val_bts) => {
                 let rres = pb::InvokeResponse {
                     namespace: invoke.namespace,
-                    method: invoke.user_id,
-                    user_id: invoke.user_id,
-                    action_id: invoke.action_id,
+                    method: invoke.method,
+                    user_cid: invoke.user_cid,
+                    invoke_id: invoke.invoke_id,
                     rpc_data: val_bts,
                 };
                 Ok(rres)
@@ -116,7 +116,7 @@ impl UserSpaceMapper {
     pub async fn serve_rpc_request_vec8_dep(&self, rpc_http: Vec<u8>) -> Result<Vec<u8>, GenErr> {
         let invoke: pb::Invoke = prost::Message::decode(rpc_http.as_slice())?;
         let rpc_invoke_enumed = rpc2::invoke_to_parsed(&invoke)?;
-        let user_id = invoke.user_id;
+        let user_id = invoke.user_cid;
 
         if user_id == 0 {
             // err
@@ -243,9 +243,13 @@ mod tests {
         let invoke = pb::Invoke {
             namespace: 0,
             method: shared::rpc2::method_ids::SharedEcho,
-            user_id: 3,
-            action_id: 0,
-            session: vec![],
+            user_cid: 3,
+            invoke_id: 0,
+            session_hash: "".to_string(),
+            api_version: 0,
+            app_name: "".to_string(),
+            app_version: "".to_string(),
+            device_name: "".to_string(),
             rpc_data: echo_data,
         };
         let mut vec = vec![];

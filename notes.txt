@@ -1,3 +1,5 @@
 + for writing playground codes: write them in test moudle and then call it form an excutable file > but b/c
     rust compiler ignores test moudles when you play comment the "#[cfg(test)]" section.
 
++ About rust:
+    + Empty String and Vec have zero capacity means they do not allocate unless something goes inot them.

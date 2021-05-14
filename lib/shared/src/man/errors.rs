@@ -14,6 +14,7 @@ pub enum GenErr {
     NoRpcRegistry,
 
     NotFound,
+    WrongParam,
 
     UserSpaceErr,
 }

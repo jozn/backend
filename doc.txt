@@ -1,5 +1,9 @@
 Notes:
-    longblob in mysql has 8bytes, text and blob has 4
+    longblob in mysql has 8 bytes, text and blob has 4
+    + uuid has a spec use the name only if you use that format
+    + NOT:> we should ping server every 30-60 seconds >> update: NO , go for statless
+    + favour statless connection
+    + Phone number in international format always
 Policies:
     + Separation of concerns is more important than some code reuse. (ex: Media, Photo, Avatar, Thumb, Video,
       Audio,...) > give things space to grow independently and the scope/boundaries of their functionality be

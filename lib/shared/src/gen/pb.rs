@@ -58,13 +58,24 @@ pub struct Invoke {
     pub method: u32,
     /// imut
     #[prost(uint32, tag = "7")]
-    pub user_id: u32,
+    pub user_cid: u32,
     /// imut
     #[prost(uint64, tag = "2")]
-    pub action_id: u64,
+    pub invoke_id: u64,
     /// imut
-    #[prost(bytes, tag = "8")]
-    pub session: std::vec::Vec<u8>,
+    #[prost(string, tag = "8")]
+    pub session_hash: std::string::String,
+    #[prost(uint32, tag = "10")]
+    pub api_version: u32,
+    /// ex: "Android"
+    #[prost(string, tag = "11")]
+    pub app_name: std::string::String,
+    /// "v3.2"
+    #[prost(string, tag = "12")]
+    pub app_version: std::string::String,
+    /// "HMD GlobalNokia 3.2, Android 10 Q (29)"
+    #[prost(string, tag = "13")]
+    pub device_name: std::string::String,
     /// imut
     #[prost(bytes, tag = "4")]
     pub rpc_data: std::vec::Vec<u8>,
@@ -82,10 +93,10 @@ pub struct InvokeResponse {
     pub method: u32,
     /// imut
     #[prost(uint32, tag = "7")]
-    pub user_id: u32,
+    pub user_cid: u32,
     /// imut
     #[prost(uint64, tag = "2")]
-    pub action_id: u64,
+    pub invoke_id: u64,
     /// imut
     #[prost(bytes, tag = "4")]
     pub rpc_data: std::vec::Vec<u8>,
@@ -718,35 +729,38 @@ pub struct FileMsg {
     #[prost(bytes, tag = "9")]
     pub data: std::vec::Vec<u8>,
 }
-///todo
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Session {
-    #[prost(fixed64, tag = "1")]
-    pub gid: u64,
     #[prost(string, tag = "2")]
-    pub session_uuid: std::string::String,
-    #[prost(uint64, tag = "100")]
-    pub device_id: u64,
+    pub session_hash: std::string::String,
+    ///  uint64 device_id = 100;
     #[prost(uint32, tag = "3")]
     pub user_cid: u32,
     #[prost(string, tag = "4")]
-    pub last_ip_address: std::string::String,
+    pub last_ip: std::string::String,
     #[prost(string, tag = "8")]
     pub user_agent: std::string::String,
-    #[prost(enumeration = "DevicePlatform", tag = "9")]
-    pub platform: i32,
-    #[prost(uint32, tag = "5")]
+    ///  DevicePlatform platform = 9;
+    ///  uint32 api_version = 5;
+    #[prost(uint32, tag = "10")]
     pub api_version: u32,
+    /// ex: "Android"
+    #[prost(string, tag = "11")]
+    pub app_name: std::string::String,
+    /// "v3.2"
+    #[prost(string, tag = "12")]
+    pub app_version: std::string::String,
+    /// "HMD GlobalNokia 3.2, Android 10 Q (29)"
+    #[prost(string, tag = "13")]
+    pub device_name: std::string::String,
     #[prost(uint32, tag = "6")]
     pub active_time: u32,
     #[prost(uint32, tag = "7")]
     pub created_time: u32,
 }
-///todo
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Sms {
-    #[prost(fixed64, tag = "1")]
-    pub gid: u64,
+    /// we maybe need this
     #[prost(string, tag = "3")]
     pub install_uuid: std::string::String,
     #[prost(string, tag = "4")]
@@ -915,6 +929,65 @@ pub struct GroupCountsDep {
     pub link_count: u32,
     #[prost(uint32, tag = "32")]
     pub pined_count: u32,
+}
+///todo
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SmsBk {
+    #[prost(fixed64, tag = "1")]
+    pub gid: u64,
+    #[prost(string, tag = "3")]
+    pub install_uuid: std::string::String,
+    #[prost(string, tag = "4")]
+    pub phone_number: std::string::String,
+    #[prost(string, tag = "32")]
+    pub country_code: std::string::String,
+    #[prost(bool, tag = "103")]
+    pub for_login: bool,
+    #[prost(string, tag = "107")]
+    pub hash_code: std::string::String,
+    #[prost(string, tag = "5")]
+    pub confirm_code: std::string::String,
+    #[prost(string, tag = "6")]
+    pub gateway_number: std::string::String,
+    #[prost(string, tag = "101")]
+    pub text_body: std::string::String,
+    #[prost(uint32, tag = "100")]
+    pub created_time: u32,
+    /// Below are for easier debugging purpose > stringy
+    ///
+    /// some custom debug info: http header, code, body, ...
+    #[prost(string, tag = "9")]
+    pub gateway_error: std::string::String,
+    /// like "register" "login" "delete" "marketing" ,...
+    #[prost(string, tag = "14")]
+    pub intent: std::string::String,
+    /// like "confirmed" "unconfirmed" "sending" "gateway_error"
+    #[prost(string, tag = "102")]
+    pub result: std::string::String,
+}
+///todo
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SessionBk {
+    #[prost(fixed64, tag = "1")]
+    pub gid: u64,
+    #[prost(string, tag = "2")]
+    pub session_uuid: std::string::String,
+    #[prost(uint64, tag = "100")]
+    pub device_id: u64,
+    #[prost(uint32, tag = "3")]
+    pub user_cid: u32,
+    #[prost(string, tag = "4")]
+    pub last_ip_address: std::string::String,
+    #[prost(string, tag = "8")]
+    pub user_agent: std::string::String,
+    #[prost(enumeration = "DevicePlatform", tag = "9")]
+    pub platform: i32,
+    #[prost(uint32, tag = "5")]
+    pub api_version: u32,
+    #[prost(uint32, tag = "6")]
+    pub active_time: u32,
+    #[prost(uint32, tag = "7")]
+    pub created_time: u32,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -1463,9 +1536,13 @@ pub mod user_command {
         #[prost(string, tag = "3")]
         pub last_name: std::string::String,
         #[prost(string, tag = "15")]
-        pub phone: std::string::String,
+        pub phone_number: std::string::String,
         #[prost(uint32, tag = "5")]
         pub created_time: u32,
+        #[prost(string, tag = "10")]
+        pub hash_code: std::string::String,
+        #[prost(string, tag = "30")]
+        pub confirm_code: std::string::String,
     }
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QEditUser {
@@ -1568,7 +1645,7 @@ pub struct GetNextIdResponse {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AuthSendCodeParam {
-    /// 9015132134
+    /// 989015132134
     #[prost(string, tag = "2")]
     pub phone_number: std::string::String,
     /// 98
@@ -2463,6 +2540,9 @@ pub struct UserRegisterUserParam {
 pub struct UserRegisterUserResponse {
     #[prost(message, optional, tag = "1")]
     pub user: ::std::option::Option<User>,
+    /// A new session for this log in
+    #[prost(message, optional, tag = "2")]
+    pub session: ::std::option::Option<Session>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserEditUserParam {

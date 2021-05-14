@@ -33,8 +33,8 @@ pub fn to_invoke_response(data: Vec<u8>, req_invoke: &pb::Invoke) -> Result<Vec<
     let invoke = pb::InvokeResponse {
         namespace: req_invoke.namespace,
         method: req_invoke.method,
-        user_id: 0,
-        action_id: req_invoke.action_id,
+        user_cid: 0,
+        invoke_id: req_invoke.invoke_id,
         rpc_data: data,
     };
     let mut buff = vec![];
@@ -42,8 +42,11 @@ pub fn to_invoke_response(data: Vec<u8>, req_invoke: &pb::Invoke) -> Result<Vec<
     Ok(buff)
 }
 
+// Do not keep this vec in memory for long as it has 512bytes buffer for fast encoding
 pub fn prost_encode(pb: &impl prost::Message) -> Result<Vec<u8>, prost::EncodeError> {
-    let mut buff = vec![];
+    // let mut buff = vec![];
+    // let mut buff = Vec::with_capacity(128);
+    let mut buff = Vec::with_capacity(256); // good buffer makes a things faster
     ::prost::Message::encode(pb, &mut buff)?;
     Ok(buff)
 }
@@ -57,9 +60,13 @@ pub fn param_to_invoke(param: &impl prost::Message, method_id: u32) -> Result<Ve
     let invoke = pb::Invoke {
         namespace: 0,
         method: method_id,
-        user_id: 0,
-        action_id: 0,
-        session: vec![],
+        user_cid: 0,
+        invoke_id: 0,
+        session_hash: "".to_string(),
+        api_version: 0,
+        app_name: "".to_string(),
+        app_version: "".to_string(),
+        device_name: "".to_string(),
         rpc_data: param_buff,
     };
 

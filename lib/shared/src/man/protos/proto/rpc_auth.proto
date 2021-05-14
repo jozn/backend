@@ -14,7 +14,7 @@ service RPC_Auth {
 
 
 message AuthSendCodeParam {
-    string phone_number = 2; // 9015132134
+    string phone_number = 2; // 989015132134
     string country_code = 3; // 98
     bool resend = 4;
 }

@@ -28,6 +28,8 @@ service RPC_User {
     rpc UserRemoveSession (UserRemoveSessionParam) returns (UserRemoveSessionResponse); // event_id_400
     rpc UserRemoveOtherSessions (UserRemoveOtherParam) returns (UserRemoveOtherResponse); // event
 
+//    rpc UserRemoveOtherSessions (UserRemoveOtherParam) returns (UserRemoveOtherResponse);
+
     // Settings > not in here in Profile
 
     // Views
@@ -50,6 +52,7 @@ message UserRegisterUserParam {
 
 message UserRegisterUserResponse {
     User user = 1;
+    Session session = 2; // A new session for this log in
 }
 
 

@@ -1,7 +1,7 @@
 use async_trait::async_trait;
 use shared;
 use shared::errors::GenErr;
-use shared::{pb, rpc2};
+use shared::{pb, rpc2, utils};
 
 use crate::UserSpace;
 
@@ -21,20 +21,17 @@ impl rpc2::RPC_User_Handler2 for UserSpace {
         };
         let user_cid = user_cid_row.insert(&self.mysql_pool).await?.cid;
 
-
         let profile_cid_row = shared::my::GenCid {
             cid: 0,
-            intent: "channel".to_string(),
+            intent: "profile".to_string(),
         };
         let profile_cid = profile_cid_row.insert(&self.mysql_pool).await?.cid;
-
 
         let channel_cid_row = shared::my::GenCid {
             cid: 0,
             intent: "channel".to_string(),
         };
         let channel_cid = channel_cid_row.insert(&self.mysql_pool).await?.cid;
-
 
         // channel
         let channel = pb::Channel {
@@ -81,7 +78,7 @@ impl rpc2::RPC_User_Handler2 for UserSpace {
 
         let user = pb::User {
             user_cid: user_cid,
-            phone: param.phone_number,
+            phone: param.phone_number.clone(),
             email: "".to_string(),
             created_time: shared::utils::time::get_time_now_sec(),
             version_time: shared::utils::time::get_time_now_sec(),
@@ -106,6 +103,7 @@ impl rpc2::RPC_User_Handler2 for UserSpace {
         let channel_row = my::Channel {
             channel_cid: channel_cid as u64,
             pb_data: buff,
+            debug_data: format!("{:#?}", &channel),
         };
         channel_row.replace(&self.mysql_pool).await?;
 
@@ -114,6 +112,7 @@ impl rpc2::RPC_User_Handler2 for UserSpace {
         let profile_row = my::Profile {
             profile_cid: profile_cid as u64,
             pb_data: buff,
+            debug_data: format!("{:#?}", &profile),
         };
         profile_row.replace(&self.mysql_pool).await?;
 
@@ -121,11 +120,40 @@ impl rpc2::RPC_User_Handler2 for UserSpace {
         let buff = common::prost_encode(&user)?;
         let user_row = my::User {
             user_cid: user_cid as u64,
+            phone_number: param.phone_number.clone(),
             pb_data: buff,
+            debug_data: format!("{:#?}", &user),
         };
         user_row.replace(&self.mysql_pool).await?;
 
-        Ok(pb::UserRegisterUserResponse { user: Some(user) })
+        // Session handling
+        let session_pb = pb::Session {
+            session_hash: utils::rand::get_rand_session(18),
+            user_cid,
+            last_ip: "".to_string(),                //todo
+            user_agent: "Android v0.4".to_string(), // todo
+            api_version: 0,                         // todo
+            app_name: "".to_string(),
+            app_version: "".to_string(),
+            device_name: "".to_string(),
+            active_time: get_time_now_sec(),
+            created_time: get_time_now_sec(),
+        };
+
+        // user db
+        let buff = common::prost_encode(&session_pb)?;
+        let session_row = my::Session {
+            session_hash: session_pb.session_hash.clone(),
+            user_cid: user_cid, //todo db
+            pb_data: buff,
+            debug_data: format!("{:#?}", &session_pb),
+        };
+        session_row.replace(&self.mysql_pool).await?;
+
+        Ok(pb::UserRegisterUserResponse {
+            user: Some(user),
+            session: Some(session_pb),
+        })
     }
 
     async fn UserEditUser(

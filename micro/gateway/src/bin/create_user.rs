@@ -18,7 +18,7 @@ async fn auth_sample() {
             last_name: "Sabet".to_string(),
             created_time: 0,
             hash_code: "zzzzzzzzzzzzz".to_string(),
-            phone_number: "9015132328".to_string(),
+            phone_number: "989015131234".to_string(),
             confirm_code: "2345".to_string(),
         })
         .await;
