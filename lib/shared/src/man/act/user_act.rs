@@ -8,7 +8,7 @@ pub struct UserAct {
 #[rustfmt::skip]
 impl UserAct {
 
-    pub async fn register_user (&self, p: param::RegisterUser) -> Result<pb::User,GenErr> {
+    pub async fn register_user(&self, p: param::RegisterUser) -> Result<pb::User,GenErr> {
         let user_cid = self.db.get_next_cid("user").await?;
         let profile_cid = self.db.get_next_cid("profile").await?;
         let channel_cid = self.db.get_next_cid("channel").await?;
@@ -55,7 +55,7 @@ impl UserAct {
         Ok(user)
     }
 
-    pub async fn edit_user (&self,user_cid: u64, p: param::EditUser) -> Result<pb::User,GenErr> {
+    pub async fn edit_user(&self,user_cid: u64, p: param::EditUser) -> Result<pb::User,GenErr> {
         let mut user = self.db.get_user_by_cid(user_cid).await?;
 
         if p.set_new_name {

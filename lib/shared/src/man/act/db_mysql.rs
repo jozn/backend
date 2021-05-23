@@ -12,7 +12,7 @@ pub struct DBMySql {
 #[rustfmt::skip]
 impl DBMySql {
     pub fn new() ->Self {
-        let database_url = "mysql://flipper:12345678@192.168.1.115:3306/flip_my";
+        let database_url = "mysql://flipper:12345678@192.168.93.115:3306/flip_my";
         let my = DBMySql {
             mysql_pool: Arc::new(mysql_async::Pool::new(database_url)),
         };
@@ -244,6 +244,36 @@ impl DBMySql {
         contacts: Vec<pb::Contact>,
     ) -> Result<(), GenErr>;
     pub async fn remove_profile_contacts(&self, profile_cid: u64) -> Result<(), GenErr>;*/
+}
+
+// Other db
+impl DBMySql {
+    // =================== Sms ====================
+    pub async fn get_sms(&self, phone: &str, hash_code: &str) -> Result<pb::Sms, GenErr>{
+        let sms_row = my::SmsSelector::new()
+            .hash_code_eq(hash_code)
+            .and_phone_number_eq(phone)
+            .get_row(&self.mysql_pool)
+            .await?;
+
+        let sms_pb: pb::Sms = common::prost_decode(&sms_row.pb_data)?;
+
+        Ok(sms_pb)
+    }
+    pub async fn save_sms(&self, sms: &pb::Sms) -> Result<(), GenErr>{
+        let buff = common::prost_encode(sms)?;
+        let sms_row = my::Sms {
+            sms_id: 0,
+            phone_number: sms.phone_number.clone(),
+            hash_code: sms.hash_code.clone(),
+            result_code: 200,
+            pb_data: buff,
+            debug_data: format!("{:#?}", sms),
+        };
+        sms_row.insert(&self.mysql_pool).await;
+
+        Ok(())
+    }
 }
 
 // #[cfg(test)]
