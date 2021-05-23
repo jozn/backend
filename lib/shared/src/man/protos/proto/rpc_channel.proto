@@ -58,7 +58,7 @@ service RPC_Channel {
     rpc ChannelPinMessage (ChannelPinMessageParam) returns (ChannelPinMessageResponse); // event_id_600
     rpc ChannelUnPinMessage (ChannelUnPinMessageParam) returns (ChannelUnPinMessageResponse); // event
 
-    // Avatar
+    // Avatar > todo swap Add <> Avatar
     rpc ChannelAvatarAdd (ChannelAvatarAddParam) returns (ChannelAvatarAddResponse); // qevent_id_80
     rpc ChannelAvatarDelete (ChannelAvatarDeleteParam) returns (ChannelAvatarDeleteResponse); // qevent
 

@@ -580,10 +580,11 @@ message Sms {
 message Comment {
   uint64 comment_gid = 6; // imut
   uint64 message_gid = 1; // imut
+  uint64 channel_cid = 4; // imut
   uint32 profile_cid = 2; // imut
   uint32 created_time = 3; // imut
 
-  string text = 4;  // mut
+  string text = 7;  // mut
 }
 
 message Follower {

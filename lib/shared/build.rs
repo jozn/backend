@@ -2,7 +2,7 @@ extern crate prost_build;
 // If it must fail > it must panics > no output to concole without panic
 
 fn main() {
-    build_pb();
+    // build_pb();
     // format_codes();
 }
 
@@ -28,11 +28,13 @@ fn build_pb() {
 
     let mut config = prost_build::Config::default();
     config.out_dir("src/gen/");
+    // config.message_attribute(".", "#[derive(Default)]");
+    // config.att(".", "#[derive(Smg)]");
     let v = config.compile_protos(&vec_protos, &["src/man/protos/proto".to_string()]);
     println!("{:?}", v);
     v.unwrap();
 
-    run_format_codes();
+    // run_format_codes();
 }
 
 fn run_format_codes() {

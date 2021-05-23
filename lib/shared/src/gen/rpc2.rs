@@ -5598,6 +5598,602 @@ impl common::RpcClient {
     }
 }
 
+/////////////////////// Sample codes for act modules ///////
+/*
+#[rustfmt::skip]
+mod IPC_CMasterAct{
+    use crate::{act,pb,errors::GenErr};
+    pub async fn get_next_id (ret: &act::Ret, param: pb::GetNextIdParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+}
+#[rustfmt::skip]
+mod AuthAct{
+    use crate::{act,pb,errors::GenErr};
+    pub async fn auth_send_code (ret: &act::Ret, param: pb::AuthSendCodeParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn auth_log_in (ret: &act::Ret, param: pb::AuthLogInParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn auth_log_out (ret: &act::Ret, param: pb::AuthLogOutParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+}
+#[rustfmt::skip]
+mod ChannelAct{
+    use crate::{act,pb,errors::GenErr};
+    pub async fn channel_create_channel (ret: &act::Ret, param: pb::ChannelCreateChannelParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_edit_channel (ret: &act::Ret, param: pb::ChannelEditChannelParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_delete_channel (ret: &act::Ret, param: pb::ChannelDeleteChannelParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_add_author (ret: &act::Ret, param: pb::ChannelAddAuthorParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_change_author_permission (ret: &act::Ret, param: pb::ChannelChangeAuthorPermissionParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_remove_author (ret: &act::Ret, param: pb::ChannelRemoveAuthorParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_follow_channel (ret: &act::Ret, param: pb::ChannelFollowChannelParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_un_follow_channel (ret: &act::Ret, param: pb::ChannelUnFollowChannelParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_remove_followers (ret: &act::Ret, param: pb::ChannelRemoveFollowersParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_subscribe (ret: &act::Ret, param: pb::ChannelSubscribeParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_un_subscribe (ret: &act::Ret, param: pb::ChannelUnSubscribeParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_remove_subscribers (ret: &act::Ret, param: pb::ChannelRemoveSubscribersParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_change_privacy (ret: &act::Ret, param: pb::ChannelChangePrivacyParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_change_default_permission (ret: &act::Ret, param: pb::ChannelChangeDefaultPermissionParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_revoke_link (ret: &act::Ret, param: pb::ChannelRevokeLinkParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_change_username (ret: &act::Ret, param: pb::ChannelChangeUsernameParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_block_profile (ret: &act::Ret, param: pb::ChannelBlockProfileParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_send_message (ret: &act::Ret, param: pb::ChannelSendMessageParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_edit_message (ret: &act::Ret, param: pb::ChannelEditMessageParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_delete_messages (ret: &act::Ret, param: pb::ChannelDeleteMessagesParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_like_message (ret: &act::Ret, param: pb::ChannelLikeMessageParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_un_like_message (ret: &act::Ret, param: pb::ChannelUnLikeMessageParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_re_share_message (ret: &act::Ret, param: pb::ChannelReShareMessageParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_un_re_share_message (ret: &act::Ret, param: pb::ChannelUnReShareMessageParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_add_comment (ret: &act::Ret, param: pb::ChannelAddCommentParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_delete_comment (ret: &act::Ret, param: pb::ChannelDeleteCommentParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_pin_message (ret: &act::Ret, param: pb::ChannelPinMessageParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_un_pin_message (ret: &act::Ret, param: pb::ChannelUnPinMessageParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_avatar_add (ret: &act::Ret, param: pb::ChannelAvatarAddParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_avatar_delete (ret: &act::Ret, param: pb::ChannelAvatarDeleteParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_send_doing_action (ret: &act::Ret, param: pb::ChannelSendDoingActionParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_report_channel (ret: &act::Ret, param: pb::ChannelReportChannelParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_report_message (ret: &act::Ret, param: pb::ChannelReportMessageParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_get_full (ret: &act::Ret, param: pb::ChannelGetFullParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_get_messages_list (ret: &act::Ret, param: pb::ChannelGetMessagesListParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_get_media_list (ret: &act::Ret, param: pb::ChannelGetMediaListParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_get_authors (ret: &act::Ret, param: pb::ChannelGetAuthorsParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_get_followers (ret: &act::Ret, param: pb::ChannelGetFollowersParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_get_subscribers (ret: &act::Ret, param: pb::ChannelGetSubscribersParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_blocked (ret: &act::Ret, param: pb::ChannelBlockedParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_avatar_get_list (ret: &act::Ret, param: pb::ChannelAvatarGetListParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_get_inbox (ret: &act::Ret, param: pb::ChannelGetInboxParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn channel_get_followings (ret: &act::Ret, param: pb::ChannelGetFollowingsParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+}
+#[rustfmt::skip]
+mod ChatAct{
+    use crate::{act,pb,errors::GenErr};
+    pub async fn chat_delete_chat (ret: &act::Ret, param: pb::ChatDeleteChatParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn chat_send_message (ret: &act::Ret, param: pb::ChatSendMessageParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn chat_edit_message (ret: &act::Ret, param: pb::ChatEditMessageParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn chat_delete_messages (ret: &act::Ret, param: pb::ChatDeleteMessagesParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn chat_delete_history (ret: &act::Ret, param: pb::ChatDeleteHistoryParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn chat_set_notification (ret: &act::Ret, param: pb::ChatSetNotificationParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn chat_send_doing_action (ret: &act::Ret, param: pb::ChatSendDoingActionParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn chat_report_chat (ret: &act::Ret, param: pb::ChatReportChatParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn chat_get_full (ret: &act::Ret, param: pb::ChatGetFullMessageParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn chat_get_messages_list (ret: &act::Ret, param: pb::ChatGetMessagesListParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn chat_get_media_list (ret: &act::Ret, param: pb::ChatGetMediaListParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn chat_get_inbox (ret: &act::Ret, param: pb::ChatGetInboxParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+}
+#[rustfmt::skip]
+mod GroupAct{
+    use crate::{act,pb,errors::GenErr};
+    pub async fn group_create_group (ret: &act::Ret, param: pb::GroupCreateGroupParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_edit_group (ret: &act::Ret, param: pb::GroupEditGroupParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_delete_group (ret: &act::Ret, param: pb::GroupDeleteGroupParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_add_admin (ret: &act::Ret, param: pb::GroupAddAdminParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_remove_member (ret: &act::Ret, param: pb::GroupRemoveMemberParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_change_member_level (ret: &act::Ret, param: pb::GroupChangeMemberLevelParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_change_member_permission (ret: &act::Ret, param: pb::GroupChangeMemberPermissionParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_ban_member (ret: &act::Ret, param: pb::GroupBanMemberParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_join_group (ret: &act::Ret, param: pb::JoinGroupParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_leave_group (ret: &act::Ret, param: pb::GroupLeaveGroupParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_add_member (ret: &act::Ret, param: pb::GroupAddMemberParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_set_notification (ret: &act::Ret, param: pb::GroupSetNotificationParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_change_privacy (ret: &act::Ret, param: pb::GroupChangePrivacyParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_change_default_permission (ret: &act::Ret, param: pb::GroupChangeDefaultPermissionParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_revoke_link (ret: &act::Ret, param: pb::GroupRevokeLinkParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_change_username (ret: &act::Ret, param: pb::GroupChangeUsernameParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_send_message (ret: &act::Ret, param: pb::GroupSendMessageParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_edit_message (ret: &act::Ret, param: pb::GroupEditMessageParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_delete_messages (ret: &act::Ret, param: pb::GroupDeleteMessagesParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_delete_history (ret: &act::Ret, param: pb::GroupDeleteHistoryParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_pin_message (ret: &act::Ret, param: pb::GroupPinMessageParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_un_pin_message (ret: &act::Ret, param: pb::GroupUnPinMessageParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_avatar_add (ret: &act::Ret, param: pb::GroupAvatarAddParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_avatar_delete (ret: &act::Ret, param: pb::GroupAvatarDeleteParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_send_doing_action (ret: &act::Ret, param: pb::GroupSendDoingActionParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_report_group (ret: &act::Ret, param: pb::GroupReportGroupParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_get_full (ret: &act::Ret, param: pb::GroupGetFullParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_get_messages_list (ret: &act::Ret, param: pb::GroupGetMessagesListParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_get_media_list (ret: &act::Ret, param: pb::GroupGetMediaListParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_get_members_list (ret: &act::Ret, param: pb::GroupGetMembersListParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_get_admins_list (ret: &act::Ret, param: pb::GroupGetAdminsListParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_avatar_get_list (ret: &act::Ret, param: pb::GroupAvatarGetListParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn group_get_inbox (ret: &act::Ret, param: pb::GroupGetInboxParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+}
+#[rustfmt::skip]
+mod ProfileAct{
+    use crate::{act,pb,errors::GenErr};
+    pub async fn profile_set_settings (ret: &act::Ret, param: pb::ProfileSetSettingsParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+}
+#[rustfmt::skip]
+mod SampleAct{
+    use crate::{act,pb,errors::GenErr};
+    pub async fn get_users1 (ret: &act::Ret, param: pb::GetUsers1Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn get_profiles (ret: &act::Ret, param: pb::GetProfilesParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn get_channels (ret: &act::Ret, param: pb::GetChannelsParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn get_directs (ret: &act::Ret, param: pb::GetDirectsParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn get_messages (ret: &act::Ret, param: pb::GetMessagesParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+}
+#[rustfmt::skip]
+mod SharedAct{
+    use crate::{act,pb,errors::GenErr};
+    pub async fn shared_echo (ret: &act::Ret, param: pb::SharedEchoParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shared_check_user_name (ret: &act::Ret, param: pb::SharedCheckUserNameParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+}
+#[rustfmt::skip]
+mod ShopAct{
+    use crate::{act,pb,errors::GenErr};
+    pub async fn shop_eee (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shop_create_shop (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shop_edit_shop (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shop_pause_shop (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shop_terminate_shop (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shop_add_product (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shop_edit_product (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shop_delete_product (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shop_add_product_to_basket (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shop_remove_product_from_basket (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shop_checkout_basket (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shop_like_product (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shop_un_like_product (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shop_like_shop (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shop_un_like_shop (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shop_get_full (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shop_product_list (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shop_get_basket_list (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shop_get_liked_products_list (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shop_get_liked_shops_list (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shop_get_order_list (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shop_get_refund_list (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shop_cancel_order (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shop_edit_product_info (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shop_edit_product_price (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn shop_edit_product_inventory (ret: &act::Ret, param: pb::Param) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+}
+#[rustfmt::skip]
+mod UploadAct{
+    use crate::{act,pb,errors::GenErr};
+    pub async fn upload_file (ret: &act::Ret, param: pb::UploadFileParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+}
+#[rustfmt::skip]
+mod UserAct{
+    use crate::{act,pb,errors::GenErr};
+    pub async fn user_register_user (ret: &act::Ret, param: pb::UserRegisterUserParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn user_edit_user (ret: &act::Ret, param: pb::UserEditUserParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn user_delete_send_code (ret: &act::Ret, param: pb::UserDeleteSendCodeParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn user_delete_confirm_code (ret: &act::Ret, param: pb::UserDeleteConfirmCodeParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn user_delete_user (ret: &act::Ret, param: pb::UserDeleteUserParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn user_change_phone_number (ret: &act::Ret, param: pb::UserChangePhoneNumberParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn user_remove_session (ret: &act::Ret, param: pb::UserRemoveSessionParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn user_remove_other_sessions (ret: &act::Ret, param: pb::UserRemoveOtherParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn user_get_me (ret: &act::Ret, param: pb::UserGetMeParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+    pub async fn user_get_active_sessions (ret: &act::Ret, param: pb::UserGetActiveSessionsParam) -> Result<(),GenErr> {
+        unimplemented!("");
+    }
+
+}
+*/
+
 /////////////////////// Code gen for def rpc //////////////
 struct _RRR_ {}
 

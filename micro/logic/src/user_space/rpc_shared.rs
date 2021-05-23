@@ -17,13 +17,3 @@ impl rpc2::RPC_Shared_Handler2 for UserSpace {
         })
     }
 }
-
-#[async_trait]
-impl rpc2::RPC_Channel_Handler2 for UserSpace {
-    async fn ChannelCreateChannel(
-        &self,
-        param: pb::ChannelCreateChannelParam,
-    ) -> Result<pb::ChannelCreateChannelResponse, GenErr> {
-        Ok(pb::ChannelCreateChannelResponse::default())
-    }
-}

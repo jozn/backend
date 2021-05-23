@@ -112,7 +112,7 @@ impl UserSpaceMapper {
         }
     }
 
-    // deprecated
+    /*    // deprecated
     pub async fn serve_rpc_request_vec8_dep(&self, rpc_http: Vec<u8>) -> Result<Vec<u8>, GenErr> {
         let invoke: pb::Invoke = prost::Message::decode(rpc_http.as_slice())?;
         let rpc_invoke_enumed = rpc2::invoke_to_parsed(&invoke)?;
@@ -142,7 +142,7 @@ impl UserSpaceMapper {
             Ok(val_bts) => Ok(val_bts),
             Err(e) => Err(GenErr::UserSpaceErr),
         }
-    }
+    }*/
 
     // This lockup mapper for the channel of stream of user_id, if not exist then dispatches new
     //  task for user id.

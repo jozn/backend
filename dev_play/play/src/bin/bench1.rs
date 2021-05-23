@@ -7,6 +7,10 @@ use std::io::Write;
 use std::ops::Sub;
 
 fn main() {
+    let m = pb::Message {
+        ..Default::default()
+    };
+
     let s = "".to_string();
     println!("empty string cap {} ", s.capacity());
 
@@ -15,7 +19,7 @@ fn main() {
     cal_time(incoke_alloc);
     cal_time(message_alloc);
     cal_time(incoke2_alloc);
-    cal_time(inovke1);
+    // cal_time(inovke1);
     cal_time(message1);
 }
 
@@ -42,7 +46,7 @@ fn cal_time<F: Fn()>(func: F) {
 //
 //      Note: some rates above is not real world sceanrio as memory is local to cpu cache and reused.
 
-fn inovke1() {
+/*fn inovke1() {
     for i in 0..10_000_000 {
         let invoke1 = Invoke {
             namespace: 132,
@@ -62,7 +66,7 @@ fn inovke1() {
             );
         }
     }
-}
+}*/
 
 fn mem_size() {
     println!("+++ mem size: {}", std::mem::size_of::<Invoke2>())

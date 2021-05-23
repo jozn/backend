@@ -31,13 +31,14 @@
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SampleMessage {
     #[prost(oneof = "sample_message::TestOneof", tags = "4, 9, 10")]
-    pub test_oneof: ::std::option::Option<sample_message::TestOneof>,
+    pub test_oneof: ::core::option::Option<sample_message::TestOneof>,
 }
+/// Nested message and enum types in `SampleMessage`.
 pub mod sample_message {
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum TestOneof {
         #[prost(string, tag = "4")]
-        Name(std::string::String),
+        Name(::prost::alloc::string::String),
         #[prost(message, tag = "9")]
         SubMessage(super::Invoke),
         #[prost(message, tag = "10")]
@@ -64,21 +65,21 @@ pub struct Invoke {
     pub invoke_id: u64,
     /// imut
     #[prost(string, tag = "8")]
-    pub session_hash: std::string::String,
+    pub session_hash: ::prost::alloc::string::String,
     #[prost(uint32, tag = "10")]
     pub api_version: u32,
     /// ex: "Android"
     #[prost(string, tag = "11")]
-    pub app_name: std::string::String,
+    pub app_name: ::prost::alloc::string::String,
     /// "v3.2"
     #[prost(string, tag = "12")]
-    pub app_version: std::string::String,
+    pub app_version: ::prost::alloc::string::String,
     /// "HMD GlobalNokia 3.2, Android 10 Q (29)"
     #[prost(string, tag = "13")]
-    pub device_name: std::string::String,
+    pub device_name: ::prost::alloc::string::String,
     /// imut
-    #[prost(bytes, tag = "4")]
-    pub rpc_data: std::vec::Vec<u8>,
+    #[prost(bytes = "vec", tag = "4")]
+    pub rpc_data: ::prost::alloc::vec::Vec<u8>,
 }
 /// InvokeResponse is returned from server in response of Invoke.
 ///
@@ -98,8 +99,8 @@ pub struct InvokeResponse {
     #[prost(uint64, tag = "2")]
     pub invoke_id: u64,
     /// imut
-    #[prost(bytes, tag = "4")]
-    pub rpc_data: std::vec::Vec<u8>,
+    #[prost(bytes = "vec", tag = "4")]
+    pub rpc_data: ::prost::alloc::vec::Vec<u8>,
 }
 ///==================== User ==================
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -110,13 +111,13 @@ pub struct Contact {
     pub profile_cid: u32,
     /// +98*
     #[prost(string, tag = "4")]
-    pub phone: std::string::String,
+    pub phone: ::prost::alloc::string::String,
     /// In device
     #[prost(string, tag = "5")]
-    pub first_name: std::string::String,
+    pub first_name: ::prost::alloc::string::String,
     /// In device
     #[prost(string, tag = "6")]
-    pub last_name: std::string::String,
+    pub last_name: ::prost::alloc::string::String,
     #[prost(uint32, tag = "12")]
     pub peer_profile_cid: u32,
     #[prost(uint32, tag = "13")]
@@ -130,19 +131,19 @@ pub struct User {
     pub user_cid: u32,
     /// for default profile
     #[prost(string, tag = "14")]
-    pub phone: std::string::String,
+    pub phone: ::prost::alloc::string::String,
     ///
     #[prost(string, tag = "15")]
-    pub email: std::string::String,
+    pub email: ::prost::alloc::string::String,
     #[prost(uint32, tag = "36")]
     pub created_time: u32,
     #[prost(uint32, tag = "37")]
     pub version_time: u32,
     /// Names - for Default profile build from this > set def_profile title on change
     #[prost(string, tag = "40")]
-    pub first_name: std::string::String,
+    pub first_name: ::prost::alloc::string::String,
     #[prost(string, tag = "41")]
-    pub last_name: std::string::String,
+    pub last_name: ::prost::alloc::string::String,
     /// Access 20
     #[prost(bool, tag = "38")]
     pub is_deleted: bool,
@@ -150,24 +151,24 @@ pub struct User {
     pub is_banned: bool,
     /// Passwords 30
     #[prost(string, tag = "17")]
-    pub password_hash: std::string::String,
+    pub password_hash: ::prost::alloc::string::String,
     #[prost(string, tag = "18")]
-    pub password_salt: std::string::String,
+    pub password_salt: ::prost::alloc::string::String,
     /// Profile 40
     #[prost(message, optional, tag = "1114")]
-    pub def_profile: ::std::option::Option<Profile>,
+    pub def_profile: ::core::option::Option<Profile>,
     /// Session 50
     #[prost(message, repeated, tag = "102")]
-    pub sessions: ::std::vec::Vec<Session>,
+    pub sessions: ::prost::alloc::vec::Vec<Session>,
     // Collections
     /// Shopping 60
     #[prost(message, optional, tag = "111")]
-    pub shopping_profile: ::std::option::Option<ShoppingProfile>,
+    pub shopping_profile: ::core::option::Option<ShoppingProfile>,
     #[prost(message, repeated, tag = "113")]
-    pub stores: ::std::vec::Vec<Store>,
+    pub stores: ::prost::alloc::vec::Vec<Store>,
     /// Not now 800
     #[prost(message, repeated, tag = "110")]
-    pub profiles: ::std::vec::Vec<Profile>,
+    pub profiles: ::prost::alloc::vec::Vec<Profile>,
 }
 ///==================== Profile ==================
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -187,35 +188,35 @@ pub struct Profile {
     ///
     /// imut
     #[prost(message, optional, tag = "100")]
-    pub primary_channel: ::std::option::Option<Channel>,
+    pub primary_channel: ::core::option::Option<Channel>,
     /// Save Channel
     ///
     /// imut
     #[prost(message, optional, tag = "109")]
-    pub saved_channel: ::std::option::Option<SavedChannel>,
+    pub saved_channel: ::core::option::Option<SavedChannel>,
     /// Settings
     ///
     /// imut
     #[prost(message, optional, tag = "107")]
-    pub setting: ::std::option::Option<ProfileSettings>,
+    pub setting: ::core::option::Option<ProfileSettings>,
     /// Views 100
     ///
     /// When sending profile to others set this if they have this profile in their contacts
     #[prost(message, optional, tag = "111")]
-    pub contact_info: ::std::option::Option<Contact>,
+    pub contact_info: ::core::option::Option<Contact>,
     /// Demonstration: 800 - collections > not really present > big > fetch with api
     ///
     /// mut
     #[prost(message, repeated, tag = "104")]
-    pub channels: ::std::vec::Vec<Channel>,
+    pub channels: ::prost::alloc::vec::Vec<Channel>,
     ///  repeated Direct directs = 105;// mut
     ///
     /// mut
     #[prost(message, repeated, tag = "106")]
-    pub groups: ::std::vec::Vec<Group>,
+    pub groups: ::prost::alloc::vec::Vec<Group>,
     /// mut
     #[prost(message, repeated, tag = "108")]
-    pub contacts: ::std::vec::Vec<Contact>,
+    pub contacts: ::prost::alloc::vec::Vec<Contact>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProfileSettings {}
@@ -243,20 +244,20 @@ pub struct Chat {
     ///
     /// ? must use profile
     #[prost(message, optional, tag = "49")]
-    pub contact: ::std::option::Option<Contact>,
+    pub contact: ::core::option::Option<Contact>,
     /// Profile > or Peer Chat ?
     #[prost(message, optional, tag = "149")]
-    pub profile: ::std::option::Option<Profile>,
+    pub profile: ::core::option::Option<Profile>,
     /// Messages
     ///
     /// mut
     #[prost(message, optional, tag = "25")]
-    pub last_message: ::std::option::Option<Message>,
+    pub last_message: ::core::option::Option<Message>,
     /// mut
     #[prost(message, optional, tag = "26")]
-    pub pinned_message: ::std::option::Option<Message>,
+    pub pinned_message: ::core::option::Option<Message>,
     #[prost(message, optional, tag = "700")]
-    pub inboxer: ::std::option::Option<Inboxer>,
+    pub inboxer: ::core::option::Option<Inboxer>,
 }
 ///?? or embed
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -292,7 +293,7 @@ pub struct Message {
     #[prost(enumeration = "MessageType", tag = "107")]
     pub message_type: i32,
     #[prost(string, tag = "7")]
-    pub text: std::string::String,
+    pub text: ::prost::alloc::string::String,
     /// imut > Including bots 1: Android app, 2... to 1000 reserved - bots >1000
     #[prost(uint32, tag = "12")]
     pub via_app_id: u32,
@@ -325,26 +326,26 @@ pub struct Message {
     ///
     /// forward is always live object from other channels, but not from other chats, groups
     #[prost(message, optional, boxed, tag = "16")]
-    pub forward: ::std::option::Option<::std::boxed::Box<Message>>,
+    pub forward: ::core::option::Option<::prost::alloc::boxed::Box<Message>>,
     #[prost(message, optional, boxed, tag = "50")]
-    pub reply_to: ::std::option::Option<::std::boxed::Box<Message>>,
+    pub reply_to: ::core::option::Option<::prost::alloc::boxed::Box<Message>>,
     /// Channels Settings
     #[prost(uint32, tag = "1001")]
     pub channel_cid: u32,
     #[prost(message, optional, tag = "102")]
-    pub setting: ::std::option::Option<MessageSetting>,
+    pub setting: ::core::option::Option<MessageSetting>,
     /// Channels Extra
     #[prost(message, optional, tag = "101")]
-    pub counts: ::std::option::Option<MessageCount>,
+    pub counts: ::core::option::Option<MessageCount>,
     /// Group
     #[prost(uint32, tag = "1002")]
     pub group_cid: u32,
     /// Media
     #[prost(message, repeated, tag = "103")]
-    pub files: ::std::vec::Vec<FileMsg>,
+    pub files: ::prost::alloc::vec::Vec<FileMsg>,
     /// Stores
     #[prost(message, optional, tag = "110")]
-    pub product: ::std::option::Option<Product>,
+    pub product: ::core::option::Option<Product>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MessageCount {
@@ -376,7 +377,7 @@ pub struct MessageLog {
     #[prost(uint32, tag = "3")]
     pub target_profile_cid: u32,
     #[prost(message, optional, tag = "11")]
-    pub target_profile_view: ::std::option::Option<Profile>,
+    pub target_profile_view: ::core::option::Option<Profile>,
 }
 ///==================== Channel ==================
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -399,13 +400,13 @@ pub struct Channel {
     ///
     /// mut
     #[prost(string, tag = "2")]
-    pub user_name: std::string::String,
+    pub user_name: ::prost::alloc::string::String,
     /// mut - For default channels take if from User first and lastname.
     #[prost(string, tag = "3")]
-    pub channel_title: std::string::String,
+    pub channel_title: ::prost::alloc::string::String,
     /// mut
     #[prost(string, tag = "16")]
-    pub about: std::string::String,
+    pub about: ::prost::alloc::string::String,
     /// mut
     #[prost(bool, tag = "6")]
     pub is_verified: bool,
@@ -426,10 +427,10 @@ pub struct Channel {
     ///
     /// mut
     #[prost(string, tag = "17")]
-    pub invite_link_hash: std::string::String,
+    pub invite_link_hash: ::prost::alloc::string::String,
     /// for owner
     #[prost(message, optional, tag = "90")]
-    pub notification_setting: ::std::option::Option<ChannelOwnerNotification>,
+    pub notification_setting: ::core::option::Option<ChannelOwnerNotification>,
     /// mut
     #[prost(enumeration = "ChannelPrivacy", tag = "9")]
     pub privacy: i32,
@@ -437,7 +438,7 @@ pub struct Channel {
     ///
     /// mut
     #[prost(message, optional, tag = "25")]
-    pub last_message: ::std::option::Option<Message>,
+    pub last_message: ::core::option::Option<Message>,
     /// mut
     #[prost(uint32, tag = "19")]
     pub message_seq: u32,
@@ -445,17 +446,17 @@ pub struct Channel {
     ///
     /// mut
     #[prost(message, optional, tag = "26")]
-    pub pinned_message: ::std::option::Option<Message>,
+    pub pinned_message: ::core::option::Option<Message>,
     /// Avatar
     ///
     /// mut
     #[prost(message, optional, tag = "100")]
-    pub avatar: ::std::option::Option<FileMsg>,
+    pub avatar: ::core::option::Option<FileMsg>,
     /// mut
     #[prost(int64, tag = "40")]
     pub avatar_count: i64,
     #[prost(message, optional, tag = "700")]
-    pub inboxer: ::std::option::Option<Inboxer>,
+    pub inboxer: ::core::option::Option<Inboxer>,
     /// Counts -> followers_count in profile
     #[prost(uint32, tag = "20")]
     pub followers_count: u32,
@@ -467,7 +468,7 @@ pub struct Channel {
     pub reshared_count: u32,
     /// mut
     #[prost(message, optional, tag = "44")]
-    pub counts: ::std::option::Option<MediaCounts>,
+    pub counts: ::core::option::Option<MediaCounts>,
 }
 ///todo
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -483,16 +484,16 @@ pub struct Store {
     #[prost(uint32, tag = "1")]
     pub cid: u32,
     #[prost(string, tag = "2")]
-    pub user_name: std::string::String,
+    pub user_name: ::prost::alloc::string::String,
     /// For default channels take if from User.
     #[prost(string, tag = "3")]
-    pub store_name: std::string::String,
+    pub store_name: ::prost::alloc::string::String,
     #[prost(string, tag = "102")]
-    pub address: std::string::String,
+    pub address: ::prost::alloc::string::String,
     #[prost(uint32, tag = "7")]
     pub creator_user_cid: u32,
     #[prost(string, tag = "16")]
-    pub about: std::string::String,
+    pub about: ::prost::alloc::string::String,
     #[prost(uint32, tag = "19")]
     pub message_seq: u32,
     /// version
@@ -505,7 +506,7 @@ pub struct Store {
     #[prost(bool, tag = "6")]
     pub is_verified: bool,
     #[prost(message, optional, tag = "100")]
-    pub avatar: ::std::option::Option<FileMsg>,
+    pub avatar: ::core::option::Option<FileMsg>,
 }
 ///todo
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -516,9 +517,9 @@ pub struct Product {
     #[prost(uint32, tag = "53")]
     pub category_id: u32,
     #[prost(string, tag = "50")]
-    pub category: std::string::String,
+    pub category: ::prost::alloc::string::String,
     #[prost(string, tag = "51")]
-    pub brand: std::string::String,
+    pub brand: ::prost::alloc::string::String,
     ///from 10_000 - 5% > 500
     #[prost(uint32, tag = "3")]
     pub fee_rate: u32,
@@ -589,9 +590,9 @@ pub struct SavedChannel {
     #[prost(uint32, tag = "36")]
     pub created_time: u32,
     #[prost(message, optional, tag = "41")]
-    pub counts: ::std::option::Option<ChannelCountsDep>,
+    pub counts: ::core::option::Option<ChannelCountsDep>,
     #[prost(message, optional, tag = "25")]
-    pub last_message: ::std::option::Option<Message>,
+    pub last_message: ::core::option::Option<Message>,
 }
 ///==================== Group ==================
 ///
@@ -609,12 +610,12 @@ pub struct Group {
     ///
     /// or _name
     #[prost(string, tag = "3")]
-    pub group_title: std::string::String,
+    pub group_title: ::prost::alloc::string::String,
     /// with "group" suffix > not now > all is private now
     #[prost(string, tag = "4")]
-    pub user_name: std::string::String,
+    pub user_name: ::prost::alloc::string::String,
     #[prost(string, tag = "15")]
-    pub about: std::string::String,
+    pub about: ::prost::alloc::string::String,
     /// Sync
     #[prost(uint32, tag = "10")]
     pub seq: u32,
@@ -634,18 +635,18 @@ pub struct Group {
     #[prost(bool, tag = "9")]
     pub is_open_group: bool,
     #[prost(string, tag = "16")]
-    pub invite_link_hash: std::string::String,
+    pub invite_link_hash: ::prost::alloc::string::String,
     /// Messages
     #[prost(message, optional, tag = "25")]
-    pub last_message: ::std::option::Option<Message>,
+    pub last_message: ::core::option::Option<Message>,
     #[prost(message, optional, tag = "26")]
-    pub pinned_message: ::std::option::Option<Message>,
+    pub pinned_message: ::core::option::Option<Message>,
     // Pin
     /// Avatar
     #[prost(uint32, tag = "14")]
     pub avatar_count: u32,
     #[prost(message, optional, tag = "27")]
-    pub avatar: ::std::option::Option<FileMsg>,
+    pub avatar: ::core::option::Option<FileMsg>,
     /// Counts
     #[prost(uint32, tag = "17")]
     pub members_count: u32,
@@ -654,12 +655,12 @@ pub struct Group {
     #[prost(uint32, tag = "19")]
     pub moderator_counts: u32,
     #[prost(message, optional, tag = "200")]
-    pub media_counts: ::std::option::Option<MediaCounts>,
+    pub media_counts: ::core::option::Option<MediaCounts>,
     /// Member
     ///
     /// s_imut
     #[prost(message, optional, tag = "43")]
-    pub group_member: ::std::option::Option<GroupMember>,
+    pub group_member: ::core::option::Option<GroupMember>,
     /// imut
     #[prost(fixed64, tag = "11")]
     pub visible_from_msg_gid: u64,
@@ -719,40 +720,40 @@ pub struct FileMsg {
     #[prost(uint32, tag = "5")]
     pub height: u32,
     #[prost(string, tag = "6")]
-    pub extension: std::string::String,
+    pub extension: ::prost::alloc::string::String,
     #[prost(string, tag = "61")]
-    pub full_path: std::string::String,
+    pub full_path: ::prost::alloc::string::String,
     #[prost(uint32, tag = "7")]
     pub user_cid: u32,
-    #[prost(bytes, tag = "8")]
-    pub data_thumb: std::vec::Vec<u8>,
-    #[prost(bytes, tag = "9")]
-    pub data: std::vec::Vec<u8>,
+    #[prost(bytes = "vec", tag = "8")]
+    pub data_thumb: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes = "vec", tag = "9")]
+    pub data: ::prost::alloc::vec::Vec<u8>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Session {
     #[prost(string, tag = "2")]
-    pub session_hash: std::string::String,
+    pub session_hash: ::prost::alloc::string::String,
     ///  uint64 device_id = 100;
     #[prost(uint32, tag = "3")]
     pub user_cid: u32,
     #[prost(string, tag = "4")]
-    pub last_ip: std::string::String,
+    pub last_ip: ::prost::alloc::string::String,
     #[prost(string, tag = "8")]
-    pub user_agent: std::string::String,
+    pub user_agent: ::prost::alloc::string::String,
     ///  DevicePlatform platform = 9;
     ///  uint32 api_version = 5;
     #[prost(uint32, tag = "10")]
     pub api_version: u32,
     /// ex: "Android"
     #[prost(string, tag = "11")]
-    pub app_name: std::string::String,
+    pub app_name: ::prost::alloc::string::String,
     /// "v3.2"
     #[prost(string, tag = "12")]
-    pub app_version: std::string::String,
+    pub app_version: ::prost::alloc::string::String,
     /// "HMD GlobalNokia 3.2, Android 10 Q (29)"
     #[prost(string, tag = "13")]
-    pub device_name: std::string::String,
+    pub device_name: ::prost::alloc::string::String,
     #[prost(uint32, tag = "6")]
     pub active_time: u32,
     #[prost(uint32, tag = "7")]
@@ -762,34 +763,34 @@ pub struct Session {
 pub struct Sms {
     /// we maybe need this
     #[prost(string, tag = "3")]
-    pub install_uuid: std::string::String,
+    pub install_uuid: ::prost::alloc::string::String,
     #[prost(string, tag = "4")]
-    pub phone_number: std::string::String,
+    pub phone_number: ::prost::alloc::string::String,
     #[prost(string, tag = "32")]
-    pub country_code: std::string::String,
+    pub country_code: ::prost::alloc::string::String,
     #[prost(bool, tag = "103")]
     pub for_login: bool,
     #[prost(string, tag = "107")]
-    pub hash_code: std::string::String,
+    pub hash_code: ::prost::alloc::string::String,
     #[prost(string, tag = "5")]
-    pub confirm_code: std::string::String,
+    pub confirm_code: ::prost::alloc::string::String,
     #[prost(string, tag = "6")]
-    pub gateway_number: std::string::String,
+    pub gateway_number: ::prost::alloc::string::String,
     #[prost(string, tag = "101")]
-    pub text_body: std::string::String,
+    pub text_body: ::prost::alloc::string::String,
     #[prost(uint32, tag = "100")]
     pub created_time: u32,
     /// Below are for easier debugging purpose > stringy
     ///
     /// some custom debug info: http header, code, body, ...
     #[prost(string, tag = "9")]
-    pub gateway_error: std::string::String,
+    pub gateway_error: ::prost::alloc::string::String,
     /// like "register" "login" "delete" "marketing" ,...
     #[prost(string, tag = "14")]
-    pub intent: std::string::String,
+    pub intent: ::prost::alloc::string::String,
     /// like "confirmed" "unconfirmed" "sending" "gateway_error"
     #[prost(string, tag = "102")]
-    pub result: std::string::String,
+    pub result: ::prost::alloc::string::String,
 }
 ///==================== New > move ==================
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -801,14 +802,17 @@ pub struct Comment {
     #[prost(uint64, tag = "1")]
     pub message_gid: u64,
     /// imut
+    #[prost(uint64, tag = "4")]
+    pub channel_cid: u64,
+    /// imut
     #[prost(uint32, tag = "2")]
     pub profile_cid: u32,
     /// imut
     #[prost(uint32, tag = "3")]
     pub created_time: u32,
     /// mut
-    #[prost(string, tag = "4")]
-    pub text: std::string::String,
+    #[prost(string, tag = "7")]
+    pub text: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Follower {
@@ -861,7 +865,7 @@ pub struct NewMessageInput {
     #[prost(enumeration = "MessageType", tag = "107")]
     pub message_type: i32,
     #[prost(string, tag = "7")]
-    pub text: std::string::String,
+    pub text: ::prost::alloc::string::String,
     /// imut
     #[prost(uint32, tag = "12")]
     pub via_app_id: u32,
@@ -936,34 +940,34 @@ pub struct SmsBk {
     #[prost(fixed64, tag = "1")]
     pub gid: u64,
     #[prost(string, tag = "3")]
-    pub install_uuid: std::string::String,
+    pub install_uuid: ::prost::alloc::string::String,
     #[prost(string, tag = "4")]
-    pub phone_number: std::string::String,
+    pub phone_number: ::prost::alloc::string::String,
     #[prost(string, tag = "32")]
-    pub country_code: std::string::String,
+    pub country_code: ::prost::alloc::string::String,
     #[prost(bool, tag = "103")]
     pub for_login: bool,
     #[prost(string, tag = "107")]
-    pub hash_code: std::string::String,
+    pub hash_code: ::prost::alloc::string::String,
     #[prost(string, tag = "5")]
-    pub confirm_code: std::string::String,
+    pub confirm_code: ::prost::alloc::string::String,
     #[prost(string, tag = "6")]
-    pub gateway_number: std::string::String,
+    pub gateway_number: ::prost::alloc::string::String,
     #[prost(string, tag = "101")]
-    pub text_body: std::string::String,
+    pub text_body: ::prost::alloc::string::String,
     #[prost(uint32, tag = "100")]
     pub created_time: u32,
     /// Below are for easier debugging purpose > stringy
     ///
     /// some custom debug info: http header, code, body, ...
     #[prost(string, tag = "9")]
-    pub gateway_error: std::string::String,
+    pub gateway_error: ::prost::alloc::string::String,
     /// like "register" "login" "delete" "marketing" ,...
     #[prost(string, tag = "14")]
-    pub intent: std::string::String,
+    pub intent: ::prost::alloc::string::String,
     /// like "confirmed" "unconfirmed" "sending" "gateway_error"
     #[prost(string, tag = "102")]
-    pub result: std::string::String,
+    pub result: ::prost::alloc::string::String,
 }
 ///todo
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -971,15 +975,15 @@ pub struct SessionBk {
     #[prost(fixed64, tag = "1")]
     pub gid: u64,
     #[prost(string, tag = "2")]
-    pub session_uuid: std::string::String,
+    pub session_uuid: ::prost::alloc::string::String,
     #[prost(uint64, tag = "100")]
     pub device_id: u64,
     #[prost(uint32, tag = "3")]
     pub user_cid: u32,
     #[prost(string, tag = "4")]
-    pub last_ip_address: std::string::String,
+    pub last_ip_address: ::prost::alloc::string::String,
     #[prost(string, tag = "8")]
-    pub user_agent: std::string::String,
+    pub user_agent: ::prost::alloc::string::String,
     #[prost(enumeration = "DevicePlatform", tag = "9")]
     pub platform: i32,
     #[prost(uint32, tag = "5")]
@@ -1079,8 +1083,9 @@ pub struct ChannelCommand {
         oneof = "channel_command::SubCommand",
         tags = "50, 51, 52, 30, 31, 40, 41, 10, 11, 12, 200, 201, 300, 301, 400, 401, 80, 81"
     )]
-    pub sub_command: ::std::option::Option<channel_command::SubCommand>,
+    pub sub_command: ::core::option::Option<channel_command::SubCommand>,
 }
+/// Nested message and enum types in `ChannelCommand`.
 pub mod channel_command {
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QCreateChannel {
@@ -1089,11 +1094,11 @@ pub mod channel_command {
         #[prost(uint32, tag = "2")]
         pub creator_profile_cid: u32,
         #[prost(string, tag = "3")]
-        pub channel_title: std::string::String,
+        pub channel_title: ::prost::alloc::string::String,
         #[prost(string, tag = "4")]
-        pub user_name: std::string::String,
+        pub user_name: ::prost::alloc::string::String,
         #[prost(string, tag = "15")]
-        pub about: std::string::String,
+        pub about: ::prost::alloc::string::String,
     }
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QEditChannel {
@@ -1104,11 +1109,11 @@ pub mod channel_command {
         #[prost(bool, tag = "3")]
         pub set_new_title: bool,
         #[prost(string, tag = "4")]
-        pub new_title: std::string::String,
+        pub new_title: ::prost::alloc::string::String,
         #[prost(bool, tag = "5")]
         pub set_new_about: bool,
         #[prost(string, tag = "6")]
-        pub new_about: std::string::String,
+        pub new_about: ::prost::alloc::string::String,
     }
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QDeleteChannel {
@@ -1150,7 +1155,7 @@ pub mod channel_command {
         #[prost(uint32, tag = "1")]
         pub channel_cid: u32,
         #[prost(message, optional, tag = "2")]
-        pub message_input: ::std::option::Option<super::NewMessageInput>,
+        pub message_input: ::core::option::Option<super::NewMessageInput>,
     }
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QEditMessage {
@@ -1161,7 +1166,7 @@ pub mod channel_command {
         #[prost(uint32, tag = "3")]
         pub by_profile_cid: u32,
         #[prost(string, tag = "2")]
-        pub new_text: std::string::String,
+        pub new_text: ::prost::alloc::string::String,
     }
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QDeleteMessages {
@@ -1170,7 +1175,7 @@ pub mod channel_command {
         #[prost(uint32, tag = "2")]
         pub by_profile_cid: u32,
         #[prost(uint64, repeated, tag = "3")]
-        pub message_gids: ::std::vec::Vec<u64>,
+        pub message_gids: ::prost::alloc::vec::Vec<u64>,
     }
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QLikeMessage {
@@ -1221,7 +1226,7 @@ pub mod channel_command {
         #[prost(uint32, tag = "3")]
         pub by_profile_cid: u32,
         #[prost(string, tag = "4")]
-        pub comment_text: std::string::String,
+        pub comment_text: ::prost::alloc::string::String,
     }
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QDeleteComment {
@@ -1291,8 +1296,9 @@ pub struct ChatCommand {
     #[prost(uint32, tag = "1")]
     pub profile_cid: u32,
     #[prost(oneof = "chat_command::SubCommand", tags = "50, 10, 11, 12, 13")]
-    pub sub_command: ::std::option::Option<chat_command::SubCommand>,
+    pub sub_command: ::core::option::Option<chat_command::SubCommand>,
 }
+/// Nested message and enum types in `ChatCommand`.
 pub mod chat_command {
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QDeleteChat {
@@ -1308,7 +1314,7 @@ pub mod chat_command {
         #[prost(uint64, tag = "2")]
         pub chat_gid: u64,
         #[prost(message, optional, tag = "3")]
-        pub message_input: ::std::option::Option<super::NewMessageInput>,
+        pub message_input: ::core::option::Option<super::NewMessageInput>,
     }
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QEditMessage {
@@ -1319,7 +1325,7 @@ pub mod chat_command {
         #[prost(uint32, tag = "3")]
         pub by_profile_cid: u32,
         #[prost(string, tag = "6")]
-        pub new_text: std::string::String,
+        pub new_text: ::prost::alloc::string::String,
     }
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QDeleteMessages {
@@ -1328,7 +1334,7 @@ pub mod chat_command {
         #[prost(uint64, tag = "2")]
         pub chat_gid: u64,
         #[prost(uint64, repeated, tag = "3")]
-        pub message_gids: ::std::vec::Vec<u64>,
+        pub message_gids: ::prost::alloc::vec::Vec<u64>,
     }
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QDeleteHistory {
@@ -1357,8 +1363,9 @@ pub struct GroupCommand {
         oneof = "group_command::SubCommand",
         tags = "40, 41, 42, 50, 51, 52, 10, 11, 12, 13, 600, 601, 80, 81, 82"
     )]
-    pub sub_command: ::std::option::Option<group_command::SubCommand>,
+    pub sub_command: ::core::option::Option<group_command::SubCommand>,
 }
+/// Nested message and enum types in `GroupCommand`.
 pub mod group_command {
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QCreateGroup {
@@ -1367,7 +1374,7 @@ pub mod group_command {
         #[prost(uint32, tag = "2")]
         pub creator_profile_cid: u32,
         #[prost(string, tag = "3")]
-        pub group_title: std::string::String,
+        pub group_title: ::prost::alloc::string::String,
         #[prost(bool, tag = "8")]
         pub history_viewable: bool,
         #[prost(bool, tag = "9")]
@@ -1375,9 +1382,9 @@ pub mod group_command {
         #[prost(bool, tag = "17")]
         pub global_search: bool,
         #[prost(string, tag = "15")]
-        pub about: std::string::String,
+        pub about: ::prost::alloc::string::String,
         #[prost(string, tag = "4")]
-        pub user_name: std::string::String,
+        pub user_name: ::prost::alloc::string::String,
     }
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QEditGroup {
@@ -1388,11 +1395,11 @@ pub mod group_command {
         #[prost(bool, tag = "3")]
         pub set_new_title: bool,
         #[prost(string, tag = "4")]
-        pub new_title: std::string::String,
+        pub new_title: ::prost::alloc::string::String,
         #[prost(bool, tag = "5")]
         pub set_new_about: bool,
         #[prost(string, tag = "6")]
-        pub new_about: std::string::String,
+        pub new_about: ::prost::alloc::string::String,
     }
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QDeleteGroup {
@@ -1429,7 +1436,7 @@ pub mod group_command {
         #[prost(uint32, tag = "1")]
         pub group_id: u32,
         #[prost(message, optional, tag = "2")]
-        pub message_input: ::std::option::Option<super::NewMessageInput>,
+        pub message_input: ::core::option::Option<super::NewMessageInput>,
     }
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QEditMessage {
@@ -1438,7 +1445,7 @@ pub mod group_command {
         #[prost(uint32, tag = "3")]
         pub by_profile_cid: u32,
         #[prost(string, tag = "2")]
-        pub new_text: std::string::String,
+        pub new_text: ::prost::alloc::string::String,
     }
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QDeleteMessages {
@@ -1447,7 +1454,7 @@ pub mod group_command {
         #[prost(uint32, tag = "2")]
         pub by_profile_cid: u32,
         #[prost(uint64, repeated, tag = "3")]
-        pub message_ids: ::std::vec::Vec<u64>,
+        pub message_ids: ::prost::alloc::vec::Vec<u64>,
     }
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QDeleteHistory {}
@@ -1510,8 +1517,9 @@ pub mod group_command {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProfileCommand {
     #[prost(oneof = "profile_command::SubCommand", tags = "10")]
-    pub sub_command: ::std::option::Option<profile_command::SubCommand>,
+    pub sub_command: ::core::option::Option<profile_command::SubCommand>,
 }
+/// Nested message and enum types in `ProfileCommand`.
 pub mod profile_command {
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QSetSettings {}
@@ -1524,25 +1532,26 @@ pub mod profile_command {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserCommand {
     #[prost(oneof = "user_command::SubCommand", tags = "100, 101")]
-    pub sub_command: ::std::option::Option<user_command::SubCommand>,
+    pub sub_command: ::core::option::Option<user_command::SubCommand>,
 }
+/// Nested message and enum types in `UserCommand`.
 pub mod user_command {
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QRegisterUser {
         #[prost(uint32, tag = "1")]
         pub user_cid: u32,
         #[prost(string, tag = "2")]
-        pub first_name: std::string::String,
+        pub first_name: ::prost::alloc::string::String,
         #[prost(string, tag = "3")]
-        pub last_name: std::string::String,
+        pub last_name: ::prost::alloc::string::String,
         #[prost(string, tag = "15")]
-        pub phone_number: std::string::String,
+        pub phone_number: ::prost::alloc::string::String,
         #[prost(uint32, tag = "5")]
         pub created_time: u32,
         #[prost(string, tag = "10")]
-        pub hash_code: std::string::String,
+        pub hash_code: ::prost::alloc::string::String,
         #[prost(string, tag = "30")]
-        pub confirm_code: std::string::String,
+        pub confirm_code: ::prost::alloc::string::String,
     }
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QEditUser {
@@ -1551,9 +1560,9 @@ pub mod user_command {
         #[prost(bool, tag = "3")]
         pub set_new_name: bool,
         #[prost(string, tag = "4")]
-        pub new_first_name: std::string::String,
+        pub new_first_name: ::prost::alloc::string::String,
         #[prost(string, tag = "6")]
-        pub new_last_name: std::string::String,
+        pub new_last_name: ::prost::alloc::string::String,
     }
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum SubCommand {
@@ -1578,8 +1587,9 @@ pub struct EventCommand {
     #[prost(uint32, tag = "1203")]
     pub group_cid: u32,
     #[prost(oneof = "event_command::Command", tags = "17, 7, 9, 5, 6")]
-    pub command: ::std::option::Option<event_command::Command>,
+    pub command: ::core::option::Option<event_command::Command>,
 }
+/// Nested message and enum types in `EventCommand`.
 pub mod event_command {
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Command {
@@ -1609,7 +1619,7 @@ pub struct CNewMessageInput {
     #[prost(enumeration = "MessageType", tag = "107")]
     pub message_type: i32,
     #[prost(string, tag = "7")]
-    pub text: std::string::String,
+    pub text: ::prost::alloc::string::String,
     /// imut
     #[prost(uint32, tag = "12")]
     pub via_app_id: u32,
@@ -1632,7 +1642,7 @@ pub struct CNewMessageInput {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetNextIdParam {
     #[prost(string, tag = "1")]
-    pub key: std::string::String,
+    pub key: ::prost::alloc::string::String,
     #[prost(int32, tag = "2")]
     pub start_from: i32,
 }
@@ -1647,10 +1657,10 @@ pub struct GetNextIdResponse {
 pub struct AuthSendCodeParam {
     /// 989015132134
     #[prost(string, tag = "2")]
-    pub phone_number: std::string::String,
+    pub phone_number: ::prost::alloc::string::String,
     /// 98
     #[prost(string, tag = "3")]
-    pub country_code: std::string::String,
+    pub country_code: ::prost::alloc::string::String,
     #[prost(bool, tag = "4")]
     pub resend: bool,
 }
@@ -1658,7 +1668,7 @@ pub struct AuthSendCodeParam {
 pub struct AuthSendCodeResponse {
     /// a unique code like a session for duration of login or register
     #[prost(string, tag = "1")]
-    pub hash_code: std::string::String,
+    pub hash_code: ::prost::alloc::string::String,
     /// if ture then LogIn otherwise use:create rpc
     #[prost(bool, tag = "2")]
     pub phone_registered: bool,
@@ -1666,20 +1676,20 @@ pub struct AuthSendCodeResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AuthLogInParam {
     #[prost(string, tag = "1")]
-    pub hash_code: std::string::String,
+    pub hash_code: ::prost::alloc::string::String,
     /// 9015132134 , not needed just for rechecking
     #[prost(string, tag = "2")]
-    pub phone_number: std::string::String,
+    pub phone_number: ::prost::alloc::string::String,
     #[prost(string, tag = "3")]
-    pub confirm_code: std::string::String,
+    pub confirm_code: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AuthLogInResponse {
     #[prost(message, optional, tag = "1")]
-    pub user: ::std::option::Option<User>,
+    pub user: ::core::option::Option<User>,
     /// A new session for this log in
     #[prost(message, optional, tag = "2")]
-    pub session: ::std::option::Option<Session>,
+    pub session: ::core::option::Option<Session>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AuthLogOutParam {}
@@ -1697,11 +1707,11 @@ pub struct ChannelCreateChannelParam {
     pub creator_profile_cid: u32,
     /// or _name
     #[prost(string, tag = "3")]
-    pub channel_title: std::string::String,
+    pub channel_title: ::prost::alloc::string::String,
     #[prost(string, tag = "4")]
-    pub user_name: std::string::String,
+    pub user_name: ::prost::alloc::string::String,
     #[prost(string, tag = "15")]
-    pub about: std::string::String,
+    pub about: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelCreateChannelResponse {}
@@ -1714,11 +1724,11 @@ pub struct ChannelEditChannelParam {
     #[prost(bool, tag = "3")]
     pub set_new_title: bool,
     #[prost(string, tag = "4")]
-    pub new_title: std::string::String,
+    pub new_title: ::prost::alloc::string::String,
     #[prost(bool, tag = "5")]
     pub set_new_about: bool,
     #[prost(string, tag = "6")]
-    pub new_about: std::string::String,
+    pub new_about: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelEditChannelResponse {}
@@ -1829,7 +1839,7 @@ pub struct ChannelSendMessageParam {
     #[prost(uint32, tag = "1")]
     pub channel_cid: u32,
     #[prost(message, optional, tag = "2")]
-    pub message_input: ::std::option::Option<NewMessageInput>,
+    pub message_input: ::core::option::Option<NewMessageInput>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelSendMessageResponse {}
@@ -1842,7 +1852,7 @@ pub struct ChannelEditMessageParam {
     #[prost(uint32, tag = "3")]
     pub by_profile_cid: u32,
     #[prost(string, tag = "2")]
-    pub new_text: std::string::String,
+    pub new_text: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelEditMessageResponse {}
@@ -1853,7 +1863,7 @@ pub struct ChannelDeleteMessagesParam {
     #[prost(uint32, tag = "2")]
     pub by_profile_cid: u32,
     #[prost(uint64, repeated, tag = "3")]
-    pub message_gids: ::std::vec::Vec<u64>,
+    pub message_gids: ::prost::alloc::vec::Vec<u64>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelDeleteMessagesResponse {}
@@ -1925,7 +1935,7 @@ pub struct ChannelAddCommentParam {
     #[prost(uint32, tag = "3")]
     pub by_profile_cid: u32,
     #[prost(string, tag = "4")]
-    pub comment_text: std::string::String,
+    pub comment_text: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelAddCommentResponse {}
@@ -2065,7 +2075,7 @@ pub struct ChatSendMessageParam {
     #[prost(uint64, tag = "2")]
     pub chat_gid: u64,
     #[prost(message, optional, tag = "3")]
-    pub message_input: ::std::option::Option<NewMessageInput>,
+    pub message_input: ::core::option::Option<NewMessageInput>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChatSendMessageResponse {}
@@ -2078,7 +2088,7 @@ pub struct ChatEditMessageParam {
     #[prost(uint32, tag = "3")]
     pub by_profile_cid: u32,
     #[prost(string, tag = "6")]
-    pub new_text: std::string::String,
+    pub new_text: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChatEditMessageResponse {}
@@ -2089,7 +2099,7 @@ pub struct ChatDeleteMessagesParam {
     #[prost(uint64, tag = "2")]
     pub chat_gid: u64,
     #[prost(uint64, repeated, tag = "3")]
-    pub message_gids: ::std::vec::Vec<u64>,
+    pub message_gids: ::prost::alloc::vec::Vec<u64>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChatDeleteMessagesResponse {}
@@ -2151,7 +2161,7 @@ pub struct GroupCreateGroupParam {
     pub creator_profile_cid: u32,
     /// or _name
     #[prost(string, tag = "3")]
-    pub group_title: std::string::String,
+    pub group_title: ::prost::alloc::string::String,
     /// if older message is is viewable for new members > now true for all new groups
     #[prost(bool, tag = "8")]
     pub history_viewable: bool,
@@ -2162,12 +2172,12 @@ pub struct GroupCreateGroupParam {
     #[prost(bool, tag = "17")]
     pub global_search: bool,
     #[prost(string, tag = "15")]
-    pub about: std::string::String,
+    pub about: ::prost::alloc::string::String,
     /// Not Now
     ///
     /// with "group" suffix > not now > all is private now
     #[prost(string, tag = "4")]
-    pub user_name: std::string::String,
+    pub user_name: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupCreateGroupResponse {}
@@ -2180,12 +2190,12 @@ pub struct GroupEditGroupParam {
     #[prost(bool, tag = "3")]
     pub set_new_title: bool,
     #[prost(string, tag = "4")]
-    pub new_title: std::string::String,
+    pub new_title: ::prost::alloc::string::String,
     #[prost(bool, tag = "5")]
     pub set_new_about: bool,
     /// Add others editable options
     #[prost(string, tag = "6")]
-    pub new_about: std::string::String,
+    pub new_about: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupEditGroupResponse {}
@@ -2299,7 +2309,7 @@ pub struct GroupSendMessageParam {
     #[prost(uint32, tag = "1")]
     pub group_id: u32,
     #[prost(message, optional, tag = "2")]
-    pub message_input: ::std::option::Option<NewMessageInput>,
+    pub message_input: ::core::option::Option<NewMessageInput>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupSendMessageResponse {}
@@ -2310,7 +2320,7 @@ pub struct GroupEditMessageParam {
     #[prost(uint32, tag = "3")]
     pub by_profile_cid: u32,
     #[prost(string, tag = "2")]
-    pub new_text: std::string::String,
+    pub new_text: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupEditMessageResponse {}
@@ -2342,7 +2352,7 @@ pub struct GroupDeleteMessagesParam {
     #[prost(uint32, tag = "2")]
     pub by_profile_cid: u32,
     #[prost(uint64, repeated, tag = "3")]
-    pub message_ids: ::std::vec::Vec<u64>,
+    pub message_ids: ::prost::alloc::vec::Vec<u64>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupDeleteMessagesResponse {}
@@ -2451,21 +2461,21 @@ pub struct GetUsers1Param {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetUsers1Response {
     #[prost(message, repeated, tag = "1")]
-    pub users: ::std::vec::Vec<Profile>,
+    pub users: ::prost::alloc::vec::Vec<Profile>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetProfilesParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetProfilesResponse {
     #[prost(message, repeated, tag = "1")]
-    pub profiles: ::std::vec::Vec<Profile>,
+    pub profiles: ::prost::alloc::vec::Vec<Profile>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetChannelsParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetChannelsResponse {
     #[prost(message, repeated, tag = "1")]
-    pub channels: ::std::vec::Vec<Channel>,
+    pub channels: ::prost::alloc::vec::Vec<Channel>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetDirectsParam {}
@@ -2477,33 +2487,33 @@ pub struct GetMessagesParam {}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetMessagesResponse {
     #[prost(message, repeated, tag = "1")]
-    pub directs: ::std::vec::Vec<Message>,
+    pub directs: ::prost::alloc::vec::Vec<Message>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SharedEchoParam {
     #[prost(string, tag = "1")]
-    pub text: std::string::String,
+    pub text: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SharedEchoResponse {
     #[prost(bool, tag = "1")]
     pub done: bool,
     #[prost(string, tag = "2")]
-    pub text: std::string::String,
+    pub text: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SharedCheckUserNameParam {
     #[prost(string, tag = "1")]
-    pub username: std::string::String,
+    pub username: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SharedCheckUserNameResponse {
     #[prost(bool, tag = "1")]
     pub is_available: bool,
     #[prost(string, tag = "2")]
-    pub username: std::string::String,
+    pub username: ::prost::alloc::string::String,
     #[prost(string, tag = "3")]
-    pub show_message: std::string::String,
+    pub show_message: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Param {}
@@ -2516,7 +2526,7 @@ pub struct UploadFileResponse {
     #[prost(bool, tag = "1")]
     pub done: bool,
     #[prost(string, tag = "2")]
-    pub text: std::string::String,
+    pub text: ::prost::alloc::string::String,
 }
 /// CrUd
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2524,25 +2534,25 @@ pub struct UserRegisterUserParam {
     #[prost(uint32, tag = "1")]
     pub user_cid: u32,
     #[prost(string, tag = "2")]
-    pub first_name: std::string::String,
+    pub first_name: ::prost::alloc::string::String,
     #[prost(string, tag = "3")]
-    pub last_name: std::string::String,
+    pub last_name: ::prost::alloc::string::String,
     #[prost(string, tag = "15")]
-    pub phone_number: std::string::String,
+    pub phone_number: ::prost::alloc::string::String,
     #[prost(uint32, tag = "5")]
     pub created_time: u32,
     #[prost(string, tag = "10")]
-    pub hash_code: std::string::String,
+    pub hash_code: ::prost::alloc::string::String,
     #[prost(string, tag = "30")]
-    pub confirm_code: std::string::String,
+    pub confirm_code: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserRegisterUserResponse {
     #[prost(message, optional, tag = "1")]
-    pub user: ::std::option::Option<User>,
+    pub user: ::core::option::Option<User>,
     /// A new session for this log in
     #[prost(message, optional, tag = "2")]
-    pub session: ::std::option::Option<Session>,
+    pub session: ::core::option::Option<Session>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserEditUserParam {
@@ -2551,14 +2561,14 @@ pub struct UserEditUserParam {
     #[prost(bool, tag = "3")]
     pub set_new_name: bool,
     #[prost(string, tag = "4")]
-    pub new_first_name: std::string::String,
+    pub new_first_name: ::prost::alloc::string::String,
     #[prost(string, tag = "6")]
-    pub new_last_name: std::string::String,
+    pub new_last_name: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserEditUserResponse {
     #[prost(message, optional, tag = "1")]
-    pub user: ::std::option::Option<User>,
+    pub user: ::core::option::Option<User>,
 }
 /// Delete User
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2569,13 +2579,13 @@ pub struct UserDeleteSendCodeParam {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserDeleteSendCodeResponse {
     #[prost(string, repeated, tag = "4")]
-    pub sms_numbers: ::std::vec::Vec<std::string::String>,
+    pub sms_numbers: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserDeleteConfirmCodeParam {
     ///4 digit 4215
     #[prost(string, tag = "3")]
-    pub code: std::string::String,
+    pub code: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserDeleteConfirmCodeResponse {
@@ -2597,7 +2607,7 @@ pub struct UserChangePhoneNumberResponse {
     #[prost(bool, tag = "1")]
     pub done: bool,
     #[prost(string, tag = "2")]
-    pub text: std::string::String,
+    pub text: ::prost::alloc::string::String,
 }
 // Email
 
