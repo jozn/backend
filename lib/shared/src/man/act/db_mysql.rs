@@ -1,4 +1,4 @@
-use super::db_trait_dep::*;
+// use super::db_trait_dep::*;
 use crate::gen::pb;
 use crate::man::errors::GenErr;
 use crate::{common, my};
@@ -132,6 +132,118 @@ impl DBMySql {
 
         Ok(())
     }
+}
+
+#[rustfmt::skip]
+impl DBMySql {
+    // =================== User ====================
+    pub async fn get_user_by_cid(&self, user_cid: u64) -> Result<pb::User, GenErr> {
+        let user_row = my::UserSelector::new()
+            .user_cid_eq(user_cid)
+            .get_row(&self.mysql_pool)
+            .await?;
+
+        let user_pb: pb::User = common::prost_decode(&user_row.pb_data)?;
+
+        Ok(user_pb)
+    }
+
+    pub async fn get_user_by_phone(&self, phone: &str) -> Result<pb::User, GenErr>{
+        let user_row = my::UserSelector::new()
+            .phone_number_eq(phone)
+            .get_row(&self.mysql_pool)
+            .await?;
+
+        let user_pb: pb::User = common::prost_decode(&user_row.pb_data)?;
+
+        Ok(user_pb)
+    }
+
+    pub async fn save_user(&self, user: &pb::User) -> Result<(), GenErr>{
+        // user db
+        let buff = common::prost_encode(user)?;
+        let user_row = my::User {
+            user_cid: user.user_cid as u64,
+            phone_number: user.phone.clone(),
+            pb_data: buff,
+            debug_data: format!("{:#?}", user),
+        };
+        user_row.replace(&self.mysql_pool).await?;
+
+        Ok(())
+    }
+    // fn delete_user(&self, user: &pb::User) -> Result<(), GenErr>;
+
+    // =================== User Session ====================
+    pub async fn get_user_session(&self, user_cid: u64, session_hash: &str) -> Result<pb::Session, GenErr> {
+        let session_row = my::SessionSelector::new()
+            .user_cid_eq(user_cid as u32)
+            .and_session_hash_eq(session_hash)
+            .get_row(&self.mysql_pool)
+            .await?;
+
+        let session_pb: pb::Session = common::prost_decode(&session_row.pb_data)?;
+
+        Ok(session_pb)
+    }
+
+    pub async fn save_user_session(&self, session: &pb::Session) -> Result<(), GenErr> {
+        let buff = common::prost_encode(session)?;
+        let session_row = my::Session {
+            session_hash: session.session_hash.clone(),
+            user_cid: session.user_cid, //todo db
+            pb_data: buff,
+            debug_data: format!("{:#?}", session),
+        };
+        session_row.replace(&self.mysql_pool).await?;
+
+        Ok(())
+    }
+
+    pub async fn delete_user_session(&self, session: &pb::Session) -> Result<(), GenErr>{
+        // todo db-walker deleter of rows
+        unimplemented!("")
+    }
+}
+
+impl DBMySql {
+    // =================== Profile ====================
+    pub async fn get_profile(&self, profile_cid: u64) -> Result<pb::Profile, GenErr>{
+        let profile_row = my::ProfileSelector::new()
+            .profile_cid_eq(profile_cid)
+            .get_row(&self.mysql_pool)
+            .await?;
+
+        let profile_pb: pb::Profile = common::prost_decode(&profile_row.pb_data)?;
+
+        Ok(profile_pb)
+    }
+    pub async fn save_profile(&self, profile: &pb::Profile) -> Result<(), GenErr>{
+        let buff = common::prost_encode(profile)?;
+        let profile_row = my::Profile {
+            profile_cid: profile.profile_cid as u64,
+            pb_data: buff,
+            debug_data: format!("{:#?}", profile),
+        };
+        profile_row.replace(&self.mysql_pool).await?;
+
+        Ok(())
+    }
+
+    //todo below
+/*    // =================== Profile Following ====================
+    pub async fn get_profile_followings(&self, profile_cid: u64) -> Result<Vec<u64>, GenErr>;
+    // todo this with channel must be in one batch transaction
+    pub async fn save_profile_following(&self, channel_cid: u64, profile_cid: u64) -> Result<(), GenErr>;
+
+    // =================== Profile Contacts ====================
+    pub async fn get_profile_contacts(&self, profile_cid: u64) -> Result<Vec<pb::Contact>, GenErr>;
+    pub async fn save_profile_contacts(
+        &self,
+        profile_cid: u64,
+        contacts: Vec<pb::Contact>,
+    ) -> Result<(), GenErr>;
+    pub async fn remove_profile_contacts(&self, profile_cid: u64) -> Result<(), GenErr>;*/
 }
 
 // #[cfg(test)]

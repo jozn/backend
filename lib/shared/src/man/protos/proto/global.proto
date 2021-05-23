@@ -682,3 +682,9 @@ message Session_bk {//todo
   uint32 created_time = 7;
 }
 
+message Shop{}
+message Upload{}
+message Shared{}
+message Auth{}
+message Sample{}
+message CMaster{}

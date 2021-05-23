@@ -1,17 +1,16 @@
+use crate::man::act::DBMySql;
+use crate::{act, errors::GenErr, pb, utils::time};
 
 pub struct ChannelAct {
     db: DBMySql,
 }
-
-use crate::{act,pb,errors::GenErr,utils::time};
-use crate::man::act::DBMySql;
 
 #[rustfmt::skip]
 impl ChannelAct{
     pub async fn channel_create_channel(&self, p: param::CreateChannel) -> Result<pb::Channel,GenErr> {
         let channel_cid = self.db.get_next_cid("channel").await?;
 
-        let channel = pb::Channel {
+        let channel = pb::Channel{
             channel_cid: channel_cid as u32,
             creator_profile_cid: p.creator_profile_cid,
             is_profile_channel: p.is_def_profile,
@@ -70,7 +69,7 @@ pub mod param {
     }
 
     #[derive(Clone, Default, Debug)]
-    pub struct EditChannel{
+    pub struct EditChannel {
         // pub channel_cid: u32,
         // pub by_profile_cid: u32,
         pub set_new_title: bool,
@@ -78,22 +77,7 @@ pub mod param {
         pub set_new_about: bool,
         pub new_about: String,
     }
-
-
 }
-
-
-// Deprecated
-#[derive(Clone, Default, Debug)]
-pub struct CreateChannelParam_old {
-    pub channel_cid: u32,
-    pub is_def_profile: bool,
-    pub creator_profile_cid: u32,
-    pub channel_title: String,
-    pub user_name: String,
-    pub about: String,
-}
-
 
 // #[cfg(test)]
 pub mod tests {
@@ -101,15 +85,13 @@ pub mod tests {
 
     // #[test]
     pub async fn play1() {
-        let ca = ChannelAct{
-            db: DBMySql::new()
-        };
-        let p = param::CreateChannel{
+        let ca = ChannelAct { db: DBMySql::new() };
+        let p = param::CreateChannel {
             is_def_profile: false,
             creator_profile_cid: 5,
             channel_title: "for fun :)".to_string(),
             user_name: "".to_string(),
-            about: "it's a test channel".to_string()
+            about: "it's a test channel".to_string(),
         };
 
         ca.channel_create_channel(p).await.unwrap();

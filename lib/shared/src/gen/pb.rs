@@ -993,6 +993,18 @@ pub struct SessionBk {
     #[prost(uint32, tag = "7")]
     pub created_time: u32,
 }
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Shop {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Upload {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Shared {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Auth {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Sample {}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CMaster {}
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum ProfileLevelEnum {
