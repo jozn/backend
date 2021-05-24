@@ -1,0 +1,252 @@
+syntax = "proto3";
+
+package pb_direct;
+
+import "global.proto";
+
+// direct: holder of chat, groups, subscribed channels - holder of state of users and underlying object: unseen count, last seen, ...
+// it will be a list in the ui of mobiles like whatsapp or telegram
+service RPC_Direct {
+    //rpc Direct (Param) returns (Response);
+
+    //========= One =========
+    // CRUD
+    rpc DeleteDirect (DeleteDirectParam) returns (DeleteDirectResponse); // remove?
+
+    // Pin, Archives, Marks
+    rpc ChangeTitle (ChangeTitleParam) returns (ChangeTitleResponse);
+
+    // Notifications
+    rpc SetCustomNotification (SetCustomNotificationParam) returns (SetCustomNotificationResponse);
+
+    // Others
+    rpc SendActionDoing (SendActionDoingParam) returns (SendActionDoingResponse);
+    rpc SetDraft (SetDraftParam) returns (SetDraftResponse);
+    //========= One End =========
+
+    //========= Many =========
+    // CRUD
+    rpc DeleteDirects (DeleteDirectsParam) returns (DeleteDirectsResponse);
+
+    // = Pin, Archives, Marks
+    rpc MarkAsRead (MarkAsReadParam) returns (MarkAsReadResponse);
+    rpc MarkAsUnRead (MarkAsUnReadParam) returns (MarkAsUnReadResponse);
+    rpc PinDirects (PinDirectsParam) returns (PinDirectsResponse);
+    rpc UnPinDirects (UnPinDirectsParam) returns (UnPinDirectsResponse);
+    rpc ArchiveDirects (ArchiveDirectsParam) returns (ArchiveDirectsResponse);
+    rpc UnArchiveDirects (UnArchiveDirectsParam) returns (UnArchiveDirectsResponse);
+
+    // Messages
+    rpc ClearHistories (ClearHistoriesParam) returns (ClearHistoriesResponse);
+
+    // Notifications
+    rpc MuteDirects (MuteDirectsParam) returns (MuteDirectsResponse);
+    rpc UnMuteDirects (UnMuteDirectsParam) returns (UnMuteDirectsResponse);
+    //========= Many End =========
+
+    // Folders
+    rpc CreateFolder (CreateFolderParam) returns (CreateFolderResponse);
+    rpc ChangeFolder (ChangeFolderParam) returns (ChangeFolderResponse); // batch operation - includes and excludes - no state change but a all fresh data: name, includes, excludes
+    rpc RemoveFromFolder (RemoveFromFolderParam) returns (RemoveFromFolderResponse);
+    rpc ReordersFolder (ReordersFolderParam) returns (ReordersFolderResponse);
+    rpc DeleteFolder (DeleteFolderParam) returns (DeleteFolderResponse);
+
+    // Views
+    rpc GetChatsList (GetChatsListParam) returns (GetChatsListResponse);
+    rpc GetGroupsList (GetGroupsListParam) returns (GetGroupsListResponse);
+    rpc GetChannelsList (GetChannelsListParam) returns (GetChannelsListResponse);
+
+    rpc GetFoldersList (GetFoldersListParam) returns (GetFoldersListResponse); // Just folders
+    rpc GetFoldersFullList (GetFoldersFullListParam) returns (GetFoldersFullListResponse); // folders with data
+
+}
+
+//========= One =========
+// CRUD
+
+message DeleteDirectParam {
+}
+
+message DeleteDirectResponse {
+}
+
+// Pin, Archives, Marks
+
+message ChangeTitleParam {
+}
+
+message ChangeTitleResponse {
+}
+
+// Notifications
+
+message SetCustomNotificationParam {
+}
+
+message SetCustomNotificationResponse {
+}
+
+// Others
+
+message SendActionDoingParam {
+}
+
+message SendActionDoingResponse {
+}
+
+message SetDraftParam {
+}
+
+message SetDraftResponse {
+}
+
+//========= One End =========
+
+//========= Many =========
+// CRUD
+message DeleteDirectsParam {
+}
+
+message DeleteDirectsResponse {
+}
+// = Pin, Archives, Marks
+message MarkAsReadParam {
+}
+
+message MarkAsReadResponse {
+}
+message MarkAsUnReadParam {
+}
+
+message MarkAsUnReadResponse {
+}
+
+message PinDirectsParam {
+}
+
+message PinDirectsResponse {
+}
+
+message UnPinDirectsParam {
+}
+
+message UnPinDirectsResponse {
+}
+
+message ArchiveDirectsParam {
+}
+
+message ArchiveDirectsResponse {
+}
+
+message UnArchiveDirectsParam {
+}
+
+message UnArchiveDirectsResponse {
+}
+
+// Messages
+
+message ClearHistoriesParam {
+}
+
+message ClearHistoriesResponse {
+}
+
+// Notifications
+
+message MuteDirectsParam {
+}
+
+message MuteDirectsResponse {
+}
+
+message UnMuteDirectsParam {
+}
+
+message UnMuteDirectsResponse {
+}
+
+//========= Many End =========
+
+// Folders
+
+message CreateFolderParam {
+}
+
+message CreateFolderResponse {
+}
+
+message ChangeFolderParam {
+}
+
+message ChangeFolderResponse {
+}
+
+/*
+message Param {
+}
+
+message Response {
+}
+*/
+
+message RemoveFromFolderParam {
+}
+
+message RemoveFromFolderResponse {
+}
+
+message ReordersFolderParam {
+}
+
+message ReordersFolderResponse {
+}
+
+message DeleteFolderParam {
+}
+
+message DeleteFolderResponse {
+}
+
+// Views
+
+message GetChatsListParam {
+}
+
+message GetChatsListResponse {
+}
+
+message GetGroupsListParam {
+}
+
+message GetGroupsListResponse {
+}
+
+message GetChannelsListParam {
+}
+
+message GetChannelsListResponse {
+}
+
+message GetFoldersListParam {
+}
+
+message GetFoldersListResponse {
+}
+
+message GetFoldersFullListParam {
+}
+
+message GetFoldersFullListResponse {
+}
+
+/*
+
+message Param {
+}
+
+message Response {
+}
+
+*/

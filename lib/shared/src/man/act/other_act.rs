@@ -10,7 +10,6 @@ impl OtherAct {
 
     // phone: 98901...
     pub async fn send_sms_code(&self, phone_number: &str) -> Result<pb::Sms,GenErr> {
-
         // our sms sender just accepts Iran format: "0901513..."
         let phone_ir = phone_to_iran_format(phone_number)?;
         let phone_inter = phone_to_international_format(phone_number)?;

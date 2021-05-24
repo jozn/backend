@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+option java_package = "ir.ms.pb";
+//option java_outer_classname = "PB2";
+option java_multiple_files = true;
+option optimize_for = LITE_RUNTIME; //CODE_SIZE;
+
+option go_package = "x";
+
+//import "pb_enum.proto";
+
+message RPC_General_Types {
+    message Echo {
+        message Param {
+            string Text = 1;
+        }
+
+        message Response {
+            bool Done =1;
+            string Text = 2;
+        }
+    }
+
+    message CheckUserName {
+        message Param {
+            string UserName = 1;
+        }
+
+        message Response {
+            bool IsAvailable =1;
+            string UserName = 2;
+            string ShowMessage = 3;
+        }
+    }
+}
+
+service RPC_General {
+    rpc Echo (RPC_General_Types.Echo.Param) returns (RPC_General_Types.Echo.Response);
+    rpc CheckUserName (RPC_General_Types.CheckUserName.Param) returns (RPC_General_Types.CheckUserName.Response);
+
+}
+

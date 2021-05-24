@@ -1,0 +1,121 @@
+syntax = "proto3";
+
+package pb_chat;
+
+import "global.proto";
+
+service RPC_Chat {
+    //rpc  (Param) returns (Response);
+
+    // crud: c: with sending msg, u: none, d: with direct
+
+    // Privacy: none in here, with settings in channels privacy
+
+    // Messages
+    rpc SendMessage (SendMessageParam) returns (SendMessageResponse);
+    rpc EditMessage (EditMessageParam) returns (EditMessageResponse);
+    rpc DeleteMessages (DeleteMessagesParam) returns (DeleteMessagesResponse);
+    rpc DeleteHistory (DeleteHistoryParam) returns (DeleteHistoryResponse);
+
+    // Others
+    rpc SendDoingAction (SendDoingActionParam) returns (SendDoingActionResponse);
+    rpc ReportChat (ReportChatParam) returns (ReportChatResponse);
+
+    // Views
+    rpc GetFull (GetFullMessageParam) returns (GetFullMessageResponse);
+    rpc GetMessagesList (GetMessagesListParam) returns (GetMessagesListResponse);
+    rpc GetMediaList (GetMediaListParam) returns (GetMediaListResponse);
+}
+
+// crud
+
+// Members
+
+
+// Privacy
+
+// Messages
+
+message SendMessageParam {
+    uint32 group_id = 1;
+}
+
+message SendMessageResponse {
+
+}
+
+message EditMessageParam {
+    uint32 group_id = 1;
+}
+
+message EditMessageResponse {
+
+}
+
+message DeleteMessagesParam {
+    uint32 group_id = 1;
+}
+
+message DeleteMessagesResponse {
+
+}
+
+message DeleteHistoryParam {
+}
+
+message DeleteHistoryResponse {
+}
+
+// Others
+
+message AvatarChangeParam {
+}
+
+message AvatarChangeResponse {
+}
+
+message SendDoingActionParam {
+}
+
+message SendDoingActionResponse {
+}
+
+message ReportChatParam {
+}
+
+message ReportChatResponse {
+}
+
+// Views
+
+message GetFullMessageParam {
+    uint32 group_id = 1;
+}
+
+message GetFullMessageResponse {
+
+}
+
+message GetMessagesListParam {
+}
+
+message GetMessagesListResponse {
+}
+
+message GetMediaListParam {
+}
+
+message GetMediaListResponse {
+}
+
+// Dep
+
+/*
+
+message Param {
+}
+
+message Response {
+}
+
+*/

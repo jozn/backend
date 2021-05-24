@@ -1,0 +1,258 @@
+syntax = "proto3";
+
+package pb;
+option java_package = "ir.ms.pb";
+//option java_outer_classname = "PB2";
+option java_multiple_files = true;
+option optimize_for = LITE_RUNTIME; //CODE_SIZE;
+
+option go_package = "x";
+
+//import "pb_enum.proto";
+
+// direct: holder of chat, groups, subscribed channels - holder of state of users and underlying object: unseen count, last seen, ...
+// it will be a list in the ui of mobiles like whatsapp or telegram
+service RPC_Direct {
+    //rpc Direct (Param) returns (Response);
+
+    //========= One =========
+    // CRUD
+    rpc DirectDeleteDirect (DirectDeleteDirectParam) returns (DirectDeleteDirectResponse); // remove?
+
+    // Pin, Archives, Marks
+    rpc DirectChangeTitle (DirectChangeTitleParam) returns (DirectChangeTitleResponse);
+
+    // Notifications
+    rpc DirectSetCustomNotification (DirectSetCustomNotificationParam) returns (DirectSetCustomNotificationResponse);
+
+    // Others
+    rpc DirectSendActionDoing (DirectSendActionDoingParam) returns (DirectSendActionDoingResponse);
+    rpc DirectSetDraft (DirectSetDraftParam) returns (DirectSetDraftResponse);
+    //========= One End =========
+
+    //========= Many =========
+    // CRUD
+    rpc DirectDeleteDirects (DirectDeleteDirectsParam) returns (DirectDeleteDirectsResponse);
+
+    // = Pin, Archives, Marks
+    rpc DirectMarkAsRead (DirectMarkAsReadParam) returns (DirectMarkAsReadResponse);
+    rpc DirectMarkAsUnRead (DirectMarkAsUnReadParam) returns (DirectMarkAsUnReadResponse);
+    rpc DirectPinDirects (DirectPinDirectsParam) returns (DirectPinDirectsResponse);
+    rpc DirectUnPinDirects (DirectUnPinDirectsParam) returns (DirectUnPinDirectsResponse);
+    rpc DirectArchiveDirects (DirectArchiveDirectsParam) returns (DirectArchiveDirectsResponse);
+    rpc DirectUnArchiveDirects (DirectUnArchiveDirectsParam) returns (DirectUnArchiveDirectsResponse);
+
+    // Messages
+    rpc DirectClearHistories (DirectClearHistoriesParam) returns (DirectClearHistoriesResponse);
+
+    // Notifications
+    rpc DirectMuteDirects (DirectMuteDirectsParam) returns (DirectMuteDirectsResponse);
+    rpc DirectUnMuteDirects (DirectUnMuteDirectsParam) returns (DirectUnMuteDirectsResponse);
+    //========= Many End =========
+
+    // Folders
+    rpc DirectCreateFolder (DirectCreateFolderParam) returns (DirectCreateFolderResponse);
+    rpc DirectChangeFolder (DirectChangeFolderParam) returns (DirectChangeFolderResponse); // batch operation - includes and excludes - no state change but a all fresh data: name, includes, excludes
+    rpc DirectRemoveFromFolder (DirectRemoveFromFolderParam) returns (DirectRemoveFromFolderResponse);
+    rpc DirectReordersFolder (DirectReordersFolderParam) returns (DirectReordersFolderResponse);
+    rpc DirectDeleteFolder (DirectDeleteFolderParam) returns (DirectDeleteFolderResponse);
+
+    // Views
+    rpc DirectGetChatsList (DirectGetChatsListParam) returns (DirectGetChatsListResponse);
+    rpc DirectGetGroupsList (DirectGetGroupsListParam) returns (DirectGetGroupsListResponse);
+    rpc DirectGetChannelsList (DirectGetChannelsListParam) returns (DirectGetChannelsListResponse);
+
+    rpc DirectGetFoldersList (DirectGetFoldersListParam) returns (DirectGetFoldersListResponse); // Just folders
+    rpc DirectGetFoldersFullList (DirectGetFoldersFullListParam) returns (DirectGetFoldersFullListResponse); // folders with data
+
+}
+
+//========= One =========
+// CRUD
+
+message DirectDeleteDirectParam {
+}
+
+message DirectDeleteDirectResponse {
+}
+
+// Pin, Archives, Marks
+
+message DirectChangeTitleParam {
+}
+
+message DirectChangeTitleResponse {
+}
+
+// Notifications
+
+message DirectSetCustomNotificationParam {
+}
+
+message DirectSetCustomNotificationResponse {
+}
+
+// Others
+
+message DirectSendActionDoingParam {
+}
+
+message DirectSendActionDoingResponse {
+}
+
+message DirectSetDraftParam {
+}
+
+message DirectSetDraftResponse {
+}
+
+//========= One End =========
+
+//========= Many =========
+// CRUD
+message DirectDeleteDirectsParam {
+}
+
+message DirectDeleteDirectsResponse {
+}
+// = Pin, Archives, Marks
+message DirectMarkAsReadParam {
+}
+
+message DirectMarkAsReadResponse {
+}
+message DirectMarkAsUnReadParam {
+}
+
+message DirectMarkAsUnReadResponse {
+}
+
+message DirectPinDirectsParam {
+}
+
+message DirectPinDirectsResponse {
+}
+
+message DirectUnPinDirectsParam {
+}
+
+message DirectUnPinDirectsResponse {
+}
+
+message DirectArchiveDirectsParam {
+}
+
+message DirectArchiveDirectsResponse {
+}
+
+message DirectUnArchiveDirectsParam {
+}
+
+message DirectUnArchiveDirectsResponse {
+}
+
+// Messages
+
+message DirectClearHistoriesParam {
+}
+
+message DirectClearHistoriesResponse {
+}
+
+// Notifications
+
+message DirectMuteDirectsParam {
+}
+
+message DirectMuteDirectsResponse {
+}
+
+message DirectUnMuteDirectsParam {
+}
+
+message DirectUnMuteDirectsResponse {
+}
+
+//========= Many End =========
+
+// Folders
+
+message DirectCreateFolderParam {
+}
+
+message DirectCreateFolderResponse {
+}
+
+message DirectChangeFolderParam {
+}
+
+message DirectChangeFolderResponse {
+}
+
+/*
+message Param {
+}
+
+message Response {
+}
+*/
+
+message DirectRemoveFromFolderParam {
+}
+
+message DirectRemoveFromFolderResponse {
+}
+
+message DirectReordersFolderParam {
+}
+
+message DirectReordersFolderResponse {
+}
+
+message DirectDeleteFolderParam {
+}
+
+message DirectDeleteFolderResponse {
+}
+
+// Views
+
+message DirectGetChatsListParam {
+}
+
+message DirectGetChatsListResponse {
+}
+
+message DirectGetGroupsListParam {
+}
+
+message DirectGetGroupsListResponse {
+}
+
+message DirectGetChannelsListParam {
+}
+
+message DirectGetChannelsListResponse {
+}
+
+message DirectGetFoldersListParam {
+}
+
+message DirectGetFoldersListResponse {
+}
+
+message DirectGetFoldersFullListParam {
+}
+
+message DirectGetFoldersFullListResponse {
+}
+
+/*
+
+message Param {
+}
+
+message Response {
+}
+
+*/

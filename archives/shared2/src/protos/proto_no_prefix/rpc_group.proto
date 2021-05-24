@@ -1,0 +1,326 @@
+syntax = "proto3";
+
+package pb_group;
+
+import "global.proto";
+
+message AvatarAddParam {
+    uint32 group_id = 1;
+}
+
+message AvatarAddResponse {}
+
+message AvatarDeleteParam {
+    uint32 group_id = 1;
+}
+
+message AvatarDeleteResponse {}
+
+message AvatarGetListParam {
+    uint32 group_id = 1;
+}
+
+message AvatarGetListResponse {}
+
+message SendMessageParam {
+    uint32 group_id = 1;
+}
+
+message SendMessageResponse {
+
+}
+
+message EditMessageParam {
+    uint32 group_id = 1;
+}
+
+message EditMessageResponse {
+
+}
+
+message PinMessageParam {
+    uint32 group_id = 1;
+}
+
+message PinMessageResponse {
+
+}
+
+message UnPinMessageParam {
+    uint32 group_id = 1;
+}
+
+message UnPinMessageResponse {
+
+}
+
+message DeleteMessageParam {
+    uint32 group_id = 1;
+}
+
+message DeleteMessageResponse {
+
+}
+
+message SetDraftParam {
+    uint32 group_id = 1;
+}
+
+message SetDraftResponse {
+
+}
+
+message GetFullMessageParam {
+    uint32 group_id = 1;
+}
+
+message GetFullMessageResponse {
+
+}
+
+// imple seq:
+// add rpc
+// organize parma/response  for the last part
+// strive for make api solid
+// imple things not just for ui but full
+service RPC_Group {
+    //rpc  (Param) returns (Response);
+
+    // CrDU
+    rpc CreateGroup (CreateGroupParam) returns (CreateGroupResponse);
+    rpc EditGroup (EditGroupParam) returns (EditGroupResponse);
+    rpc DeleteGroup (DeleteGroupParam) returns (DeleteGroupResponse);
+
+    // Members
+    rpc AddAdmin (AddAdminParam) returns (AddAdminResponse); // ??
+    rpc AddMember (AddMemberParam) returns (AddMemberResponse);
+    rpc RemoveMember (RemoveMemberParam) returns (RemoveMemberResponse);
+    rpc ChangeMemberLevel (ChangeMemberLevelParam) returns (ChangeMemberLevelResponse);
+    rpc ChangeMemberPermission (ChangeMemberPermissionParam) returns (ChangeMemberPermissionResponse);
+    rpc JoinGroup (JoinGroupParam) returns (JoinGroupResponse);
+    rpc LeaveGroup (LeaveGroupParam) returns (LeaveGroupResponse);
+    rpc BanMember (BanMemberParam) returns (BanMemberResponse); // ban or block?
+
+    // Privacy
+    rpc ChangePrivacy (ChangePrivacyParam) returns (ChangePrivacyResponse);
+    rpc ChangeDefaultPermission (ChangeDefaultPermissionParam) returns (ChangeDefaultPermissionResponse);
+    rpc RevokeLink (RevokeLinkParam) returns (RevokeLinkResponse);
+    rpc ChangeUsername (ChangeUsernameParam) returns (ChangeUsernameResponse);
+
+    // Messages
+    rpc SendMessage (SendMessageParam) returns (SendMessageResponse);
+    rpc EditMessage (EditMessageParam) returns (EditMessageResponse);
+    rpc PinMessage (PinMessageParam) returns (PinMessageResponse);
+    rpc UnPinMessage (UnPinMessageParam) returns (UnPinMessageResponse);
+    rpc DeleteMessage (DeleteMessageParam) returns (DeleteMessageResponse); // remove?
+    rpc DeleteMessages (DeleteMessagesParam) returns (DeleteMessagesResponse);
+    rpc DeleteHistory (DeleteHistoryParam) returns (DeleteHistoryResponse);
+    rpc ClearHistory (ClearHistoryParam) returns (ClearHistoryResponse);
+
+    // Others
+    rpc AvatarAdd (AvatarAddParam) returns (AvatarAddResponse);
+    rpc AvatarChange (AvatarChangeParam) returns (AvatarChangeResponse); // remove?
+    rpc AvatarDelete (AvatarDeleteParam) returns (AvatarDeleteResponse);
+    rpc AvatarGetList (AvatarGetListParam) returns (AvatarGetListResponse); // view?
+    rpc SendDoingAction (SendDoingActionParam) returns (SendDoingActionResponse);
+    rpc ReportGroup (ReportGroupParam) returns (ReportGroupResponse);
+
+    // Views
+    rpc GetFull (GetFullMessageParam) returns (GetFullMessageResponse);
+    rpc GetMessagesList (GetMessagesListParam) returns (GetMessagesListResponse);
+    rpc GetMediaList (GetMediaListParam) returns (GetMediaListResponse);
+    rpc GetMembersList (GetMembersListParam) returns (GetMembersListResponse);
+    rpc GetAdminsList (GetAdminsListParam) returns (GetAdminsListResponse);
+
+    // Deprecated
+    rpc SetDraft (SetDraftParam) returns (SetDraftResponse); // draft via direct
+
+}
+
+// CrDU
+message CreateGroupParam {
+    uint32 group_id = 1;
+}
+
+message CreateGroupResponse {
+
+}
+
+message EditGroupParam {
+    uint32 group_id = 1;
+}
+
+message EditGroupResponse {
+
+}
+
+message DeleteGroupParam {
+    uint32 group_id = 1;
+}
+
+message DeleteGroupResponse {
+
+}
+
+// Members
+/*message Param {
+}
+
+message Response {
+}*/
+
+message AddAdminParam {
+}
+
+message AddAdminResponse {
+}
+
+message AddMemberParam {
+}
+
+message AddMemberResponse {
+}
+
+message RemoveMemberParam {
+}
+
+message RemoveMemberResponse {
+}
+
+message ChangeMemberLevelParam {
+}
+
+message ChangeMemberLevelResponse {
+}
+
+message ChangeMemberPermissionParam {
+}
+
+message ChangeMemberPermissionResponse {
+}
+
+message JoinGroupParam {
+}
+
+message JoinGroupResponse {
+}
+
+message LeaveGroupParam {
+}
+
+message LeaveGroupResponse {
+}
+
+message BanMemberParam {
+}
+
+message BanMemberResponse {
+}
+
+// Privacy
+
+message ChangePrivacyParam {
+    uint32 group_id = 1;
+}
+
+message ChangePrivacyResponse {
+
+}
+
+message ChangeDefaultPermissionParam {
+}
+
+message ChangeDefaultPermissionResponse {
+}
+
+message RevokeLinkParam {
+}
+
+message RevokeLinkResponse {
+}
+
+message ChangeUsernameParam {
+}
+
+message ChangeUsernameResponse {
+}
+
+// Messages
+
+message DeleteMessagesParam {
+    uint32 group_id = 1;
+}
+
+message DeleteMessagesResponse {
+
+}
+
+message DeleteHistoryParam {
+}
+
+message DeleteHistoryResponse {
+}
+
+message ClearHistoryParam {
+}
+
+message ClearHistoryResponse {
+}
+
+// Others
+
+message AvatarChangeParam {
+}
+
+message AvatarChangeResponse {
+}
+
+message SendDoingActionParam {
+}
+
+message SendDoingActionResponse {
+}
+
+message ReportGroupParam {
+}
+
+message ReportGroupResponse {
+}
+
+// Views
+
+message GetMessagesListParam {
+}
+
+message GetMessagesListResponse {
+}
+
+message GetMediaListParam {
+}
+
+message GetMediaListResponse {
+}
+
+message GetMembersListParam {
+}
+
+message GetMembersListResponse {
+}
+
+message GetAdminsListParam {
+}
+
+message GetAdminsListResponse {
+}
+
+// Dep
+
+/*
+
+message Param {
+}
+
+message Response {
+}
+
+*/

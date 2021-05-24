@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package pb;
+
+import "global.proto";
+
+message GetUsers1Param {
+   
+}
+
+message GetUsers1Response {
+
+}
+
+service RPC_Sample {
+    rpc GetUsers1 (GetUsers1Param) returns (GetUsers1Response);
+
+}
+

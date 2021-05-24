@@ -4,6 +4,7 @@ Notes:
     + NOT:> we should ping server every 30-60 seconds >> update: NO , go for statless
     + favour statless connection
     + Phone number in international format always
+    + Built the ecosystem around MySQL, no more in memory database > less moving parts
 Policies:
     + Separation of concerns is more important than some code reuse. (ex: Media, Photo, Avatar, Thumb, Video,
       Audio,...) > give things space to grow independently and the scope/boundaries of their functionality be

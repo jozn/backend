@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<textarea id="txt" style="height: 400px; width: 500px">
+
+  int64 PostId = 5;
+  int64 CommentId = 6;
+  int64 HashTagId = 7;
+  int64 GroupId = 8;
+  int64 ActionId = 9;
+  int64 ChatId = 10;
+  string ChatKey = 11;
+  int64 MessageId = 12;
+  int64 ReSharedId = 13;
+  int64 Murmur64Hash = 14;
+
+</textarea>
+<button id="btn"> convert </button>
+
+<br/>
+
+<textarea id="out" style="height: 400px; width: 500px" > </textarea>
+
+
+<button id="copy"> copy </button>
+
+
+<script >
+
+    function run() {
+        var id = document.getElementById("txt");
+        var out_id = document.getElementById("out");
+        let text = id.value;
+        let arr = text.split(/\S/);
+
+        console.log("input: " + text);
+
+        var out = "";
+
+        var pre = "";
+        for(var i=0; i< text.length; i++) {
+          let a = text[i];
+          if(a.match(/[A-Z]/)){
+            if(pre === " ") {
+              a = ""+a.toLowerCase();
+            }else {
+              a = "_"+a.toLowerCase();
+            }
+          }
+          pre = text[i];
+          out = out + a;
+        }
+
+        var s =  arr.join(" ");
+        out_id.value = out;
+        out_id.focus();
+        out_id.select();
+
+    }
+
+    var btn = document.getElementById("btn");
+    btn.onclick = run
+    btn.onchange = run
+    btn.onblur = run
+
+
+    var copy = document.getElementById("copy");
+    copy.onclick = function() {
+      var out_id = document.getElementById("out");
+
+
+    }
+
+
+</script>
+</body>
+
+</html>

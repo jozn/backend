@@ -1,0 +1,15 @@
+pb-rs --dont_use_cow proto/* -d pb
+
++ in the wire rpc names should not matters / just a namespace, only methods name should matters.
+
+sfz -b 0.0.0.0 /
+
+// http/2 bench > for hyper it's in ~200k range
+h2load -n1000000 -c100 -m10 http://localhost:8081/
+=================
+cargo run --bin sms2  # from workspace root
+cargo run -p cmaster  # from workspace root
+=================
+requirement of projects:
+gcc
+llvm (for rocksdb lib)
