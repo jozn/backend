@@ -4,7 +4,7 @@ members = [
 #    "archives/shared2",
     "micro/gateway",
 #    "micro/cmaster",
-    "micro/db_view",
+#    "micro/db_view",
     "micro/logic",
 
     # Dev Playground

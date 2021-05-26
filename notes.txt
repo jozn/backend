@@ -3,3 +3,17 @@
 
 + About rust:
     + Empty String and Vec have zero capacity means they do not allocate unless something goes inot them.
+
++ MySQL Notes:
+    + for copying a table: CREATE TABLE blogs2 LIKE blogs;
+    + copy tables: INSERT INTO blogs2 (SELECT * FROM `blogs`); // https://www.mysqltutorial.org/mysql-copy-table-data.aspx
+    + CREATE TABLE sms_bk SELECT * FROM sms [[where]];
+    + SHOW CREATE TABLE `blogs`;
+    + ALTER TABLE table_name ENGINE engine_name;
+    + SHOW ENGINES;
+    + SHOW CREATE DATABASE twitter;
+    + DELETE FROM blogs; // dangerous
+    + mysqldump -u flipper -p --all-databases >bk1.sql
+
++ Others
+    + hexdump -C ./all.sh

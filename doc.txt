@@ -5,6 +5,9 @@ Notes:
     + favour statless connection
     + Phone number in international format always
     + Built the ecosystem around MySQL, no more in memory database > less moving parts
+    + Build the system around a needed benchmark output > like 8k rpc processing per second
+        this will make us to be design a better and more modular design and avoids trivial
+        micro optimzation.
 Policies:
     + Separation of concerns is more important than some code reuse. (ex: Media, Photo, Avatar, Thumb, Video,
       Audio,...) > give things space to grow independently and the scope/boundaries of their functionality be
