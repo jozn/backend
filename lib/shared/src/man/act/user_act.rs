@@ -1,5 +1,10 @@
 use crate::man::act::DBMySql;
-use crate::{act, errors::GenErr, pb, utils::{time,rand}};
+use crate::{
+    act,
+    errors::GenErr,
+    pb,
+    utils::{rand, time},
+};
 
 pub struct UserAct {
     db: DBMySql,
@@ -119,9 +124,7 @@ pub mod param {
     }
 
     #[derive(Clone, Default, Debug)]
-    pub struct CreateSession {
-    }
-
+    pub struct CreateSession {}
 }
 
 // #[cfg(test)]
@@ -131,6 +134,5 @@ pub mod tests {
     // #[test]
     pub async fn play1() {
         let ca = UserAct { db: DBMySql::new() };
-
     }
 }

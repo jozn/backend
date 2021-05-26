@@ -1,7 +1,7 @@
 // use super::db_trait_dep::*;
 use crate::gen::pb;
 use crate::man::errors::GenErr;
-use crate::{common, my};
+use crate::{common, my, utils::time};
 use std::sync::Arc;
 
 #[derive(Debug)]
@@ -12,7 +12,7 @@ pub struct DBMySql {
 #[rustfmt::skip]
 impl DBMySql {
     pub fn new() ->Self {
-        let database_url = "mysql://flipper:12345678@192.168.93.115:3306/flip_my";
+        let database_url = "mysql://flipper:12345678@192.168.162.115:3306/flip_my";
         let my = DBMySql {
             mysql_pool: Arc::new(mysql_async::Pool::new(database_url)),
         };
@@ -69,6 +69,7 @@ impl DBMySql {
 
         Ok(msg_pb)
     }
+
     pub async fn save_channel_message(&self, message: &pb::Message) -> Result<(), GenErr> {
         let pb_data = common::prost_encode(message)?;
         let debug_data = format!("{:#?}", &message);
@@ -87,18 +88,34 @@ impl DBMySql {
 
     // =================== Channel Follower ====================
     pub async fn get_channel_followers(&self, channel_cid: u64) -> Result<Vec<u64>, GenErr> {
+
         unimplemented!("");
     }
-    pub async fn save_channel_follower(&self, channel_cid: u64, profile_cid: u64) -> Result<(), GenErr> {
-        unimplemented!("");
+    pub async fn save_channel_follower(&self, channel_cid: u32, profile_cid: u32) -> Result<(), GenErr> {
+        let ch_fl_row = my::ChannelFollower {
+            profile_cid,
+            channel_cid,
+            created_time: time::get_time_now_sec(),
+            follow_id: 0
+        };
+        let r = ch_fl_row.replace(&self.mysql_pool).await?;
+
+        Ok(())
     }
 
     // =================== Channel Message Like ====================
     pub async fn get_message_likes(&self, channel_cid: u64, message_gid: u64) -> Result<Vec<u64>, GenErr> {
         unimplemented!("");
     }
-    pub async fn save_message_like(&self, channel_cid: u64, message_gid: u64, profile_cid: u64) -> Result<(), GenErr> {
-        unimplemented!("");
+    pub async fn save_message_like(&self, channel_cid: u32, message_gid: u64, profile_cid: u32) -> Result<(), GenErr> {
+        let ch_lk_row = my::ChannelMsgLike{
+            message_gid,
+            profile_cid,
+            created_time: time::get_time_now_sec()
+        };
+        let r = ch_lk_row.replace(&self.mysql_pool).await?;
+
+        Ok(())
     }
 
     // =================== Channel Message Comment ====================
@@ -208,7 +225,7 @@ impl DBMySql {
 
 impl DBMySql {
     // =================== Profile ====================
-    pub async fn get_profile(&self, profile_cid: u64) -> Result<pb::Profile, GenErr>{
+    pub async fn get_profile(&self, profile_cid: u64) -> Result<pb::Profile, GenErr> {
         let profile_row = my::ProfileSelector::new()
             .profile_cid_eq(profile_cid)
             .get_row(&self.mysql_pool)
@@ -218,7 +235,7 @@ impl DBMySql {
 
         Ok(profile_pb)
     }
-    pub async fn save_profile(&self, profile: &pb::Profile) -> Result<(), GenErr>{
+    pub async fn save_profile(&self, profile: &pb::Profile) -> Result<(), GenErr> {
         let buff = common::prost_encode(profile)?;
         let profile_row = my::Profile {
             profile_cid: profile.profile_cid as u64,
@@ -231,7 +248,7 @@ impl DBMySql {
     }
 
     //todo below
-/*    // =================== Profile Following ====================
+    /*    // =================== Profile Following ====================
     pub async fn get_profile_followings(&self, profile_cid: u64) -> Result<Vec<u64>, GenErr>;
     // todo this with channel must be in one batch transaction
     pub async fn save_profile_following(&self, channel_cid: u64, profile_cid: u64) -> Result<(), GenErr>;
@@ -249,7 +266,7 @@ impl DBMySql {
 // Other db
 impl DBMySql {
     // =================== Sms ====================
-    pub async fn get_sms(&self, phone: &str, hash_code: &str) -> Result<pb::Sms, GenErr>{
+    pub async fn get_sms(&self, phone: &str, hash_code: &str) -> Result<pb::Sms, GenErr> {
         let sms_row = my::SmsSelector::new()
             .hash_code_eq(hash_code)
             .and_phone_number_eq(phone)
@@ -260,7 +277,7 @@ impl DBMySql {
 
         Ok(sms_pb)
     }
-    pub async fn save_sms(&self, sms: &pb::Sms) -> Result<(), GenErr>{
+    pub async fn save_sms(&self, sms: &pb::Sms) -> Result<(), GenErr> {
         let buff = common::prost_encode(sms)?;
         let sms_row = my::Sms {
             sms_id: 0,

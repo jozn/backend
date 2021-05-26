@@ -1,5 +1,10 @@
 use crate::man::act::DBMySql;
-use crate::{act, errors::GenErr, pb, utils::{time, rand}, sms_sender};
+use crate::{
+    act,
+    errors::GenErr,
+    pb, sms_sender,
+    utils::{rand, time},
+};
 
 pub struct OtherAct {
     db: DBMySql,
@@ -54,29 +59,37 @@ impl OtherAct {
 
 }
 
-fn phone_to_iran_format(number:&str) -> Result<String,GenErr> {
-    let number_ir = if number.starts_with("98") { // international format
+fn phone_to_iran_format(number: &str) -> Result<String, GenErr> {
+    let number_ir = if number.starts_with("98") {
+        // international format
         format!("0{}", &number[2..])
-    } else if number.starts_with("0") { // Iran format
+    } else if number.starts_with("0") {
+        // Iran format
         format!("{}", &number)
-    } else if number.starts_with("9") { // Iran mobile without 0
+    } else if number.starts_with("9") {
+        // Iran mobile without 0
         format!("0{}", &number)
-    } else { // Unknown format
-        return Err(GenErr::WrongParam)
+    } else {
+        // Unknown format
+        return Err(GenErr::WrongParam);
     };
 
     Ok(number_ir)
 }
 
-fn phone_to_international_format(number:&str) ->  Result<String,GenErr> {
-    let number_inter = if number.starts_with("98") { // international format
+fn phone_to_international_format(number: &str) -> Result<String, GenErr> {
+    let number_inter = if number.starts_with("98") {
+        // international format
         format!("{}", &number)
-    } else if number.starts_with("0") { // Iran format with 0
+    } else if number.starts_with("0") {
+        // Iran format with 0
         format!("98{}", &number[1..])
-    } else if number.starts_with("9") { // Iran mobile without 0
+    } else if number.starts_with("9") {
+        // Iran mobile without 0
         format!("98{}", &number)
-    } else { // Unknown format
-        return Err(GenErr::WrongParam)
+    } else {
+        // Unknown format
+        return Err(GenErr::WrongParam);
     };
 
     Ok(number_inter)
@@ -85,7 +98,5 @@ fn phone_to_international_format(number:&str) ->  Result<String,GenErr> {
 pub mod param {
 
     #[derive(Clone, Default, Debug)]
-    pub struct XXSample {
-    }
-
+    pub struct XXSample {}
 }

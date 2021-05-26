@@ -7,7 +7,8 @@ pub struct ChannelAct {
 
 #[rustfmt::skip]
 impl ChannelAct{
-    pub async fn channel_create_channel(&self, p: param::CreateChannel) -> Result<pb::Channel,GenErr> {
+    // CrUD
+    pub async fn create_channel(&self, p: param::CreateChannel) -> Result<pb::Channel,GenErr> {
         let channel_cid = self.db.get_next_cid("channel").await?;
 
         let channel = pb::Channel{
@@ -27,7 +28,7 @@ impl ChannelAct{
         Ok(channel)
     }
 
-    pub async fn channel_edit_channel(&self, channel_cid: u32, p: param::EditChannel) -> Result<pb::Channel,GenErr> {
+    pub async fn edit_channel(&self, channel_cid: u32, p: param::EditChannel) -> Result<pb::Channel,GenErr> {
         let mut ch = self.db.get_channel(channel_cid as u64).await?;
 
         if p.set_new_title {
@@ -42,7 +43,7 @@ impl ChannelAct{
         Ok(ch)
     }
 
-    pub async fn channel_delete_channel(&self, channel_cid: u32, p: param::EditChannel) -> Result<pb::Channel,GenErr>{
+    pub async fn delete_channel(&self, channel_cid: u32, p: param::EditChannel) -> Result<pb::Channel,GenErr>{
         let mut ch = self.db.get_channel(channel_cid as u64).await?;
 
         ch.is_deleted = 1;//todo to bool
@@ -53,6 +54,85 @@ impl ChannelAct{
         self.db.save_channel(&ch).await?;
 
         Ok(ch)
+    }
+
+    // Following
+    pub async fn follow_channel(&self, channel_cid: u32, by_profile_cid: u32) -> Result<(),GenErr> {
+        self.db.save_channel_follower(channel_cid,by_profile_cid).await?;
+        // todo add others
+
+        Ok(())
+    }
+
+    pub async fn unfollow_channel(&self) -> Result<pb::Channel,GenErr> {
+        let _ = pb::ChannelUnFollowChannelParam::default();
+        unimplemented!("");
+    }
+
+    // Likes
+    pub async fn like_message(&self, channel_cid: u32, message_gid: u64, by_profile_cid: u32) -> Result<(),GenErr> {
+        self.db.save_message_like(channel_cid,message_gid,by_profile_cid).await?;
+        // todo add others
+
+        Ok(())
+    }
+
+    pub async fn unlike_message (&self) -> Result<pb::Channel,GenErr> {
+        let _ = pb::ChannelUnLikeMessageParam::default();
+        unimplemented!("");
+    }
+
+    // Messages
+    pub async fn add_message(&self, channel_cid: u32, by_profile_cid: u32, msg_in: pb::NewMessageInput) -> Result<pb::Message,GenErr> {
+        let msg = pb::Message{
+            message_gid: time::get_time_now().as_nanos() as u64, //todo
+            by_profile_cid,
+            message_type: pb::MessageType::Text as i32 ,
+            text: msg_in.text,
+            created_time: time::get_time_now_sec(),
+            delivery_status: pb::MessageDeliveryStatues::Sent as i32,
+            channel_cid,
+            counts: None, // not here just view
+            ..Default::default()
+        };
+        self.db.save_channel_message(&msg).await?;
+
+        Ok(msg)
+    }
+
+    pub async fn edit_message(&self, p: param::EditMessage) -> Result<pb::Message,GenErr> {
+        let mut  msg = self.db.get_channel_message( p.channel_cid as u64, p.message_gid).await?;
+        msg.text = p.new_text;
+        self.db.save_channel_message(&msg).await?;
+
+        Ok(msg)
+    }
+
+    pub async fn delete_messages(&self, channel_cid: u32, message_gid: u64) -> Result<pb::Channel,GenErr> {
+        // todo
+        let _ = pb::ChannelDeleteMessagesParam::default();
+        unimplemented!("");
+    }
+
+    // Comment
+    pub async fn add_comment(&self, p: param::AddComment) -> Result<pb::Comment,GenErr> {
+        let com = pb::Comment{
+            comment_gid: 0, // todo shard it
+            message_gid: p.message_gid,
+            channel_cid: p.channel_cid as u64,
+            profile_cid: p.by_profile_cid,
+            created_time: time::get_time_now_sec(),
+            text: p.comment_text
+        };
+        self.db.save_message_comment(&com).await?;
+
+        Ok(com)
+    }
+
+    pub async fn delete_comment(&self, p: param::DeleteComment) -> Result<pb::Channel,GenErr> {
+        // todo
+        let _ = pb::ChannelDeleteCommentParam::default();
+        unimplemented!("");
     }
 
 }
@@ -77,6 +157,31 @@ pub mod param {
         pub set_new_about: bool,
         pub new_about: String,
     }
+
+    #[derive(Clone, Default, Debug)]
+    pub struct EditMessage {
+        pub channel_cid: u32,
+        pub message_gid: u64,
+        pub by_profile_cid: u32,
+        pub new_text: String,
+    }
+
+    #[derive(Clone, Default, Debug)]
+    pub struct AddComment {
+        pub channel_cid: u32,
+        pub message_gid: u64,
+        pub by_profile_cid: u32,
+        pub comment_text: String,
+    }
+
+    #[derive(Clone, Default, Debug)]
+    pub struct DeleteComment {
+        pub channel_cid: u32,
+        pub message_gid: u64,
+        pub by_profile_cid: u32,
+        pub comment_gid: u64,
+    }
+
 }
 
 // #[cfg(test)]
@@ -84,7 +189,7 @@ pub mod tests {
     use super::*;
 
     // #[test]
-    pub async fn play1() {
+    pub async fn play2() {
         let ca = ChannelAct { db: DBMySql::new() };
         let p = param::CreateChannel {
             is_def_profile: false,
@@ -94,6 +199,22 @@ pub mod tests {
             about: "it's a test channel".to_string(),
         };
 
-        ca.channel_create_channel(p).await.unwrap();
+        ca.create_channel(p).await.unwrap();
+    }
+
+    pub async fn play1() {
+        let ca = ChannelAct { db: DBMySql::new() };
+        let p = pb::NewMessageInput {
+            message_gid: 0,
+            by_profile_cid: 7,
+            message_type: 1,
+            text: "heloo 😗 😙 😚".to_string(),
+            via_app_id: 0,
+            seq: 0,
+            created_time: 0,
+            verified: false
+        };
+
+        ca.add_message(8, 1888, p).await.unwrap();
     }
 }
