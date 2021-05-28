@@ -11,64 +11,64 @@ service RPC_Channel {
     //rpc Channel (Param) returns (Response);
 
     // CrDU
-    rpc ChannelCreateChannel (ChannelCreateChannelParam) returns (ChannelCreateChannelResponse); // qevent_id_50
-    rpc ChannelEditChannel (ChannelEditChannelParam) returns (ChannelEditChannelResponse); // qevent
-    rpc ChannelDeleteChannel (ChannelDeleteChannelParam) returns (ChannelDeleteChannelResponse); // qevent
+    rpc ChannelCreateChannel (ChannelCreateChannelParam) returns (ChannelCreateChannelResponse);
+    rpc ChannelEditChannel (ChannelEditChannelParam) returns (ChannelEditChannelResponse);
+    rpc ChannelDeleteChannel (ChannelDeleteChannelParam) returns (ChannelDeleteChannelResponse);
 
     // Author
-    rpc ChannelAddAuthor (ChannelAddAuthorParam) returns (ChannelAddAuthorResponse); // event_id_60
-    rpc ChannelChangeAuthorPermission (ChannelChangeAuthorPermissionParam) returns (ChannelChangeAuthorPermissionResponse); // event
-    rpc ChannelRemoveAuthor (ChannelRemoveAuthorParam) returns (ChannelRemoveAuthorResponse); // event
+    rpc ChannelAddAuthor (ChannelAddAuthorParam) returns (ChannelAddAuthorResponse);
+    rpc ChannelChangeAuthorPermission (ChannelChangeAuthorPermissionParam) returns (ChannelChangeAuthorPermissionResponse);
+    rpc ChannelRemoveAuthor (ChannelRemoveAuthorParam) returns (ChannelRemoveAuthorResponse);
 
     // Follow
-    rpc ChannelFollowChannel (ChannelFollowChannelParam) returns (ChannelFollowChannelResponse); // qevent_id_30
-    rpc ChannelUnFollowChannel (ChannelUnFollowChannelParam) returns (ChannelUnFollowChannelResponse); // qevent
-    rpc ChannelRemoveFollowers (ChannelRemoveFollowersParam) returns (ChannelRemoveFollowersResponse); // event
+    rpc ChannelFollowChannel (ChannelFollowChannelParam) returns (ChannelFollowChannelResponse);
+    rpc ChannelUnFollowChannel (ChannelUnFollowChannelParam) returns (ChannelUnFollowChannelResponse);
+    rpc ChannelRemoveFollowers (ChannelRemoveFollowersParam) returns (ChannelRemoveFollowersResponse);
 
     // Subscribe
-    rpc ChannelSubscribe (ChannelSubscribeParam) returns (ChannelSubscribeResponse); // qevent_id_40
-    rpc ChannelUnSubscribe (ChannelUnSubscribeParam) returns (ChannelUnSubscribeResponse); // qevent
+    rpc ChannelSubscribe (ChannelSubscribeParam) returns (ChannelSubscribeResponse);
+    rpc ChannelUnSubscribe (ChannelUnSubscribeParam) returns (ChannelUnSubscribeResponse);
     rpc ChannelRemoveSubscribers (ChannelRemoveSubscribersParam) returns (ChannelRemoveSubscribersResponse); // PROBEBELY DELETE: AS SUBCROBER LIST SHOULD BE HIDDEN
 
     // Privacy
-    rpc ChannelChangePrivacy (ChannelChangePrivacyParam) returns (ChannelChangePrivacyResponse); // vent_id_70
-    rpc ChannelChangeDefaultPermission (ChannelChangeDefaultPermissionParam) returns (ChannelChangeDefaultPermissionResponse);  // event
-    rpc ChannelRevokeLink (ChannelRevokeLinkParam) returns (ChannelRevokeLinkResponse); // event
-    rpc ChannelChangeUsername (ChannelChangeUsernameParam) returns (ChannelChangeUsernameResponse); // event
-    rpc ChannelBlockProfile (ChannelBlockProfileParam) returns (ChannelBlockProfileResponse); // event
+    rpc ChannelChangePrivacy (ChannelChangePrivacyParam) returns (ChannelChangePrivacyResponse);
+    rpc ChannelChangeDefaultPermission (ChannelChangeDefaultPermissionParam) returns (ChannelChangeDefaultPermissionResponse);
+    rpc ChannelRevokeLink (ChannelRevokeLinkParam) returns (ChannelRevokeLinkResponse);
+    rpc ChannelChangeUsername (ChannelChangeUsernameParam) returns (ChannelChangeUsernameResponse);
+    rpc ChannelBlockProfile (ChannelBlockProfileParam) returns (ChannelBlockProfileResponse);
 
     // Messages
-    rpc ChannelSendMessage (ChannelSendMessageParam) returns (ChannelSendMessageResponse); // qevent_id_10
-    rpc ChannelEditMessage (ChannelEditMessageParam) returns (ChannelEditMessageResponse); // qevent
-    rpc ChannelDeleteMessages (ChannelDeleteMessagesParam) returns (ChannelDeleteMessagesResponse); // qevent
+    rpc ChannelSendMessage (ChannelSendMessageParam) returns (ChannelSendMessageResponse);
+    rpc ChannelEditMessage (ChannelEditMessageParam) returns (ChannelEditMessageResponse);
+    rpc ChannelDeleteMessages (ChannelDeleteMessagesParam) returns (ChannelDeleteMessagesResponse);
 
     // Like
-    rpc ChannelLikeMessage (ChannelLikeMessageParam) returns (ChannelLikeMessageResponse); // qevent_id_200
-    rpc ChannelUnLikeMessage (ChannelUnLikeMessageParam) returns (ChannelUnLikeMessageResponse); // qevent
+    rpc ChannelLikeMessage (ChannelLikeMessageParam) returns (ChannelLikeMessageResponse);
+    rpc ChannelUnLikeMessage (ChannelUnLikeMessageParam) returns (ChannelUnLikeMessageResponse);
 
     // Repost > deprecated
-    rpc ChannelReShareMessage (ChannelReShareMessageParam) returns (ChannelReShareMessageResponse); // qevent_id_300
-    rpc ChannelUnReShareMessage (ChannelUnReShareMessageParam) returns (ChannelUnReShareMessageResponse); // qevent
+    rpc ChannelReShareMessage (ChannelReShareMessageParam) returns (ChannelReShareMessageResponse);
+    rpc ChannelUnReShareMessage (ChannelUnReShareMessageParam) returns (ChannelUnReShareMessageResponse);
 
     // Comment
-    rpc ChannelAddComment (ChannelAddCommentParam) returns (ChannelAddCommentResponse); // qevent_id_400
-    rpc ChannelDeleteComment (ChannelDeleteCommentParam) returns (ChannelDeleteCommentResponse); // qevent
+    rpc ChannelAddComment (ChannelAddCommentParam) returns (ChannelAddCommentResponse);
+    rpc ChannelDeleteComment (ChannelDeleteCommentParam) returns (ChannelDeleteCommentResponse);
 
     // Pin
-    rpc ChannelPinMessage (ChannelPinMessageParam) returns (ChannelPinMessageResponse); // event_id_600
-    rpc ChannelUnPinMessage (ChannelUnPinMessageParam) returns (ChannelUnPinMessageResponse); // event
+    rpc ChannelPinMessage (ChannelPinMessageParam) returns (ChannelPinMessageResponse);
+    rpc ChannelUnPinMessage (ChannelUnPinMessageParam) returns (ChannelUnPinMessageResponse);
 
     // Avatar > todo swap Add <> Avatar
-    rpc ChannelAvatarAdd (ChannelAvatarAddParam) returns (ChannelAvatarAddResponse); // qevent_id_80
-    rpc ChannelAvatarDelete (ChannelAvatarDeleteParam) returns (ChannelAvatarDeleteResponse); // qevent
+    rpc ChannelAvatarAdd (ChannelAvatarAddParam) returns (ChannelAvatarAddResponse);
+    rpc ChannelAvatarDelete (ChannelAvatarDeleteParam) returns (ChannelAvatarDeleteResponse);
 
     // Settings
     //rpc Channel (Param) returns (Response);
 
     // Others
-    rpc ChannelSendDoingAction (ChannelSendDoingActionParam) returns (ChannelSendDoingActionResponse); //
-    rpc ChannelReportChannel (ChannelReportChannelParam) returns (ChannelReportChannelResponse); //
-    rpc ChannelReportMessage (ChannelReportMessageParam) returns (ChannelReportMessageResponse); //
+    rpc ChannelSendDoingAction (ChannelSendDoingActionParam) returns (ChannelSendDoingActionResponse);
+    rpc ChannelReportChannel (ChannelReportChannelParam) returns (ChannelReportChannelResponse);
+    rpc ChannelReportMessage (ChannelReportMessageParam) returns (ChannelReportMessageResponse);
 
     //========= Inbox ===========
     // MarkAsRead / MarkAsUnRead
@@ -95,8 +95,6 @@ service RPC_Channel {
 
 // CrDU
 message ChannelCreateChannelParam {
-    uint32 channel_cid = 1;
-    uint32 creator_profile_cid = 2;
     string channel_title = 3; // or _name
     string user_name = 4;
     string about = 15;
@@ -109,7 +107,6 @@ message ChannelCreateChannelResponse {
 
 message ChannelEditChannelParam {
     uint32 channel_cid = 1;
-    uint32 by_profile_cid = 2;
     bool set_new_title = 3;
     string new_title = 4;
     bool set_new_about = 5;
@@ -122,7 +119,6 @@ message ChannelEditChannelResponse {
 
 message ChannelDeleteChannelParam {
     uint32 channel_cid = 1;
-    uint32 by_profile_cid = 2;
 }
 
 message ChannelDeleteChannelResponse {
@@ -158,7 +154,6 @@ message ChannelRemoveAuthorResponse {
 // Follow
 message ChannelFollowChannelParam {
     uint32 channel_cid = 1;
-    uint32 by_profile_cid = 2;
 }
 
 message ChannelFollowChannelResponse {
@@ -167,7 +162,6 @@ message ChannelFollowChannelResponse {
 
 message ChannelUnFollowChannelParam {
     uint32 channel_cid = 1;
-    uint32 by_profile_cid = 2;
 }
 
 message ChannelUnFollowChannelResponse {
@@ -185,7 +179,6 @@ message ChannelRemoveFollowersResponse {
 // Subscribe
 message ChannelSubscribeParam {
     uint32 channel_cid = 1;
-    uint32 by_profile_cid = 2;
 }
 
 message ChannelSubscribeResponse {
@@ -194,7 +187,6 @@ message ChannelSubscribeResponse {
 
 message ChannelUnSubscribeParam {
     uint32 channel_cid = 1;
-    uint32 by_profile_cid = 2;
 }
 
 message ChannelUnSubscribeResponse {
@@ -265,7 +257,6 @@ message ChannelSendMessageResponse {
 message ChannelEditMessageParam {
     uint32 channel_cid = 1;
     fixed64 message_gid = 4;
-    uint32 by_profile_cid = 3;
     string new_text = 2;
 }
 
@@ -276,7 +267,6 @@ message ChannelEditMessageResponse {
 
 message ChannelDeleteMessagesParam {
     uint32 channel_cid = 1;
-    uint32 by_profile_cid = 2;
     repeated uint64 message_gids = 3;
 }
 
@@ -297,7 +287,6 @@ message ChannelClearHistoryResponse {
 message ChannelLikeMessageParam {
     uint32 channel_cid = 1;
     fixed64 message_gid = 2;
-    uint32 by_profile_cid = 3;
 }
 
 message ChannelLikeMessageResponse {
@@ -307,8 +296,7 @@ message ChannelLikeMessageResponse {
 message ChannelUnLikeMessageParam {
     uint32 channel_cid = 1;
     fixed64 message_gid = 2;
-    uint32 by_profile_cid = 3;
-    fixed64 like_gid = 4;
+    fixed64 like_gid = 4; //?
 }
 
 message ChannelUnLikeMessageResponse {
@@ -319,7 +307,6 @@ message ChannelUnLikeMessageResponse {
 message ChannelReShareMessageParam {
     uint32 channel_cid = 1;
     fixed64 message_gid = 2;
-    uint32 by_profile_cid = 3;
 }
 
 message ChannelReShareMessageResponse {
@@ -329,7 +316,6 @@ message ChannelReShareMessageResponse {
 message ChannelUnReShareMessageParam {
     uint32 channel_cid = 1;
     fixed64 message_gid = 2;
-    uint32 by_profile_cid = 3;
     fixed64 re_share_gid = 4;
 }
 
@@ -341,7 +327,6 @@ message ChannelUnReShareMessageResponse {
 message ChannelAddCommentParam {
     uint32 channel_cid = 1;
     fixed64 message_gid = 2;
-    uint32 by_profile_cid = 3;
     string comment_text = 4;
 }
 
@@ -352,7 +337,6 @@ message ChannelAddCommentResponse {
 message ChannelDeleteCommentParam {
     uint32 channel_cid = 1;
     fixed64 message_gid = 2;
-    uint32 by_profile_cid = 3;
     fixed64 comment_gid = 4;
 }
 

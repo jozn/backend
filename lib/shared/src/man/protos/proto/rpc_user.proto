@@ -9,24 +9,24 @@ service RPC_User {
     //rpc User (Param) returns (Response);
 
     // CrUd
-    rpc UserRegisterUser (UserRegisterUserParam) returns (UserRegisterUserResponse); // qevent_id_100
-    rpc UserEditUser (UserEditUserParam) returns (UserEditUserResponse); // qevent
+    rpc UserRegisterUser (UserRegisterUserParam) returns (UserRegisterUserResponse);
+    rpc UserEditUser (UserEditUserParam) returns (UserEditUserResponse);
 
     // Delete
-    rpc UserDeleteSendCode (UserDeleteSendCodeParam) returns (UserDeleteSendCodeResponse);  // event
-    rpc UserDeleteConfirmCode (UserDeleteConfirmCodeParam) returns (UserDeleteConfirmCodeResponse); // event
-    rpc UserDeleteUser (UserDeleteUserParam) returns (UserDeleteUserResponse); // event_id_800
+    rpc UserDeleteSendCode (UserDeleteSendCodeParam) returns (UserDeleteSendCodeResponse);
+    rpc UserDeleteConfirmCode (UserDeleteConfirmCodeParam) returns (UserDeleteConfirmCodeResponse);
+    rpc UserDeleteUser (UserDeleteUserParam) returns (UserDeleteUserResponse);
 
     // Phone (phone is per User not per Profile)
-    rpc UserChangePhoneNumber (UserChangePhoneNumberParam) returns (UserChangePhoneNumberResponse); // event_id_300
+    rpc UserChangePhoneNumber (UserChangePhoneNumberParam) returns (UserChangePhoneNumberResponse);
 
     // Email
 
     // Password
 
     // Session
-    rpc UserRemoveSession (UserRemoveSessionParam) returns (UserRemoveSessionResponse); // event_id_400
-    rpc UserRemoveOtherSessions (UserRemoveOtherParam) returns (UserRemoveOtherResponse); // event
+    rpc UserRemoveSession (UserRemoveSessionParam) returns (UserRemoveSessionResponse);
+    rpc UserRemoveOtherSessions (UserRemoveOtherParam) returns (UserRemoveOtherResponse);
 
 //    rpc UserRemoveOtherSessions (UserRemoveOtherParam) returns (UserRemoveOtherResponse);
 
@@ -40,11 +40,9 @@ service RPC_User {
 
 // CrUd
 message UserRegisterUserParam {
-    uint32 user_cid = 1;
     string first_name = 2;
     string last_name = 3;
     string phone_number = 15;
-    uint32 created_time = 5;
 
     string hash_code = 10;
     string confirm_code = 30;
@@ -57,7 +55,6 @@ message UserRegisterUserResponse {
 
 
 message UserEditUserParam {
-    uint32 user_cid = 1;
     bool set_new_name = 3;
     string new_first_name = 4;
     string new_last_name = 6;

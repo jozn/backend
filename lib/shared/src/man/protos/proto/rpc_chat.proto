@@ -9,18 +9,18 @@ service RPC_Chat {
     //rpc Chat (Param) returns (Response);
 
     // cruD: c: with sending msg, u: none,
-    rpc ChatDeleteChat (ChatDeleteChatParam) returns (ChatDeleteChatResponse); // qevent_id_50
+    rpc ChatDeleteChat (ChatDeleteChatParam) returns (ChatDeleteChatResponse);
 
     // Privacy: none in here, with settings in profile privacy
 
     // Messages
-    rpc ChatSendMessage (ChatSendMessageParam) returns (ChatSendMessageResponse); // qevent_id_10
-    rpc ChatEditMessage (ChatEditMessageParam) returns (ChatEditMessageResponse); // qevent
-    rpc ChatDeleteMessages (ChatDeleteMessagesParam) returns (ChatDeleteMessagesResponse); // qevent
-    rpc ChatDeleteHistory (ChatDeleteHistoryParam) returns (ChatDeleteHistoryResponse); // qevent
+    rpc ChatSendMessage (ChatSendMessageParam) returns (ChatSendMessageResponse);
+    rpc ChatEditMessage (ChatEditMessageParam) returns (ChatEditMessageResponse);
+    rpc ChatDeleteMessages (ChatDeleteMessagesParam) returns (ChatDeleteMessagesResponse);
+    rpc ChatDeleteHistory (ChatDeleteHistoryParam) returns (ChatDeleteHistoryResponse);
 
     // Notifications
-    rpc ChatSetNotification (ChatSetNotificationParam) returns (ChatSetNotificationResponse); // event_id_20
+    rpc ChatSetNotification (ChatSetNotificationParam) returns (ChatSetNotificationResponse);
     // add? MuteChat?
 
     // Others
@@ -63,7 +63,7 @@ message ChatDeleteChatResponse {
 // Messages
 
 message ChatSendMessageParam {
-    uint64 profile_cid = 1;
+//    uint64 profile_cid = 1;
     uint64 chat_gid = 2;
     NewMessageInput message_input = 3;
 }
@@ -75,7 +75,7 @@ message ChatSendMessageResponse {
 message ChatEditMessageParam {
     uint64 chat_gid = 2;
     fixed64 message_gid = 4;
-    uint32 by_profile_cid = 3;
+//    uint32 by_profile_cid = 3;
     string new_text = 6;
 }
 
@@ -84,7 +84,7 @@ message ChatEditMessageResponse {
 }
 
 message ChatDeleteMessagesParam {
-    uint64 profile_cid = 1;
+//    uint64 profile_cid = 1;
     uint64 chat_gid = 2;
     repeated uint64 message_gids = 3;
 }
@@ -94,7 +94,7 @@ message ChatDeleteMessagesResponse {
 }
 
 message ChatDeleteHistoryParam {
-    uint64 profile_cid = 1;
+//    uint64 profile_cid = 1;
     uint64 chat_gid = 2;
 }
 

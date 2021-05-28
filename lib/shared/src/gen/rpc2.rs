@@ -4464,7 +4464,7 @@ mod CMasterAct{
 /*        
 
     pub async fn get_next_id(&self, p: param::GetNextId) -> Result<pb::CMaster,GenErr> {
-        let _ = pb::GetNextIdParam::default(); 
+        let _ = pb::GetNextIdParam::default();
         unimplemented!("");
     }
 
@@ -4480,17 +4480,17 @@ mod AuthAct{
 /*        
 
     pub async fn send_code(&self, p: param::SendCode) -> Result<pb::Auth,GenErr> {
-        let _ = pb::AuthSendCodeParam::default(); 
+        let _ = pb::AuthSendCodeParam::default();
         unimplemented!("");
     }
 
     pub async fn log_in(&self, p: param::LogIn) -> Result<pb::Auth,GenErr> {
-        let _ = pb::AuthLogInParam::default(); 
+        let _ = pb::AuthLogInParam::default();
         unimplemented!("");
     }
 
     pub async fn log_out(&self, p: param::LogOut) -> Result<pb::Auth,GenErr> {
-        let _ = pb::AuthLogOutParam::default(); 
+        let _ = pb::AuthLogOutParam::default();
         unimplemented!("");
     }
 
@@ -4506,217 +4506,217 @@ mod ChannelAct{
 /*        
 
     pub async fn create_channel(&self, p: param::CreateChannel) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelCreateChannelParam::default(); 
+        let _ = pb::ChannelCreateChannelParam::default();
         unimplemented!("");
     }
 
     pub async fn edit_channel(&self, p: param::EditChannel) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelEditChannelParam::default(); 
+        let _ = pb::ChannelEditChannelParam::default();
         unimplemented!("");
     }
 
     pub async fn delete_channel(&self, p: param::DeleteChannel) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelDeleteChannelParam::default(); 
+        let _ = pb::ChannelDeleteChannelParam::default();
         unimplemented!("");
     }
 
     pub async fn add_author(&self, p: param::AddAuthor) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelAddAuthorParam::default(); 
+        let _ = pb::ChannelAddAuthorParam::default();
         unimplemented!("");
     }
 
     pub async fn change_author_permission(&self, p: param::ChangeAuthorPermission) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelChangeAuthorPermissionParam::default(); 
+        let _ = pb::ChannelChangeAuthorPermissionParam::default();
         unimplemented!("");
     }
 
     pub async fn remove_author(&self, p: param::RemoveAuthor) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelRemoveAuthorParam::default(); 
+        let _ = pb::ChannelRemoveAuthorParam::default();
         unimplemented!("");
     }
 
     pub async fn follow_channel(&self, p: param::FollowChannel) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelFollowChannelParam::default(); 
+        let _ = pb::ChannelFollowChannelParam::default();
         unimplemented!("");
     }
 
     pub async fn un_follow_channel(&self, p: param::UnFollowChannel) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelUnFollowChannelParam::default(); 
+        let _ = pb::ChannelUnFollowChannelParam::default();
         unimplemented!("");
     }
 
     pub async fn remove_followers(&self, p: param::RemoveFollowers) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelRemoveFollowersParam::default(); 
+        let _ = pb::ChannelRemoveFollowersParam::default();
         unimplemented!("");
     }
 
     pub async fn subscribe(&self, p: param::Subscribe) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelSubscribeParam::default(); 
+        let _ = pb::ChannelSubscribeParam::default();
         unimplemented!("");
     }
 
     pub async fn un_subscribe(&self, p: param::UnSubscribe) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelUnSubscribeParam::default(); 
+        let _ = pb::ChannelUnSubscribeParam::default();
         unimplemented!("");
     }
 
     pub async fn remove_subscribers(&self, p: param::RemoveSubscribers) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelRemoveSubscribersParam::default(); 
+        let _ = pb::ChannelRemoveSubscribersParam::default();
         unimplemented!("");
     }
 
     pub async fn change_privacy(&self, p: param::ChangePrivacy) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelChangePrivacyParam::default(); 
+        let _ = pb::ChannelChangePrivacyParam::default();
         unimplemented!("");
     }
 
     pub async fn change_default_permission(&self, p: param::ChangeDefaultPermission) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelChangeDefaultPermissionParam::default(); 
+        let _ = pb::ChannelChangeDefaultPermissionParam::default();
         unimplemented!("");
     }
 
     pub async fn revoke_link(&self, p: param::RevokeLink) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelRevokeLinkParam::default(); 
+        let _ = pb::ChannelRevokeLinkParam::default();
         unimplemented!("");
     }
 
     pub async fn change_username(&self, p: param::ChangeUsername) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelChangeUsernameParam::default(); 
+        let _ = pb::ChannelChangeUsernameParam::default();
         unimplemented!("");
     }
 
     pub async fn block_profile(&self, p: param::BlockProfile) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelBlockProfileParam::default(); 
+        let _ = pb::ChannelBlockProfileParam::default();
         unimplemented!("");
     }
 
     pub async fn send_message(&self, p: param::SendMessage) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelSendMessageParam::default(); 
+        let _ = pb::ChannelSendMessageParam::default();
         unimplemented!("");
     }
 
     pub async fn edit_message(&self, p: param::EditMessage) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelEditMessageParam::default(); 
+        let _ = pb::ChannelEditMessageParam::default();
         unimplemented!("");
     }
 
     pub async fn delete_messages(&self, p: param::DeleteMessages) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelDeleteMessagesParam::default(); 
+        let _ = pb::ChannelDeleteMessagesParam::default();
         unimplemented!("");
     }
 
     pub async fn like_message(&self, p: param::LikeMessage) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelLikeMessageParam::default(); 
+        let _ = pb::ChannelLikeMessageParam::default();
         unimplemented!("");
     }
 
     pub async fn un_like_message(&self, p: param::UnLikeMessage) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelUnLikeMessageParam::default(); 
+        let _ = pb::ChannelUnLikeMessageParam::default();
         unimplemented!("");
     }
 
     pub async fn re_share_message(&self, p: param::ReShareMessage) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelReShareMessageParam::default(); 
+        let _ = pb::ChannelReShareMessageParam::default();
         unimplemented!("");
     }
 
     pub async fn un_re_share_message(&self, p: param::UnReShareMessage) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelUnReShareMessageParam::default(); 
+        let _ = pb::ChannelUnReShareMessageParam::default();
         unimplemented!("");
     }
 
     pub async fn add_comment(&self, p: param::AddComment) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelAddCommentParam::default(); 
+        let _ = pb::ChannelAddCommentParam::default();
         unimplemented!("");
     }
 
     pub async fn delete_comment(&self, p: param::DeleteComment) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelDeleteCommentParam::default(); 
+        let _ = pb::ChannelDeleteCommentParam::default();
         unimplemented!("");
     }
 
     pub async fn pin_message(&self, p: param::PinMessage) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelPinMessageParam::default(); 
+        let _ = pb::ChannelPinMessageParam::default();
         unimplemented!("");
     }
 
     pub async fn un_pin_message(&self, p: param::UnPinMessage) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelUnPinMessageParam::default(); 
+        let _ = pb::ChannelUnPinMessageParam::default();
         unimplemented!("");
     }
 
     pub async fn avatar_add(&self, p: param::AvatarAdd) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelAvatarAddParam::default(); 
+        let _ = pb::ChannelAvatarAddParam::default();
         unimplemented!("");
     }
 
     pub async fn avatar_delete(&self, p: param::AvatarDelete) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelAvatarDeleteParam::default(); 
+        let _ = pb::ChannelAvatarDeleteParam::default();
         unimplemented!("");
     }
 
     pub async fn send_doing_action(&self, p: param::SendDoingAction) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelSendDoingActionParam::default(); 
+        let _ = pb::ChannelSendDoingActionParam::default();
         unimplemented!("");
     }
 
     pub async fn report_channel(&self, p: param::ReportChannel) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelReportChannelParam::default(); 
+        let _ = pb::ChannelReportChannelParam::default();
         unimplemented!("");
     }
 
     pub async fn report_message(&self, p: param::ReportMessage) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelReportMessageParam::default(); 
+        let _ = pb::ChannelReportMessageParam::default();
         unimplemented!("");
     }
 
     pub async fn get_full(&self, p: param::GetFull) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelGetFullParam::default(); 
+        let _ = pb::ChannelGetFullParam::default();
         unimplemented!("");
     }
 
     pub async fn get_messages_list(&self, p: param::GetMessagesList) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelGetMessagesListParam::default(); 
+        let _ = pb::ChannelGetMessagesListParam::default();
         unimplemented!("");
     }
 
     pub async fn get_media_list(&self, p: param::GetMediaList) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelGetMediaListParam::default(); 
+        let _ = pb::ChannelGetMediaListParam::default();
         unimplemented!("");
     }
 
     pub async fn get_authors(&self, p: param::GetAuthors) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelGetAuthorsParam::default(); 
+        let _ = pb::ChannelGetAuthorsParam::default();
         unimplemented!("");
     }
 
     pub async fn get_followers(&self, p: param::GetFollowers) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelGetFollowersParam::default(); 
+        let _ = pb::ChannelGetFollowersParam::default();
         unimplemented!("");
     }
 
     pub async fn get_subscribers(&self, p: param::GetSubscribers) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelGetSubscribersParam::default(); 
+        let _ = pb::ChannelGetSubscribersParam::default();
         unimplemented!("");
     }
 
     pub async fn blocked(&self, p: param::Blocked) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelBlockedParam::default(); 
+        let _ = pb::ChannelBlockedParam::default();
         unimplemented!("");
     }
 
     pub async fn avatar_get_list(&self, p: param::AvatarGetList) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelAvatarGetListParam::default(); 
+        let _ = pb::ChannelAvatarGetListParam::default();
         unimplemented!("");
     }
 
     pub async fn get_inbox(&self, p: param::GetInbox) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelGetInboxParam::default(); 
+        let _ = pb::ChannelGetInboxParam::default();
         unimplemented!("");
     }
 
     pub async fn get_followings(&self, p: param::GetFollowings) -> Result<pb::Channel,GenErr> {
-        let _ = pb::ChannelGetFollowingsParam::default(); 
+        let _ = pb::ChannelGetFollowingsParam::default();
         unimplemented!("");
     }
 
@@ -4732,62 +4732,62 @@ mod ChatAct{
 /*        
 
     pub async fn delete_chat(&self, p: param::DeleteChat) -> Result<pb::Chat,GenErr> {
-        let _ = pb::ChatDeleteChatParam::default(); 
+        let _ = pb::ChatDeleteChatParam::default();
         unimplemented!("");
     }
 
     pub async fn send_message(&self, p: param::SendMessage) -> Result<pb::Chat,GenErr> {
-        let _ = pb::ChatSendMessageParam::default(); 
+        let _ = pb::ChatSendMessageParam::default();
         unimplemented!("");
     }
 
     pub async fn edit_message(&self, p: param::EditMessage) -> Result<pb::Chat,GenErr> {
-        let _ = pb::ChatEditMessageParam::default(); 
+        let _ = pb::ChatEditMessageParam::default();
         unimplemented!("");
     }
 
     pub async fn delete_messages(&self, p: param::DeleteMessages) -> Result<pb::Chat,GenErr> {
-        let _ = pb::ChatDeleteMessagesParam::default(); 
+        let _ = pb::ChatDeleteMessagesParam::default();
         unimplemented!("");
     }
 
     pub async fn delete_history(&self, p: param::DeleteHistory) -> Result<pb::Chat,GenErr> {
-        let _ = pb::ChatDeleteHistoryParam::default(); 
+        let _ = pb::ChatDeleteHistoryParam::default();
         unimplemented!("");
     }
 
     pub async fn set_notification(&self, p: param::SetNotification) -> Result<pb::Chat,GenErr> {
-        let _ = pb::ChatSetNotificationParam::default(); 
+        let _ = pb::ChatSetNotificationParam::default();
         unimplemented!("");
     }
 
     pub async fn send_doing_action(&self, p: param::SendDoingAction) -> Result<pb::Chat,GenErr> {
-        let _ = pb::ChatSendDoingActionParam::default(); 
+        let _ = pb::ChatSendDoingActionParam::default();
         unimplemented!("");
     }
 
     pub async fn report_chat(&self, p: param::ReportChat) -> Result<pb::Chat,GenErr> {
-        let _ = pb::ChatReportChatParam::default(); 
+        let _ = pb::ChatReportChatParam::default();
         unimplemented!("");
     }
 
     pub async fn get_full(&self, p: param::GetFullMessage) -> Result<pb::Chat,GenErr> {
-        let _ = pb::ChatGetFullMessageParam::default(); 
+        let _ = pb::ChatGetFullMessageParam::default();
         unimplemented!("");
     }
 
     pub async fn get_messages_list(&self, p: param::GetMessagesList) -> Result<pb::Chat,GenErr> {
-        let _ = pb::ChatGetMessagesListParam::default(); 
+        let _ = pb::ChatGetMessagesListParam::default();
         unimplemented!("");
     }
 
     pub async fn get_media_list(&self, p: param::GetMediaList) -> Result<pb::Chat,GenErr> {
-        let _ = pb::ChatGetMediaListParam::default(); 
+        let _ = pb::ChatGetMediaListParam::default();
         unimplemented!("");
     }
 
     pub async fn get_inbox(&self, p: param::GetInbox) -> Result<pb::Chat,GenErr> {
-        let _ = pb::ChatGetInboxParam::default(); 
+        let _ = pb::ChatGetInboxParam::default();
         unimplemented!("");
     }
 
@@ -4803,167 +4803,167 @@ mod GroupAct{
 /*        
 
     pub async fn create_group(&self, p: param::CreateGroup) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupCreateGroupParam::default(); 
+        let _ = pb::GroupCreateGroupParam::default();
         unimplemented!("");
     }
 
     pub async fn edit_group(&self, p: param::EditGroup) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupEditGroupParam::default(); 
+        let _ = pb::GroupEditGroupParam::default();
         unimplemented!("");
     }
 
     pub async fn delete_group(&self, p: param::DeleteGroup) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupDeleteGroupParam::default(); 
+        let _ = pb::GroupDeleteGroupParam::default();
         unimplemented!("");
     }
 
     pub async fn add_admin(&self, p: param::AddAdmin) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupAddAdminParam::default(); 
+        let _ = pb::GroupAddAdminParam::default();
         unimplemented!("");
     }
 
     pub async fn remove_member(&self, p: param::RemoveMember) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupRemoveMemberParam::default(); 
+        let _ = pb::GroupRemoveMemberParam::default();
         unimplemented!("");
     }
 
     pub async fn change_member_level(&self, p: param::ChangeMemberLevel) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupChangeMemberLevelParam::default(); 
+        let _ = pb::GroupChangeMemberLevelParam::default();
         unimplemented!("");
     }
 
     pub async fn change_member_permission(&self, p: param::ChangeMemberPermission) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupChangeMemberPermissionParam::default(); 
+        let _ = pb::GroupChangeMemberPermissionParam::default();
         unimplemented!("");
     }
 
     pub async fn ban_member(&self, p: param::BanMember) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupBanMemberParam::default(); 
+        let _ = pb::GroupBanMemberParam::default();
         unimplemented!("");
     }
 
     pub async fn join_group(&self, p: param::JoinGroup) -> Result<pb::Group,GenErr> {
-        let _ = pb::JoinGroupParam::default(); 
+        let _ = pb::JoinGroupParam::default();
         unimplemented!("");
     }
 
     pub async fn leave_group(&self, p: param::LeaveGroup) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupLeaveGroupParam::default(); 
+        let _ = pb::GroupLeaveGroupParam::default();
         unimplemented!("");
     }
 
     pub async fn add_member(&self, p: param::AddMember) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupAddMemberParam::default(); 
+        let _ = pb::GroupAddMemberParam::default();
         unimplemented!("");
     }
 
     pub async fn set_notification(&self, p: param::SetNotification) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupSetNotificationParam::default(); 
+        let _ = pb::GroupSetNotificationParam::default();
         unimplemented!("");
     }
 
     pub async fn change_privacy(&self, p: param::ChangePrivacy) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupChangePrivacyParam::default(); 
+        let _ = pb::GroupChangePrivacyParam::default();
         unimplemented!("");
     }
 
     pub async fn change_default_permission(&self, p: param::ChangeDefaultPermission) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupChangeDefaultPermissionParam::default(); 
+        let _ = pb::GroupChangeDefaultPermissionParam::default();
         unimplemented!("");
     }
 
     pub async fn revoke_link(&self, p: param::RevokeLink) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupRevokeLinkParam::default(); 
+        let _ = pb::GroupRevokeLinkParam::default();
         unimplemented!("");
     }
 
     pub async fn change_username(&self, p: param::ChangeUsername) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupChangeUsernameParam::default(); 
+        let _ = pb::GroupChangeUsernameParam::default();
         unimplemented!("");
     }
 
     pub async fn send_message(&self, p: param::SendMessage) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupSendMessageParam::default(); 
+        let _ = pb::GroupSendMessageParam::default();
         unimplemented!("");
     }
 
     pub async fn edit_message(&self, p: param::EditMessage) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupEditMessageParam::default(); 
+        let _ = pb::GroupEditMessageParam::default();
         unimplemented!("");
     }
 
     pub async fn delete_messages(&self, p: param::DeleteMessages) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupDeleteMessagesParam::default(); 
+        let _ = pb::GroupDeleteMessagesParam::default();
         unimplemented!("");
     }
 
     pub async fn delete_history(&self, p: param::DeleteHistory) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupDeleteHistoryParam::default(); 
+        let _ = pb::GroupDeleteHistoryParam::default();
         unimplemented!("");
     }
 
     pub async fn pin_message(&self, p: param::PinMessage) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupPinMessageParam::default(); 
+        let _ = pb::GroupPinMessageParam::default();
         unimplemented!("");
     }
 
     pub async fn un_pin_message(&self, p: param::UnPinMessage) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupUnPinMessageParam::default(); 
+        let _ = pb::GroupUnPinMessageParam::default();
         unimplemented!("");
     }
 
     pub async fn avatar_add(&self, p: param::AvatarAdd) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupAvatarAddParam::default(); 
+        let _ = pb::GroupAvatarAddParam::default();
         unimplemented!("");
     }
 
     pub async fn avatar_delete(&self, p: param::AvatarDelete) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupAvatarDeleteParam::default(); 
+        let _ = pb::GroupAvatarDeleteParam::default();
         unimplemented!("");
     }
 
     pub async fn send_doing_action(&self, p: param::SendDoingAction) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupSendDoingActionParam::default(); 
+        let _ = pb::GroupSendDoingActionParam::default();
         unimplemented!("");
     }
 
     pub async fn report_group(&self, p: param::ReportGroup) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupReportGroupParam::default(); 
+        let _ = pb::GroupReportGroupParam::default();
         unimplemented!("");
     }
 
     pub async fn get_full(&self, p: param::GetFull) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupGetFullParam::default(); 
+        let _ = pb::GroupGetFullParam::default();
         unimplemented!("");
     }
 
     pub async fn get_messages_list(&self, p: param::GetMessagesList) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupGetMessagesListParam::default(); 
+        let _ = pb::GroupGetMessagesListParam::default();
         unimplemented!("");
     }
 
     pub async fn get_media_list(&self, p: param::GetMediaList) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupGetMediaListParam::default(); 
+        let _ = pb::GroupGetMediaListParam::default();
         unimplemented!("");
     }
 
     pub async fn get_members_list(&self, p: param::GetMembersList) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupGetMembersListParam::default(); 
+        let _ = pb::GroupGetMembersListParam::default();
         unimplemented!("");
     }
 
     pub async fn get_admins_list(&self, p: param::GetAdminsList) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupGetAdminsListParam::default(); 
+        let _ = pb::GroupGetAdminsListParam::default();
         unimplemented!("");
     }
 
     pub async fn avatar_get_list(&self, p: param::AvatarGetList) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupAvatarGetListParam::default(); 
+        let _ = pb::GroupAvatarGetListParam::default();
         unimplemented!("");
     }
 
     pub async fn get_inbox(&self, p: param::GetInbox) -> Result<pb::Group,GenErr> {
-        let _ = pb::GroupGetInboxParam::default(); 
+        let _ = pb::GroupGetInboxParam::default();
         unimplemented!("");
     }
 
@@ -4979,7 +4979,7 @@ mod ProfileAct{
 /*        
 
     pub async fn set_settings(&self, p: param::SetSettings) -> Result<pb::Profile,GenErr> {
-        let _ = pb::ProfileSetSettingsParam::default(); 
+        let _ = pb::ProfileSetSettingsParam::default();
         unimplemented!("");
     }
 
@@ -4995,27 +4995,27 @@ mod SampleAct{
 /*        
 
     pub async fn get_users1(&self, p: param::GetUsers1) -> Result<pb::Sample,GenErr> {
-        let _ = pb::GetUsers1Param::default(); 
+        let _ = pb::GetUsers1Param::default();
         unimplemented!("");
     }
 
     pub async fn get_profiles(&self, p: param::GetProfiles) -> Result<pb::Sample,GenErr> {
-        let _ = pb::GetProfilesParam::default(); 
+        let _ = pb::GetProfilesParam::default();
         unimplemented!("");
     }
 
     pub async fn get_channels(&self, p: param::GetChannels) -> Result<pb::Sample,GenErr> {
-        let _ = pb::GetChannelsParam::default(); 
+        let _ = pb::GetChannelsParam::default();
         unimplemented!("");
     }
 
     pub async fn get_directs(&self, p: param::GetDirects) -> Result<pb::Sample,GenErr> {
-        let _ = pb::GetDirectsParam::default(); 
+        let _ = pb::GetDirectsParam::default();
         unimplemented!("");
     }
 
     pub async fn get_messages(&self, p: param::GetMessages) -> Result<pb::Sample,GenErr> {
-        let _ = pb::GetMessagesParam::default(); 
+        let _ = pb::GetMessagesParam::default();
         unimplemented!("");
     }
 
@@ -5031,12 +5031,12 @@ mod SharedAct{
 /*        
 
     pub async fn echo(&self, p: param::Echo) -> Result<pb::Shared,GenErr> {
-        let _ = pb::SharedEchoParam::default(); 
+        let _ = pb::SharedEchoParam::default();
         unimplemented!("");
     }
 
     pub async fn check_user_name(&self, p: param::CheckUserName) -> Result<pb::Shared,GenErr> {
-        let _ = pb::SharedCheckUserNameParam::default(); 
+        let _ = pb::SharedCheckUserNameParam::default();
         unimplemented!("");
     }
 
@@ -5052,132 +5052,132 @@ mod ShopAct{
 /*        
 
     pub async fn eee(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
     pub async fn create_shop(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
     pub async fn edit_shop(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
     pub async fn pause_shop(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
     pub async fn terminate_shop(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
     pub async fn add_product(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
     pub async fn edit_product(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
     pub async fn delete_product(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
     pub async fn add_product_to_basket(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
     pub async fn remove_product_from_basket(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
     pub async fn checkout_basket(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
     pub async fn like_product(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
     pub async fn un_like_product(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
     pub async fn like_shop(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
     pub async fn un_like_shop(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
     pub async fn get_full(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
     pub async fn product_list(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
     pub async fn get_basket_list(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
     pub async fn get_liked_products_list(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
     pub async fn get_liked_shops_list(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
     pub async fn get_order_list(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
     pub async fn get_refund_list(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
     pub async fn cancel_order(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
     pub async fn edit_product_info(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
     pub async fn edit_product_price(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
     pub async fn edit_product_inventory(&self, p: param::) -> Result<pb::Shop,GenErr> {
-        let _ = pb::Param::default(); 
+        let _ = pb::Param::default();
         unimplemented!("");
     }
 
@@ -5193,7 +5193,7 @@ mod UploadAct{
 /*        
 
     pub async fn file(&self, p: param::File) -> Result<pb::Upload,GenErr> {
-        let _ = pb::UploadFileParam::default(); 
+        let _ = pb::UploadFileParam::default();
         unimplemented!("");
     }
 
@@ -5209,52 +5209,52 @@ mod UserAct{
 /*        
 
     pub async fn register_user(&self, p: param::RegisterUser) -> Result<pb::User,GenErr> {
-        let _ = pb::UserRegisterUserParam::default(); 
+        let _ = pb::UserRegisterUserParam::default();
         unimplemented!("");
     }
 
     pub async fn edit_user(&self, p: param::EditUser) -> Result<pb::User,GenErr> {
-        let _ = pb::UserEditUserParam::default(); 
+        let _ = pb::UserEditUserParam::default();
         unimplemented!("");
     }
 
     pub async fn delete_send_code(&self, p: param::DeleteSendCode) -> Result<pb::User,GenErr> {
-        let _ = pb::UserDeleteSendCodeParam::default(); 
+        let _ = pb::UserDeleteSendCodeParam::default();
         unimplemented!("");
     }
 
     pub async fn delete_confirm_code(&self, p: param::DeleteConfirmCode) -> Result<pb::User,GenErr> {
-        let _ = pb::UserDeleteConfirmCodeParam::default(); 
+        let _ = pb::UserDeleteConfirmCodeParam::default();
         unimplemented!("");
     }
 
     pub async fn delete_user(&self, p: param::DeleteUser) -> Result<pb::User,GenErr> {
-        let _ = pb::UserDeleteUserParam::default(); 
+        let _ = pb::UserDeleteUserParam::default();
         unimplemented!("");
     }
 
     pub async fn change_phone_number(&self, p: param::ChangePhoneNumber) -> Result<pb::User,GenErr> {
-        let _ = pb::UserChangePhoneNumberParam::default(); 
+        let _ = pb::UserChangePhoneNumberParam::default();
         unimplemented!("");
     }
 
     pub async fn remove_session(&self, p: param::RemoveSession) -> Result<pb::User,GenErr> {
-        let _ = pb::UserRemoveSessionParam::default(); 
+        let _ = pb::UserRemoveSessionParam::default();
         unimplemented!("");
     }
 
     pub async fn remove_other_sessions(&self, p: param::RemoveOther) -> Result<pb::User,GenErr> {
-        let _ = pb::UserRemoveOtherParam::default(); 
+        let _ = pb::UserRemoveOtherParam::default();
         unimplemented!("");
     }
 
     pub async fn get_me(&self, p: param::GetMe) -> Result<pb::User,GenErr> {
-        let _ = pb::UserGetMeParam::default(); 
+        let _ = pb::UserGetMeParam::default();
         unimplemented!("");
     }
 
     pub async fn get_active_sessions(&self, p: param::GetActiveSessions) -> Result<pb::User,GenErr> {
-        let _ = pb::UserGetActiveSessionsParam::default(); 
+        let _ = pb::UserGetActiveSessionsParam::default();
         unimplemented!("");
     }
 

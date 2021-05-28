@@ -11,7 +11,7 @@ service RPC_Profile {
     // Add Profile (here or in User? > here)
 
     // Settings
-    rpc ProfileSetSettings (ProfileSetSettingsParam) returns (ProfileSetSettingsResponse); // qevent_id_10
+    rpc ProfileSetSettings (ProfileSetSettingsParam) returns (ProfileSetSettingsResponse);
 
     // Views (none > User.GetMe() returns all )
 }
