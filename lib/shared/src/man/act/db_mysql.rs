@@ -12,7 +12,7 @@ pub struct DBMySql {
 #[rustfmt::skip]
 impl DBMySql {
     pub fn new() ->Self {
-        let database_url = "mysql://flipper:12345678@192.168.162.115:3306/flip_my";
+        let database_url = "mysql://flipper:12345678@192.168.92.115:3306/twitter";
         let my = DBMySql {
             mysql_pool: Arc::new(mysql_async::Pool::new(database_url)),
         };

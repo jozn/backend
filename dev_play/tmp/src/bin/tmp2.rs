@@ -8,7 +8,7 @@ use tmp::models;
 
 #[tokio::main]
 async fn main() {
-    let t = models::Tweet {
+    let t = models::Tweet_DEP {
         tweet_id: 1987,
         created_time: 444,
         text_body: "sfds".to_string(),

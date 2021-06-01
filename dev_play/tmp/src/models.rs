@@ -18,19 +18,19 @@ use shared::xc::CWError;
 // Not fully ORM is supported: limited to CRUD on rows + Indexes querys
 
 #[derive(Debug, PartialEq, Eq, Clone)]
-pub struct Tweet {
+pub struct Tweet_DEP {
     // tweet
     pub tweet_id: u64,
     pub created_time: u64,
     pub text_body: String,
 }
 
-impl FromRow for Tweet {
+impl FromRow for Tweet_DEP {
     fn from_row_opt(row: Row) -> Result<Self, FromRowError>
     where
         Self: Sized,
     {
-        Ok(Tweet {
+        Ok(Tweet_DEP {
             tweet_id: row.get(0).unwrap(),
             created_time: row.get(1).unwrap(),
             text_body: row.get(2).unwrap(),
@@ -38,8 +38,8 @@ impl FromRow for Tweet {
     }
 }
 
-impl Tweet {
-    pub async fn insert(&self, pool: &Pool) -> Result<Tweet, CWError> {
+impl Tweet_DEP {
+    pub async fn insert(&self, pool: &Pool) -> Result<Tweet_DEP, CWError> {
         let mut conn = pool.get_conn().await.unwrap();
 
         let query = r"INSERT INTO twitter.tweet (created_time, text_body) VALUES (?, ?)";
@@ -162,7 +162,7 @@ impl TweetSelector {
         &mut self,
         session: &Pool,
         size: i64,
-    ) -> Result<Vec<Tweet>, CWError> {
+    ) -> Result<Vec<Tweet_DEP>, CWError> {
         let mut conn = session.get_conn().await.unwrap();
         let (cql_query, query_values) = self._to_cql();
 
@@ -170,16 +170,16 @@ impl TweetSelector {
 
         let p = Params::Positional(query_values);
 
-        let query_result = conn.exec_map(cql_query, p, |obj: Tweet| obj).await.unwrap();
+        let query_result = conn.exec_map(cql_query, p, |obj: Tweet_DEP| obj).await.unwrap();
 
         Ok(query_result)
     }
 
-    pub async fn get_rows(&mut self, session: &Pool) -> Result<Vec<Tweet>, CWError> {
+    pub async fn get_rows(&mut self, session: &Pool) -> Result<Vec<Tweet_DEP>, CWError> {
         self._get_rows_with_size(session, -1).await
     }
 
-    pub async fn get_row(&mut self, session: &Pool) -> Result<Tweet, CWError> {
+    pub async fn get_row(&mut self, session: &Pool) -> Result<Tweet_DEP, CWError> {
         let rows = self._get_rows_with_size(session, 1).await?;
 
         let opt = rows.get(0);

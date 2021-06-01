@@ -14,6 +14,7 @@
     + SHOW CREATE DATABASE twitter;
     + DELETE FROM blogs; // dangerous
     + mysqldump -u flipper -p --all-databases >bk1.sql
+    + RENAME TABLE t TO t_old, t_copy TO t;
 
 + Others
     + hexdump -C ./all.sh
