@@ -2,7 +2,7 @@ use grammers_mtsender::AuthorizationError;
 use grammers_mtsender::InvocationError;
 use rusqlite; //todo remove
 use serde::__private::Formatter;
-use shared::gen::my::mysql_models::MyError;
+use shared::gen::my_dep::mysql_models::MyError;
 use std::error::Error;
 use std::fmt::Display;
 

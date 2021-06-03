@@ -20,7 +20,6 @@ async fn main() {
 
     let mut t = my_dev::tweet::Tweet{
         tweet_id: 1,
-        user_id: 12,
         created_time: 234,
         text_body: "sdfsdfdsfsdfsdf".to_string()
     };
@@ -29,12 +28,10 @@ async fn main() {
 
     let arr = vec![Tweet{
         tweet_id: 0,
-        user_id: 100,
         created_time: 1,
         text_body: "11".to_string()
     }, Tweet{
         tweet_id: 0,
-        user_id: 101,
         created_time: 2,
         text_body: "22".to_string()
     }];
@@ -45,11 +42,11 @@ async fn main() {
     t.select_all().tweet_id_eq(234).and_created_time_eq(234).get_rows(&spool).await;
 
     let mut u = my_dev::tweet::TweetUpdater::new();
-    u.set_text_body("werwer").user_id_eq(12).limit(4).order_by_user_id_desc().update(&spool).await;
+    // u.set_text_body("werwer").user_id_eq(12).limit(4).order_by_user_id_desc().update(&spool).await;
 
 
-    let m = my_dev::tweet::tweets_of_user(100,&spool).await;
-    println!("{:?}", m)
+    // let m = my_dev::tweet::tweets_of_user(100,&spool).await;
+    // println!("{:?}", m)
 
     // t.select_all().hash_code_eq("sdf").and_sms_id_ge(324).get_rows(&pool).await.unwrap();
 

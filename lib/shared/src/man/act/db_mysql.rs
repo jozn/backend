@@ -1,7 +1,7 @@
 // use super::db_trait_dep::*;
 use crate::gen::pb;
 use crate::man::errors::GenErr;
-use crate::{common, my, utils::time};
+use crate::{common, my_dep, utils::time};
 use std::sync::Arc;
 
 #[derive(Debug)]
@@ -20,7 +20,7 @@ impl DBMySql {
     }
 
     pub async fn get_next_cid(&self, intent: &str) -> Result<u64, GenErr> {
-        let gen_cid = my::GenCid {
+        let gen_cid = my_dep::GenCid {
             cid: 0,
             intent: intent.to_string(),
         };
@@ -33,7 +33,7 @@ impl DBMySql {
 impl DBMySql {
     // =================== Channel ====================
     pub async fn get_channel(&self, channel_id: u64) -> Result<pb::Channel, GenErr> {
-        let channel_row = my::ChannelSelector::new()
+        let channel_row = my_dep::ChannelSelector::new()
             .channel_cid_eq(channel_id)
             .get_row(&self.mysql_pool)
             .await?;
@@ -47,7 +47,7 @@ impl DBMySql {
         let buff = common::prost_encode(channel)?;
         let debug_data = format!("{:#?}", &channel);
 
-        let channel_row = my::Channel {
+        let channel_row = my_dep::Channel {
             channel_cid: channel.channel_cid as u64,
             pb_data: buff,
             debug_data: debug_data,
@@ -59,7 +59,7 @@ impl DBMySql {
 
     // =================== Channel Message ====================
     pub async fn get_channel_message(&self, channel_cid: u64, message_gid: u64) -> Result<pb::Message, GenErr> {
-        let ch_msg_row = my::ChannelMsgSelector::new()
+        let ch_msg_row = my_dep::ChannelMsgSelector::new()
             .channel_cid_eq(channel_cid)
             .and_msg_gid_eq(message_gid)
             .get_row(&self.mysql_pool)
@@ -75,7 +75,7 @@ impl DBMySql {
         let debug_data = format!("{:#?}", &message);
 
         // todo: check gid and channel cid
-        let ch_mag_row = my::ChannelMsg {
+        let ch_mag_row = my_dep::ChannelMsg {
             channel_cid: message.channel_cid as u64,
             msg_gid: message.message_gid,
             pb_data,
@@ -92,7 +92,7 @@ impl DBMySql {
         unimplemented!("");
     }
     pub async fn save_channel_follower(&self, channel_cid: u32, profile_cid: u32) -> Result<(), GenErr> {
-        let ch_fl_row = my::ChannelFollower {
+        let ch_fl_row = my_dep::ChannelFollower {
             profile_cid,
             channel_cid,
             created_time: time::get_time_now_sec(),
@@ -108,7 +108,7 @@ impl DBMySql {
         unimplemented!("");
     }
     pub async fn save_message_like(&self, channel_cid: u32, message_gid: u64, profile_cid: u32) -> Result<(), GenErr> {
-        let ch_lk_row = my::ChannelMsgLike{
+        let ch_lk_row = my_dep::ChannelMsgLike{
             message_gid,
             profile_cid,
             created_time: time::get_time_now_sec()
@@ -120,7 +120,7 @@ impl DBMySql {
 
     // =================== Channel Message Comment ====================
     pub async fn get_message_comments(&self, channel_cid: u64,  message_gid: u64) -> Result<Vec<pb::Comment>, GenErr> {
-        let db_rows = my::MsgCommentSelector::new()
+        let db_rows = my_dep::MsgCommentSelector::new()
             .channel_cid_eq(channel_cid)
             .and_message_gid_eq(message_gid)
             .get_rows(&self.mysql_pool)
@@ -138,7 +138,7 @@ impl DBMySql {
     pub async fn save_message_comment(&self, comment: &pb::Comment) -> Result<(), GenErr> {
         let pb_data = common::prost_encode(comment)?;
 
-        let row = my::MsgComment {
+        let row = my_dep::MsgComment {
             channel_cid: comment.channel_cid,
             message_gid: comment.message_gid,
             comment_gid: comment.comment_gid,
@@ -155,7 +155,7 @@ impl DBMySql {
 impl DBMySql {
     // =================== User ====================
     pub async fn get_user_by_cid(&self, user_cid: u64) -> Result<pb::User, GenErr> {
-        let user_row = my::UserSelector::new()
+        let user_row = my_dep::UserSelector::new()
             .user_cid_eq(user_cid)
             .get_row(&self.mysql_pool)
             .await?;
@@ -166,7 +166,7 @@ impl DBMySql {
     }
 
     pub async fn get_user_by_phone(&self, phone: &str) -> Result<pb::User, GenErr>{
-        let user_row = my::UserSelector::new()
+        let user_row = my_dep::UserSelector::new()
             .phone_number_eq(phone)
             .get_row(&self.mysql_pool)
             .await?;
@@ -179,7 +179,7 @@ impl DBMySql {
     pub async fn save_user(&self, user: &pb::User) -> Result<(), GenErr>{
         // user db
         let buff = common::prost_encode(user)?;
-        let user_row = my::User {
+        let user_row = my_dep::User {
             user_cid: user.user_cid as u64,
             phone_number: user.phone.clone(),
             pb_data: buff,
@@ -193,7 +193,7 @@ impl DBMySql {
 
     // =================== User Session ====================
     pub async fn get_user_session(&self, user_cid: u64, session_hash: &str) -> Result<pb::Session, GenErr> {
-        let session_row = my::SessionSelector::new()
+        let session_row = my_dep::SessionSelector::new()
             .user_cid_eq(user_cid as u32)
             .and_session_hash_eq(session_hash)
             .get_row(&self.mysql_pool)
@@ -206,7 +206,7 @@ impl DBMySql {
 
     pub async fn save_user_session(&self, session: &pb::Session) -> Result<(), GenErr> {
         let buff = common::prost_encode(session)?;
-        let session_row = my::Session {
+        let session_row = my_dep::Session {
             session_hash: session.session_hash.clone(),
             user_cid: session.user_cid, //todo db
             pb_data: buff,
@@ -226,7 +226,7 @@ impl DBMySql {
 impl DBMySql {
     // =================== Profile ====================
     pub async fn get_profile(&self, profile_cid: u64) -> Result<pb::Profile, GenErr> {
-        let profile_row = my::ProfileSelector::new()
+        let profile_row = my_dep::ProfileSelector::new()
             .profile_cid_eq(profile_cid)
             .get_row(&self.mysql_pool)
             .await?;
@@ -237,7 +237,7 @@ impl DBMySql {
     }
     pub async fn save_profile(&self, profile: &pb::Profile) -> Result<(), GenErr> {
         let buff = common::prost_encode(profile)?;
-        let profile_row = my::Profile {
+        let profile_row = my_dep::Profile {
             profile_cid: profile.profile_cid as u64,
             pb_data: buff,
             debug_data: format!("{:#?}", profile),
@@ -267,7 +267,7 @@ impl DBMySql {
 impl DBMySql {
     // =================== Sms ====================
     pub async fn get_sms(&self, phone: &str, hash_code: &str) -> Result<pb::Sms, GenErr> {
-        let sms_row = my::SmsSelector::new()
+        let sms_row = my_dep::SmsSelector::new()
             .hash_code_eq(hash_code)
             .and_phone_number_eq(phone)
             .get_row(&self.mysql_pool)
@@ -279,7 +279,7 @@ impl DBMySql {
     }
     pub async fn save_sms(&self, sms: &pb::Sms) -> Result<(), GenErr> {
         let buff = common::prost_encode(sms)?;
-        let sms_row = my::Sms {
+        let sms_row = my_dep::Sms {
             sms_id: 0,
             phone_number: sms.phone_number.clone(),
             hash_code: sms.hash_code.clone(),
@@ -316,7 +316,7 @@ pub mod tests {
             created_time: 0,
             user_name: "hamid_ria".to_string(),
             channel_title: "My blogs".to_string(),
-            about: "anything in my mind".to_string(),
+            about: "anything in my_dep mind".to_string(),
             is_verified: false,
             sync_time_ms: 234,
             ..Default::default()

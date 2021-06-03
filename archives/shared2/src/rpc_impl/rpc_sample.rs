@@ -157,7 +157,7 @@ impl MemDb {
                 channel_name: format!("channel def u#{}", u),
                 creator_profile_cid: pro_cid,
                 is_profile_channel: true,
-                about: format!("my about user def ch {}", u),
+                about: format!("my_dep about user def ch {}", u),
                 avatar: Some(_get_sample_avatar()),
                 last_message: Some(_make_last_msg(5)),
                 ..Default::default()
@@ -215,7 +215,7 @@ impl MemDb {
                 channel_name: format!("channel #{} u{}", chanel_cid, u.cid),
                 creator_profile_cid: profile.cid,
                 is_profile_channel: false,
-                about: format!("my about extra chan {}", u.first_name),
+                about: format!("my_dep about extra chan {}", u.first_name),
                 avatar: Some(_get_sample_avatar()),
                 last_message: Some(_make_last_msg(5)),
                 ..Default::default()

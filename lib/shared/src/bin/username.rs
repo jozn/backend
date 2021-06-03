@@ -1,4 +1,4 @@
-use shared;
+use shared;get_chat(profile_cid as u32, chat_gid,).await?;
 
 /*#[tokio::main]
 async fn main() {

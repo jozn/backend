@@ -65,7 +65,7 @@ impl Crawler {
 
                 let data = serde_json::to_string(&channel_data).unwrap();
 
-                let channel_row = shared::my::mysql_models::TgChannel {
+                let channel_row = shared::my_dep::mysql_models::TgChannel {
                     channel_id: i.id as u32,
                     username: i.username.clone(),
                     data: data,
@@ -90,7 +90,7 @@ impl Crawler {
 
     async fn crawl_next_channel_messages(&self) -> Result<(), TelegramGenErr> {
         //todo
-        let rows = shared::my::mysql_models::TgChannelSelector::new()
+        let rows = shared::my_dep::mysql_models::TgChannelSelector::new()
             .get_rows(&self.mysql_pool)
             .await?;
 

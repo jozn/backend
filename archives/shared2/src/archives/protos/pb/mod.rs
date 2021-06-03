@@ -1,4 +1,4 @@
-// Automatically generated mod.rs
+// Automatically generated my_dep
 pub mod enums;
 pub mod global;
 pub mod rpc_account;

@@ -15,3 +15,4 @@ pub mod aof;
 pub mod checker;
 // pub mod db_util;
 pub mod act;
+pub mod mysql_shared;

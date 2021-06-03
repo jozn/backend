@@ -20,7 +20,7 @@ pub struct TQuery {
     pub wheres: Vec<WhereClause>,
     pub wheres_ins: Vec<WhereInClause>,
     pub select_cols: Vec<&'static str>, // Selector
-    pub delete_cols: Vec<&'static str>, // Deleter
+    // pub delete_cols: Vec<&'static str>, // Deleter
     pub order_by:  Vec<&'static str>,
     pub updates: HashMap<&'static str, Value>, // Updater
     pub limit: u32,
@@ -131,11 +131,11 @@ pub async fn update_rows(query: &TQuery, session: &SPool) -> Result<(),MyError> 
 
 pub async fn delete_rows(query: &TQuery, session: &SPool) -> Result<(),MyError> {
     let mut conn = session.pool.get_conn().await?;
-    let del_col = query.delete_cols.join(", ");
+    //let del_col = query.delete_cols.join(", ");
 
     let (cql_where, where_values) = _get_where(query.wheres.clone());
 
-    let cql_query = format!("DELETE {} FROM {}.{} WHERE {}", session.database, query.table, del_col, cql_where);
+    let cql_query = format!("DELETE FROM {}.{} WHERE {}", session.database, query.table, cql_where);
 
     let p = Params::Positional(where_values);
 

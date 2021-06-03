@@ -15,19 +15,19 @@ impl rpc2::RPC_User_Handler2 for UserSpace {
 
         // todo check hash_code parm first
 
-        let user_cid_row = shared::my::GenCid {
+        let user_cid_row = shared::my_dep::GenCid {
             cid: 0,
             intent: "user".to_string(),
         };
         let user_cid = user_cid_row.insert(&self.mysql_pool).await?.cid;
 
-        let profile_cid_row = shared::my::GenCid {
+        let profile_cid_row = shared::my_dep::GenCid {
             cid: 0,
             intent: "profile".to_string(),
         };
         let profile_cid = profile_cid_row.insert(&self.mysql_pool).await?.cid;
 
-        let channel_cid_row = shared::my::GenCid {
+        let channel_cid_row = shared::my_dep::GenCid {
             cid: 0,
             intent: "channel".to_string(),
         };
@@ -96,11 +96,11 @@ impl rpc2::RPC_User_Handler2 for UserSpace {
         };
 
         use shared::common;
-        use shared::my;
+        use shared::my_dep;
 
         // channel db
         let buff = common::prost_encode(&channel)?;
-        let channel_row = my::Channel {
+        let channel_row = my_dep::Channel {
             channel_cid: channel_cid as u64,
             pb_data: buff,
             debug_data: format!("{:#?}", &channel),
@@ -109,7 +109,7 @@ impl rpc2::RPC_User_Handler2 for UserSpace {
 
         // profile db
         let buff = common::prost_encode(&profile)?;
-        let profile_row = my::Profile {
+        let profile_row = my_dep::Profile {
             profile_cid: profile_cid as u64,
             pb_data: buff,
             debug_data: format!("{:#?}", &profile),
@@ -118,7 +118,7 @@ impl rpc2::RPC_User_Handler2 for UserSpace {
 
         // user db
         let buff = common::prost_encode(&user)?;
-        let user_row = my::User {
+        let user_row = my_dep::User {
             user_cid: user_cid as u64,
             phone_number: param.phone_number.clone(),
             pb_data: buff,
@@ -142,7 +142,7 @@ impl rpc2::RPC_User_Handler2 for UserSpace {
 
         // user db
         let buff = common::prost_encode(&session_pb)?;
-        let session_row = my::Session {
+        let session_row = my_dep::Session {
             session_hash: session_pb.session_hash.clone(),
             user_cid: user_cid, //todo db
             pb_data: buff,

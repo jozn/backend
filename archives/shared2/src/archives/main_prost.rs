@@ -56,7 +56,7 @@ fn main(){
         media_id: 0,
         file_ref_id: 0,
         post_key: "yes".to_string(),
-        text: "my text".to_string(),
+        text: "my_dep text".to_string(),
         rich_text: "".to_string(),
         shared_to: 0,
         via: 0,

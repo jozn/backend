@@ -4,10 +4,10 @@ use crate::{errors::TelegramGenErr, types, utils};
 use rusqlite::{params, Connection, Result, NO_PARAMS};
 
 use mysql::OptsBuilder;
-use shared::my;
+use shared::my_dep;
 
 pub async fn play_my() {
-    /*    let m = my::models::TgChannel{
+    /*    let m = my_dep::models::TgChannel{
         channel_id: 4,
         username: "asdfsd".to_string(),
         data: b"some23".to_vec()

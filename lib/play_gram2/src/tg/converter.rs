@@ -8,7 +8,7 @@ use types::*;
 // gifs: if document is animated it's gif (could mp4 gif > hence it set video attributes)
 // in documents ttl_seconds is not being set even if auto delete message being set.
 // have whitelist filtering not a black list: mpt, ogg, mp3, pdf, docs,...
-// if audio is set to voice:true it will not have save to my music
+// if audio is set to voice:true it will not have save to my_dep music
 // is audio is set to voice:true it will have waveform otherwise not.
 // audio: performer and title is being set just for music not voice,
 // filename is being set for music (but not voice), animated (gif) mostly "mp4.mp4",

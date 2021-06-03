@@ -1,6 +1,7 @@
 use crate::man::act::DBMySql;
 use crate::{
     act,
+    my,
     errors::GenErr,
     pb,
     utils::{rand, time},
@@ -14,6 +15,8 @@ pub struct ChatAct {
 impl ChatAct {
 
     pub async fn delete_chat(&self, profile_cid: u32, chat_gid: u64) -> Result<pb::Chat,GenErr> {
+        // let d = my::get_chat(profile_cid as u32, chat_gid,).await?;
+        // let d = my::get_ch
         let _ = pb::ChatDeleteChatParam::default();
         unimplemented!("");
     }

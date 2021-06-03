@@ -1,7 +1,7 @@
 use async_trait::async_trait;
 use shared;
 use shared::errors::GenErr;
-use shared::{common, my, pb, rpc2};
+use shared::{common, my_dep, pb, rpc2};
 
 use crate::UserSpace;
 
@@ -37,7 +37,7 @@ impl rpc2::RPC_Auth_Handler2 for UserSpace {
         let buff = shared::common::prost_encode(&sms_pb)?;
         let json_pb = format!("{:#?}", sms_pb);
 
-        let sms_row = shared::my::Sms {
+        let sms_row = shared::my_dep::Sms {
             sms_id: 0,
             phone_number: phone.clone(),
             hash_code: hash_code.clone(),
@@ -56,7 +56,7 @@ impl rpc2::RPC_Auth_Handler2 for UserSpace {
     }
 
     async fn AuthLogIn(&self, param: pb::AuthLogInParam) -> Result<pb::AuthLogInResponse, GenErr> {
-        let s = my::SmsSelector::new()
+        let s = my_dep::SmsSelector::new()
             .hash_code_eq(&param.hash_code)
             .get_row(&self.mysql_pool)
             .await?;
@@ -73,7 +73,7 @@ impl rpc2::RPC_Auth_Handler2 for UserSpace {
         }
 
         // todo extract this
-        let user_row = my::UserSelector::new()
+        let user_row = my_dep::UserSelector::new()
             .phone_number_eq(&phone)
             .get_row(&self.mysql_pool)
             .await?;

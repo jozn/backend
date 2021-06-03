@@ -1,2 +1,2 @@
-// Automatically generated mod.rs
+// Automatically generated my_dep
 pub mod items;

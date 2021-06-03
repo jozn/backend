@@ -9,7 +9,7 @@ async fn main() {
 }
 
 async fn client_sample() {
-    let m = shared::my::Sms {
+    let m = shared::my_dep::Sms {
         sms_id: 0,
         result_code: 23,
         pd_data: vec![],

@@ -1,4 +1,4 @@
-use crate::gen::my::MyError;
+use crate::gen::my_dep::MyError;
 use crate::xc::CWError;
 
 #[derive(Debug)]

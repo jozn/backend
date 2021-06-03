@@ -1,5 +1,9 @@
 pub mod tweet;
+pub mod tweet_media;
 
+
+pub use tweet::*;
+pub use tweet_media::*;
 
 // Every Table Must Have Primary Keys to Be Included In This Output
 // Primiay Keys must be one column (no compostion types yet)

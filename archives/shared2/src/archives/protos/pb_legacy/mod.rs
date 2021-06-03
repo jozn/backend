@@ -1,4 +1,4 @@
-// Automatically generated mod.rs
+// Automatically generated my_dep
 pub mod proto;
 pub mod pb_changes;
 pub mod pb_enum;
