@@ -39,7 +39,7 @@ async fn main() {
         text_body: "22".to_string()
     }];
 
-    my_dev::tweet::tweet_mass_insert(&arr,&spool).await;
+    my_dev::tweet::tweet_mass_insert(&arr,&spool).await.unwrap();
 
     let mut t = my_dev::tweet::TweetSelector::new();
     t.select_all().tweet_id_eq(234).and_created_time_eq(234).get_rows(&spool).await;
@@ -47,6 +47,9 @@ async fn main() {
     let mut u = my_dev::tweet::TweetUpdater::new();
     u.set_text_body("werwer").user_id_eq(12).limit(4).order_by_user_id_desc().update(&spool).await;
 
+
+    let m = my_dev::tweet::tweets_of_user(100,&spool).await;
+    println!("{:?}", m)
 
     // t.select_all().hash_code_eq("sdf").and_sms_id_ge(324).get_rows(&pool).await.unwrap();
 

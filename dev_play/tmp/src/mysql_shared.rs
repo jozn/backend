@@ -16,9 +16,10 @@ pub struct SPool {
 
 #[derive(Default, Debug)]
 pub struct TQuery {
+    pub table: &'static str,
     pub wheres: Vec<WhereClause>,
     pub wheres_ins: Vec<WhereInClause>,
-    pub select_cols: Vec<&'static str>, // Just Selector
+    pub select_cols: Vec<&'static str>, // Selector
     pub delete_cols: Vec<&'static str>, // Deleter
     pub order_by:  Vec<&'static str>,
     pub updates: HashMap<&'static str, Value>, // Updater
@@ -53,14 +54,14 @@ pub fn _get_where(wheres: Vec<WhereClause>) ->  (String, Vec<Value>) {
 }
 
 impl TQuery {
-    pub fn _to_sql_selector(&self) ->  (String, Vec<Value>)  {
+    pub fn _to_sql_selector(&self, database: &str) ->  (String, Vec<Value>)  {
         let cql_select = if self.select_cols.is_empty() {
             "*".to_string()
         } else {
             self.select_cols.join(", ")
         };
 
-        let mut cql_query = format!("SELECT {} FROM `twitter`.`tweet`", cql_select);
+        let mut cql_query = format!("SELECT {} FROM {}.{}", cql_select, database, self.table);
 
         let (cql_where, where_values) = _get_where(self.wheres.clone());
 
@@ -114,9 +115,9 @@ pub async fn update_rows(query: &TQuery, session: &SPool) -> Result<(),MyError> 
 
     // Build final query
     let mut cql_query = if query.wheres.is_empty() {
-        format!("UPDATE .TableSchemeOut SET {}", cql_update)
+        format!("UPDATE {:}.{:} SET {:}",session.database, query.table ,cql_update)
     } else {
-        format!("UPDATE .TableSchemeOut SET {} WHERE {}", cql_update, cql_where)
+        format!("UPDATE {:}.{:} SET {} WHERE {}",session.database, query.table, cql_update, cql_where)
     };
 
     let p = Params::Positional(all_vals);
@@ -134,7 +135,7 @@ pub async fn delete_rows(query: &TQuery, session: &SPool) -> Result<(),MyError> 
 
     let (cql_where, where_values) = _get_where(query.wheres.clone());
 
-    let cql_query = format!("DELETE {} FROM `twitter`.`tweet` WHERE {}", del_col, cql_where);
+    let cql_query = format!("DELETE {} FROM {}.{} WHERE {}", session.database, query.table, del_col, cql_where);
 
     let p = Params::Positional(where_values);
 

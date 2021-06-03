@@ -2900,6 +2900,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "play2"
+version = "0.1.0"
+dependencies = [
+ "rand 0.8.3",
+]
+
+[[package]]
 name = "play_gram2"
 version = "0.1.0"
 dependencies = [

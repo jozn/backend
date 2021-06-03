@@ -81,7 +81,12 @@ pub struct TweetSelector {
 
 impl TweetSelector {
     pub fn new() -> Self {
-        TweetSelector::default()
+        TweetSelector{
+            q: TQuery{
+                table: "tweet",
+                ..Default::default()
+            }
+        }
     }
 
     pub fn limit(&mut self, size: u32) -> &mut Self {
@@ -123,7 +128,7 @@ impl TweetSelector {
 
     pub async fn _get_rows_with_size(&mut self, session: &SPool, size: i64) -> Result<Vec<Tweet>, MyError>   {
         let mut conn = session.pool.get_conn().await?;
-        let(cql_query, query_values) = self.q._to_sql_selector();
+        let(cql_query, query_values) = self.q._to_sql_selector(&session.database);
 
         println!("{} - {:?}", &cql_query, &query_values);
 
@@ -975,7 +980,12 @@ pub struct TweetUpdater {
 
 impl TweetUpdater {
     pub fn new() -> Self {
-        TweetUpdater::default()
+        TweetUpdater{
+            q: TQuery{
+                table: "tweet",
+                ..Default::default()
+            }
+        }
     }
 
     pub fn limit(&mut self, size: u32) -> &mut Self {
@@ -1831,7 +1841,12 @@ pub struct TweetDeleter {
 
 impl TweetDeleter {
     pub fn new() -> Self {
-        TweetDeleter::default()
+        TweetDeleter{
+            q: TQuery{
+                table: "tweet",
+                ..Default::default()
+            }
+        }
     }
 
     pub fn limit(&mut self, size: u32) -> &mut Self {
@@ -2693,11 +2708,11 @@ pub async fn tweet_mass_insert(arr :&Vec<Tweet>, spool: &SPool) -> Result<(),MyE
 
     let mut arr_vals = vec![];
     for ar in arr {
-                   arr_vals.push(ar.tweet_id.clone().into());
-                   arr_vals.push(ar.user_id.clone().into());
-                   arr_vals.push(ar.created_time.clone().into());
-                   arr_vals.push(ar.text_body.clone().into());
-    }
+                
+                arr_vals.push(ar.user_id.clone().into());
+                arr_vals.push(ar.created_time.clone().into());
+                arr_vals.push(ar.text_body.clone().into());
+       }
 
     let p = Params::Positional(arr_vals);
 
@@ -2708,4 +2723,34 @@ pub async fn tweet_mass_insert(arr :&Vec<Tweet>, spool: &SPool) -> Result<(),MyE
     ).await?;
 
     Ok(())
+}
+
+// Index
+pub async fn created_time(created_time: u64, spool: &SPool) -> Result<Vec<Tweet>,MyError> {
+	let m = TweetSelector::new()
+		.created_time_eq(created_time)
+		.get_rows(spool).await?;
+	Ok(m)
+}
+
+pub async fn get_tweet(tweet_id: u64, spool: &SPool) -> Result<Tweet,MyError> {
+	let m = TweetSelector::new()
+		.tweet_id_eq(tweet_id)
+		.get_row(spool).await?;
+	Ok(m)
+}
+
+pub async fn tweets_of_user(user_id: u32, spool: &SPool) -> Result<Vec<Tweet>,MyError> {
+	let m = TweetSelector::new()
+		.user_id_eq(user_id)
+		.get_rows(spool).await?;
+	Ok(m)
+}
+
+pub async fn user_id_INX(user_id: u32,tweet_id: u64, spool: &SPool) -> Result<Tweet,MyError> {
+	let m = TweetSelector::new()
+		.user_id_eq(user_id)
+		.and_tweet_id_eq(tweet_id)
+		.get_row(spool).await?;
+	Ok(m)
 }

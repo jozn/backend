@@ -9,6 +9,7 @@ members = [
 
     # Dev Playground
     "dev_play/play",
+    "dev_play/play2",
     "dev_play/tmp",
 
     "lib/play_gram2",
