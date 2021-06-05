@@ -1,5 +1,3 @@
-// use crate::gen::my_dep::MyError;
-use crate::xc::CWError;
 use crate::man::mysql_shared::MyError;
 
 #[derive(Debug)]
@@ -10,9 +8,7 @@ pub enum GenErr {
     ProstDecode(::prost::DecodeError),
     ProstEncode(::prost::EncodeError),
     MySQL(MyError),
-    MySQL_DEP,
 
-    CassadraError,
     NoRpcRegistry,
 
     NotFound,
@@ -39,28 +35,8 @@ impl From<prost::EncodeError> for GenErr {
     }
 }
 
-impl From<CWError> for GenErr {
-    fn from(cerr: CWError) -> Self {
-        GenErr::CassadraError
-    }
-}
-
 impl From<MyError> for GenErr {
     fn from(err: MyError) -> Self {
         GenErr::MySQL(err)
     }
 }
-
-/*impl
-From<Option::None> for GenErr {
-    fn from(_: Option::None) -> Self {
-        GenErr::NotFound
-    }
-}
-*/
-/*impl From<std::option::NoneError> for GenErr {
-    fn from(_: std::option::NoneError) -> Self {
-        GenErr::NotFound
-    }
-}
-*/
