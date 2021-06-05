@@ -1,8 +1,7 @@
-use crate::man::act::DBMySql;
-use crate::{act, errors::GenErr, pb, utils::time};
+use crate::{act, errors::GenErr, pb, utils::time,db_helper};
 
 pub struct ChannelAct {
-    db: DBMySql,
+    db: db_helper::DBMySql,
 }
 
 #[rustfmt::skip]
@@ -190,7 +189,7 @@ pub mod tests {
 
     // #[test]
     pub async fn play2() {
-        let ca = ChannelAct { db: DBMySql::new() };
+        let ca = ChannelAct { db: db_helper::DBMySql::new() };
         let p = param::CreateChannel {
             is_def_profile: false,
             creator_profile_cid: 5,
@@ -203,7 +202,7 @@ pub mod tests {
     }
 
     pub async fn play1() {
-        let ca = ChannelAct { db: DBMySql::new() };
+        let ca = ChannelAct {  db: db_helper::DBMySql::new() };
         let p = pb::NewMessageInput {
             message_gid: 0,
             by_profile_cid: 7,

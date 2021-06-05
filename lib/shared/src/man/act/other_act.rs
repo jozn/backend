@@ -1,13 +1,13 @@
-use crate::man::act::DBMySql;
 use crate::{
     act,
+    db_helper,
     errors::GenErr,
     pb, sms_sender,
     utils::{rand, time},
 };
 
 pub struct OtherAct {
-    db: DBMySql,
+    db: db_helper::DBMySql,
 }
 
 #[rustfmt::skip]

@@ -1,14 +1,14 @@
-use crate::man::act::DBMySql;
 use crate::{
     act,
     my,
+    db_helper,
     errors::GenErr,
     pb,
     utils::{rand, time},
 };
 
 pub struct ChatAct {
-    db: DBMySql,
+    db: db_helper::DBMySql,
 }
 
 #[rustfmt::skip]
@@ -82,6 +82,6 @@ pub mod tests {
 
     // #[test]
     pub async fn play1() {
-        let ca = ChatAct { db: DBMySql::new() };
+
     }
 }

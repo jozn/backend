@@ -45,13 +45,6 @@ impl From<CWError> for GenErr {
     }
 }
 
-// todo remove
-impl From<crate::gen::my_dep::MyError> for GenErr {
-    fn from(err: crate::gen::my_dep::MyError) -> Self {
-        GenErr::MySQL_DEP
-    }
-}
-
 impl From<MyError> for GenErr {
     fn from(err: MyError) -> Self {
         GenErr::MySQL(err)

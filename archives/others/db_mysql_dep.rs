@@ -5,15 +5,15 @@ use crate::{common, my_dep, utils::time};
 use std::sync::Arc;
 
 #[derive(Debug)]
-pub struct DBMySql {
+pub struct DBMySql_DEP {
     mysql_pool: Arc<mysql_async::Pool>,
 }
 
 #[rustfmt::skip]
-impl DBMySql {
+impl DBMySql_DEP {
     pub fn new() ->Self {
         let database_url = "mysql://flipper:12345678@192.168.92.115:3306/twitter";
-        let my = DBMySql {
+        let my = DBMySql_DEP {
             mysql_pool: Arc::new(mysql_async::Pool::new(database_url)),
         };
         my
@@ -30,7 +30,7 @@ impl DBMySql {
 }
 
 #[rustfmt::skip]
-impl DBMySql {
+impl DBMySql_DEP {
     // =================== Channel ====================
     pub async fn get_channel(&self, channel_id: u64) -> Result<pb::Channel, GenErr> {
         let channel_row = my_dep::ChannelSelector::new()
@@ -152,7 +152,7 @@ impl DBMySql {
 }
 
 #[rustfmt::skip]
-impl DBMySql {
+impl DBMySql_DEP {
     // =================== User ====================
     pub async fn get_user_by_cid(&self, user_cid: u64) -> Result<pb::User, GenErr> {
         let user_row = my_dep::UserSelector::new()
@@ -223,7 +223,7 @@ impl DBMySql {
     }
 }
 
-impl DBMySql {
+impl DBMySql_DEP {
     // =================== Profile ====================
     pub async fn get_profile(&self, profile_cid: u64) -> Result<pb::Profile, GenErr> {
         let profile_row = my_dep::ProfileSelector::new()
@@ -264,7 +264,7 @@ impl DBMySql {
 }
 
 // Other db
-impl DBMySql {
+impl DBMySql_DEP {
     // =================== Sms ====================
     pub async fn get_sms(&self, phone: &str, hash_code: &str) -> Result<pb::Sms, GenErr> {
         let sms_row = my_dep::SmsSelector::new()
@@ -297,14 +297,14 @@ impl DBMySql {
 pub mod tests {
     use super::*;
 
-    impl DBMySql {
+    impl DBMySql_DEP {
         fn playasd() {}
     }
 
     // #[test]
     pub async fn play_channel1() {
         let database_url = "mysql://flipper:12345678@192.168.1.115:3306/flip_my";
-        let my = DBMySql {
+        let my = DBMySql_DEP {
             mysql_pool: Arc::new(mysql_async::Pool::new(database_url)),
         };
 
