@@ -41,7 +41,20 @@ impl ChannelMsgMedia {
         Ok(cp)
     }
 
-    // todo add replace with coping insert after it's complete
+    // [[ for template: this code is copy of insert with 'insert' changed to 'replace' ]]
+    pub async fn replace(&self, spool: &SPool) -> Result<ChannelMsgMedia,MyError> {
+        let mut conn = spool.pool.get_conn().await?;
+
+        let query = format!(r"REPLACE INTO {:}.channel_msg_media (channel_cid, media_type_id, msg_gid) VALUES (?, ?, ?)",&spool.database);
+        let p = Params::Positional(vec![self.channel_cid.clone().into(), self.media_type_id.clone().into(), self.msg_gid.clone().into()]);
+
+        conn.exec_iter(
+            query, p
+        ).await?;
+
+        let cp = self.clone();
+        Ok(cp)
+    }
 
     pub async fn update(&self, spool: &SPool) -> Result<(),MyError> {
         let mut conn = spool.pool.get_conn().await?;

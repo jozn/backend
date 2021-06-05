@@ -39,7 +39,20 @@ impl MsgReshare {
         Ok(cp)
     }
 
-    // todo add replace with coping insert after it's complete
+    // [[ for template: this code is copy of insert with 'insert' changed to 'replace' ]]
+    pub async fn replace(&self, spool: &SPool) -> Result<MsgReshare,MyError> {
+        let mut conn = spool.pool.get_conn().await?;
+
+        let query = format!(r"REPLACE INTO {:}.msg_reshare (message_gid, profile_cid) VALUES (?, ?)",&spool.database);
+        let p = Params::Positional(vec![self.message_gid.clone().into(), self.profile_cid.clone().into()]);
+
+        conn.exec_iter(
+            query, p
+        ).await?;
+
+        let cp = self.clone();
+        Ok(cp)
+    }
 
     pub async fn update(&self, spool: &SPool) -> Result<(),MyError> {
         let mut conn = spool.pool.get_conn().await?;

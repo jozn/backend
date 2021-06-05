@@ -47,7 +47,20 @@ impl SmsBk {
         Ok(cp)
     }
 
-    // todo add replace with coping insert after it's complete
+    // [[ for template: this code is copy of insert with 'insert' changed to 'replace' ]]
+    pub async fn replace(&self, spool: &SPool) -> Result<SmsBk,MyError> {
+        let mut conn = spool.pool.get_conn().await?;
+
+        let query = format!(r"REPLACE INTO {:}.sms_bk (sms_id, phone_number, hash_code, result_code, pb_data, debug_data) VALUES (?, ?, ?, ?, ?, ?)",&spool.database);
+        let p = Params::Positional(vec![self.sms_id.clone().into(), self.phone_number.clone().into(), self.hash_code.clone().into(), self.result_code.clone().into(), self.pb_data.clone().into(), self.debug_data.clone().into()]);
+
+        conn.exec_iter(
+            query, p
+        ).await?;
+
+        let cp = self.clone();
+        Ok(cp)
+    }
 
     pub async fn update(&self, spool: &SPool) -> Result<(),MyError> {
         let mut conn = spool.pool.get_conn().await?;

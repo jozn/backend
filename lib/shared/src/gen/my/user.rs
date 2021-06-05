@@ -43,7 +43,20 @@ impl User {
         Ok(cp)
     }
 
-    // todo add replace with coping insert after it's complete
+    // [[ for template: this code is copy of insert with 'insert' changed to 'replace' ]]
+    pub async fn replace(&self, spool: &SPool) -> Result<User,MyError> {
+        let mut conn = spool.pool.get_conn().await?;
+
+        let query = format!(r"REPLACE INTO {:}.user (user_cid, phone_number, pb_data, debug_data) VALUES (?, ?, ?, ?)",&spool.database);
+        let p = Params::Positional(vec![self.user_cid.clone().into(), self.phone_number.clone().into(), self.pb_data.clone().into(), self.debug_data.clone().into()]);
+
+        conn.exec_iter(
+            query, p
+        ).await?;
+
+        let cp = self.clone();
+        Ok(cp)
+    }
 
     pub async fn update(&self, spool: &SPool) -> Result<(),MyError> {
         let mut conn = spool.pool.get_conn().await?;
@@ -2098,5 +2111,12 @@ pub async fn get_user(user_cid: u64, spool: &SPool) -> Result<User,MyError> {
 	let m = UserSelector::new()
 		.user_cid_eq(user_cid)
 		.get_row(spool).await?;
+	Ok(m)
+}
+
+pub async fn user_by_phone_number(phone_number: &str, spool: &SPool) -> Result<Vec<User>,MyError> {
+	let m = UserSelector::new()
+		.phone_number_eq(phone_number)
+		.get_rows(spool).await?;
 	Ok(m)
 }

@@ -41,7 +41,22 @@ impl GenCid {
     }
 
 
-    // todo add replace with coping insert after it's complete
+    // [[ for template: this code is copy of insert with 'insert' changed to 'replace' ]]
+    pub async fn replace(&self, spool: &SPool) -> Result<GenCid,MyError> {
+        let mut conn = spool.pool.get_conn().await?;
+
+        let query = format!(r"REPLACE INTO {:}.gen_cid (intent) VALUES (?)",&spool.database);
+        let p = Params::Positional(vec![self.intent.clone().into()]);
+
+        let qr = conn.exec_iter(
+            query, p
+        ).await?;
+
+        let mut cp = self.clone();
+        cp.cid = qr.last_insert_id().unwrap() as u32;
+        Ok(cp)
+    }
+
 
     pub async fn update(&self, spool: &SPool) -> Result<(),MyError> {
         let mut conn = spool.pool.get_conn().await?;
