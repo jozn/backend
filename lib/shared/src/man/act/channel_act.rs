@@ -58,7 +58,7 @@ impl ChannelAct{
     // Following
     pub async fn follow_channel(&self, channel_cid: u32, by_profile_cid: u32) -> Result<(),GenErr> {
         self.db.save_channel_follower(channel_cid,by_profile_cid).await?;
-        // todo add others
+        // todo add 2021_jun
 
         Ok(())
     }
@@ -71,7 +71,7 @@ impl ChannelAct{
     // Likes
     pub async fn like_message(&self, channel_cid: u32, message_gid: u64, by_profile_cid: u32) -> Result<(),GenErr> {
         self.db.save_message_like(channel_cid,message_gid,by_profile_cid).await?;
-        // todo add others
+        // todo add 2021_jun
 
         Ok(())
     }

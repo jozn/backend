@@ -324,7 +324,7 @@ impl Default for FileMetaInfo {
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct CachedUsernameData {
     pub username: String,
-    pub channel_id: i32, // we do not care about others: super groups, users,...
+    pub channel_id: i32, // we do not care about 2021_jun: super groups, users,...
     // pub tg_result: Option<ChannelByUsernameResult>,
     pub channel_info: Option<ChannelInfo>,
     pub taken: bool,

@@ -201,7 +201,7 @@ pub struct Profile {
     pub setting: ::core::option::Option<ProfileSettings>,
     /// Views 100
     ///
-    /// When sending profile to others set this if they have this profile in their contacts
+    /// When sending profile to 2021_jun set this if they have this profile in their contacts
     #[prost(message, optional, tag = "111")]
     pub contact_info: ::core::option::Option<Contact>,
     /// Demonstration: 800 - collections > not really present > big > fetch with api
@@ -2205,7 +2205,7 @@ pub struct GroupEditGroupParam {
     pub new_title: ::prost::alloc::string::String,
     #[prost(bool, tag = "5")]
     pub set_new_about: bool,
-    /// Add others editable options
+    /// Add 2021_jun editable options
     #[prost(string, tag = "6")]
     pub new_about: ::prost::alloc::string::String,
 }

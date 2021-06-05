@@ -17,7 +17,7 @@ pub use user::{Platform, RestrictionReason, User};
 
 /// A chat.
 ///
-/// Chats represent places where you can share messages with others.
+/// Chats represent places where you can share messages with 2021_jun.
 ///
 /// * Private conversations with other people are treated as the chat of the user itself.
 /// * Conversations in a group, whether it's private or public, are simply known as groups.

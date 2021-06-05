@@ -125,7 +125,7 @@ pub struct Profile {
     pub contacts: ::std::vec::Vec<Contact>,
     /// Views
     ///
-    /// When sending profile to others set this if they have this profile in their contacts
+    /// When sending profile to 2021_jun set this if they have this profile in their contacts
     #[prost(message, optional, tag = "111")]
     pub contact_info: ::std::option::Option<Contact>,
 }

@@ -149,7 +149,7 @@ impl AdminRightsBuilder {
         self
     }
 
-    /// Whether the user will be able to delete messages. This includes messages from others.
+    /// Whether the user will be able to delete messages. This includes messages from 2021_jun.
     pub fn delete_messages(&mut self, val: bool) -> &mut Self {
         self.rights.delete_messages = val;
         self
