@@ -58,6 +58,8 @@ impl ShardId {
         })
     }
 
+    // todo add new to u53
+
     // compact version returns an u64 which is less than 2^53-1 (the first 53 insignificant bits).
     // Tht primary reason for compact design is JavaScrip environment as it does not support larger
     //  integers.

@@ -49,12 +49,13 @@ pub use sms_bk::*;
 pub use tweet::*;
 pub use user::*;
 
+// todo this notes is old not does not relfelect current implemention
 // Every Table Must Have Primary Keys to Be Included In This Output
-// Primiay Keys must be one column (no compostion types yet)
+// Primiay Keys must can be more than one column (compostion types)
 // Primiay Keys can be 1) Auto Increment 2) Other self Inserted
 
 // Implemention is simple NOT many features is suported in Rust version:
 // Keep mysql data types in int, bigint, text, varchar, bool, blob
-// No signed integer is supported
+// No signed integer is supported yet
 // For now Primary key should only be numbers
 // Not fully ORM is supported: limited to CRUD on rows + Indexes querys

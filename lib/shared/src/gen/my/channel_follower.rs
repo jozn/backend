@@ -4,7 +4,7 @@ use mysql_async::{FromRowError, OptsBuilder, Params, Row, Pool};
 use mysql_common::row::ColumnIndex;
 
 use mysql_common::value::Value;
-use crate::mysql_shared::*;
+use crate::mysql_common::*;
 
 #[derive(Default, Clone, PartialEq, Eq, Debug)]
 pub struct ChannelFollower  { // channel_follower
@@ -2719,17 +2719,17 @@ pub async fn channel_follower_mass_insert(arr :&Vec<ChannelFollower>, spool: &SP
 }
 
 // Index
+pub async fn follow_id(follow_id: u32, spool: &SPool) -> Result<Vec<ChannelFollower>,MyError> {
+	let m = ChannelFollowerSelector::new()
+		.follow_id_eq(follow_id)
+		.get_rows(spool).await?;
+	Ok(m)
+}
+
 pub async fn get_channel_follower(profile_cid: u32,channel_cid: u32, spool: &SPool) -> Result<ChannelFollower,MyError> {
 	let m = ChannelFollowerSelector::new()
 		.profile_cid_eq(profile_cid)
 		.and_channel_cid_eq(channel_cid)
 		.get_row(spool).await?;
-	Ok(m)
-}
-
-pub async fn follow_id(follow_id: u32, spool: &SPool) -> Result<Vec<ChannelFollower>,MyError> {
-	let m = ChannelFollowerSelector::new()
-		.follow_id_eq(follow_id)
-		.get_rows(spool).await?;
 	Ok(m)
 }

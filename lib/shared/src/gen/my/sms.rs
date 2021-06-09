@@ -4,7 +4,7 @@ use mysql_async::{FromRowError, OptsBuilder, Params, Row, Pool};
 use mysql_common::row::ColumnIndex;
 
 use mysql_common::value::Value;
-use crate::mysql_shared::*;
+use crate::mysql_common::*;
 
 #[derive(Default, Clone, PartialEq, Eq, Debug)]
 pub struct Sms  { // sms
@@ -3351,16 +3351,16 @@ pub async fn sms_mass_insert(arr :&Vec<Sms>, spool: &SPool) -> Result<(),MyError
 }
 
 // Index
-pub async fn hash_code(hash_code: &str, spool: &SPool) -> Result<Sms,MyError> {
+pub async fn get_sms(sms_id: u64, spool: &SPool) -> Result<Sms,MyError> {
 	let m = SmsSelector::new()
-		.hash_code_eq(hash_code)
+		.sms_id_eq(sms_id)
 		.get_row(spool).await?;
 	Ok(m)
 }
 
-pub async fn get_sms(sms_id: u64, spool: &SPool) -> Result<Sms,MyError> {
+pub async fn hash_code(hash_code: &str, spool: &SPool) -> Result<Sms,MyError> {
 	let m = SmsSelector::new()
-		.sms_id_eq(sms_id)
+		.hash_code_eq(hash_code)
 		.get_row(spool).await?;
 	Ok(m)
 }

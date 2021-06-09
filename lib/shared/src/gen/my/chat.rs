@@ -4,7 +4,7 @@ use mysql_async::{FromRowError, OptsBuilder, Params, Row, Pool};
 use mysql_common::row::ColumnIndex;
 
 use mysql_common::value::Value;
-use crate::mysql_shared::*;
+use crate::mysql_common::*;
 
 #[derive(Default, Clone, PartialEq, Eq, Debug)]
 pub struct Chat  { // chat

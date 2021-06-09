@@ -1,11 +1,11 @@
 use crate::gen::pb;
 use crate::man::errors::GenErr;
-use crate::{common, my, utils::time, mysql_shared};
+use crate::{common, my, utils::time, mysql_common};
 use std::sync::Arc;
 
 #[derive(Debug)]
 pub struct DBMySql {
-    mysql_pool: Arc<mysql_shared::SPool>,
+    mysql_pool: Arc<mysql_common::SPool>,
 }
 
 #[rustfmt::skip]
@@ -13,7 +13,7 @@ impl DBMySql {
     pub fn new() ->Self {
         let database_url = "mysql://flipper:12345678@192.168.92.115:3306/twitter";
         let my = DBMySql {
-            mysql_pool: Arc::new(mysql_shared::SPool{
+            mysql_pool: Arc::new(mysql_common::SPool{
                 pool: mysql_async::Pool::new(database_url),
                 database: "flip_my".to_string()
             }),
@@ -35,11 +35,6 @@ impl DBMySql {
 impl DBMySql {
     // =================== Channel ====================
     pub async fn get_channel(&self, channel_id: u64) -> Result<pb::Channel, GenErr> {
-/*        let channel_row = my::ChannelSelector::new()
-            .channel_cid_eq(channel_id)
-            .get_row(&self.mysql_pool)
-            .await?;*/
-
         let channel_row = my::get_channel(channel_id, &self.mysql_pool).await?;
 
         let channel_pb: pb::Channel = common::prost_decode(&channel_row.pb_data)?;
@@ -63,12 +58,6 @@ impl DBMySql {
 
     // =================== Channel Message ====================
     pub async fn get_channel_message(&self, channel_cid: u64, message_gid: u64) -> Result<pb::Message, GenErr> {
-/*        let ch_msg_row = my::ChannelMsgSelector::new()
-            .channel_cid_eq(channel_cid)
-            .and_msg_gid_eq(message_gid)
-            .get_row(&self.mysql_pool)
-            .await?;*/
-
         let ch_msg_row = my::get_channel_msg(channel_cid, message_gid, &self.mysql_pool).await?;
 
         let msg_pb: pb::Message = common::prost_decode(&ch_msg_row.pb_data)?;
@@ -161,11 +150,6 @@ impl DBMySql {
 impl DBMySql {
     // =================== User ====================
     pub async fn get_user_by_cid(&self, user_cid: u64) -> Result<pb::User, GenErr> {
-/*        let user_row = my_dep::UserSelector::new()
-            .user_cid_eq(user_cid)
-            .get_row(&self.mysql_pool)
-            .await?;*/
-
         let user_row = my::get_user(user_cid,&self.mysql_pool).await?;
 
         let user_pb: pb::User = common::prost_decode(&user_row.pb_data)?;
@@ -178,8 +162,6 @@ impl DBMySql {
             .phone_number_eq(phone)
             .get_row(&self.mysql_pool)
             .await?;
-
-        // let user_rows = my::user_by_phone_number(user_cid,&self.mysql_pool).await?;
 
         let user_pb: pb::User = common::prost_decode(&user_row.pb_data)?;
 
@@ -235,11 +217,6 @@ impl DBMySql {
 impl DBMySql {
     // =================== Profile ====================
     pub async fn get_profile(&self, profile_cid: u64) -> Result<pb::Profile, GenErr> {
-/*        let profile_row = my::ProfileSelector::new()
-            .profile_cid_eq(profile_cid)
-            .get_row(&self.mysql_pool)
-            .await?;*/
-
         let profile_row = my::get_profile(profile_cid, &self.mysql_pool).await?;
         let profile_pb: pb::Profile = common::prost_decode(&profile_row.pb_data)?;
 

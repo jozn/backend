@@ -1,4 +1,4 @@
-use crate::man::mysql_shared::MyError;
+use crate::man::mysql_common::MyError;
 
 #[derive(Debug)]
 pub enum GenErr {

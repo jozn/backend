@@ -3,6 +3,7 @@ use prost::Message;
 use std::io::Write;
 
 // AOF = Append Only File
+// Currentlly no live code uses this module
 
 const DEFAULT_DATA_DIR: &str = "/opt/flip/";
 const DEFAULT_DATA_NAMESPACE: &str = "def";

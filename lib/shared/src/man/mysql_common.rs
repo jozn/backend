@@ -5,9 +5,6 @@ use mysql_common::row::ColumnIndex;
 use mysql_common::value::Value;
 use std::collections::HashMap;
 
-pub struct XXX{}
-
-///////////////// SHARED CODE ///////////
 #[derive(Debug)]
 pub struct SPool {
     pub pool: mysql_async::Pool,
