@@ -8,7 +8,7 @@ edition = "2018"
 
 [dependencies]
 shared = {path = "../../lib/shared" }
-tokio = { version = "0.2.21", features = ["full"] }
+tokio = { version = "1", features = ["full"] }
 grammers-tl-types = "0.2.0"
 prost = "0.7.0"
 byteorder = "1"
