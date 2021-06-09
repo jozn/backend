@@ -14,7 +14,7 @@ pub struct ChatAct {
 #[rustfmt::skip]
 impl ChatAct {
 
-    pub async fn delete_chat(&self, profile_cid: u32, chat_gid: u64) -> Result<pb::Chat,GenErr> {
+    pub async fn delete_chat(&self, profile_id: u32, chat_gid: u64) -> Result<pb::Chat,GenErr> {
         // let d = my::get_chat(profile_cid as u32, chat_gid,).await?;
         // let d = my::get_ch
         let _ = pb::ChatDeleteChatParam::default();
@@ -48,7 +48,7 @@ pub mod param {
 
     #[derive(Clone, Default, Debug)]
     pub struct SendMessage {
-        pub profile_cid: u64,
+        pub profile_id: u64,
         pub chat_gid: u64,
         pub message_input: pb::NewMessageInput,
     }
@@ -57,20 +57,20 @@ pub mod param {
     pub struct EditMessage {
         pub chat_gid: u64,
         pub message_gid: u64,
-        pub by_profile_cid: u32,
+        pub by_profile_id: u32,
         pub new_text: String,
     }
 
     #[derive(Clone, Default, Debug)]
     pub struct DeleteMessage {
-        pub profile_cid: u64,
+        pub profile_id: u64,
         pub chat_gid: u64,
         pub message_gids: Vec<u64>,
     }
 
     #[derive(Clone, Default, Debug)]
     pub struct DeleteHistory {
-        pub profile_cid: u64,
+        pub profile_id: u64,
         pub chat_gid: u64,
     }
 

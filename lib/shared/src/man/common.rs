@@ -33,7 +33,7 @@ pub fn to_invoke_response(data: Vec<u8>, req_invoke: &pb::Invoke) -> Result<Vec<
     let invoke = pb::InvokeResponse {
         namespace: req_invoke.namespace,
         method: req_invoke.method,
-        user_cid: 0,
+        user_id: 0,
         invoke_id: req_invoke.invoke_id,
         rpc_data: data,
     };
@@ -60,7 +60,7 @@ pub fn param_to_invoke(param: &impl prost::Message, method_id: u32) -> Result<Ve
     let invoke = pb::Invoke {
         namespace: 0,
         method: method_id,
-        user_cid: 0,
+        user_id: 0,
         invoke_id: 0,
         session_hash: "".to_string(),
         api_version: 0,

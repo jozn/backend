@@ -59,7 +59,7 @@ pub struct Invoke {
     pub method: u32,
     /// imut
     #[prost(uint32, tag="7")]
-    pub user_cid: u32,
+    pub user_id: u32,
     /// imut
     #[prost(uint64, tag="2")]
     pub invoke_id: u64,
@@ -94,7 +94,7 @@ pub struct InvokeResponse {
     pub method: u32,
     /// imut
     #[prost(uint32, tag="7")]
-    pub user_cid: u32,
+    pub user_id: u32,
     /// imut
     #[prost(uint64, tag="2")]
     pub invoke_id: u64,
@@ -108,7 +108,7 @@ pub struct Contact {
     #[prost(fixed64, tag="1")]
     pub contact_gid: u64,
     #[prost(uint32, tag="2")]
-    pub profile_cid: u32,
+    pub profile_id: u32,
     /// +98*
     #[prost(string, tag="4")]
     pub phone: ::prost::alloc::string::String,
@@ -119,7 +119,7 @@ pub struct Contact {
     #[prost(string, tag="6")]
     pub last_name: ::prost::alloc::string::String,
     #[prost(uint32, tag="12")]
-    pub peer_profile_cid: u32,
+    pub peer_profile_id: u32,
     #[prost(uint32, tag="13")]
     pub created_time: u32,
 }
@@ -128,7 +128,7 @@ pub struct Contact {
 pub struct User {
     /// Info 0-10
     #[prost(uint32, tag="1")]
-    pub user_cid: u32,
+    pub user_id: u32,
     /// for default profile
     #[prost(string, tag="14")]
     pub phone: ::prost::alloc::string::String,
@@ -176,12 +176,12 @@ pub struct User {
 pub struct Profile {
     /// Info 0-10
     ///
-    /// imut - profile_cid
+    /// imut - profile_id
     #[prost(uint32, tag="1")]
-    pub profile_cid: u32,
+    pub profile_id: u32,
     /// imut
     #[prost(uint32, tag="2")]
-    pub user_cid: u32,
+    pub user_id: u32,
     /// imut
     #[prost(uint32, tag="103")]
     pub created_time: u32,
@@ -232,10 +232,10 @@ pub struct Chat {
     pub chat_gid: u64,
     /// imut
     #[prost(uint32, tag="1")]
-    pub profile1_cid: u32,
+    pub profile1_id: u32,
     /// imut
     #[prost(uint32, tag="2")]
-    pub profile2_cid: u32,
+    pub profile2_id: u32,
     /// imut
     #[prost(fixed64, tag="3")]
     pub direct1_gid: u64,
@@ -290,7 +290,7 @@ pub struct Message {
     pub message_gid: u64,
     /// imut
     #[prost(uint32, tag="2")]
-    pub by_profile_cid: u32,
+    pub by_profile_id: u32,
     /// imut - mostly
     #[prost(enumeration="MessageType", tag="107")]
     pub message_type: i32,
@@ -333,7 +333,7 @@ pub struct Message {
     pub reply_to: ::core::option::Option<::prost::alloc::boxed::Box<Message>>,
     /// Channels Settings
     #[prost(uint32, tag="1001")]
-    pub channel_cid: u32,
+    pub channel_id: u32,
     #[prost(message, optional, tag="102")]
     pub setting: ::core::option::Option<MessageSetting>,
     /// Channels Extra
@@ -341,7 +341,7 @@ pub struct Message {
     pub counts: ::core::option::Option<MessageCount>,
     /// Group
     #[prost(uint32, tag="1002")]
-    pub group_cid: u32,
+    pub group_id: u32,
     /// Media
     #[prost(message, repeated, tag="103")]
     pub files: ::prost::alloc::vec::Vec<FileMsg>,
@@ -375,9 +375,9 @@ pub struct MessageLog {
     #[prost(enumeration="MessageLogType", tag="10")]
     pub log_type: i32,
     #[prost(uint32, tag="2")]
-    pub by_profile_cid: u32,
+    pub by_profile_id: u32,
     #[prost(uint32, tag="3")]
-    pub target_profile_cid: u32,
+    pub target_profile_id: u32,
     #[prost(message, optional, tag="11")]
     pub target_profile_view: ::core::option::Option<Profile>,
 }
@@ -388,10 +388,10 @@ pub struct Channel {
     ///
     /// imut
     #[prost(uint32, tag="1")]
-    pub channel_cid: u32,
+    pub channel_id: u32,
     /// imut
     #[prost(uint32, tag="7")]
-    pub creator_profile_cid: u32,
+    pub creator_profile_id: u32,
     /// imut
     #[prost(bool, tag="101")]
     pub is_profile_channel: bool,
@@ -495,7 +495,7 @@ pub struct Store {
     #[prost(string, tag="102")]
     pub address: ::prost::alloc::string::String,
     #[prost(uint32, tag="7")]
-    pub creator_user_cid: u32,
+    pub creator_user_id: u32,
     #[prost(string, tag="16")]
     pub about: ::prost::alloc::string::String,
     #[prost(uint32, tag="19")]
@@ -553,7 +553,7 @@ pub struct Inboxer {
     pub inboxer_gid: u64,
     /// imutt > del
     #[prost(uint32, tag="5")]
-    pub profile_cid: u32,
+    pub profile_id: u32,
     /// Meta info (sync) - mut
     ///
     /// mut
@@ -583,9 +583,9 @@ pub struct Inboxer {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SavedChannel {
     #[prost(uint32, tag="1")]
-    pub channel_cid: u32,
+    pub channel_id: u32,
     #[prost(uint32, tag="7")]
-    pub creator_profile_cid: u32,
+    pub creator_profile_id: u32,
     #[prost(uint32, tag="19")]
     pub message_seq: u32,
     /// version
@@ -605,9 +605,9 @@ pub struct SavedChannel {
 pub struct Group {
     /// Info
     #[prost(uint32, tag="1")]
-    pub group_cid: u32,
+    pub group_id: u32,
     #[prost(uint32, tag="7")]
-    pub creator_profile_cid: u32,
+    pub creator_profile_id: u32,
     #[prost(uint32, tag="21")]
     pub created_time: u32,
     /// Visibility
@@ -675,12 +675,12 @@ pub struct GroupMember {
     /// Info
     #[prost(int64, tag="1")]
     pub member_gid: i64,
-    #[prost(int64, tag="2")]
-    pub group_cid: i64,
+    #[prost(uint32, tag="2")]
+    pub group_id: u32,
     #[prost(uint32, tag="3")]
-    pub profile_cid: u32,
+    pub profile_id: u32,
     #[prost(uint32, tag="4")]
-    pub by_profile_cid: u32,
+    pub by_profile_id: u32,
     #[prost(uint32, tag="6")]
     pub created_time: u32,
 }
@@ -730,7 +730,7 @@ pub struct FileMsg {
     #[prost(string, tag="61")]
     pub full_path: ::prost::alloc::string::String,
     #[prost(uint32, tag="7")]
-    pub user_cid: u32,
+    pub user_id: u32,
     #[prost(bytes="vec", tag="8")]
     pub data_thumb: ::prost::alloc::vec::Vec<u8>,
     #[prost(bytes="vec", tag="9")]
@@ -742,7 +742,7 @@ pub struct Session {
     pub session_hash: ::prost::alloc::string::String,
     ///  uint64 device_id = 100;
     #[prost(uint32, tag="3")]
-    pub user_cid: u32,
+    pub user_id: u32,
     #[prost(string, tag="4")]
     pub last_ip: ::prost::alloc::string::String,
     #[prost(string, tag="8")]
@@ -808,11 +808,11 @@ pub struct Comment {
     #[prost(uint64, tag="1")]
     pub message_gid: u64,
     /// imut
-    #[prost(uint64, tag="4")]
-    pub channel_cid: u64,
+    #[prost(uint32, tag="4")]
+    pub channel_id: u32,
     /// imut
     #[prost(uint32, tag="2")]
-    pub profile_cid: u32,
+    pub profile_id: u32,
     /// imut
     #[prost(uint32, tag="3")]
     pub created_time: u32,
@@ -824,10 +824,10 @@ pub struct Comment {
 pub struct Follower {
     /// imut
     #[prost(uint32, tag="1")]
-    pub channel_cid: u32,
+    pub channel_id: u32,
     /// imut
     #[prost(uint32, tag="2")]
-    pub profile_cid: u32,
+    pub profile_id: u32,
     /// imut
     #[prost(uint32, tag="3")]
     pub created_time: u32,
@@ -836,10 +836,10 @@ pub struct Follower {
 pub struct Subscribe {
     /// imut
     #[prost(uint32, tag="1")]
-    pub channel_cid: u32,
+    pub channel_id: u32,
     /// imut
     #[prost(uint32, tag="2")]
-    pub profile_cid: u32,
+    pub profile_id: u32,
     /// imut
     #[prost(uint32, tag="3")]
     pub created_time: u32,
@@ -851,7 +851,7 @@ pub struct Like {
     pub message_gid: u64,
     /// imut
     #[prost(uint32, tag="2")]
-    pub profile_cid: u32,
+    pub profile_id: u32,
     /// imut
     #[prost(uint32, tag="3")]
     pub created_time: u32,
@@ -866,7 +866,7 @@ pub struct NewMessageInput {
     pub message_gid: u64,
     /// imut
     #[prost(uint32, tag="2")]
-    pub by_profile_cid: u32,
+    pub by_profile_id: u32,
     /// imut - mostly
     #[prost(enumeration="MessageType", tag="107")]
     pub message_type: i32,
@@ -985,7 +985,7 @@ pub struct SessionBk {
     #[prost(uint64, tag="100")]
     pub device_id: u64,
     #[prost(uint32, tag="3")]
-    pub user_cid: u32,
+    pub user_id: u32,
     #[prost(string, tag="4")]
     pub last_ip_address: ::prost::alloc::string::String,
     #[prost(string, tag="8")]
@@ -1176,7 +1176,7 @@ pub struct ChannelCreateChannelResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelEditChannelParam {
     #[prost(uint32, tag="1")]
-    pub channel_cid: u32,
+    pub channel_id: u32,
     #[prost(bool, tag="3")]
     pub set_new_title: bool,
     #[prost(string, tag="4")]
@@ -1192,7 +1192,7 @@ pub struct ChannelEditChannelResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelDeleteChannelParam {
     #[prost(uint32, tag="1")]
-    pub channel_cid: u32,
+    pub channel_id: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelDeleteChannelResponse {
@@ -1224,7 +1224,7 @@ pub struct ChannelRemoveAuthorResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelFollowChannelParam {
     #[prost(uint32, tag="1")]
-    pub channel_cid: u32,
+    pub channel_id: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelFollowChannelResponse {
@@ -1232,7 +1232,7 @@ pub struct ChannelFollowChannelResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelUnFollowChannelParam {
     #[prost(uint32, tag="1")]
-    pub channel_cid: u32,
+    pub channel_id: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelUnFollowChannelResponse {
@@ -1248,7 +1248,7 @@ pub struct ChannelRemoveFollowersResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelSubscribeParam {
     #[prost(uint32, tag="1")]
-    pub channel_cid: u32,
+    pub channel_id: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelSubscribeResponse {
@@ -1256,7 +1256,7 @@ pub struct ChannelSubscribeResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelUnSubscribeParam {
     #[prost(uint32, tag="1")]
-    pub channel_cid: u32,
+    pub channel_id: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelUnSubscribeResponse {
@@ -1309,7 +1309,7 @@ pub struct ChannelBlockProfileResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelSendMessageParam {
     #[prost(uint32, tag="1")]
-    pub channel_cid: u32,
+    pub channel_id: u32,
     #[prost(message, optional, tag="2")]
     pub message_input: ::core::option::Option<NewMessageInput>,
 }
@@ -1319,7 +1319,7 @@ pub struct ChannelSendMessageResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelEditMessageParam {
     #[prost(uint32, tag="1")]
-    pub channel_cid: u32,
+    pub channel_id: u32,
     #[prost(fixed64, tag="4")]
     pub message_gid: u64,
     #[prost(string, tag="2")]
@@ -1331,7 +1331,7 @@ pub struct ChannelEditMessageResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelDeleteMessagesParam {
     #[prost(uint32, tag="1")]
-    pub channel_cid: u32,
+    pub channel_id: u32,
     #[prost(uint64, repeated, tag="3")]
     pub message_gids: ::prost::alloc::vec::Vec<u64>,
 }
@@ -1351,7 +1351,7 @@ pub struct ChannelClearHistoryResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelLikeMessageParam {
     #[prost(uint32, tag="1")]
-    pub channel_cid: u32,
+    pub channel_id: u32,
     #[prost(fixed64, tag="2")]
     pub message_gid: u64,
 }
@@ -1361,7 +1361,7 @@ pub struct ChannelLikeMessageResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelUnLikeMessageParam {
     #[prost(uint32, tag="1")]
-    pub channel_cid: u32,
+    pub channel_id: u32,
     #[prost(fixed64, tag="2")]
     pub message_gid: u64,
     ///?
@@ -1375,7 +1375,7 @@ pub struct ChannelUnLikeMessageResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelReShareMessageParam {
     #[prost(uint32, tag="1")]
-    pub channel_cid: u32,
+    pub channel_id: u32,
     #[prost(fixed64, tag="2")]
     pub message_gid: u64,
 }
@@ -1385,7 +1385,7 @@ pub struct ChannelReShareMessageResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelUnReShareMessageParam {
     #[prost(uint32, tag="1")]
-    pub channel_cid: u32,
+    pub channel_id: u32,
     #[prost(fixed64, tag="2")]
     pub message_gid: u64,
     #[prost(fixed64, tag="4")]
@@ -1398,7 +1398,7 @@ pub struct ChannelUnReShareMessageResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelAddCommentParam {
     #[prost(uint32, tag="1")]
-    pub channel_cid: u32,
+    pub channel_id: u32,
     #[prost(fixed64, tag="2")]
     pub message_gid: u64,
     #[prost(string, tag="4")]
@@ -1410,7 +1410,7 @@ pub struct ChannelAddCommentResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelDeleteCommentParam {
     #[prost(uint32, tag="1")]
-    pub channel_cid: u32,
+    pub channel_id: u32,
     #[prost(fixed64, tag="2")]
     pub message_gid: u64,
     #[prost(fixed64, tag="4")]
@@ -1423,7 +1423,7 @@ pub struct ChannelDeleteCommentResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelPinMessageParam {
     #[prost(uint32, tag="1")]
-    pub channel_cid: u32,
+    pub channel_id: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelPinMessageResponse {
@@ -1431,7 +1431,7 @@ pub struct ChannelPinMessageResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelUnPinMessageParam {
     #[prost(uint32, tag="1")]
-    pub channel_cid: u32,
+    pub channel_id: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelUnPinMessageResponse {
@@ -1440,7 +1440,7 @@ pub struct ChannelUnPinMessageResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelAvatarAddParam {
     #[prost(uint32, tag="1")]
-    pub channel_cid: u32,
+    pub channel_id: u32,
     #[prost(uint64, tag="2")]
     pub file_id: u64,
 }
@@ -1457,7 +1457,7 @@ pub struct ChannelAvatarChangeResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelAvatarDeleteParam {
     #[prost(uint32, tag="1")]
-    pub channel_cid: u32,
+    pub channel_id: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelAvatarDeleteResponse {
@@ -1537,7 +1537,7 @@ pub struct ChannelBlockedResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelAvatarGetListParam {
     #[prost(uint32, tag="1")]
-    pub channel_cid: u32,
+    pub channel_id: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelAvatarGetListResponse {
@@ -1552,8 +1552,8 @@ pub struct ChannelGetInboxResponse {
 /// crud
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChatDeleteChatParam {
-    #[prost(uint64, tag="1")]
-    pub profile_cid: u64,
+    #[prost(uint32, tag="1")]
+    pub profile_id: u32,
     /// both - many
     #[prost(uint64, tag="2")]
     pub chat_gid: u64,
@@ -1670,9 +1670,9 @@ pub struct ChatGetInboxResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupCreateGroupParam {
     #[prost(uint32, tag="1")]
-    pub group_cid: u32,
+    pub group_id: u32,
     #[prost(uint32, tag="2")]
-    pub creator_profile_cid: u32,
+    pub creator_profile_id: u32,
     /// or _name
     #[prost(string, tag="3")]
     pub group_title: ::prost::alloc::string::String,
@@ -1699,9 +1699,9 @@ pub struct GroupCreateGroupResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupEditGroupParam {
     #[prost(uint32, tag="1")]
-    pub group_cid: u32,
+    pub group_id: u32,
     #[prost(uint32, tag="2")]
-    pub by_profile_cid: u32,
+    pub by_profile_id: u32,
     #[prost(bool, tag="3")]
     pub set_new_title: bool,
     #[prost(string, tag="4")]
@@ -1718,9 +1718,9 @@ pub struct GroupEditGroupResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupDeleteGroupParam {
     #[prost(uint32, tag="1")]
-    pub group_cid: u32,
+    pub group_id: u32,
     #[prost(uint32, tag="2")]
-    pub by_profile_cid: u32,
+    pub by_profile_id: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupDeleteGroupResponse {
@@ -1737,11 +1737,11 @@ pub struct GroupAddAdminResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupRemoveMemberParam {
     #[prost(uint32, tag="1")]
-    pub group_cid: u32,
+    pub group_id: u32,
     #[prost(uint32, tag="2")]
-    pub by_profile_cid: u32,
+    pub by_profile_id: u32,
     #[prost(uint32, tag="3")]
-    pub member_profile_cid: u32,
+    pub member_profile_id: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupRemoveMemberResponse {
@@ -1763,11 +1763,11 @@ pub struct GroupChangeMemberPermissionResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupBanMemberParam {
     #[prost(uint32, tag="1")]
-    pub group_cid: u32,
+    pub group_id: u32,
     #[prost(uint32, tag="2")]
-    pub by_profile_cid: u32,
+    pub by_profile_id: u32,
     #[prost(uint32, tag="3")]
-    pub banned_profile_cid: u32,
+    pub banned_profile_id: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupBanMemberResponse {
@@ -1776,9 +1776,9 @@ pub struct GroupBanMemberResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct JoinGroupParam {
     #[prost(uint32, tag="1")]
-    pub group_cid: u32,
+    pub group_id: u32,
     #[prost(uint32, tag="3")]
-    pub new_member_profile_cid: u32,
+    pub new_member_profile_id: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct JoinGroupResponse {
@@ -1786,9 +1786,9 @@ pub struct JoinGroupResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupLeaveGroupParam {
     #[prost(uint32, tag="1")]
-    pub group_cid: u32,
+    pub group_id: u32,
     #[prost(uint32, tag="3")]
-    pub member_profile_cid: u32,
+    pub member_profile_id: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupLeaveGroupResponse {
@@ -1796,11 +1796,11 @@ pub struct GroupLeaveGroupResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupAddMemberParam {
     #[prost(uint32, tag="1")]
-    pub group_cid: u32,
+    pub group_id: u32,
     #[prost(uint32, tag="2")]
-    pub by_profile_cid: u32,
+    pub by_profile_id: u32,
     #[prost(uint32, tag="3")]
-    pub new_member_profile_cid: u32,
+    pub new_member_profile_id: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupAddMemberResponse {
@@ -1857,7 +1857,7 @@ pub struct GroupEditMessageParam {
     #[prost(uint32, tag="1")]
     pub group_id: u32,
     #[prost(uint32, tag="3")]
-    pub by_profile_cid: u32,
+    pub by_profile_id: u32,
     #[prost(string, tag="2")]
     pub new_text: ::prost::alloc::string::String,
 }
@@ -1891,9 +1891,9 @@ pub struct GroupDeleteMessageResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupDeleteMessagesParam {
     #[prost(uint32, tag="1")]
-    pub group_cid: u32,
+    pub group_id: u32,
     #[prost(uint32, tag="2")]
-    pub by_profile_cid: u32,
+    pub by_profile_id: u32,
     #[prost(uint64, repeated, tag="3")]
     pub message_ids: ::prost::alloc::vec::Vec<u64>,
 }
@@ -1941,7 +1941,7 @@ pub struct GroupAvatarDeleteResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupAvatarGetListParam {
     #[prost(uint32, tag="1")]
-    pub group_cid: u32,
+    pub group_id: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupAvatarGetListResponse {
@@ -1964,7 +1964,7 @@ pub struct GroupReportGroupResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupGetFullParam {
     #[prost(uint32, tag="1")]
-    pub group_cid: u32,
+    pub group_id: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupGetFullResponse {
@@ -1972,7 +1972,7 @@ pub struct GroupGetFullResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupGetMessagesListParam {
     #[prost(uint32, tag="1")]
-    pub group_cid: u32,
+    pub group_id: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupGetMessagesListResponse {
@@ -1980,7 +1980,7 @@ pub struct GroupGetMessagesListResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupGetMediaListParam {
     #[prost(uint32, tag="1")]
-    pub group_cid: u32,
+    pub group_id: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupGetMediaListResponse {
@@ -1988,7 +1988,7 @@ pub struct GroupGetMediaListResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupGetMembersListParam {
     #[prost(uint32, tag="1")]
-    pub group_cid: u32,
+    pub group_id: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GroupGetMembersListResponse {

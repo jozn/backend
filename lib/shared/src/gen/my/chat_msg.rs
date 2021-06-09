@@ -8,7 +8,7 @@ use crate::mysql_common::*;
 
 #[derive(Default, Clone, PartialEq, Eq, Debug)]
 pub struct ChatMsg  { // chat_msg
-    pub profile_cid: u64,
+    pub profile_cid: u32,
     pub chat_gid: u64,
     pub msg_gid: u64,
     pub pb_data: Vec<u8>,
@@ -218,7 +218,7 @@ impl ChatMsgSelector {
     }
 
     
-    pub fn profile_cid_eq (&mut self, val: u64 ) -> &mut Self {
+    pub fn profile_cid_eq (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid = ?".to_string(),
             args: val.into(),
@@ -227,7 +227,7 @@ impl ChatMsgSelector {
         self
     }
 
-    pub fn profile_cid_lt (&mut self, val: u64 ) -> &mut Self {
+    pub fn profile_cid_lt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid < ?".to_string(),
             args: val.into(),
@@ -236,7 +236,7 @@ impl ChatMsgSelector {
         self
     }
 
-    pub fn profile_cid_le (&mut self, val: u64 ) -> &mut Self {
+    pub fn profile_cid_le (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid <= ?".to_string(),
             args: val.into(),
@@ -245,7 +245,7 @@ impl ChatMsgSelector {
         self
     }
 
-    pub fn profile_cid_gt (&mut self, val: u64 ) -> &mut Self {
+    pub fn profile_cid_gt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid > ?".to_string(),
             args: val.into(),
@@ -254,7 +254,7 @@ impl ChatMsgSelector {
         self
     }
 
-    pub fn profile_cid_ge (&mut self, val: u64 ) -> &mut Self {
+    pub fn profile_cid_ge (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid >= ?".to_string(),
             args: val.into(),
@@ -263,7 +263,7 @@ impl ChatMsgSelector {
         self
     }
 
-    pub fn and_profile_cid_eq (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_profile_cid_eq (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid = ?".to_string(),
             args: val.into(),
@@ -272,7 +272,7 @@ impl ChatMsgSelector {
         self
     }
 
-    pub fn and_profile_cid_lt (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_profile_cid_lt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid < ?".to_string(),
             args: val.into(),
@@ -281,7 +281,7 @@ impl ChatMsgSelector {
         self
     }
 
-    pub fn and_profile_cid_le (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_profile_cid_le (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid <= ?".to_string(),
             args: val.into(),
@@ -290,7 +290,7 @@ impl ChatMsgSelector {
         self
     }
 
-    pub fn and_profile_cid_gt (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_profile_cid_gt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid > ?".to_string(),
             args: val.into(),
@@ -299,7 +299,7 @@ impl ChatMsgSelector {
         self
     }
 
-    pub fn and_profile_cid_ge (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_profile_cid_ge (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid >= ?".to_string(),
             args: val.into(),
@@ -308,7 +308,7 @@ impl ChatMsgSelector {
         self
     }
 
-    pub fn or_profile_cid_eq (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_profile_cid_eq (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid = ?".to_string(),
             args: val.into(),
@@ -317,7 +317,7 @@ impl ChatMsgSelector {
         self
     }
 
-    pub fn or_profile_cid_lt (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_profile_cid_lt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid < ?".to_string(),
             args: val.into(),
@@ -326,7 +326,7 @@ impl ChatMsgSelector {
         self
     }
 
-    pub fn or_profile_cid_le (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_profile_cid_le (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid <= ?".to_string(),
             args: val.into(),
@@ -335,7 +335,7 @@ impl ChatMsgSelector {
         self
     }
 
-    pub fn or_profile_cid_gt (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_profile_cid_gt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid > ?".to_string(),
             args: val.into(),
@@ -344,7 +344,7 @@ impl ChatMsgSelector {
         self
     }
 
-    pub fn or_profile_cid_ge (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_profile_cid_ge (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid >= ?".to_string(),
             args: val.into(),
@@ -759,7 +759,7 @@ impl ChatMsgSelector {
     }
 
     
-    pub fn profile_cid_in (&mut self, val: Vec<u64> ) -> &mut Self {
+    pub fn profile_cid_in (&mut self, val: Vec<u32> ) -> &mut Self {
 		let len = val.len();
         if len == 0 {
             return self
@@ -778,7 +778,7 @@ impl ChatMsgSelector {
         self
     }
 
-    pub fn and_profile_cid_in (&mut self, val: Vec<u64> ) -> &mut Self {
+    pub fn and_profile_cid_in (&mut self, val: Vec<u32> ) -> &mut Self {
 		let len = val.len();
         if len == 0 {
             return self
@@ -797,7 +797,7 @@ impl ChatMsgSelector {
         self
     }
 
-    pub fn or_profile_cid_in (&mut self, val: Vec<u64> ) -> &mut Self {
+    pub fn or_profile_cid_in (&mut self, val: Vec<u32> ) -> &mut Self {
 		let len = val.len();
         if len == 0 {
             return self
@@ -1012,7 +1012,7 @@ impl ChatMsgUpdater {
     }
 
     //each column delete
-    pub fn set_profile_cid(&mut self, val :u64) -> &mut Self {
+    pub fn set_profile_cid(&mut self, val :u32) -> &mut Self {
         self.q.updates.insert("profile_cid",val.into());
         self
     }
@@ -1084,7 +1084,7 @@ impl ChatMsgUpdater {
     }
 
     
-    pub fn profile_cid_eq (&mut self, val: u64 ) -> &mut Self {
+    pub fn profile_cid_eq (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid = ?".to_string(),
             args: val.into(),
@@ -1093,7 +1093,7 @@ impl ChatMsgUpdater {
         self
     }
 
-    pub fn profile_cid_lt (&mut self, val: u64 ) -> &mut Self {
+    pub fn profile_cid_lt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid < ?".to_string(),
             args: val.into(),
@@ -1102,7 +1102,7 @@ impl ChatMsgUpdater {
         self
     }
 
-    pub fn profile_cid_le (&mut self, val: u64 ) -> &mut Self {
+    pub fn profile_cid_le (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid <= ?".to_string(),
             args: val.into(),
@@ -1111,7 +1111,7 @@ impl ChatMsgUpdater {
         self
     }
 
-    pub fn profile_cid_gt (&mut self, val: u64 ) -> &mut Self {
+    pub fn profile_cid_gt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid > ?".to_string(),
             args: val.into(),
@@ -1120,7 +1120,7 @@ impl ChatMsgUpdater {
         self
     }
 
-    pub fn profile_cid_ge (&mut self, val: u64 ) -> &mut Self {
+    pub fn profile_cid_ge (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid >= ?".to_string(),
             args: val.into(),
@@ -1129,7 +1129,7 @@ impl ChatMsgUpdater {
         self
     }
 
-    pub fn and_profile_cid_eq (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_profile_cid_eq (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid = ?".to_string(),
             args: val.into(),
@@ -1138,7 +1138,7 @@ impl ChatMsgUpdater {
         self
     }
 
-    pub fn and_profile_cid_lt (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_profile_cid_lt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid < ?".to_string(),
             args: val.into(),
@@ -1147,7 +1147,7 @@ impl ChatMsgUpdater {
         self
     }
 
-    pub fn and_profile_cid_le (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_profile_cid_le (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid <= ?".to_string(),
             args: val.into(),
@@ -1156,7 +1156,7 @@ impl ChatMsgUpdater {
         self
     }
 
-    pub fn and_profile_cid_gt (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_profile_cid_gt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid > ?".to_string(),
             args: val.into(),
@@ -1165,7 +1165,7 @@ impl ChatMsgUpdater {
         self
     }
 
-    pub fn and_profile_cid_ge (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_profile_cid_ge (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid >= ?".to_string(),
             args: val.into(),
@@ -1174,7 +1174,7 @@ impl ChatMsgUpdater {
         self
     }
 
-    pub fn or_profile_cid_eq (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_profile_cid_eq (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid = ?".to_string(),
             args: val.into(),
@@ -1183,7 +1183,7 @@ impl ChatMsgUpdater {
         self
     }
 
-    pub fn or_profile_cid_lt (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_profile_cid_lt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid < ?".to_string(),
             args: val.into(),
@@ -1192,7 +1192,7 @@ impl ChatMsgUpdater {
         self
     }
 
-    pub fn or_profile_cid_le (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_profile_cid_le (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid <= ?".to_string(),
             args: val.into(),
@@ -1201,7 +1201,7 @@ impl ChatMsgUpdater {
         self
     }
 
-    pub fn or_profile_cid_gt (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_profile_cid_gt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid > ?".to_string(),
             args: val.into(),
@@ -1210,7 +1210,7 @@ impl ChatMsgUpdater {
         self
     }
 
-    pub fn or_profile_cid_ge (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_profile_cid_ge (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid >= ?".to_string(),
             args: val.into(),
@@ -1625,7 +1625,7 @@ impl ChatMsgUpdater {
     }
 
     
-    pub fn profile_cid_in (&mut self, val: Vec<u64> ) -> &mut Self {
+    pub fn profile_cid_in (&mut self, val: Vec<u32> ) -> &mut Self {
 		let len = val.len();
         if len == 0 {
             return self
@@ -1644,7 +1644,7 @@ impl ChatMsgUpdater {
         self
     }
 
-    pub fn and_profile_cid_in (&mut self, val: Vec<u64> ) -> &mut Self {
+    pub fn and_profile_cid_in (&mut self, val: Vec<u32> ) -> &mut Self {
 		let len = val.len();
         if len == 0 {
             return self
@@ -1663,7 +1663,7 @@ impl ChatMsgUpdater {
         self
     }
 
-    pub fn or_profile_cid_in (&mut self, val: Vec<u64> ) -> &mut Self {
+    pub fn or_profile_cid_in (&mut self, val: Vec<u32> ) -> &mut Self {
 		let len = val.len();
         if len == 0 {
             return self
@@ -1923,7 +1923,7 @@ impl ChatMsgDeleter {
     }
 
     
-    pub fn profile_cid_eq (&mut self, val: u64 ) -> &mut Self {
+    pub fn profile_cid_eq (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid = ?".to_string(),
             args: val.into(),
@@ -1932,7 +1932,7 @@ impl ChatMsgDeleter {
         self
     }
 
-    pub fn profile_cid_lt (&mut self, val: u64 ) -> &mut Self {
+    pub fn profile_cid_lt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid < ?".to_string(),
             args: val.into(),
@@ -1941,7 +1941,7 @@ impl ChatMsgDeleter {
         self
     }
 
-    pub fn profile_cid_le (&mut self, val: u64 ) -> &mut Self {
+    pub fn profile_cid_le (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid <= ?".to_string(),
             args: val.into(),
@@ -1950,7 +1950,7 @@ impl ChatMsgDeleter {
         self
     }
 
-    pub fn profile_cid_gt (&mut self, val: u64 ) -> &mut Self {
+    pub fn profile_cid_gt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid > ?".to_string(),
             args: val.into(),
@@ -1959,7 +1959,7 @@ impl ChatMsgDeleter {
         self
     }
 
-    pub fn profile_cid_ge (&mut self, val: u64 ) -> &mut Self {
+    pub fn profile_cid_ge (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: " profile_cid >= ?".to_string(),
             args: val.into(),
@@ -1968,7 +1968,7 @@ impl ChatMsgDeleter {
         self
     }
 
-    pub fn and_profile_cid_eq (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_profile_cid_eq (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid = ?".to_string(),
             args: val.into(),
@@ -1977,7 +1977,7 @@ impl ChatMsgDeleter {
         self
     }
 
-    pub fn and_profile_cid_lt (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_profile_cid_lt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid < ?".to_string(),
             args: val.into(),
@@ -1986,7 +1986,7 @@ impl ChatMsgDeleter {
         self
     }
 
-    pub fn and_profile_cid_le (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_profile_cid_le (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid <= ?".to_string(),
             args: val.into(),
@@ -1995,7 +1995,7 @@ impl ChatMsgDeleter {
         self
     }
 
-    pub fn and_profile_cid_gt (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_profile_cid_gt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid > ?".to_string(),
             args: val.into(),
@@ -2004,7 +2004,7 @@ impl ChatMsgDeleter {
         self
     }
 
-    pub fn and_profile_cid_ge (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_profile_cid_ge (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "AND profile_cid >= ?".to_string(),
             args: val.into(),
@@ -2013,7 +2013,7 @@ impl ChatMsgDeleter {
         self
     }
 
-    pub fn or_profile_cid_eq (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_profile_cid_eq (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid = ?".to_string(),
             args: val.into(),
@@ -2022,7 +2022,7 @@ impl ChatMsgDeleter {
         self
     }
 
-    pub fn or_profile_cid_lt (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_profile_cid_lt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid < ?".to_string(),
             args: val.into(),
@@ -2031,7 +2031,7 @@ impl ChatMsgDeleter {
         self
     }
 
-    pub fn or_profile_cid_le (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_profile_cid_le (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid <= ?".to_string(),
             args: val.into(),
@@ -2040,7 +2040,7 @@ impl ChatMsgDeleter {
         self
     }
 
-    pub fn or_profile_cid_gt (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_profile_cid_gt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid > ?".to_string(),
             args: val.into(),
@@ -2049,7 +2049,7 @@ impl ChatMsgDeleter {
         self
     }
 
-    pub fn or_profile_cid_ge (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_profile_cid_ge (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
             condition: "OR profile_cid >= ?".to_string(),
             args: val.into(),
@@ -2464,7 +2464,7 @@ impl ChatMsgDeleter {
     }
 
     
-    pub fn profile_cid_in (&mut self, val: Vec<u64> ) -> &mut Self {
+    pub fn profile_cid_in (&mut self, val: Vec<u32> ) -> &mut Self {
 		let len = val.len();
         if len == 0 {
             return self
@@ -2483,7 +2483,7 @@ impl ChatMsgDeleter {
         self
     }
 
-    pub fn and_profile_cid_in (&mut self, val: Vec<u64> ) -> &mut Self {
+    pub fn and_profile_cid_in (&mut self, val: Vec<u32> ) -> &mut Self {
 		let len = val.len();
         if len == 0 {
             return self
@@ -2502,7 +2502,7 @@ impl ChatMsgDeleter {
         self
     }
 
-    pub fn or_profile_cid_in (&mut self, val: Vec<u64> ) -> &mut Self {
+    pub fn or_profile_cid_in (&mut self, val: Vec<u32> ) -> &mut Self {
 		let len = val.len();
         if len == 0 {
             return self
@@ -2726,7 +2726,7 @@ pub async fn chat_msg_mass_insert(arr :&Vec<ChatMsg>, spool: &SPool) -> Result<(
 }
 
 // Index
-pub async fn get_chat_msg(profile_cid: u64,chat_gid: u64,msg_gid: u64, spool: &SPool) -> Result<ChatMsg,MyError> {
+pub async fn get_chat_msg(profile_cid: u32,chat_gid: u64,msg_gid: u64, spool: &SPool) -> Result<ChatMsg,MyError> {
 	let m = ChatMsgSelector::new()
 		.profile_cid_eq(profile_cid)
 		.and_chat_gid_eq(chat_gid)

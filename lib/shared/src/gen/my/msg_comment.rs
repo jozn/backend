@@ -8,7 +8,7 @@ use crate::mysql_common::*;
 
 #[derive(Default, Clone, PartialEq, Eq, Debug)]
 pub struct MsgComment  { // msg_comment
-    pub channel_cid: u64,
+    pub channel_id: u32,
     pub message_gid: u64,
     pub comment_gid: u64,
     pub pb_data: Vec<u8>,
@@ -21,7 +21,7 @@ impl FromRow for MsgComment {
         Self: Sized,
     {
         Ok(MsgComment  {
-            channel_cid: row.get(0).unwrap_or_default(),
+            channel_id: row.get(0).unwrap_or_default(),
             message_gid: row.get(1).unwrap_or_default(),
             comment_gid: row.get(2).unwrap_or_default(),
             pb_data: row.get(3).unwrap_or_default(),
@@ -34,8 +34,8 @@ impl MsgComment {
     pub async fn insert(&self, spool: &SPool) -> Result<MsgComment,MyError> {
         let mut conn = spool.pool.get_conn().await?;
 
-        let query = format!(r"INSERT INTO {:}.msg_comment (channel_cid, message_gid, comment_gid, pb_data, debug_data) VALUES (?, ?, ?, ?, ?)",&spool.database);
-        let p = Params::Positional(vec![self.channel_cid.clone().into(), self.message_gid.clone().into(), self.comment_gid.clone().into(), self.pb_data.clone().into(), self.debug_data.clone().into()]);
+        let query = format!(r"INSERT INTO {:}.msg_comment (channel_id, message_gid, comment_gid, pb_data, debug_data) VALUES (?, ?, ?, ?, ?)",&spool.database);
+        let p = Params::Positional(vec![self.channel_id.clone().into(), self.message_gid.clone().into(), self.comment_gid.clone().into(), self.pb_data.clone().into(), self.debug_data.clone().into()]);
 
         conn.exec_iter(
             query, p
@@ -49,8 +49,8 @@ impl MsgComment {
     pub async fn replace(&self, spool: &SPool) -> Result<MsgComment,MyError> {
         let mut conn = spool.pool.get_conn().await?;
 
-        let query = format!(r"REPLACE INTO {:}.msg_comment (channel_cid, message_gid, comment_gid, pb_data, debug_data) VALUES (?, ?, ?, ?, ?)",&spool.database);
-        let p = Params::Positional(vec![self.channel_cid.clone().into(), self.message_gid.clone().into(), self.comment_gid.clone().into(), self.pb_data.clone().into(), self.debug_data.clone().into()]);
+        let query = format!(r"REPLACE INTO {:}.msg_comment (channel_id, message_gid, comment_gid, pb_data, debug_data) VALUES (?, ?, ?, ?, ?)",&spool.database);
+        let p = Params::Positional(vec![self.channel_id.clone().into(), self.message_gid.clone().into(), self.comment_gid.clone().into(), self.pb_data.clone().into(), self.debug_data.clone().into()]);
 
         conn.exec_iter(
             query, p
@@ -62,8 +62,8 @@ impl MsgComment {
 
     pub async fn update(&self, spool: &SPool) -> Result<(),MyError> {
         let mut conn = spool.pool.get_conn().await?;
-        let query = format!(r"UPDATE `{:}`.msg_comment` SET channel_cid = ?, pb_data = ?, debug_data = ? WHERE message_gid = ? AND comment_gid = ? ", &spool.database);
-        let p = Params::Positional(vec![self.channel_cid.clone().into(), self.pb_data.clone().into(), self.debug_data.clone().into(),  self.message_gid.clone().into(), self.comment_gid.clone().into() ]);
+        let query = format!(r"UPDATE `{:}`.msg_comment` SET channel_id = ?, pb_data = ?, debug_data = ? WHERE message_gid = ? AND comment_gid = ? ", &spool.database);
+        let p = Params::Positional(vec![self.channel_id.clone().into(), self.pb_data.clone().into(), self.debug_data.clone().into(),  self.message_gid.clone().into(), self.comment_gid.clone().into() ]);
 
         let qr = conn.exec_iter(
             query, p
@@ -118,8 +118,8 @@ impl MsgCommentSelector {
     }
 
     //each column select
-    pub fn select_channel_cid(&mut self) -> &mut Self {
-        self.q.select_cols.push("channel_cid");
+    pub fn select_channel_id(&mut self) -> &mut Self {
+        self.q.select_cols.push("channel_id");
         self
     }
     
@@ -177,13 +177,13 @@ impl MsgCommentSelector {
 
     // Modifiers
     
-    pub fn order_by_channel_cid_asc(&mut self) -> &mut Self {
-		self.q.order_by.push("channel_cid ASC");
+    pub fn order_by_channel_id_asc(&mut self) -> &mut Self {
+		self.q.order_by.push("channel_id ASC");
         self
     }
 
-	pub fn order_by_channel_cid_desc(&mut self) -> &mut Self {
-		self.q.order_by.push("channel_cid DESC");
+	pub fn order_by_channel_id_desc(&mut self) -> &mut Self {
+		self.q.order_by.push("channel_id DESC");
         self
     }
 
@@ -218,135 +218,135 @@ impl MsgCommentSelector {
     }
 
     
-    pub fn channel_cid_eq (&mut self, val: u64 ) -> &mut Self {
+    pub fn channel_id_eq (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: " channel_cid = ?".to_string(),
+            condition: " channel_id = ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn channel_cid_lt (&mut self, val: u64 ) -> &mut Self {
+    pub fn channel_id_lt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: " channel_cid < ?".to_string(),
+            condition: " channel_id < ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn channel_cid_le (&mut self, val: u64 ) -> &mut Self {
+    pub fn channel_id_le (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: " channel_cid <= ?".to_string(),
+            condition: " channel_id <= ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn channel_cid_gt (&mut self, val: u64 ) -> &mut Self {
+    pub fn channel_id_gt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: " channel_cid > ?".to_string(),
+            condition: " channel_id > ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn channel_cid_ge (&mut self, val: u64 ) -> &mut Self {
+    pub fn channel_id_ge (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: " channel_cid >= ?".to_string(),
+            condition: " channel_id >= ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn and_channel_cid_eq (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_channel_id_eq (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "AND channel_cid = ?".to_string(),
+            condition: "AND channel_id = ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn and_channel_cid_lt (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_channel_id_lt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "AND channel_cid < ?".to_string(),
+            condition: "AND channel_id < ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn and_channel_cid_le (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_channel_id_le (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "AND channel_cid <= ?".to_string(),
+            condition: "AND channel_id <= ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn and_channel_cid_gt (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_channel_id_gt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "AND channel_cid > ?".to_string(),
+            condition: "AND channel_id > ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn and_channel_cid_ge (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_channel_id_ge (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "AND channel_cid >= ?".to_string(),
+            condition: "AND channel_id >= ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn or_channel_cid_eq (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_channel_id_eq (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "OR channel_cid = ?".to_string(),
+            condition: "OR channel_id = ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn or_channel_cid_lt (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_channel_id_lt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "OR channel_cid < ?".to_string(),
+            condition: "OR channel_id < ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn or_channel_cid_le (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_channel_id_le (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "OR channel_cid <= ?".to_string(),
+            condition: "OR channel_id <= ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn or_channel_cid_gt (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_channel_id_gt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "OR channel_cid > ?".to_string(),
+            condition: "OR channel_id > ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn or_channel_cid_ge (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_channel_id_ge (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "OR channel_cid >= ?".to_string(),
+            condition: "OR channel_id >= ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
@@ -759,7 +759,7 @@ impl MsgCommentSelector {
     }
 
     
-    pub fn channel_cid_in (&mut self, val: Vec<u64> ) -> &mut Self {
+    pub fn channel_id_in (&mut self, val: Vec<u32> ) -> &mut Self {
 		let len = val.len();
         if len == 0 {
             return self
@@ -771,14 +771,14 @@ impl MsgCommentSelector {
 		let arr = val.iter().map(|v|v.into()).collect();
 
         let w = WhereInClause{
-			condition: format!(" channel_cid IN ({})", marks),
+			condition: format!(" channel_id IN ({})", marks),
             args: arr,
         };
         self.q.wheres_ins.push(w);
         self
     }
 
-    pub fn and_channel_cid_in (&mut self, val: Vec<u64> ) -> &mut Self {
+    pub fn and_channel_id_in (&mut self, val: Vec<u32> ) -> &mut Self {
 		let len = val.len();
         if len == 0 {
             return self
@@ -790,14 +790,14 @@ impl MsgCommentSelector {
 		let arr = val.iter().map(|v|v.into()).collect();
 
         let w = WhereInClause{
-			condition: format!("AND channel_cid IN ({})", marks),
+			condition: format!("AND channel_id IN ({})", marks),
             args: arr,
         };
         self.q.wheres_ins.push(w);
         self
     }
 
-    pub fn or_channel_cid_in (&mut self, val: Vec<u64> ) -> &mut Self {
+    pub fn or_channel_id_in (&mut self, val: Vec<u32> ) -> &mut Self {
 		let len = val.len();
         if len == 0 {
             return self
@@ -809,7 +809,7 @@ impl MsgCommentSelector {
 		let arr = val.iter().map(|v|v.into()).collect();
 
         let w = WhereInClause{
-			condition: format!("OR channel_cid IN ({})", marks),
+			condition: format!("OR channel_id IN ({})", marks),
             args: arr,
         };
         self.q.wheres_ins.push(w);
@@ -1012,8 +1012,8 @@ impl MsgCommentUpdater {
     }
 
     //each column delete
-    pub fn set_channel_cid(&mut self, val :u64) -> &mut Self {
-        self.q.updates.insert("channel_cid",val.into());
+    pub fn set_channel_id(&mut self, val :u32) -> &mut Self {
+        self.q.updates.insert("channel_id",val.into());
         self
     }
     
@@ -1043,13 +1043,13 @@ impl MsgCommentUpdater {
     }
 
     
-    pub fn order_by_channel_cid_asc(&mut self) -> &mut Self {
-		self.q.order_by.push("channel_cid ASC");
+    pub fn order_by_channel_id_asc(&mut self) -> &mut Self {
+		self.q.order_by.push("channel_id ASC");
         self
     }
 
-	pub fn order_by_channel_cid_desc(&mut self) -> &mut Self {
-		self.q.order_by.push("channel_cid DESC");
+	pub fn order_by_channel_id_desc(&mut self) -> &mut Self {
+		self.q.order_by.push("channel_id DESC");
         self
     }
 
@@ -1084,135 +1084,135 @@ impl MsgCommentUpdater {
     }
 
     
-    pub fn channel_cid_eq (&mut self, val: u64 ) -> &mut Self {
+    pub fn channel_id_eq (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: " channel_cid = ?".to_string(),
+            condition: " channel_id = ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn channel_cid_lt (&mut self, val: u64 ) -> &mut Self {
+    pub fn channel_id_lt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: " channel_cid < ?".to_string(),
+            condition: " channel_id < ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn channel_cid_le (&mut self, val: u64 ) -> &mut Self {
+    pub fn channel_id_le (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: " channel_cid <= ?".to_string(),
+            condition: " channel_id <= ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn channel_cid_gt (&mut self, val: u64 ) -> &mut Self {
+    pub fn channel_id_gt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: " channel_cid > ?".to_string(),
+            condition: " channel_id > ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn channel_cid_ge (&mut self, val: u64 ) -> &mut Self {
+    pub fn channel_id_ge (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: " channel_cid >= ?".to_string(),
+            condition: " channel_id >= ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn and_channel_cid_eq (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_channel_id_eq (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "AND channel_cid = ?".to_string(),
+            condition: "AND channel_id = ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn and_channel_cid_lt (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_channel_id_lt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "AND channel_cid < ?".to_string(),
+            condition: "AND channel_id < ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn and_channel_cid_le (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_channel_id_le (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "AND channel_cid <= ?".to_string(),
+            condition: "AND channel_id <= ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn and_channel_cid_gt (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_channel_id_gt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "AND channel_cid > ?".to_string(),
+            condition: "AND channel_id > ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn and_channel_cid_ge (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_channel_id_ge (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "AND channel_cid >= ?".to_string(),
+            condition: "AND channel_id >= ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn or_channel_cid_eq (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_channel_id_eq (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "OR channel_cid = ?".to_string(),
+            condition: "OR channel_id = ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn or_channel_cid_lt (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_channel_id_lt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "OR channel_cid < ?".to_string(),
+            condition: "OR channel_id < ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn or_channel_cid_le (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_channel_id_le (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "OR channel_cid <= ?".to_string(),
+            condition: "OR channel_id <= ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn or_channel_cid_gt (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_channel_id_gt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "OR channel_cid > ?".to_string(),
+            condition: "OR channel_id > ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn or_channel_cid_ge (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_channel_id_ge (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "OR channel_cid >= ?".to_string(),
+            condition: "OR channel_id >= ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
@@ -1625,7 +1625,7 @@ impl MsgCommentUpdater {
     }
 
     
-    pub fn channel_cid_in (&mut self, val: Vec<u64> ) -> &mut Self {
+    pub fn channel_id_in (&mut self, val: Vec<u32> ) -> &mut Self {
 		let len = val.len();
         if len == 0 {
             return self
@@ -1637,14 +1637,14 @@ impl MsgCommentUpdater {
 		let arr = val.iter().map(|v|v.into()).collect();
 
         let w = WhereInClause{
-			condition: format!(" channel_cid IN ({})", marks),
+			condition: format!(" channel_id IN ({})", marks),
             args: arr,
         };
         self.q.wheres_ins.push(w);
         self
     }
 
-    pub fn and_channel_cid_in (&mut self, val: Vec<u64> ) -> &mut Self {
+    pub fn and_channel_id_in (&mut self, val: Vec<u32> ) -> &mut Self {
 		let len = val.len();
         if len == 0 {
             return self
@@ -1656,14 +1656,14 @@ impl MsgCommentUpdater {
 		let arr = val.iter().map(|v|v.into()).collect();
 
         let w = WhereInClause{
-			condition: format!("AND channel_cid IN ({})", marks),
+			condition: format!("AND channel_id IN ({})", marks),
             args: arr,
         };
         self.q.wheres_ins.push(w);
         self
     }
 
-    pub fn or_channel_cid_in (&mut self, val: Vec<u64> ) -> &mut Self {
+    pub fn or_channel_id_in (&mut self, val: Vec<u32> ) -> &mut Self {
 		let len = val.len();
         if len == 0 {
             return self
@@ -1675,7 +1675,7 @@ impl MsgCommentUpdater {
 		let arr = val.iter().map(|v|v.into()).collect();
 
         let w = WhereInClause{
-			condition: format!("OR channel_cid IN ({})", marks),
+			condition: format!("OR channel_id IN ({})", marks),
             args: arr,
         };
         self.q.wheres_ins.push(w);
@@ -1882,13 +1882,13 @@ impl MsgCommentDeleter {
     }
 
     
-    pub fn order_by_channel_cid_asc(&mut self) -> &mut Self {
-		self.q.order_by.push("channel_cid ASC");
+    pub fn order_by_channel_id_asc(&mut self) -> &mut Self {
+		self.q.order_by.push("channel_id ASC");
         self
     }
 
-	pub fn order_by_channel_cid_desc(&mut self) -> &mut Self {
-		self.q.order_by.push("channel_cid DESC");
+	pub fn order_by_channel_id_desc(&mut self) -> &mut Self {
+		self.q.order_by.push("channel_id DESC");
         self
     }
 
@@ -1923,135 +1923,135 @@ impl MsgCommentDeleter {
     }
 
     
-    pub fn channel_cid_eq (&mut self, val: u64 ) -> &mut Self {
+    pub fn channel_id_eq (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: " channel_cid = ?".to_string(),
+            condition: " channel_id = ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn channel_cid_lt (&mut self, val: u64 ) -> &mut Self {
+    pub fn channel_id_lt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: " channel_cid < ?".to_string(),
+            condition: " channel_id < ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn channel_cid_le (&mut self, val: u64 ) -> &mut Self {
+    pub fn channel_id_le (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: " channel_cid <= ?".to_string(),
+            condition: " channel_id <= ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn channel_cid_gt (&mut self, val: u64 ) -> &mut Self {
+    pub fn channel_id_gt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: " channel_cid > ?".to_string(),
+            condition: " channel_id > ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn channel_cid_ge (&mut self, val: u64 ) -> &mut Self {
+    pub fn channel_id_ge (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: " channel_cid >= ?".to_string(),
+            condition: " channel_id >= ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn and_channel_cid_eq (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_channel_id_eq (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "AND channel_cid = ?".to_string(),
+            condition: "AND channel_id = ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn and_channel_cid_lt (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_channel_id_lt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "AND channel_cid < ?".to_string(),
+            condition: "AND channel_id < ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn and_channel_cid_le (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_channel_id_le (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "AND channel_cid <= ?".to_string(),
+            condition: "AND channel_id <= ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn and_channel_cid_gt (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_channel_id_gt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "AND channel_cid > ?".to_string(),
+            condition: "AND channel_id > ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn and_channel_cid_ge (&mut self, val: u64 ) -> &mut Self {
+    pub fn and_channel_id_ge (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "AND channel_cid >= ?".to_string(),
+            condition: "AND channel_id >= ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn or_channel_cid_eq (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_channel_id_eq (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "OR channel_cid = ?".to_string(),
+            condition: "OR channel_id = ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn or_channel_cid_lt (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_channel_id_lt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "OR channel_cid < ?".to_string(),
+            condition: "OR channel_id < ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn or_channel_cid_le (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_channel_id_le (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "OR channel_cid <= ?".to_string(),
+            condition: "OR channel_id <= ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn or_channel_cid_gt (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_channel_id_gt (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "OR channel_cid > ?".to_string(),
+            condition: "OR channel_id > ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
         self
     }
 
-    pub fn or_channel_cid_ge (&mut self, val: u64 ) -> &mut Self {
+    pub fn or_channel_id_ge (&mut self, val: u32 ) -> &mut Self {
         let w = WhereClause{
-            condition: "OR channel_cid >= ?".to_string(),
+            condition: "OR channel_id >= ?".to_string(),
             args: val.into(),
         };
         self.q.wheres.push(w);
@@ -2464,7 +2464,7 @@ impl MsgCommentDeleter {
     }
 
     
-    pub fn channel_cid_in (&mut self, val: Vec<u64> ) -> &mut Self {
+    pub fn channel_id_in (&mut self, val: Vec<u32> ) -> &mut Self {
 		let len = val.len();
         if len == 0 {
             return self
@@ -2476,14 +2476,14 @@ impl MsgCommentDeleter {
 		let arr = val.iter().map(|v|v.into()).collect();
 
         let w = WhereInClause{
-			condition: format!(" channel_cid IN ({})", marks),
+			condition: format!(" channel_id IN ({})", marks),
             args: arr,
         };
         self.q.wheres_ins.push(w);
         self
     }
 
-    pub fn and_channel_cid_in (&mut self, val: Vec<u64> ) -> &mut Self {
+    pub fn and_channel_id_in (&mut self, val: Vec<u32> ) -> &mut Self {
 		let len = val.len();
         if len == 0 {
             return self
@@ -2495,14 +2495,14 @@ impl MsgCommentDeleter {
 		let arr = val.iter().map(|v|v.into()).collect();
 
         let w = WhereInClause{
-			condition: format!("AND channel_cid IN ({})", marks),
+			condition: format!("AND channel_id IN ({})", marks),
             args: arr,
         };
         self.q.wheres_ins.push(w);
         self
     }
 
-    pub fn or_channel_cid_in (&mut self, val: Vec<u64> ) -> &mut Self {
+    pub fn or_channel_id_in (&mut self, val: Vec<u32> ) -> &mut Self {
 		let len = val.len();
         if len == 0 {
             return self
@@ -2514,7 +2514,7 @@ impl MsgCommentDeleter {
 		let arr = val.iter().map(|v|v.into()).collect();
 
         let w = WhereInClause{
-			condition: format!("OR channel_cid IN ({})", marks),
+			condition: format!("OR channel_id IN ({})", marks),
             args: arr,
         };
         self.q.wheres_ins.push(w);
@@ -2699,7 +2699,7 @@ pub async fn msg_comment_mass_insert(arr :&Vec<MsgComment>, spool: &SPool) -> Re
     if arr.len() == 0 {
         return Err(MyError::EmptySql)
     }
-     let mut insert_fields = "(channel_cid, message_gid, comment_gid, pb_data, debug_data)";
+     let mut insert_fields = "(channel_id, message_gid, comment_gid, pb_data, debug_data)";
 
      let mut vals_str = "(?, ?, ?, ?, ?), ".repeat(arr.len());
     let vals_str = &vals_str[0..(vals_str.len()-2)];
@@ -2708,7 +2708,7 @@ pub async fn msg_comment_mass_insert(arr :&Vec<MsgComment>, spool: &SPool) -> Re
 
     let mut arr_vals = vec![];
     for ar in arr {
-        arr_vals.push(ar.channel_cid.clone().into());
+        arr_vals.push(ar.channel_id.clone().into());
         arr_vals.push(ar.message_gid.clone().into());
         arr_vals.push(ar.comment_gid.clone().into());
         arr_vals.push(ar.pb_data.clone().into());

@@ -47,7 +47,7 @@ service RPC_Chat {
 // todo : clean profile_cid
 // crud
 message ChatDeleteChatParam {
-    uint64 profile_cid = 1;
+    uint32 profile_id = 1;
     uint64 chat_gid = 2;
     // both - many
 }

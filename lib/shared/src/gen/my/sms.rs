@@ -3351,16 +3351,16 @@ pub async fn sms_mass_insert(arr :&Vec<Sms>, spool: &SPool) -> Result<(),MyError
 }
 
 // Index
-pub async fn get_sms(sms_id: u64, spool: &SPool) -> Result<Sms,MyError> {
+pub async fn hash_code(hash_code: &str, spool: &SPool) -> Result<Sms,MyError> {
 	let m = SmsSelector::new()
-		.sms_id_eq(sms_id)
+		.hash_code_eq(hash_code)
 		.get_row(spool).await?;
 	Ok(m)
 }
 
-pub async fn hash_code(hash_code: &str, spool: &SPool) -> Result<Sms,MyError> {
+pub async fn get_sms(sms_id: u64, spool: &SPool) -> Result<Sms,MyError> {
 	let m = SmsSelector::new()
-		.hash_code_eq(hash_code)
+		.sms_id_eq(sms_id)
 		.get_row(spool).await?;
 	Ok(m)
 }

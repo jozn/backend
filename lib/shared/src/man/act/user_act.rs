@@ -20,8 +20,8 @@ impl UserAct {
 
         // channel
         let channel = pb::Channel {
-            channel_cid: channel_cid as u32,
-            creator_profile_cid: profile_cid as u32,
+            channel_id: channel_cid as u32,
+            creator_profile_id: profile_cid as u32,
             is_profile_channel: true,
             created_time: time::get_time_now_sec(),
             channel_title: format!("{} {}", p.first_name, p.last_name),
@@ -31,8 +31,8 @@ impl UserAct {
 
         // profile
         let profile = pb::Profile {
-            profile_cid: profile_cid as u32,
-            user_cid: user_cid as u32,
+            profile_id: profile_cid as u32,
+            user_id: user_cid as u32,
             created_time: time::get_time_now_sec(),
             primary_channel: Some(channel.clone()),
             saved_channel: None, // todo
@@ -42,7 +42,7 @@ impl UserAct {
 
         // user
         let user = pb::User {
-            user_cid: user_cid as u32,
+            user_id: user_cid as u32,
             phone: p.phone_number.clone(),
             created_time: time::get_time_now_sec(),
             version_time: time::get_time_now_sec(),
@@ -60,8 +60,8 @@ impl UserAct {
         Ok(user)
     }
 
-    pub async fn edit_user(&self,user_cid: u64, p: param::EditUser) -> Result<pb::User,GenErr> {
-        let mut user = self.db.get_user_by_cid(user_cid).await?;
+    pub async fn edit_user(&self,user_id: u32, p: param::EditUser) -> Result<pb::User,GenErr> {
+        let mut user = self.db.get_user_by_id(user_id).await?;
 
         if p.set_new_name {
             user.first_name = p.new_first_name;
@@ -73,8 +73,8 @@ impl UserAct {
         Ok(user)
     }
 
-    pub async fn delete_user(&self, user_cid: u64) -> Result<pb::User,GenErr> {
-        let mut user = self.db.get_user_by_cid(user_cid).await?;
+    pub async fn delete_user(&self, user_id: u32) -> Result<pb::User,GenErr> {
+        let mut user = self.db.get_user_by_id(user_id).await?;
 
         user.is_deleted = true;
         // todo remove things
@@ -83,13 +83,13 @@ impl UserAct {
         Ok(user)
     }
 
-    pub async fn create_session(&self, user_cid: u64, p: param::CreateSession) -> Result<pb::Session,GenErr> {
-        let mut user = self.db.get_user_by_cid(user_cid).await?;
+    pub async fn create_session(&self, user_id: u32, p: param::CreateSession) -> Result<pb::Session,GenErr> {
+        let mut user = self.db.get_user_by_id(user_id).await?;
 
         // Session handling
         let session_pb = pb::Session {
             session_hash: rand::get_rand_session(18),
-            user_cid: user_cid as u32,
+            user_id: user_id as u32,
             last_ip: "".to_string(),                //todo
             user_agent: "Android v0.4".to_string(), // todo
             api_version: 0,                         // todo

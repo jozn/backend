@@ -74,8 +74,8 @@ service RPC_Group {
 
 // CrDU
 message GroupCreateGroupParam {
-    uint32 group_cid = 1;
-    uint32 creator_profile_cid = 2;
+    uint32 group_id = 1;
+    uint32 creator_profile_id = 2;
     string group_title = 3; // or _name
     bool history_viewable = 8; // if older message is is viewable for new members > now true for all new groups
     bool force_join = 9; // view history without joining
@@ -91,8 +91,8 @@ message GroupCreateGroupResponse {
 
 
 message GroupEditGroupParam {
-    uint32 group_cid = 1;
-    uint32 by_profile_cid = 2;
+    uint32 group_id = 1;
+    uint32 by_profile_id = 2;
     bool set_new_title = 3;
     string new_title = 4;
     bool set_new_about = 5;
@@ -106,8 +106,8 @@ message GroupEditGroupResponse {
 
 
 message GroupDeleteGroupParam {
-    uint32 group_cid = 1;
-    uint32 by_profile_cid = 2;
+    uint32 group_id = 1;
+    uint32 by_profile_id = 2;
 }
 
 message GroupDeleteGroupResponse {
@@ -125,9 +125,9 @@ message GroupAddAdminResponse {
 
 
 message GroupRemoveMemberParam {
-    uint32 group_cid = 1;
-    uint32 by_profile_cid = 2;
-    uint32 member_profile_cid = 3;
+    uint32 group_id = 1;
+    uint32 by_profile_id = 2;
+    uint32 member_profile_id = 3;
 }
 
 message GroupRemoveMemberResponse {
@@ -151,9 +151,9 @@ message GroupChangeMemberPermissionResponse {
 
 
 message GroupBanMemberParam {
-    uint32 group_cid = 1;
-    uint32 by_profile_cid = 2;
-    uint32 banned_profile_cid = 3;
+    uint32 group_id = 1;
+    uint32 by_profile_id = 2;
+    uint32 banned_profile_id = 3;
 }
 
 message GroupBanMemberResponse {
@@ -162,8 +162,8 @@ message GroupBanMemberResponse {
 
 // Members Actions
 message JoinGroupParam {
-    uint32 group_cid = 1;
-    uint32 new_member_profile_cid = 3;
+    uint32 group_id = 1;
+    uint32 new_member_profile_id = 3;
 }
 
 message JoinGroupResponse {
@@ -171,8 +171,8 @@ message JoinGroupResponse {
 
 
 message GroupLeaveGroupParam {
-    uint32 group_cid = 1;
-    uint32 member_profile_cid = 3;
+    uint32 group_id = 1;
+    uint32 member_profile_id = 3;
 }
 
 message GroupLeaveGroupResponse {
@@ -180,9 +180,9 @@ message GroupLeaveGroupResponse {
 
 
 message GroupAddMemberParam {
-    uint32 group_cid = 1;
-    uint32 by_profile_cid = 2;
-    uint32 new_member_profile_cid = 3;
+    uint32 group_id = 1;
+    uint32 by_profile_id = 2;
+    uint32 new_member_profile_id = 3;
 }
 
 message GroupAddMemberResponse {
@@ -242,7 +242,7 @@ message GroupSendMessageResponse {
 
 message GroupEditMessageParam {
     uint32 group_id = 1;
-    uint32 by_profile_cid = 3;
+    uint32 by_profile_id = 3;
     string new_text = 2;
 }
 
@@ -279,8 +279,8 @@ message GroupDeleteMessageResponse {
 
 
 message GroupDeleteMessagesParam {
-    uint32 group_cid = 1;
-    uint32 by_profile_cid = 2;
+    uint32 group_id = 1;
+    uint32 by_profile_id = 2;
     repeated uint64 message_ids = 3;
 }
 
@@ -329,7 +329,7 @@ message GroupAvatarDeleteResponse {}
 
 
 message GroupAvatarGetListParam {
-    uint32 group_cid = 1;
+    uint32 group_id = 1;
 }
 
 message GroupAvatarGetListResponse {}
@@ -353,7 +353,7 @@ message GroupReportGroupResponse {
 
 // Views
 message GroupGetFullParam {
-    uint32 group_cid = 1;
+    uint32 group_id = 1;
 }
 
 message GroupGetFullResponse {
@@ -361,7 +361,7 @@ message GroupGetFullResponse {
 
 
 message GroupGetMessagesListParam {
-    uint32 group_cid = 1;
+    uint32 group_id = 1;
 }
 
 message GroupGetMessagesListResponse {
@@ -369,7 +369,7 @@ message GroupGetMessagesListResponse {
 
 
 message GroupGetMediaListParam {
-    uint32 group_cid = 1;
+    uint32 group_id = 1;
 }
 
 message GroupGetMediaListResponse {
@@ -377,7 +377,7 @@ message GroupGetMediaListResponse {
 
 
 message GroupGetMembersListParam {
-    uint32 group_cid = 1;
+    uint32 group_id = 1;
 }
 
 message GroupGetMembersListResponse {

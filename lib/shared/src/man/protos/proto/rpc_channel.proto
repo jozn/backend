@@ -106,7 +106,7 @@ message ChannelCreateChannelResponse {
 
 
 message ChannelEditChannelParam {
-    uint32 channel_cid = 1;
+    uint32 channel_id = 1;
     bool set_new_title = 3;
     string new_title = 4;
     bool set_new_about = 5;
@@ -118,7 +118,7 @@ message ChannelEditChannelResponse {
 }
 
 message ChannelDeleteChannelParam {
-    uint32 channel_cid = 1;
+    uint32 channel_id = 1;
 }
 
 message ChannelDeleteChannelResponse {
@@ -153,7 +153,7 @@ message ChannelRemoveAuthorResponse {
 
 // Follow
 message ChannelFollowChannelParam {
-    uint32 channel_cid = 1;
+    uint32 channel_id = 1;
 }
 
 message ChannelFollowChannelResponse {
@@ -161,7 +161,7 @@ message ChannelFollowChannelResponse {
 
 
 message ChannelUnFollowChannelParam {
-    uint32 channel_cid = 1;
+    uint32 channel_id = 1;
 }
 
 message ChannelUnFollowChannelResponse {
@@ -178,7 +178,7 @@ message ChannelRemoveFollowersResponse {
 
 // Subscribe
 message ChannelSubscribeParam {
-    uint32 channel_cid = 1;
+    uint32 channel_id = 1;
 }
 
 message ChannelSubscribeResponse {
@@ -186,7 +186,7 @@ message ChannelSubscribeResponse {
 
 
 message ChannelUnSubscribeParam {
-    uint32 channel_cid = 1;
+    uint32 channel_id = 1;
 }
 
 message ChannelUnSubscribeResponse {
@@ -245,7 +245,7 @@ message ChannelBlockProfileResponse {
 
 // Messages
 message ChannelSendMessageParam {
-    uint32 channel_cid = 1;
+    uint32 channel_id = 1;
     NewMessageInput message_input = 2;
 }
 
@@ -255,7 +255,7 @@ message ChannelSendMessageResponse {
 
 
 message ChannelEditMessageParam {
-    uint32 channel_cid = 1;
+    uint32 channel_id = 1;
     fixed64 message_gid = 4;
     string new_text = 2;
 }
@@ -266,7 +266,7 @@ message ChannelEditMessageResponse {
 
 
 message ChannelDeleteMessagesParam {
-    uint32 channel_cid = 1;
+    uint32 channel_id = 1;
     repeated uint64 message_gids = 3;
 }
 
@@ -285,7 +285,7 @@ message ChannelClearHistoryResponse {
 
 // Like
 message ChannelLikeMessageParam {
-    uint32 channel_cid = 1;
+    uint32 channel_id = 1;
     fixed64 message_gid = 2;
 }
 
@@ -294,7 +294,7 @@ message ChannelLikeMessageResponse {
 
 
 message ChannelUnLikeMessageParam {
-    uint32 channel_cid = 1;
+    uint32 channel_id = 1;
     fixed64 message_gid = 2;
     fixed64 like_gid = 4; //?
 }
@@ -305,7 +305,7 @@ message ChannelUnLikeMessageResponse {
 
 // ReShare
 message ChannelReShareMessageParam {
-    uint32 channel_cid = 1;
+    uint32 channel_id = 1;
     fixed64 message_gid = 2;
 }
 
@@ -314,7 +314,7 @@ message ChannelReShareMessageResponse {
 
 
 message ChannelUnReShareMessageParam {
-    uint32 channel_cid = 1;
+    uint32 channel_id = 1;
     fixed64 message_gid = 2;
     fixed64 re_share_gid = 4;
 }
@@ -325,7 +325,7 @@ message ChannelUnReShareMessageResponse {
 
 // Comment
 message ChannelAddCommentParam {
-    uint32 channel_cid = 1;
+    uint32 channel_id = 1;
     fixed64 message_gid = 2;
     string comment_text = 4;
 }
@@ -335,7 +335,7 @@ message ChannelAddCommentResponse {
 
 
 message ChannelDeleteCommentParam {
-    uint32 channel_cid = 1;
+    uint32 channel_id = 1;
     fixed64 message_gid = 2;
     fixed64 comment_gid = 4;
 }
@@ -346,7 +346,7 @@ message ChannelDeleteCommentResponse {
 
 // Pin
 message ChannelPinMessageParam {
-    uint32 channel_cid = 1;
+    uint32 channel_id = 1;
 }
 
 message ChannelPinMessageResponse {
@@ -355,7 +355,7 @@ message ChannelPinMessageResponse {
 
 
 message ChannelUnPinMessageParam {
-    uint32 channel_cid = 1;
+    uint32 channel_id = 1;
 }
 
 message ChannelUnPinMessageResponse {
@@ -365,7 +365,7 @@ message ChannelUnPinMessageResponse {
 
 // Avatar
 message ChannelAvatarAddParam {
-    uint32 channel_cid = 1;
+    uint32 channel_id = 1;
     uint64 file_id = 2;
 }
 
@@ -381,7 +381,7 @@ message ChannelAvatarChangeResponse {
 
 
 message ChannelAvatarDeleteParam {
-    uint32 channel_cid = 1;
+    uint32 channel_id = 1;
 }
 
 message ChannelAvatarDeleteResponse {}
@@ -470,7 +470,7 @@ message ChannelBlockedResponse {
 
 
 message ChannelAvatarGetListParam {
-    uint32 channel_cid = 1;
+    uint32 channel_id = 1;
 }
 
 message ChannelAvatarGetListResponse {}

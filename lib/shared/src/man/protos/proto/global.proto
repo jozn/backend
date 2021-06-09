@@ -53,7 +53,7 @@ enum ProfileLevelEnum {
 message Invoke { // imut all
   uint32 namespace = 6; // imut
   uint32 method = 1; // imut
-  uint32 user_cid = 7; // imut
+  uint32 user_id = 7; // imut
   uint64 invoke_id = 2; // imut
   string session_hash = 8; // imut
   uint32 api_version = 10;
@@ -67,7 +67,7 @@ message Invoke { // imut all
 message InvokeResponse { // imut all
   uint32 namespace = 6; // imut
   uint32 method = 1; // imut
-  uint32 user_cid = 7; // imut
+  uint32 user_id = 7; // imut
   uint64 invoke_id = 2; // imut
   bytes rpc_data = 4; // imut
 }
@@ -75,18 +75,18 @@ message InvokeResponse { // imut all
 //==================== User ==================
 message Contact {
   fixed64 contact_gid = 1;
-  uint32 profile_cid = 2;
+  uint32 profile_id = 2;
   string phone = 4; // +98*
   string first_name = 5; // In device
   string last_name = 6; // In device
-  uint32 peer_profile_cid = 12;
+  uint32 peer_profile_id = 12;
   uint32 created_time = 13;
 }
 
 // Notes: User should only be returned for user own api calls, it's contain user's private data.
 message User {
   // Info 0-10
-  uint32 user_cid = 1;
+  uint32 user_id = 1;
   string phone = 14; // for default profile
   string email = 15; //
 
@@ -124,8 +124,8 @@ message User {
 //==================== Profile ==================
 message Profile {
   // Info 0-10
-  uint32 profile_cid = 1; // imut - profile_cid
-  uint32 user_cid = 2;// imut
+  uint32 profile_id = 1; // imut - profile_id
+  uint32 user_id = 2;// imut
   uint32 created_time = 103; // imut
 
   // Channel
@@ -154,8 +154,8 @@ message ProfileSettings {
 //==================== Peer Chat ==================
 message Chat {//?? or embed
   fixed64 chat_gid = 7; // imut
-  uint32 profile1_cid = 1; // imut
-  uint32 profile2_cid = 2; // imut
+  uint32 profile1_id = 1; // imut
+  uint32 profile2_id = 2; // imut
 
   fixed64 direct1_gid = 3; // imut
   fixed64 direct2_gid = 4; // imut
@@ -198,7 +198,7 @@ message Chat_Dep {//?? or embed
 message Message {
   // 1-10 Info
   fixed64 message_gid = 1; // imut
-  uint32 by_profile_cid = 2; // imut
+  uint32 by_profile_id = 2; // imut
   MessageType message_type =107; // imut - mostly
   string text = 7;
   uint32 via_app_id = 12; // imut > Including bots 1: Android app, 2... to 1000 reserved - bots >1000
@@ -221,14 +221,14 @@ message Message {
   Message reply_to = 50;
 
   // Channels Settings
-  uint32 channel_cid = 1001;
+  uint32 channel_id = 1001;
   MessageSetting setting = 102;
 
   // Channels Extra
   MessageCount counts = 101;
 
   // Group
-  uint32 group_cid = 1002;
+  uint32 group_id = 1002;
 
   // Media
   repeated FileMsg files = 103;
@@ -288,8 +288,8 @@ enum MessageDeliveryStatues {
 
 message MessageLog {
   MessageLogType log_type = 10;
-  uint32 by_profile_cid = 2;
-  uint32 target_profile_cid = 3;
+  uint32 by_profile_id = 2;
+  uint32 target_profile_id = 3;
   Profile target_profile_view = 11;
 }
 
@@ -308,8 +308,8 @@ enum MessageLogType {
 //==================== Channel ==================
 message Channel {
   // Info
-  uint32 channel_cid = 1; // imut
-  uint32 creator_profile_cid = 7; // imut
+  uint32 channel_id = 1; // imut
+  uint32 creator_profile_id = 7; // imut
   bool is_profile_channel = 101; // imut
   uint32 created_time = 36; // imut
 
@@ -374,7 +374,7 @@ message Store {//todo
   string user_name = 2;
   string store_name = 3; // For default channels take if from User.
   string address = 102;
-  uint32 creator_user_cid = 7;
+  uint32 creator_user_id = 7;
   string about = 16;
   uint32 message_seq = 19;
   fixed64 sync_time_ms = 21; // version
@@ -414,7 +414,7 @@ message ProductPriceInfo {//todo
 message Inboxer {
   // Info 1-10
   fixed64 inboxer_gid = 1; // imut  > del
-  uint32 profile_cid = 5; // imutt > del
+  uint32 profile_id = 5; // imutt > del
 
   // Meta info (sync) - mut
   uint32 unseen_count = 12; // mut
@@ -429,8 +429,8 @@ message Inboxer {
 
 //==================== Saved ==================
 message SavedChannel {//todo
-  uint32 channel_cid = 1;
-  uint32 creator_profile_cid = 7;
+  uint32 channel_id = 1;
+  uint32 creator_profile_id = 7;
   uint32 message_seq = 19;
   fixed64 sync_time_ms = 21; // version
   uint32 created_time = 36;
@@ -442,8 +442,8 @@ message SavedChannel {//todo
 //==================== Group ==================
 message Group {//todo
   // Info
-  uint32 group_cid = 1;
-  uint32 creator_profile_cid = 7;
+  uint32 group_id = 1;
+  uint32 creator_profile_id = 7;
   uint32 created_time = 21;
 
   // Visibility
@@ -489,9 +489,9 @@ message Group {//todo
 message GroupMember {
   // Info
   int64 member_gid = 1;
-  int64 group_cid = 2;
-  uint32 profile_cid = 3;
-  uint32 by_profile_cid = 4;
+  uint32 group_id = 2;
+  uint32 profile_id = 3;
+  uint32 by_profile_id = 4;
   uint32 created_time = 6;
 
   // Notification todo
@@ -527,7 +527,7 @@ message FileMsg {//todo
   uint32 height = 5;
   string extension = 6;
   string full_path = 61;
-  uint32 user_cid = 7;
+  uint32 user_id = 7;
   bytes data_thumb = 8;
   bytes data = 9;
 }
@@ -547,7 +547,7 @@ enum DevicePlatform {
 message Session {
   string session_hash = 2;
 //  uint64 device_id = 100;
-  uint32 user_cid = 3;
+  uint32 user_id = 3;
   string last_ip = 4;
   string user_agent = 8;
 //  DevicePlatform platform = 9;
@@ -580,28 +580,28 @@ message Sms {
 message Comment {
   uint64 comment_gid = 6; // imut
   uint64 message_gid = 1; // imut
-  uint64 channel_cid = 4; // imut
-  uint32 profile_cid = 2; // imut
+  uint32 channel_id = 4; // imut
+  uint32 profile_id = 2; // imut
   uint32 created_time = 3; // imut
 
   string text = 7;  // mut
 }
 
 message Follower {
-  uint32 channel_cid = 1; // imut
-  uint32 profile_cid = 2; // imut
+  uint32 channel_id = 1; // imut
+  uint32 profile_id = 2; // imut
   uint32 created_time = 3; // imut
 }
 
 message Subscribe {
-  uint32 channel_cid = 1; // imut
-  uint32 profile_cid = 2; // imut
+  uint32 channel_id = 1; // imut
+  uint32 profile_id = 2; // imut
   uint32 created_time = 3; // imut
 }
 
 message Like {
   uint64 message_gid = 1; // imut
-  uint32 profile_cid = 2; // imut
+  uint32 profile_id = 2; // imut
   uint32 created_time = 3; // imut
 }
 
@@ -609,7 +609,7 @@ message Like {
 
 message NewMessageInput { // C: Common
   fixed64 message_gid = 1; // imut
-  uint32 by_profile_cid = 2; // imut
+  uint32 by_profile_id = 2; // imut
   MessageType message_type = 107; // imut - mostly
   string text = 7;
   uint32 via_app_id = 12; // imut
@@ -673,7 +673,7 @@ message Session_bk {//todo
   fixed64 gid = 1;
   string session_uuid = 2;
   uint64 device_id = 100;
-  uint32 user_cid = 3;
+  uint32 user_id = 3;
   string last_ip_address = 4;
   string user_agent = 8;
   DevicePlatform platform = 9;
