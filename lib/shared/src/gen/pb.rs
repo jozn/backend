@@ -1017,6 +1017,148 @@ pub struct Sample {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CMaster {
 }
+//================ File Media ==============
+
+/// flat represenation of file
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FileView {
+    #[prost(fixed64, tag="1")]
+    pub file_id: u64,
+    #[prost(fixed64, tag="11")]
+    pub ref_id: u64,
+    #[prost(uint32, tag="12")]
+    pub bucket_id: u32,
+    #[prost(uint32, tag="2")]
+    pub secret: u32,
+    /// from client > is needed??? it should be present in Message Document or other higher layer not in here
+    #[prost(string, tag="13")]
+    pub file_name: ::prost::alloc::string::String,
+    #[prost(enumeration="FileType", tag="3")]
+    pub file_type: i32,
+    #[prost(string, tag="6")]
+    pub file_mime: ::prost::alloc::string::String,
+    /// Image
+    #[prost(uint32, tag="100")]
+    pub image_width: u32,
+    #[prost(uint32, tag="101")]
+    pub image_height: u32,
+    /// gifs
+    #[prost(message, optional, boxed, tag="102")]
+    pub image_cover: ::core::option::Option<::prost::alloc::boxed::Box<FileView>>,
+    /// Video
+    #[prost(uint32, tag="200")]
+    pub video_width: u32,
+    #[prost(uint32, tag="201")]
+    pub video_height: u32,
+    #[prost(uint32, tag="203")]
+    pub video_duration: u32,
+    #[prost(message, optional, boxed, tag="204")]
+    pub video_cover: ::core::option::Option<::prost::alloc::boxed::Box<FileView>>,
+    /// Audio
+    #[prost(bool, tag="300")]
+    pub audio_is_voice: bool,
+    #[prost(uint32, tag="301")]
+    pub audio_duration: u32,
+    #[prost(string, tag="302")]
+    pub audio_title: ::prost::alloc::string::String,
+    #[prost(string, tag="304")]
+    pub audio_performer: ::prost::alloc::string::String,
+    #[prost(bytes="vec", tag="305")]
+    pub audio_waveform: ::prost::alloc::vec::Vec<u8>,
+    #[prost(message, optional, boxed, tag="306")]
+    pub audio_cover: ::core::option::Option<::prost::alloc::boxed::Box<FileView>>,
+}
+///============ Internal to server =============
+///
+/// internal to server
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct File1 {
+    #[prost(fixed64, tag="1")]
+    pub file_id: u64,
+    #[prost(fixed64, tag="11")]
+    pub ref_id: u64,
+    #[prost(uint32, tag="12")]
+    pub bucket_id: u32,
+    #[prost(uint32, tag="2")]
+    pub secret: u32,
+    /// from client
+    #[prost(string, tag="13")]
+    pub file_name: ::prost::alloc::string::String,
+    #[prost(uint32, tag="7")]
+    pub user_id: u32,
+    #[prost(uint32, tag="14")]
+    pub file_size: u32,
+    #[prost(enumeration="FileType", tag="3")]
+    pub file_type: i32,
+    #[prost(string, tag="6")]
+    pub file_mime: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FileImage {
+    #[prost(uint32, tag="4")]
+    pub width: u32,
+    #[prost(uint32, tag="5")]
+    pub height: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FileVideo {
+    #[prost(uint32, tag="4")]
+    pub width: u32,
+    #[prost(uint32, tag="5")]
+    pub height: u32,
+    #[prost(uint32, tag="6")]
+    pub duration: u32,
+    #[prost(message, optional, tag="7")]
+    pub cover: ::core::option::Option<File1>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudioFile {
+    #[prost(bool, tag="1")]
+    pub is_voice: bool,
+    #[prost(uint32, tag="6")]
+    pub duration: u32,
+    #[prost(string, tag="8")]
+    pub title: ::prost::alloc::string::String,
+    #[prost(string, tag="9")]
+    pub performer: ::prost::alloc::string::String,
+    #[prost(bytes="vec", tag="10")]
+    pub waveform: ::prost::alloc::vec::Vec<u8>,
+    #[prost(message, optional, tag="7")]
+    pub cover: ::core::option::Option<File1>,
+}
+/// internal to server
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FileRef {
+    #[prost(fixed64, tag="1")]
+    pub file_id: u64,
+    #[prost(fixed64, tag="11")]
+    pub ref_id: u64,
+    ///?
+    #[prost(uint32, tag="12")]
+    pub bucket_id: u32,
+    #[prost(uint32, tag="2")]
+    pub secret: u32,
+    /// from client
+    #[prost(string, tag="13")]
+    pub file_name: ::prost::alloc::string::String,
+    #[prost(uint32, tag="7")]
+    pub user_id: u32,
+    #[prost(uint32, tag="14")]
+    pub created_time: u32,
+}
+/// internal to server
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Bucket {
+    #[prost(uint32, tag="12")]
+    pub bucket_id: u32,
+    /// image video avatar music voice image_thumb document
+    #[prost(string, tag="3")]
+    pub intent: ::prost::alloc::string::String,
+    #[prost(bool, tag="4")]
+    pub is_open: bool,
+    #[prost(uint32, tag="14")]
+    pub created_time: u32,
+}
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum ProfileLevelEnum {
@@ -1098,6 +1240,19 @@ pub enum DevicePlatform {
     MacOs = 4,
     Linux = 5,
     Web = 7,
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum FileType {
+    FileUnknown = 0,
+    FileJpeg = 1,
+    FileGif = 2,
+    FilePng = 3,
+    FileWebp = 4,
+    FileMp3 = 5,
+    FileMp4 = 6,
+    FilePdf = 7,
+    FileOther = 8,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetNextIdParam {

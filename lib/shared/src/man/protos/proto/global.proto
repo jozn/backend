@@ -688,3 +688,101 @@ message Shared{}
 message Auth{}
 message Sample{}
 message CMaster{}
+
+//================ File Media ==============
+
+message FileView { // flat represenation of file
+  fixed64 file_id = 1;
+  fixed64 ref_id = 11;
+  uint32 bucket_id = 12;
+  uint32 secret = 2;
+  string file_name = 13; // from client > is needed??? it should be present in Message Document or other higher layer not in here
+
+  FileType file_type = 3;
+  string file_mime = 6;
+
+  // Image
+  uint32 image_width = 100;
+  uint32 image_height = 101;
+  FileView image_cover = 102; // gifs
+
+  // Video
+  uint32 video_width = 200;
+  uint32 video_height = 201;
+  uint32 video_duration = 203;
+  FileView video_cover = 204;
+
+  // Audio
+  bool audio_is_voice = 300;
+  uint32 audio_duration = 301;
+  string audio_title = 302;
+  string audio_performer = 304;
+  bytes audio_waveform = 305;
+  FileView audio_cover = 306;
+}
+
+enum FileType {
+  FILE_UNKNOWN = 0;
+  FILE_JPEG = 1;
+  FILE_GIF = 2;
+  FILE_PNG = 3;
+  FILE_WEBP = 4;
+  FILE_MP3 = 5;
+  FILE_MP4 = 6;
+  FILE_PDF = 7;
+  FILE_OTHER = 8;
+}
+
+//============ Internal to server =============
+message File1 { // internal to server
+  fixed64 file_id = 1;
+  fixed64 ref_id = 11;
+  uint32 bucket_id = 12;
+  uint32 secret = 2;
+  string file_name = 13; // from client
+  uint32 user_id = 7;
+
+  uint32 file_size = 14;
+
+  FileType file_type = 3;
+  string file_mime = 6;
+}
+
+message FileImage {
+  uint32 width = 4;
+  uint32 height = 5;
+}
+
+message FileVideo {
+  uint32 width = 4;
+  uint32 height = 5;
+  uint32 duration = 6;
+  File1 cover = 7;
+}
+
+message AudioFile {
+  bool is_voice = 1;
+  uint32 duration = 6;
+  string title = 8;
+  string performer = 9;
+  bytes waveform = 10;
+  File1 cover = 7;
+}
+
+
+message FileRef { // internal to server
+  fixed64 file_id = 1;
+  fixed64 ref_id = 11;
+  uint32 bucket_id = 12; //?
+  uint32 secret = 2;
+  string file_name = 13; // from client
+  uint32 user_id = 7;
+  uint32 created_time = 14;
+}
+
+message Bucket { // internal to server
+  uint32 bucket_id = 12;
+  string intent = 3; // image video avatar music voice image_thumb document
+  bool is_open = 4;
+  uint32 created_time = 14;
+}

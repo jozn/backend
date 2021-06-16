@@ -1,5 +1,5 @@
 [package]
-name = "play2"
+name = "chunk"
 version = "0.1.0"
 authors = ["Hamid <7atashfeshan@gmail.com>"]
 edition = "2018"
@@ -7,5 +7,13 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rand = "0.8.3"
+shared = {path = "../../lib/shared"}
+
 clap = "3.0.0-beta.2"
+tokio = "1.7.0"
+tokio-util = "0.6.7"
+hyper = "0.14.9"
+serde = "1.0.126"
+serde_json = "1.0.64"
+bytes = "1.0.1"
+
