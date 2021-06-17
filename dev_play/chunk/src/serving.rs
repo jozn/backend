@@ -1,7 +1,5 @@
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Method, Request, Response, Result, Server, StatusCode};
-use url::Url;
-use urlparse::GetQuery;
 
 use crate::types::*;
 
@@ -33,8 +31,8 @@ async fn process_http_request(req: Request<Body>) -> Result<Response<Body>> {
             // Test what happens when file cannot be be found
             simple_file_send("this_file_should_not_exist.html").await
         }
-        _ => { simple_file_send(req.uri().path().to_string().trim_start_matches("/")).await },
-        // _ => Ok(not_found()),
+        (&Method::GET, "/upload/") => { simple_file_send(req.uri().path().to_string().trim_start_matches("/")).await },
+        _ => { Ok(not_found())},
     }
 }
 

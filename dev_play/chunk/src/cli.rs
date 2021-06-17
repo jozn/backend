@@ -17,7 +17,6 @@ pub fn get_cli_args() -> Config {
             .long_about("All listening connection are set with this.")
             .default_value("9000")
             .required(false)
-
         )
         .arg(Arg::new("dir")
             .short('d')

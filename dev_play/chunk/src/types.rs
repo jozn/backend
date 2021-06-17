@@ -1,29 +1,10 @@
 
-
-
-mod serving {
-
-}
-
 struct Bucket {
     bucket_id: u32,
+    intent: String,
+    create_time_str: String,
 }
 
-struct File22 {
-    bucket_id: u32,
-    file_id: u64,
-    ref_id: u64,
-    secret: u32,
-
-    created_time: u32,
-}
-
-mod args {}
-mod file_serving {}
-// mod types {}
-
-struct Config3{}
-struct FileReq{} // file_id,...
 fn sync(){}
 fn upload(){}
 
