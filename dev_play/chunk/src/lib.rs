@@ -3,8 +3,9 @@ pub mod cli;
 pub mod serving;
 pub mod proto_gen;
 pub mod rpc_chunk;
-mod spb;
-mod sutil;
+pub mod spb;
+pub mod sutil;
+pub mod bucket_act;
 
 pub use proto_gen::{storage};
 
@@ -12,5 +13,3 @@ pub use proto_gen::{storage};
 #[macro_use]
 extern crate serde_derive;
 extern crate serde_qs as qs;
-
-pub struct GG{}

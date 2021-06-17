@@ -5,7 +5,8 @@ pub fn file_id_to_folder(id: u64) -> String {
     format!("{:02}", rem)
 }
 
-// Each bucket will be present at sub folder. This is based on decimal folder.
+// Each bucket will be present at sub folder. This is based on decimal number.
+// ex: 5 to x, 67 to xx 234 to 2xx 3451 to 34xx and anything above 10K like 42344 to 42xxx
 pub fn bucket_to_folder(id: u32) -> String {
     match id {
         0..=9 => {
@@ -53,7 +54,7 @@ mod tests{
         ];
 
         for t in arr {
-            println!("{} {}",t.0,file_id_to_folder(t.0));
+            // println!("{} {}",t.0,file_id_to_folder(t.0));
             assert_eq!(file_id_to_folder(t.0), t.1);
         }
     }
@@ -85,7 +86,7 @@ mod tests{
         ];
 
         for t in arr {
-            println!("{} {}",t.0,bucket_to_folder(t.0));
+            // println!("{} {}",t.0,bucket_to_folder(t.0));
             assert_eq!(bucket_to_folder(t.0), t.1);
         }
     }

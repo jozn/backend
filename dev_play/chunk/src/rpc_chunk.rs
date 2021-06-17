@@ -1,27 +1,42 @@
 use crate::proto_gen;
 use crate::spb::*;
+use crate::{sutil, bucket_act};
 
-use tonic::{transport::Server, Request, Response, Status};
+use tonic::{transport::Server, Request, Response, Status, Code};
 
 #[derive(Default)]
-pub struct MyGreeter {}
+pub struct ChunkRpcHanlder {}
 
 #[tonic::async_trait]
-impl storage::client_to_chunk_server::ClientToChunk for MyGreeter {
+impl ClientToChunk for ChunkRpcHanlder {
     async fn create_bucket(&self, request: Request<CreateBucketRequest>) -> Result<Response<CreateBucketResponse>, Status> {
         println!(">>> {:?}",request.remote_addr());
 
-        // let cb = request.into_inner();
+        let cb = request.into_inner();
+
+        bucket_act::create_bucket(cb.bucket_id, &cb.intent).await;
 
         let res = CreateBucketResponse{
-            bucket_id: request.into_inner().bucket_id,
+            bucket_id: cb.bucket_id,
         };
 
         Ok(Response::new(res))
     }
 
     async fn upload_file(&self, request: Request<UploadFileRequest>) -> Result<Response<UploadFileResponse>, Status> {
-        todo!()
+        let r = request.into_inner();
+        let s = bucket_act::bucket_id_to_path(r.bucket_id);
+        if !std::path::Path::new(&s).exists() {
+            return Err(Status::new(Code::NotFound, "bucket does not exist."))
+        }
+
+        bucket_act::save_file_inot_bucket(r.bucket_id,r.file_id,&r.blob_data).await;
+
+        let res = UploadFileResponse{
+            message: "sdfds".to_string()
+        };
+
+        Ok(Response::new(res))
     }
 
     async fn ping(&self, request: Request<PingRequest>) -> Result<Response<PingResponse>, Status> {
@@ -37,7 +52,7 @@ impl storage::client_to_chunk_server::ClientToChunk for MyGreeter {
 
 pub async fn server_chunk() -> Result<(), Box<dyn std::error::Error>> {
     let addr = "0.0.0.0:5051".parse().unwrap();
-    let greeter = MyGreeter::default();
+    let greeter = ChunkRpcHanlder::default();
 
     println!("GreeterServer listening on {}", addr);
 

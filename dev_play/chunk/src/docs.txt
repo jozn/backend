@@ -1,0 +1,3 @@
+
+Notes:
+ + No intent in folder path schema as it cause difficulty for other part of code base.
