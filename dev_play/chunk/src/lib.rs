@@ -2,6 +2,10 @@ pub mod types;
 pub mod cli;
 pub mod serving;
 pub mod proto_gen;
+pub mod rpc_chunk;
+mod spb;
+
+pub use proto_gen::{storage};
 
 // macro use should be at root
 #[macro_use]

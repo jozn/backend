@@ -1,0 +1,50 @@
+syntax = "proto3";
+package storage;
+
+service ClientToChunk {
+//  rpc  (Request) returns (Response);
+  rpc CreateBucket (CreateBucketRequest) returns (CreateBucketResponse);
+  rpc UploadFile (UploadFileRequest) returns (UploadFileResponse);
+  rpc Ping (PingRequest) returns (PingResponse);
+}
+
+
+message CreateBucketRequest {
+  uint32 bucket_id = 12;
+  string intent = 3; // image video avatar music voice image_thumb document
+}
+message CreateBucketResponse {
+  uint32 bucket_id = 12; // if operation is ok
+}
+
+
+message UploadFileRequest {
+  fixed64 file_id = 1;
+  fixed64 ref_id = 11;
+  uint32 bucket_id = 12; //?
+  uint32 secret = 2;
+  uint32 file_type = 3; // FileType - this is enum from global.proto
+  bytes blob_data = 10;
+}
+message UploadFileResponse {
+  string message = 1;
+}
+
+
+message PingRequest {
+  uint32 id = 1;
+}
+message PingResponse {
+  uint32 id = 1;
+}
+
+
+/*
+message Request {
+
+}
+
+message Response {
+
+}
+*/
