@@ -24,7 +24,7 @@ pub async fn save_file_inot_bucket(bucket_id: u32, file_id: u64, blob: &[u8]) ->
         return false
     }
 
-    let pp = file_id_to_path(bucket_id,file_id);
+    let pp = file_id_to_dir(bucket_id, file_id);
     tokio::fs::create_dir_all(&pp).await;
 
     let file_path = format!("{}/{}",pp, file_id);
@@ -39,9 +39,15 @@ pub fn bucket_id_to_path(bucket_id: u32) -> String {
     format!("./primary/{}/{}",folder, bucket_id)
 }
 
-pub fn file_id_to_path(bucket_id: u32, file_id: u64) -> String {
+pub fn file_id_to_dir(bucket_id: u32, file_id: u64) -> String {
     let folder = bucket_id_to_path(bucket_id);
     let file_sub_folder = sutil::file_id_to_folder(file_id);
 
     format!("{}/{}",folder, file_sub_folder)
+}
+
+pub fn file_id_to_file_path(bucket_id: u32, file_id: u64) -> String {
+    let folder = sutil::bucket_to_folder(bucket_id);
+    let file_sub_folder = sutil::file_id_to_folder(file_id);
+    format!("./primary/{}/{}/{}/{}",folder,bucket_id ,file_sub_folder ,file_id)
 }

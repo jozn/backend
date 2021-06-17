@@ -2,6 +2,7 @@ use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Method, Request, Response, Result, Server, StatusCode};
 
 use crate::types::*;
+use crate::bucket_act;
 
 pub async fn listen_http(cfg :&Config) {
     use std::net::{IpAddr, Ipv4Addr, SocketAddr};
@@ -45,8 +46,18 @@ async fn process_get_file(req: Request<Body>) -> Result<Response<Body>> {
 
     println!("{:} >> \n {:?}", r, req);
 
+    // Play code
     let filename = &req.file;
-    if let Ok(file) = tokio::fs::File::open(filename).await {
+    if filename.len() > 0 {
+        if let Ok(file) = tokio::fs::File::open(filename).await {
+            let stream = FramedRead::new(file, BytesCodec::new());
+            let body = Body::wrap_stream(stream);
+            return Ok(Response::new(body));
+        }
+    }
+
+    let s = bucket_act::file_id_to_file_path(req.bucket_id, req.file_id);
+    if let Ok(file) = tokio::fs::File::open(s).await {
         let stream = FramedRead::new(file, BytesCodec::new());
         let body = Body::wrap_stream(stream);
         return Ok(Response::new(body));
