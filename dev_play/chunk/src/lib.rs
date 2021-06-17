@@ -4,6 +4,7 @@ pub mod serving;
 pub mod proto_gen;
 pub mod rpc_chunk;
 mod spb;
+mod sutil;
 
 pub use proto_gen::{storage};
 
