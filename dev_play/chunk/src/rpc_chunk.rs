@@ -23,17 +23,16 @@ impl ClientToChunk for ChunkRpcHanlder {
         Ok(Response::new(res))
     }
 
-    async fn upload_file(&self, request: Request<UploadFileRequest>) -> Result<Response<UploadFileResponse>, Status> {
+    async fn insert_file(&self, request: Request<InsertFileRequest>) -> Result<Response<InsertFileResponse>, Status> {
         let r = request.into_inner();
         let s = bucket_act::StoragePathBuilder::new(r.bucket_id,0).bucket_dir();
-        // let s = bucket_act::bucket_id_to_path_DEP(r.bucket_id);
         if !std::path::Path::new(&s).exists() {
             return Err(Status::new(Code::NotFound, "bucket does not exist."))
         }
 
         bucket_act::save_file_into_bucket(r.bucket_id, r.file_id, &r.blob_data).await;
 
-        let res = UploadFileResponse{
+        let res = InsertFileResponse{
             message: "sdfds".to_string(),
             ok: true
         };
@@ -42,7 +41,16 @@ impl ClientToChunk for ChunkRpcHanlder {
     }
 
     async fn remove_file(&self, request: Request<RemoveFileRequest>) -> Result<Response<RemoveFileResponse>, Status> {
-        todo!()
+        let r = request.into_inner();
+
+        bucket_act::remove_file_from_bucket(r.bucket_id, r.file_id).await;
+
+        let res = RemoveFileResponse{
+            message: "sdfds".to_string(),
+            ok: true
+        };
+
+        Ok(Response::new(res))
     }
 
     async fn ping(&self, request: Request<PingRequest>) -> Result<Response<PingResponse>, Status> {

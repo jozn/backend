@@ -51,8 +51,8 @@ pub struct LogUploadFile {
 pub struct LogRemoveFile {
     pub bucket_id: u32,
     pub file_id: u64,
-    pub ref_id: u64,
-    pub secret: u32,
+    // pub ref_id: u64,
+    // pub secret: u32,
     pub date: String,
 }
 

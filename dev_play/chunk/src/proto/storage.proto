@@ -4,7 +4,7 @@ package storage;
 service ClientToChunk {
 //  rpc  (Request) returns (Response);
   rpc CreateBucket (CreateBucketRequest) returns (CreateBucketResponse);
-  rpc UploadFile (UploadFileRequest) returns (UploadFileResponse);
+  rpc InsertFile (InsertFileRequest) returns (InsertFileResponse);
   rpc RemoveFile (RemoveFileRequest) returns (RemoveFileResponse);
   rpc Ping (PingRequest) returns (PingResponse);
 }
@@ -19,7 +19,7 @@ message CreateBucketResponse {
 }
 
 
-message UploadFileRequest {
+message InsertFileRequest {
   fixed64 file_id = 1;
   fixed64 ref_id = 11;
   uint32 bucket_id = 12; //?
@@ -27,7 +27,7 @@ message UploadFileRequest {
   uint32 file_type = 3; // FileType - this is enum from global.proto
   bytes blob_data = 10;
 }
-message UploadFileResponse {
+message InsertFileResponse {
   string message = 1;
   bool ok = 2;
 }

@@ -50,6 +50,24 @@ pub async fn save_file_into_bucket(bucket_id: u32, file_id: u64, blob: &[u8]) ->
     true
 }
 
+pub async fn remove_file_from_bucket(bucket_id: u32, file_id: u64) -> bool {
+    let path_builder = StoragePathBuilder::new(bucket_id, file_id);
+    tokio::fs::create_dir_all(path_builder.file_remove_sub_dir()).await;
+
+    tokio::fs::rename(path_builder.file_loc(), path_builder.file_remove_loc()).await;
+
+    // Save log create bucket
+    use types::*;
+    let log = LogEvent::RemoveFile(LogRemoveFile{
+        bucket_id,
+        file_id,
+        date: "Now Fir 23 2021".to_string()
+    });
+    log_event(bucket_id,&log).await;
+
+    true
+}
+
 //// Table log Jsom
 pub async fn log_event(bucket_id: u32, log: &types::LogEvent) -> bool {
     let table_path = StoragePathBuilder::new(bucket_id,0).json_log_loc();
@@ -82,49 +100,42 @@ impl StoragePathBuilder {
 
     pub fn bucket_dir(&self) -> String {
         let folder = sutil::bucket_to_folder(self.bucket_id);
-        format!("./primary/{}/{}",folder, self.bucket_id)
+        format!("./primary/{}/bucket_{}",folder, self.bucket_id)
     }
 
     pub fn file_sub_dir(&self) -> String {
         let folder = self.bucket_dir();
         let file_sub_folder = sutil::file_id_to_folder(self.file_id);
 
-        format!("{}/{}",folder, file_sub_folder)
+        format!("{}/sub_{}",folder, file_sub_folder)
     }
 
     pub fn file_loc(&self) -> String {
-        let folder = sutil::bucket_to_folder(self.bucket_id);
-        let file_sub_folder = sutil::file_id_to_folder(self.file_id);
-        format!("./primary/{}/{}/{}/{}",folder,self.bucket_id ,file_sub_folder ,self.file_id)
+        let sub_dir = self.file_sub_dir();
+        format!("{}/{}", sub_dir ,self.file_id)
     }
 
     pub fn json_log_loc(&self) -> String {
-        let folder = sutil::bucket_to_folder(self.bucket_id);
-        format!("./primary/{}/{}/log_{}.json",folder,self.bucket_id, self.bucket_id)
+        let bucket_dir = self.bucket_dir();
+        format!("{}/log_{}.json", bucket_dir, self.bucket_id)
     }
-}
 
-// DEPRECATED CODES
-//// Path builders
-pub fn bucket_id_to_path_DEP(bucket_id: u32) -> String {
-    let folder = sutil::bucket_to_folder(bucket_id);
-    format!("./primary/{}/{}",folder, bucket_id)
-}
+    // Remove
 
-pub fn file_id_to_dir_DEP(bucket_id: u32, file_id: u64) -> String {
-    let folder = bucket_id_to_path_DEP(bucket_id);
-    let file_sub_folder = sutil::file_id_to_folder(file_id);
+    pub fn bucket_remove_dir(&self) -> String {
+        let folder = sutil::bucket_to_folder(self.bucket_id);
+        format!("./primary/_remove/{}/bucket_{}",folder, self.bucket_id)
+    }
 
-    format!("{}/{}",folder, file_sub_folder)
-}
+    pub fn file_remove_sub_dir(&self) -> String {
+        let folder = self.bucket_remove_dir();
+        let file_sub_folder = sutil::file_id_to_folder(self.file_id);
 
-pub fn file_id_to_file_path_DEP(bucket_id: u32, file_id: u64) -> String {
-    let folder = sutil::bucket_to_folder(bucket_id);
-    let file_sub_folder = sutil::file_id_to_folder(file_id);
-    format!("./primary/{}/{}/{}/{}",folder,bucket_id ,file_sub_folder ,file_id)
-}
+        format!("{}/sub_{}",folder, file_sub_folder)
+    }
 
-pub fn json_log_file_path_DEP(bucket_id: u32) -> String {
-    let folder = sutil::bucket_to_folder(bucket_id);
-    format!("./primary/{}/{}/log_{}.json",folder,bucket_id, bucket_id)
+    pub fn file_remove_loc(&self) -> String {
+        let sub_dir = self.file_remove_sub_dir();
+        format!("{}/{}", sub_dir ,self.file_id)
+    }
 }

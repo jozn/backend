@@ -13,7 +13,7 @@ pub struct CreateBucketResponse {
     pub bucket_id: u32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UploadFileRequest {
+pub struct InsertFileRequest {
     #[prost(fixed64, tag = "1")]
     pub file_id: u64,
     #[prost(fixed64, tag = "11")]
@@ -30,7 +30,7 @@ pub struct UploadFileRequest {
     pub blob_data: ::prost::alloc::vec::Vec<u8>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UploadFileResponse {
+pub struct InsertFileResponse {
     #[prost(string, tag = "1")]
     pub message: ::prost::alloc::string::String,
     #[prost(bool, tag = "2")]
@@ -112,10 +112,10 @@ pub mod client_to_chunk_client {
             let path = http::uri::PathAndQuery::from_static("/storage.ClientToChunk/CreateBucket");
             self.inner.unary(request.into_request(), path, codec).await
         }
-        pub async fn upload_file(
+        pub async fn insert_file(
             &mut self,
-            request: impl tonic::IntoRequest<super::UploadFileRequest>,
-        ) -> Result<tonic::Response<super::UploadFileResponse>, tonic::Status> {
+            request: impl tonic::IntoRequest<super::InsertFileRequest>,
+        ) -> Result<tonic::Response<super::InsertFileResponse>, tonic::Status> {
             self.inner.ready().await.map_err(|e| {
                 tonic::Status::new(
                     tonic::Code::Unknown,
@@ -123,7 +123,7 @@ pub mod client_to_chunk_client {
                 )
             })?;
             let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static("/storage.ClientToChunk/UploadFile");
+            let path = http::uri::PathAndQuery::from_static("/storage.ClientToChunk/InsertFile");
             self.inner.unary(request.into_request(), path, codec).await
         }
         pub async fn remove_file(
@@ -180,10 +180,10 @@ pub mod client_to_chunk_server {
             &self,
             request: tonic::Request<super::CreateBucketRequest>,
         ) -> Result<tonic::Response<super::CreateBucketResponse>, tonic::Status>;
-        async fn upload_file(
+        async fn insert_file(
             &self,
-            request: tonic::Request<super::UploadFileRequest>,
-        ) -> Result<tonic::Response<super::UploadFileResponse>, tonic::Status>;
+            request: tonic::Request<super::InsertFileRequest>,
+        ) -> Result<tonic::Response<super::InsertFileResponse>, tonic::Status>;
         async fn remove_file(
             &self,
             request: tonic::Request<super::RemoveFileRequest>,
@@ -258,18 +258,18 @@ pub mod client_to_chunk_server {
                     };
                     Box::pin(fut)
                 }
-                "/storage.ClientToChunk/UploadFile" => {
+                "/storage.ClientToChunk/InsertFile" => {
                     #[allow(non_camel_case_types)]
-                    struct UploadFileSvc<T: ClientToChunk>(pub Arc<T>);
-                    impl<T: ClientToChunk> tonic::server::UnaryService<super::UploadFileRequest> for UploadFileSvc<T> {
-                        type Response = super::UploadFileResponse;
+                    struct InsertFileSvc<T: ClientToChunk>(pub Arc<T>);
+                    impl<T: ClientToChunk> tonic::server::UnaryService<super::InsertFileRequest> for InsertFileSvc<T> {
+                        type Response = super::InsertFileResponse;
                         type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
-                            request: tonic::Request<super::UploadFileRequest>,
+                            request: tonic::Request<super::InsertFileRequest>,
                         ) -> Self::Future {
                             let inner = self.0.clone();
-                            let fut = async move { (*inner).upload_file(request).await };
+                            let fut = async move { (*inner).insert_file(request).await };
                             Box::pin(fut)
                         }
                     }
@@ -277,7 +277,7 @@ pub mod client_to_chunk_server {
                     let fut = async move {
                         let interceptor = inner.1.clone();
                         let inner = inner.0;
-                        let method = UploadFileSvc(inner);
+                        let method = InsertFileSvc(inner);
                         let codec = tonic::codec::ProstCodec::default();
                         let mut grpc = if let Some(interceptor) = interceptor {
                             tonic::server::Grpc::with_interceptor(codec, interceptor)
