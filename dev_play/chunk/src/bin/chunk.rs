@@ -8,7 +8,8 @@ pub mod proto_gen;
 extern crate serde_derive;
 extern crate serde_qs as qs;*/
 
-use chunk::{cli, serving, rpc_chunk};
+use chunk::{cli, serving, rpc_chunk, types};
+use chunk::types::LogEvent::CreateBucket;
 
 #[tokio::main]
 async fn main() {
@@ -16,16 +17,30 @@ async fn main() {
     println!(">> Config: {:#?}", cfg);
     // pretty_env_logger::init();
 
-    tokio::spawn( async {
-        rpc_chunk::server_chunk().await;
-
+    let grpc_port = cfg.grpc_port;
+    tokio::spawn( async move {
+        rpc_chunk::server_chunk(grpc_port).await;
     });
 
     std::thread::spawn(|| async {
         // rpc_chunk::server_chunk().await;
     });
 
+    play();
+
     serving::listen_http(&cfg).await;
+}
+
+fn play(){
+    use types::*;
+    let s = types::LogEvent::CreateBucket(LogCreateBucket{
+        bucket_id: 23,
+        intent: "23".to_string(),
+        date: "23".to_string()
+    });
+
+    let d = serde_json::to_string(&s).unwrap();
+    println!("//> {}", d);
 }
 
 

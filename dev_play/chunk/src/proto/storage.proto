@@ -5,6 +5,7 @@ service ClientToChunk {
 //  rpc  (Request) returns (Response);
   rpc CreateBucket (CreateBucketRequest) returns (CreateBucketResponse);
   rpc UploadFile (UploadFileRequest) returns (UploadFileResponse);
+  rpc RemoveFile (RemoveFileRequest) returns (RemoveFileResponse);
   rpc Ping (PingRequest) returns (PingResponse);
 }
 
@@ -28,8 +29,19 @@ message UploadFileRequest {
 }
 message UploadFileResponse {
   string message = 1;
+  bool ok = 2;
 }
 
+message RemoveFileRequest {
+  fixed64 file_id = 1;
+  fixed64 ref_id = 11;
+  uint32 bucket_id = 12;
+  uint32 secret = 2;
+}
+message RemoveFileResponse {
+  string message = 1;
+  bool ok = 2;
+}
 
 message PingRequest {
   uint32 id = 1;

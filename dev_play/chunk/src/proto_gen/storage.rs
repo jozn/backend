@@ -33,6 +33,26 @@ pub struct UploadFileRequest {
 pub struct UploadFileResponse {
     #[prost(string, tag = "1")]
     pub message: ::prost::alloc::string::String,
+    #[prost(bool, tag = "2")]
+    pub ok: bool,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RemoveFileRequest {
+    #[prost(fixed64, tag = "1")]
+    pub file_id: u64,
+    #[prost(fixed64, tag = "11")]
+    pub ref_id: u64,
+    #[prost(uint32, tag = "12")]
+    pub bucket_id: u32,
+    #[prost(uint32, tag = "2")]
+    pub secret: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RemoveFileResponse {
+    #[prost(string, tag = "1")]
+    pub message: ::prost::alloc::string::String,
+    #[prost(bool, tag = "2")]
+    pub ok: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PingRequest {
@@ -106,6 +126,20 @@ pub mod client_to_chunk_client {
             let path = http::uri::PathAndQuery::from_static("/storage.ClientToChunk/UploadFile");
             self.inner.unary(request.into_request(), path, codec).await
         }
+        pub async fn remove_file(
+            &mut self,
+            request: impl tonic::IntoRequest<super::RemoveFileRequest>,
+        ) -> Result<tonic::Response<super::RemoveFileResponse>, tonic::Status> {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::new(
+                    tonic::Code::Unknown,
+                    format!("Service was not ready: {}", e.into()),
+                )
+            })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/storage.ClientToChunk/RemoveFile");
+            self.inner.unary(request.into_request(), path, codec).await
+        }
         pub async fn ping(
             &mut self,
             request: impl tonic::IntoRequest<super::PingRequest>,
@@ -150,6 +184,10 @@ pub mod client_to_chunk_server {
             &self,
             request: tonic::Request<super::UploadFileRequest>,
         ) -> Result<tonic::Response<super::UploadFileResponse>, tonic::Status>;
+        async fn remove_file(
+            &self,
+            request: tonic::Request<super::RemoveFileRequest>,
+        ) -> Result<tonic::Response<super::RemoveFileResponse>, tonic::Status>;
         async fn ping(
             &self,
             request: tonic::Request<super::PingRequest>,
@@ -240,6 +278,37 @@ pub mod client_to_chunk_server {
                         let interceptor = inner.1.clone();
                         let inner = inner.0;
                         let method = UploadFileSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = if let Some(interceptor) = interceptor {
+                            tonic::server::Grpc::with_interceptor(codec, interceptor)
+                        } else {
+                            tonic::server::Grpc::new(codec)
+                        };
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/storage.ClientToChunk/RemoveFile" => {
+                    #[allow(non_camel_case_types)]
+                    struct RemoveFileSvc<T: ClientToChunk>(pub Arc<T>);
+                    impl<T: ClientToChunk> tonic::server::UnaryService<super::RemoveFileRequest> for RemoveFileSvc<T> {
+                        type Response = super::RemoveFileResponse;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::RemoveFileRequest>,
+                        ) -> Self::Future {
+                            let inner = self.0.clone();
+                            let fut = async move { (*inner).remove_file(request).await };
+                            Box::pin(fut)
+                        }
+                    }
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let interceptor = inner.1.clone();
+                        let inner = inner.0;
+                        let method = RemoveFileSvc(inner);
                         let codec = tonic::codec::ProstCodec::default();
                         let mut grpc = if let Some(interceptor) = interceptor {
                             tonic::server::Grpc::with_interceptor(codec, interceptor)

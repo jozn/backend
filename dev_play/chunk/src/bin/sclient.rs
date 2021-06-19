@@ -5,20 +5,20 @@ use shared::common::get_random_u64;
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
+    create_bucket().await;
     upload_sample().await;
 
     Ok(())
 }
 
 async fn upload_sample() -> Result<(), Box<dyn std::error::Error>> {
-
-    let mut client = ClientToChunkClient::connect("http://0.0.0.0:5051").await?;
+    let mut client = ClientToChunkClient::connect("http://0.0.0.0:11000").await?;
 
     let fo = std::fs::read("./img.jpg").unwrap();
     let request = tonic::Request::new(storage::UploadFileRequest {
-        file_id: 123,
+        file_id: 223,
         ref_id: 1235,
-        bucket_id: 2535,
+        bucket_id: 13,
         secret: 12,
         file_type: 22,
         blob_data: fo
@@ -32,11 +32,10 @@ async fn upload_sample() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 async fn create_bucket() -> Result<(), Box<dyn std::error::Error>> {
-
-    let mut client = ClientToChunkClient::connect("http://0.0.0.0:5051").await?;
+    let mut client = ClientToChunkClient::connect("http://0.0.0.0:11000").await?;
 
     let request = tonic::Request::new(storage::CreateBucketRequest {
-        bucket_id: 2535,
+        bucket_id: 13,
         intent: "video".to_string()
     });
 
@@ -48,8 +47,7 @@ async fn create_bucket() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 async fn ping() -> Result<(), Box<dyn std::error::Error>> {
-
-    let mut client = ClientToChunkClient::connect("http://0.0.0.0:5051").await?;
+    let mut client = ClientToChunkClient::connect("http://0.0.0.0:11000").await?;
 
     let request = tonic::Request::new(storage::PingRequest {
         id: 234

@@ -18,6 +18,13 @@ pub fn get_cli_args() -> Config {
             .default_value("9000")
             .required(false)
         )
+        .arg(clap::Arg::new("grpc_port")
+            .short('g')
+            .long("grpc_port")
+            .about("Set port for gRPC")
+            .default_value("11000")
+            .required(false)
+        )
         .arg(Arg::new("dir")
             .short('d')
             .long("dir")
@@ -29,12 +36,14 @@ pub fn get_cli_args() -> Config {
         .get_matches();
 
     let port = c.value_of("port").unwrap().parse::<u16>().unwrap();
+    let port_grpc = c.value_of("grpc_port").unwrap().parse::<u16>().unwrap();
 
     let dir_vals = c.values_of("dir").unwrap();
     let dirs = dir_vals.into_iter().map(|d| d.to_string()).collect();
 
     Config {
-        port: port,
+        serving_port: port,
+        grpc_port: port_grpc,
         dirs: dirs,
         db_path: "".to_string()
     }

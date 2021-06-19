@@ -8,14 +8,14 @@ pub async fn listen_http(cfg :&Config) {
     use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 
     // let addr = "127.0.0.1:9000".parse().unwrap();
-    let socket_addr = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), cfg.port);
+    let socket_addr = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), cfg.serving_port);
 
     let make_service =
         make_service_fn(|_| async { Ok::<_, hyper::Error>(service_fn(process_http_request)) });
 
     let server = Server::bind(&socket_addr).serve(make_service);
 
-    println!("Listening on http://{}", socket_addr);
+    println!("File serving on http://{}", socket_addr);
     println!("Current directory {:?}", std::env::current_dir().unwrap());
 
     if let Err(e) = server.await {
@@ -56,7 +56,7 @@ async fn process_get_file(req: Request<Body>) -> Result<Response<Body>> {
         }
     }
 
-    let s = bucket_act::file_id_to_file_path(req.bucket_id, req.file_id);
+    let s = bucket_act::StoragePathBuilder::new(req.bucket_id, req.file_id).file_loc();
     if let Ok(file) = tokio::fs::File::open(s).await {
         let stream = FramedRead::new(file, BytesCodec::new());
         let body = Body::wrap_stream(stream);

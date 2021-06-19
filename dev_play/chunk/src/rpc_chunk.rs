@@ -25,18 +25,24 @@ impl ClientToChunk for ChunkRpcHanlder {
 
     async fn upload_file(&self, request: Request<UploadFileRequest>) -> Result<Response<UploadFileResponse>, Status> {
         let r = request.into_inner();
-        let s = bucket_act::bucket_id_to_path(r.bucket_id);
+        let s = bucket_act::StoragePathBuilder::new(r.bucket_id,0).bucket_dir();
+        // let s = bucket_act::bucket_id_to_path_DEP(r.bucket_id);
         if !std::path::Path::new(&s).exists() {
             return Err(Status::new(Code::NotFound, "bucket does not exist."))
         }
 
-        bucket_act::save_file_inot_bucket(r.bucket_id,r.file_id,&r.blob_data).await;
+        bucket_act::save_file_into_bucket(r.bucket_id, r.file_id, &r.blob_data).await;
 
         let res = UploadFileResponse{
-            message: "sdfds".to_string()
+            message: "sdfds".to_string(),
+            ok: true
         };
 
         Ok(Response::new(res))
+    }
+
+    async fn remove_file(&self, request: Request<RemoveFileRequest>) -> Result<Response<RemoveFileResponse>, Status> {
+        todo!()
     }
 
     async fn ping(&self, request: Request<PingRequest>) -> Result<Response<PingResponse>, Status> {
@@ -50,15 +56,18 @@ impl ClientToChunk for ChunkRpcHanlder {
     }
 }
 
-pub async fn server_chunk() -> Result<(), Box<dyn std::error::Error>> {
-    let addr = "0.0.0.0:5051".parse().unwrap();
-    let greeter = ChunkRpcHanlder::default();
+pub async fn server_chunk(grpc_port: u16) -> Result<(), Box<dyn std::error::Error>> {
+    use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 
-    println!("GreeterServer listening on {}", addr);
+    let socket_addr = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), grpc_port);
+
+    let chunk_grpc_handler = ChunkRpcHanlder::default();
+
+    println!("gRPC listening on http://{}", socket_addr);
 
     Server::builder()
-        .add_service(ClientToChunkServer::new(greeter))
-        .serve(addr)
+        .add_service(ClientToChunkServer::new(chunk_grpc_handler))
+        .serve(socket_addr)
         .await?;
 
     Ok(())
