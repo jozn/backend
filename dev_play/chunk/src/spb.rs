@@ -1,8 +1,7 @@
-use crate::proto_gen;
+use chunk_proto::storage;
 
-pub use proto_gen::storage;
-pub use proto_gen::storage::*;
-pub use proto_gen::storage::{
+pub use storage::*;
+pub use storage::{
     client_to_chunk_client::ClientToChunkClient,
     client_to_chunk_server::{
         ClientToChunk,

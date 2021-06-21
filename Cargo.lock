@@ -504,6 +504,7 @@ dependencies = [
 name = "chunk"
 version = "0.1.0"
 dependencies = [
+ "chunk_proto",
  "clap 3.0.0-beta.2",
  "hyper 0.14.9",
  "prost 0.7.0",
@@ -516,6 +517,19 @@ dependencies = [
  "tonic",
  "tonic-build",
  "warp",
+]
+
+[[package]]
+name = "chunk_proto"
+version = "0.1.0"
+dependencies = [
+ "clap 3.0.0-beta.2",
+ "hyper 0.14.9",
+ "prost 0.7.0",
+ "tokio 1.7.0",
+ "tokio-util 0.6.7",
+ "tonic",
+ "tonic-build",
 ]
 
 [[package]]
