@@ -120,7 +120,7 @@ impl StoragePathBuilder {
         format!("{}/log_{}.json", bucket_dir, self.bucket_id)
     }
 
-    // Remove
+    // Remove directory
 
     pub fn bucket_remove_dir(&self) -> String {
         let folder = sutil::bucket_to_folder(self.bucket_id);

@@ -1,13 +1,3 @@
-/*mod types;
-mod cli;
-mod serving;
-pub mod proto_gen;
-
-// macro use should be at root
-#[macro_use]
-extern crate serde_derive;
-extern crate serde_qs as qs;*/
-
 use chunk::{cli, serving, rpc_chunk, types};
 use chunk::types::LogEvent::CreateBucket;
 
@@ -26,23 +16,8 @@ async fn main() {
         // rpc_chunk::server_chunk().await;
     });
 
-    play();
-
     serving::listen_http(&cfg).await;
 }
-
-fn play(){
-    use types::*;
-    let s = types::LogEvent::CreateBucket(LogCreateBucket{
-        bucket_id: 23,
-        intent: "23".to_string(),
-        date: "23".to_string()
-    });
-
-    let d = serde_json::to_string(&s).unwrap();
-    println!("//> {}", d);
-}
-
 
 
 

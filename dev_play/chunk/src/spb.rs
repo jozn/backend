@@ -1,4 +1,4 @@
-use chunk_proto::storage;
+pub use chunk_proto::storage;
 
 pub use storage::*;
 pub use storage::{

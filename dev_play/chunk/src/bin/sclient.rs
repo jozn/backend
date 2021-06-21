@@ -1,6 +1,4 @@
-use chunk::proto_gen::storage;
-use chunk::proto_gen::storage::client_to_chunk_client::ClientToChunkClient;
-use shared::common::get_random_u64;
+use chunk::spb::*;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {

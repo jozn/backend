@@ -3,14 +3,12 @@ extern crate chunk_proto;
 pub mod types;
 pub mod cli;
 pub mod serving;
-// pub mod proto_gen;
 pub mod rpc_chunk;
 pub mod spb;
 pub mod sutil;
 pub mod bucket_act;
 
-// pub use chunk_proto::stosrage;
-// pub use proto_gen::{storage};
+pub use chunk_proto::storage;
 
 // macro use should be at root
 #[macro_use]

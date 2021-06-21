@@ -4,8 +4,11 @@ Notes:
 
 
 @todo
- + impl sync
+ + design and impl sync to another chunk
  + add date string to logs
  + add multi dir (disks) funcs
  + integrate warp file serving
- +
+ + clean up serving and improve it
+ + config file
+ + integrate log or trace crate
+ 
