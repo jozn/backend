@@ -11,6 +11,7 @@ members = [
     "dev_play/play",
     "dev_play/play2",
     "dev_play/tmp",
+    "dev_play/chunk_proto",
     "dev_play/chunk",
 
     "lib/play_gram2",

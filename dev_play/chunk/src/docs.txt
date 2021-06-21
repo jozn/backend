@@ -1,3 +1,11 @@
 
 Notes:
  + No intent in folder path schema as it cause difficulty for other part of code base.
+
+
+@todo
+ + impl sync
+ + add date string to logs
+ + add multi dir (disks) funcs
+ + integrate warp file serving
+ +

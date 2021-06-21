@@ -70,7 +70,7 @@ async fn process_get_file(req: Request<Body>) -> Result<Response<Body>> {
 fn not_found() -> Response<Body> {
     static NOTFOUND: &[u8] = b"Not Found";
     Response::builder()
-        .status(StatusCode::NOT_FOUND)
+        // .status(StatusCode::NOT_FOUND)
         .body(NOTFOUND.into())
         .unwrap()
 }

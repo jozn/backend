@@ -1,4 +1,3 @@
-pub mod helloworld;
 pub mod storage;
 
 pub use storage::*;

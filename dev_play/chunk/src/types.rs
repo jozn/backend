@@ -5,9 +5,6 @@ struct Bucket {
     create_time_str: String,
 }
 
-fn sync(){}
-fn upload(){}
-
 #[derive(Default, Debug,Clone)]
 pub struct Config {
     pub serving_port: u16,

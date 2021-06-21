@@ -25,12 +25,11 @@ impl ClientToChunk for ChunkRpcHanlder {
 
     async fn insert_file(&self, request: Request<InsertFileRequest>) -> Result<Response<InsertFileResponse>, Status> {
         let r = request.into_inner();
-        let s = bucket_act::StoragePathBuilder::new(r.bucket_id,0).bucket_dir();
-        if !std::path::Path::new(&s).exists() {
+
+        let res = bucket_act::save_file_into_bucket(r.bucket_id, r.file_id, &r.blob_data).await;
+        if !res {
             return Err(Status::new(Code::NotFound, "bucket does not exist."))
         }
-
-        bucket_act::save_file_into_bucket(r.bucket_id, r.file_id, &r.blob_data).await;
 
         let res = InsertFileResponse{
             message: "sdfds".to_string(),
